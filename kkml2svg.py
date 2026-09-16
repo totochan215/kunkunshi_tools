@@ -387,7 +387,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             max_cols = max(max_cols, len(data))
 
     # Calculer l'espace pour les paroles verticales
-    lyrics_sections = [(st, d) for st, d, k in prepared if k == "lyrics"]
+    lyrics_sections = [(s[0], s[1]) for s in prepared if s[2] == "lyrics"]
     if lyrics_sections:
         n_verses = 0
         for _, data in lyrics_sections:
@@ -1175,7 +1175,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
       尺♯       → rendu en 尺♯ si @shaku_sharp on (défaut), sinon 尺 simple ; jamais entouré
       下尺      → 尺 entouré d'un cercle
       下老      → deux caractères condensés en demi-largeur
-      イ下尺    → position haute イ + 下尺 (尺 entouré), condensés (large)
+      イ下尺    → position haute イ + 下尺, 3 caractères condensés (large), sans cercle
 
     尺 entouré (@shaku_circled on) :
       尺 (noire)       → cercle autour du 尺 centré
@@ -1278,25 +1278,20 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                            effective_fs, text_w=effective_fs * 1.2)
         return
 
-    # Position haute 3 caractères : イ下尺 (préfixe + 下尺 = 尺 entouré)
-    # Le composant est large : イ à gauche + cercle(尺) à droite, condensés.
+    # Position haute 3 caractères : イ下尺 (préfixe + 下尺)
+    # 3 caractères condensés via textLength. Pas de cercle autour du 尺
+    # dans ce composé (décision du 16 sept. 2026) : le 下 reste visible,
+    # le rendu suit le patron de 下老 élargi à 3 caractères.
     if (len(base_tok) == 3
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1:] == "下尺"):
         target_w = effective_fs * 1.8
-        half = target_w / 2
-        # Cercle autour du 尺, sur la moitié droite
-        r = effective_fs * 0.5
-        circ_cx = cx + half - r
-        out.append(f'<circle cx="{circ_cx}" cy="{cy+2}" r="{r}" '
-                   f'fill="none" stroke="black" stroke-width="1"/>')
-        # イ à gauche, 尺 à droite dans le cercle
         y_text = cy + 7
-        out.append(f'<text x="{cx - half}" y="{y_text}" '
+        out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
-                   f'{escape(base_tok[0] + "尺")}</text>')
+                   f'{escape(base_tok)}</text>')
         _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=target_w)
         return

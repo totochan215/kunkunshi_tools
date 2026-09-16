@@ -14,7 +14,7 @@ Les caractères de position représentent les frettes/positions sur le sanshin. 
 | 尺♯ | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle |
 | 下尺 | 尺 entouré d'un cercle | Toujours entouré, quelle que soit l'option @shaku_circled |
 | 下老 | 下 + 老 condensés en demi-largeur | Un seul `<text>` avec `textLength` à 100% de la largeur d'un kanji et `lengthAdjust="spacingAndGlyphs"`, pour tenir dans une case |
-| イ下尺 | Position haute イ + 下尺 (尺 entouré) | イ à gauche + cercle(尺) à droite, `textLength` à 180% de la largeur d'un kanji. Composant large mais nécessaire pour Hiyamikachibushi et autres |
+| イ下尺 | Position haute イ + 下尺 | Les 3 caractères イ下尺 condensés, `textLength` à 180% de la largeur d'un kanji, sans cercle autour du 尺 (décision du 16 sept. 2026). Composant large mais nécessaire pour Hiyamikachibushi et autres |
 
 ### Positions hautes (préfixes イ / ロ)
 
@@ -58,9 +58,9 @@ Tokens valides avec ロ (même hauteur, autre corde) :
 
 ### Positions hautes + 下尺 (イ下尺, ロ下尺)
 
-Le préfixe peut aussi s'appliquer à 下尺 (尺 entouré d'un cercle). Le token fait 3 caractères (イ下尺 ou ロ下尺). Rendu : préfixe + 尺 entouré, condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le cercle est positionné sur la moitié droite du texte condensé (là où se trouve le 尺), rayon `effective_fs * 0.5`. Le composant est large mais nécessaire (Hiyamikachibushi).
+Le préfixe peut aussi s'appliquer à 下尺. Le token fait 3 caractères (イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé (décision du 16 sept. 2026) : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Hiyamikachibushi).
 
-Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, le 尺 est entouré d'un cercle (rayon `effective_fs * 0.5`) positionné sur la moitié droite du texte condensé.
+Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
 Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du kanji 人. ロ est un raccourci du radical 口偏 (口). La plupart des composites n'ont pas de caractère Unicode dédié (伍 = 亻+五 est une exception), d'où l'usage des préfixes katakana dans le KKML.
 
@@ -170,9 +170,9 @@ Le format d'un token encode son rythme :
 
 | Token | Lecture | Rendu |
 |-------|---------|-------|
-| イ下尺 | i-shita-shaku | イ à gauche + cercle(尺) à droite, textLength 180% de fs |
+| イ下尺 | i-shita-shaku | イ下尺 condensés (3 caractères), textLength 180% de fs, sans cercle |
 
-Large mais fonctionnel. `HIGH_POS_CHARS = HIGH_POS_KANJI ∪ {"下"}`.
+Large mais fonctionnel. Le code traite ce cas dans une branche dédiée (3 caractères, `base_tok[1:] == "下尺"`).
 
 ## Suffixes de technique (souhou)
 

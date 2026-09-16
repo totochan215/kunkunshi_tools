@@ -57,7 +57,7 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 4. `尺♯` selon `@shaku_sharp` (jamais entouré)
 5. Accords `A-B` / `A-B-C` (séparateur `-`, max 3 notes) : notes empilées à 72%
 6. 下老 et positions hautes `イX`/`ロX` : un seul `<text>` avec `textLength` + `lengthAdjust="spacingAndGlyphs"` (下老 demi-largeur, positions hautes 120%)
-7. イ下尺 : イ à gauche + cercle(尺) à droite, textLength 180%
+7. イ下尺 : 3 caractères condensés (イ下尺), textLength 180%, sans cercle
 8. Croche `A/B` (note principale + à cheval), shuffle `A:B` (deux notes empilées)
 9. Note simple centrée ; ornement multi-caractères empilé
 
