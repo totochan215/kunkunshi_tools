@@ -43,7 +43,7 @@ Tokens valides avec イ (1 octave au-dessus) :
 | イ中 | i-naka | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
 | イ尺 | i-shaku | 1 octave au-dessus de 尺 |
 | イ工 | i-kō | 1 octave au-dessus de 工 (corde aiguë) |
-| イ五 | i-go | 1 octave au-dessus de 五 (rendu condensé, pas 伍) |
+| イ五 | i-go | 1 octave au-dessus de 五 |
 
 3 caractères (préfixe + 下 + kanji) :
 
