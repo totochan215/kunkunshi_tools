@@ -43,7 +43,11 @@ Tokens valides avec イ (1 octave au-dessus) :
 | イ中 | i-naka | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
 | イ尺 | i-shaku | 1 octave au-dessus de 尺 |
 | イ工 | i-kō | 1 octave au-dessus de 工 (corde aiguë) |
-| イ五 | i-go | 1 octave au-dessus de 五 |
+| イ五 | i-go | 1 octave au-dessus de 五 (rendu condensé, pas 伍) |
+| イ六 | i-roku | 1 octave au-dessus de 六 |
+| イ七 | i-shichi | 1 octave au-dessus de 七 |
+
+イ六 et イ七 sont rares : attestés comme noms de 勘所 dans la nomenclature 野村流 (lus i-roku, i-shichi), mais sans caractère composite Unicode dédié (contrairement à 伍 = イ五) et sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les emploient pas.
 
 3 caractères (préfixe + 下 + kanji) :
 
