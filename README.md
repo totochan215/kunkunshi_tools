@@ -5,6 +5,8 @@ Python 3 autonome, aucune dépendance hors stdlib.
 
 Pipeline : JSON Portama → KKML → SVG.
 
+Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
+
 ## Scripts
 
 ### portama2kkml.py
