@@ -2,9 +2,15 @@
 
 ## Caractères de position
 
-Les caractères de position représentent les frettes/positions sur le sanshin. Ensemble reconnu par le convertisseur :
+Les caractères de position (勘所, kandokoro) représentent les frettes/positions sur le sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs (accordage 本調子) :
 
-合 乙 老 下 四 上 中 工 尺 五 七 六 八 九 十 三 力 土 一 二
+合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
+
+Par corde : 合 乙 老 (男絃, corde grave), 四 上 中 尺 (中絃, corde moyenne), 工 五 六 七 八 九 十 (女絃, corde aiguë). En hauteurs absolues (本調子) : 合=ut, 乙=ré, 老=mi, 四=fa, 上=sol, 中=la, 尺=si♭, 工=ut, 五=ré, 六=mi, 七=fa, 八=sol, 九=la, 十=si♭.
+
+Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-ton, quasi-équivalent du dièse ♯, combiné à un caractère de base. 下老 (シタロウ) = demi-ton au-dessus de 老 ; 下尺 = demi-ton au-dessus de 尺. Les sources traditionnelles (école 野村流) traitent 下老 et 下尺 comme des 勘所 à part entière, avec lectures et doigtés propres ; la pratique moderne écrit aussi 尺♯ pour 下尺 (d'où l'option `@shaku_sharp`). Terminologie retenue dans ce projet : « position de base » pour les 14 caractères ci-dessus, « préfixe » pour 下 (demi-ton), イ (octave supérieure) et ロ (même hauteur, autre corde).
+
+Historique (16 sept. 2026) : 三 力 土 一 二 ont été retirés de l'ensemble reconnu. Ce sont des noms de notes du système ancêtre 工尺譜 (gongche), jamais attestés comme positions de sanshin. 十 est conservé : position standard documentée, la plus haute de l'échelle en 本調子.
 
 ### Positions étendues
 

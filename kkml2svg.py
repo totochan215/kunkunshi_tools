@@ -37,7 +37,12 @@ import argparse
 # --------------------------------------------------------------------------- #
 # 1. Définition des caractères de position reconnus
 # --------------------------------------------------------------------------- #
-POSITION_CHARS = set("合乙老下四上中工尺五七八六九十三八力土一二九")
+# 14 positions de base (ordre croissant, 本調子) : 合乙老 (corde grave),
+# 四上中尺 (corde moyenne), 工五六七八九十 (corde aiguë).
+# 下 n'est PAS une position autonome : préfixe de demi-ton (下老, 下尺),
+# au même titre que イ/ロ (octave/corde). 三力土一二 retirés le 16 sept. 2026 :
+# noms de notes gongche (工尺譜), jamais attestés comme positions de sanshin.
+POSITION_CHARS = set("合乙老下四上中尺工五六七八九十")
 SPECIAL_CHARS = set("○〇▲Ⓡ□×◯・#")
 EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
