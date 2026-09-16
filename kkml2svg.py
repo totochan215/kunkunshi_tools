@@ -1190,7 +1190,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
 
     Positions hautes (préfixe イ) :
       イ尺      → イ (1 octave au-dessus) + 尺, condensés en demi-largeur
-      Tokens valides : イ+{合,乙,老,四,上,尺,工,五,中}
+      Tokens valides : イ+{合,乙,老,四,上,中,尺,工,五}
       Rendu identique au patron 下老 (deux textes à 62%, offset ±cell_w*0.18)
     """
     if opts is None:
