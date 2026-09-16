@@ -40,17 +40,17 @@ Tokens valides avec イ (1 octave au-dessus) :
 | イ老 | i-rō | 1 octave au-dessus de 老 |
 | イ四 | i-yon | 1 octave au-dessus de 四 |
 | イ上 | i-jō | 1 octave au-dessus de 上 |
+| イ中 | i-naka | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
 | イ尺 | i-shaku | 1 octave au-dessus de 尺 |
 | イ工 | i-kō | 1 octave au-dessus de 工 (corde aiguë) |
 | イ五 | i-go | 1 octave au-dessus de 五 (rendu condensé, pas 伍) |
-| イ中 | i-naka | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
 
 3 caractères (préfixe + 下 + kanji) :
 
 | Token | Lecture | Position |
 |-------|---------|----------|
-| イ下尺 | i-shita-shaku | 1 octave au-dessus de 下尺 |
 | イ下老 | i-shita-rō | 1 octave au-dessus de 下老 |
+| イ下尺 | i-shita-shaku | 1 octave au-dessus de 下尺 |
 
 Tokens valides avec ロ (même hauteur, autre corde) :
 
