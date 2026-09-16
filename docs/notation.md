@@ -2,7 +2,7 @@
 
 ## Caractères de position
 
-Les caractères de position (勘所, kandokoro) représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs :
+Les caractères de position (勘所, kandokoro) représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs, sont :
 
 合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
 
