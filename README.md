@@ -1,6 +1,6 @@
 # kunkunshi_tools
 
-Outils de génération de tablatures 工工四 (kunkunshi) pour le sanshin okinawaïen.
+Outils de génération de tablatures 工工四 (kunkunshi) pour le sanshin d'Okinawa.
 Python 3 autonome, aucune dépendance hors stdlib.
 
 Pipeline : JSON Portama → KKML → SVG.
