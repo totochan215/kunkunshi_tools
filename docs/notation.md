@@ -101,7 +101,8 @@ Certaines consonnes de l'okinawaïen s'écrivent sur deux caractères : un carac
 | とぅ | tu | と + petit ぅ |
 | どぅ | du | ど + petit ぅ |
 | づぅ | dū | づ + petit ぅ |
-| ふぁ / ふぃ | fa / fi | ふ + petit ぁ/ぃ |
+| ふぁ | fa | ふ + petit ぁ |
+| ふぃ | fi | ふ + petit ぃ |
 | よー | yō | よ + ー (voyelle longue) |
 
 Petits kana combinants reconnus : ぁぃぅぇぉゃゅょゎ (hiragana) et ァィゥェォャュョヮ (katakana), plus ー (chōonpu, voyelle longue).
