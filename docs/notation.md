@@ -65,7 +65,29 @@ Tokens valides avec ロ (même hauteur, autre corde) :
 | ロ尺 | ro-shaku | Même hauteur que 尺, joué sur la corde grave |
 | ロ五 | ro-go | Même hauteur que 五, joué sur la corde médiane (中絃, nakajiru) |
 
-Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Seules ces quatre formes sont attestées en usage ; d'autres composites à radical 口 existent en Unicode (呬 = ロ四, 哈 = ロ合, 咾 = ロ老, 𠮟 = ロ七, 叭 = ロ八, 㕤 = ロ九, 叿 = ロ工) sans attestation d'usage réel. La lecture du préfixe varie selon l'école : ro- (ろじょう) ou kō- (野村流 : こうご, こうしゃく).
+Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Seules ces quatre formes sont attestées en usage. La lecture du préfixe varie selon l'école : ro- (ろじょう) ou kō- (野村流 : こうご, こうしゃく).
+
+#### Kanjis composés précomposés (information — non implémentés)
+
+Certains composites préfixe + kanji existent comme caractères Unicode précomposés. Ce sont des caractères chinois/japonais préexistants (souvent rares ou dialectaux), réutilisés graphiquement parce que le radical gauche évoque le préfixe ; ils n'ont PAS été ajoutés à Unicode pour le sanshin. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五), 亿 (乙).
+
+Composites 口偏 (série ロ — inventaire R. López García, email W3C public-music-notation 0005, 2017) :
+
+| Caractère | Équivalent | Attestation d'usage |
+|-----------|------------|---------------------|
+| 㕶 | ロ五 | Utilisé réellement |
+| 呎 | ロ尺 | Utilisé réellement (mais caractère courant : « pied », unité, en cantonais) |
+| 叿 | ロ工 | Non attesté |
+| 呬 | ロ四 | Non attesté |
+| 哈 | ロ合 | Non attesté |
+| 咾 | ロ老 | Non attesté |
+| 𠮟 | ロ七 | Non attesté (variante japonaise de 叱) |
+| 叭 | ロ八 | Non attesté (courant : 喇叭) |
+| 㕤 | ロ九 | Non attesté |
+
+Composites 亻 (série イ) : aucun composite dédié attesté en usage sanshin. 伍 (亻+五) existe comme caractère courant chinois mais n'est pas un signe de position ; les composites d'octave 仩/伬/仜/亿 relèvent du gongchepu cantonais, pas du kunkunshi.
+
+Statut KKML : non implémentés. À terme, ces caractères devront être tolérés comme tokens d'entrée et normalisés vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.), jamais rendus tels quels.
 
 ### Positions hautes + 下尺 (イ下尺, ロ下尺)
 
@@ -73,7 +95,7 @@ Le préfixe peut aussi s'appliquer à 下尺. Le token fait 3 caractères (イ�
 
 Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
-Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du kanji 人. ロ est un raccourci du radical 口偏 (口). La plupart des composites n'ont pas de caractère Unicode dédié (伍 = 亻+五 est une exception), d'où l'usage des préfixes katakana dans le KKML.
+Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du kanji 人. ロ est un raccourci du radical 口偏 (口). Les composites précomposés qui existent en Unicode sont listés plus haut à titre d'information ; le KKML utilise les préfixes katakana (2 caractères) comme forme canonique.
 
 ### Caractères vocaux (non rendus sur le sanshin)
 
