@@ -73,6 +73,8 @@ Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
 
 ## Contenu
 
-- `songs/` — fichiers KKML de référence : かぎやで風節 (avec et sans `::vocal`),
+- `samples/kkml/` — fichiers KKML de référence : かぎやで風節 (avec et sans `::vocal`),
   だんじゅかりゆし, 国頭ジントヨー, fixture de test vocal
-- `samples/` — exports JSON Portama bruts (3 fichiers, dont かぎやで風節 avec allRubyData)
+- `samples/portama-json/` — exports JSON Portama bruts (3 fichiers, dont かぎやで風節 avec allRubyData)
+- `samples/portama-pdf/` — PDF Portama sources correspondant aux échantillons
+- `samples/svg/` — rendus SVG de référence produits par kkml2svg

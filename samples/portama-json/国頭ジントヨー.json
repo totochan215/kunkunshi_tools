@@ -1,0 +1,759 @@
+{
+  "version": "2.2",
+  "musicno": 5170,
+  "userId": 5290,
+  "numDans": 9,
+  "cellsPerDan": 24,
+  "score": [
+    [
+      {
+        "note": "",
+        "repeatStart": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "repeatEnd": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      }
+    ]
+  ],
+  "allRubyData": {},
+  "price": 0,
+  "isPublished": 0,
+  "viewsize": 100,
+  "trackCount": 1,
+  "currentTrack": 1,
+  "title": "国頭[くんじゃん]ジントヨー",
+  "findname": "くんじゃんじんとよー",
+  "speed": "173",
+  "chogen": "4",
+  "choshi": "hon",
+  "rhythm": "100",
+  "rhythmMode": "100",
+  "orientation": "landscape",
+  "allLyricsData": {
+    "1": [
+      {
+        "id": "frame-1783159042736",
+        "content": "歌詞を入力",
+        "x": 715.875,
+        "y": 20,
+        "width": 105.125,
+        "height": 267.5,
+        "fontSize": "10pt"
+      }
+    ]
+  },
+  "lyricsPageBreak": "auto",
+  "lyricsDisplayNumber": "yes",
+  "lyricsFontSize": "10pt",
+  "lyricsFontFamily": "mincho",
+  "lyricsWritingMode": "vertical",
+  "rubyPrintMode": "current",
+  "print_duration": "yes"
+}
