@@ -26,8 +26,8 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 
 | Préfixe | Radical | Signification | Lecture |
 |---------|---------|---------------|---------|
-| イ | 人偏 (亻) | 1 octave au-dessus du kanji de droite | i- (い) |
-| ロ | 口偏 (口) | Même hauteur que le kanji de droite, joué sur une autre corde | ro- (ろ) |
+| イ | 人偏 (亻) | 1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
+| ロ | 口偏 (口) | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ) |
 
 Tokens valides avec イ (1 octave au-dessus) :
 
@@ -35,19 +35,19 @@ Tokens valides avec イ (1 octave au-dessus) :
 
 | Token | Lecture | Position |
 |-------|---------|----------|
-| イ合 | i-ai | 1 octave au-dessus de 合 (corde grave) |
+| イ合 | i-ai | 1 octave au-dessus de 合 |
 | イ乙 | i-otsu | 1 octave au-dessus de 乙 |
 | イ老 | i-rō | 1 octave au-dessus de 老 |
 | イ四 | i-yon | 1 octave au-dessus de 四 |
 | イ上 | i-jō | 1 octave au-dessus de 上 |
 | イ中 | i-naka | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
 | イ尺 | i-shaku | 1 octave au-dessus de 尺 |
-| イ工 | i-kō | 1 octave au-dessus de 工 (corde aiguë) |
-| イ五 | i-go | 1 octave au-dessus de 五 (rendu condensé, pas 伍) |
+| イ工 | i-kō | 1 octave au-dessus de 工 |
+| イ五 | i-go | 1 octave au-dessus de 五 |
 | イ六 | i-roku | 1 octave au-dessus de 六 |
 | イ七 | i-shichi | 1 octave au-dessus de 七 |
 
-イ六 et イ七 sont rares : attestés comme noms de 勘所 dans la nomenclature 野村流 (lus i-roku, i-shichi), mais sans caractère composite Unicode dédié (contrairement à 伍 = イ五) et sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les emploient pas.
+イ六 et イ七 sont rares : attestés comme noms de 勘所 dans la nomenclature 野村流 (lus i-roku, i-shichi), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les emploient pas.
 
 3 caractères (préfixe + 下 + kanji) :
 
@@ -60,12 +60,12 @@ Tokens valides avec ロ (même hauteur, autre corde) :
 
 | Token | Lecture | Position |
 |-------|---------|----------|
-| ロ上 | ro-jō | Même hauteur que 上, autre corde |
-| ロ中 | ro-naka | Même hauteur que 中, autre corde |
-| ロ尺 | ro-shaku | Même hauteur que 尺, autre corde |
-| ロ五 | ro-go | Même hauteur que 五, autre corde |
+| ロ上 | ro-jō | Même hauteur que 上, joué sur la corde grave (男絃, uojiru) |
+| ロ中 | ro-naka | Même hauteur que 中, joué sur la corde grave |
+| ロ尺 | ro-shaku | Même hauteur que 尺, joué sur la corde grave |
+| ロ五 | ro-go | Même hauteur que 五, joué sur la corde médiane (中絃, nakajiru) |
 
-Positions ロ rares dans la pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Seules ces quatre formes sont attestées en usage ; d'autres composites à radical 口 existent en Unicode (呬 = ロ四, 哈 = ロ合, 咾 = ロ老, 𠮟 = ロ七, 叭 = ロ八, 㕤 = ロ九, 叿 = ロ工) sans attestation d'usage réel. La lecture du préfixe varie selon l'école : ro- (ろじょう) ou kō- (野村流 : こうご, こうしゃく).
+Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Seules ces quatre formes sont attestées en usage ; d'autres composites à radical 口 existent en Unicode (呬 = ロ四, 哈 = ロ合, 咾 = ロ老, 𠮟 = ロ七, 叭 = ロ八, 㕤 = ロ九, 叿 = ロ工) sans attestation d'usage réel. La lecture du préfixe varie selon l'école : ro- (ろじょう) ou kō- (野村流 : こうご, こうしゃく).
 
 ### Positions hautes + 下尺 (イ下尺, ロ下尺)
 
