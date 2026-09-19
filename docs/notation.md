@@ -6,7 +6,13 @@ Les caractères de position (勘所, kandokoro) représentent les positions sur 
 
 合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
 
-Par corde : 合 乙 老 (男絃, corde grave), 四 上 中 尺 (中絃, corde moyenne), 工 五 六 七 八 九 十 (女絃, corde aiguë). En hauteurs absolues dans le cas d'un accordage 本調子 avec hauteur de base accordée à do : 合=do, 乙=ré, 老=mi, 四=fa, 上=sol, 中=la, 尺=si♭, 工=do, 五=ré, 六=mi, 七=fa, 八=sol, 九=la, 十=si♭.
+Répartition par corde (hauteurs absolues pour un accordage 本調子 avec hauteur de base accordée à do) :
+
+| Corde | Nom | Positions | Hauteurs (本調子, base do) |
+|-------|-----|-----------|----------------------------|
+| Grave | 男絃 (uojiru) | 合 乙 老 | do, ré, mi |
+| Moyenne | 中絃 (nakajiru) | 四 上 中 尺 | fa, sol, la, si♭ |
+| Aiguë | 女絃 (majiru) | 工 五 六 七 八 九 十 | do, ré, mi, fa, sol, la, si♭ |
 
 Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-ton, quasi-équivalent du dièse ♯, combiné à un caractère de base. 下老 (シタロウ) = demi-ton au-dessus de 老 ; 下尺 = demi-ton au-dessus de 尺. Les sources traditionnelles (école 野村流) traitent 下老 et 下尺 comme des 勘所 à part entière, avec lectures et doigtés propres ; la pratique moderne écrit aussi 尺♯ pour 下尺 (d'où l'option `@shaku_sharp`). Terminologie retenue dans ce projet : « position de base » pour les 14 caractères ci-dessus, « préfixe » pour 下 (demi-ton), イ (octave supérieure) et ロ (même hauteur, autre corde).
 
