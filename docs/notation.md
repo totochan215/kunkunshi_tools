@@ -78,7 +78,7 @@ Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que s
 
 Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois/japonais préexistants (souvent rares ou dialectaux), réutilisés graphiquement parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五), 亿 (乙).
 
-Composites 口偏 (série ロ — inventaire R. López García, email W3C public-music-notation 0005, 2017) :
+Composites 口偏 (Source : inventaire R. López García, email W3C public-music-notation 0005, 2017) :
 
 | Caractère | Équivalent | Attestation d'usage |
 |-----------|------------|---------------------|
