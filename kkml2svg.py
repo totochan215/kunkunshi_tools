@@ -141,6 +141,8 @@ def parse_kkml(text):
     i = 0
     n = len(lines)
     current = None
+    saw_marker = False
+    warned_implicit = False
     while i < n:
         line = lines[i].rstrip()
         stripped = line.strip()
@@ -174,11 +176,13 @@ def parse_kkml(text):
         # fermeture explicite — AVANT l'ouverture
         if stripped == "::":
             current = None
+            saw_marker = True
             i += 1
             continue
 
         if stripped.startswith("::"):
             current = None
+            saw_marker = True
             rest = stripped[2:].strip()
             parts = rest.split(None, 1)
             kind = parts[0] if parts else "tab"
@@ -187,6 +191,20 @@ def parse_kkml(text):
             song.blocks.append(current)
             i += 1
             continue
+
+        # Tolérance : aucune section :: déclarée mais des lignes de
+        # tablature présentes -> section ::tab implicite (info stderr,
+        # une seule fois par fichier).
+        if current is None and not saw_marker:
+            if not warned_implicit:
+                warned_implicit = True
+                print("kkml2svg: aucune section :: déclarée ; "
+                      "les lignes de tablature sont traitées comme "
+                      "une section ::tab implicite",
+                      file=sys.stderr)
+            current = Block("tab", None)
+            song.blocks.append(current)
+            continue   # retraiter la ligne dans le bloc implicite
 
         if current is not None:
             if current.kind == "tab":

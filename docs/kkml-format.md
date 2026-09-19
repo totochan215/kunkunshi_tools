@@ -24,6 +24,8 @@ positions | syllabes
 ::section titre optionnel
 ```
 
+Tolérance (section implicite) : si aucune section `::` n'est déclarée mais que le fichier contient des lignes de tablature, celles-ci sont traitées comme une section `::tab` implicite — le convertisseur émet une simple information sur stderr (une seule fois par fichier). Objectif : quelques notes tapées dans un fichier texte vide restent représentables sans balisage. Les métadonnées (`@title`, `@cols`…) restent reconnues normalement ; dès qu'un marqueur `::` apparaît, le comportement implicite est désactivé et les lignes hors bloc sont ignorées (comportement historique).
+
 ## Métadonnées reconnues
 
 - `@title` — titre de la chanson (rendu verticalement à droite de la grille en mode vertical). Défaut : vide (aucun titre affiché)
