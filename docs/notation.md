@@ -209,10 +209,10 @@ Le format d'un token encode son rythme :
 - La note supérieure est au-dessus du centre, la note inférieure en dessous
 
 ### Accord (notes simultanées) (A-B)
-- Format : `四-五` ou `合-工-尺` (séparateur `-`)
+- Format : `四-工` ou `合-四-工` (séparateur `-`)
 - Rendu : caractères empilés verticalement, taille 72%, centrés sur l'axe vertical de la case
 - Maximum 3 notes (le sanshin n'a que 3 cordes)
-- Cas d'usage : Hiyamikachibushi (accords Yon-Go)
+- Cas d'usage : par exemple dans ヒヤミカチ節 (Hiyamikachibushi) : 四-工 et 合-四-工
 
 ### Token non reconnu
 - Tout token sans séparateur qui n'est pas une position (simple ou étendue) est non reconnu
