@@ -83,7 +83,7 @@ Composites 口偏 (Source : inventaire R. López García, email W3C public-music
 | Caractère | Équivalent | Attestation d'usage |
 |-----------|------------|---------------------|
 | 㕶 | ロ五 | Utilisé réellement |
-| 呎 | ロ尺 | Utilisé réellement (mais caractère courant : « pied », unité, en cantonais) |
+| 呎 | ロ尺 | Utilisé réellement (caractère courant : « pied », unité, en cantonais) |
 | 叿 | ロ工 | Non attesté |
 | 呬 | ロ四 | Non attesté |
 | 哈 | ロ合 | Non attesté |
