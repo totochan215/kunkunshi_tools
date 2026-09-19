@@ -80,8 +80,8 @@ Séparateurs de token (à l'intérieur d'un token) :
 
 | Séparateur | Mode | Exemple |
 |------------|------|---------|
-| `/` | Deux croches sur un temps | `合/工` |
-| `:` | Une croche pointée et une double croche sur un temps (Shuffle 早弾き) | `合:工` |
+| `/` | Deux croches | `合/工` |
+| `:` | Une croche pointée et une double croche (早弾き) | `合:工` |
 | `-` | Accord (notes simultanées, max 3) | `四-工` ou `合-四-工` |
 | (aucun) | Ornement (caractères empilés) ou position étendue | `合工尺`, `下老`, `イ尺` |
 
