@@ -1,4 +1,4 @@
-# Notation musicale kunkunshi
+# Notation musicale 工工四 (kunkunshi)
 
 ## Positions de base
 
