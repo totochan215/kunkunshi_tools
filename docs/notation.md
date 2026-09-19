@@ -11,7 +11,7 @@ Répartition par corde :
 | Corde | Nom de corde | Positions | Hauteurs (本調子, base do) |
 |-------|-----|-----------|----------------------------|
 | Grave | 男絃 ou 男ジル (uojiru) | 合 乙 老 | do, ré, mi |
-| Moyenne | 中絃 ou 中ジル (nakajiru) | 四 上 中 尺 | fa, sol, la, si♭ |
+| Médiane | 中絃 ou 中ジル (nakajiru) | 四 上 中 尺 | fa, sol, la, si♭ |
 | Aiguë | 女絃 ou 女ジル (miijiru) | 工 五 六 七 八 九 十 | do, ré, mi, fa, sol, la, si♭ |
 
 Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-ton, quasi-équivalent du dièse ♯, combiné à un caractère de base. 下老 (シタロウ) = demi-ton au-dessus de 老 ; 下尺 = demi-ton au-dessus de 尺. Les sources traditionnelles (école 野村流) traitent 下老 et 下尺 comme des 勘所 à part entière, avec lectures et doigtés propres ; la pratique moderne écrit aussi 尺♯ pour 下尺 (d'où l'option `@shaku_sharp`). Terminologie retenue dans ce projet : « position de base » pour les 14 caractères ci-dessus, « préfixe » pour 下 (demi-ton), イ (octave supérieure) et ロ (même hauteur, autre corde).
