@@ -27,7 +27,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 | 下老 | 下 + 老 condensés en demi-largeur | Un seul `<text>` avec `textLength` à 100% de la largeur d'un kanji et `lengthAdjust="spacingAndGlyphs"`, pour tenir dans une case |
 | イ下尺 | Position haute イ + 下尺 | Les 3 caractères イ下尺 condensés, `textLength` à 180% de la largeur d'un kanji, sans cercle autour du 尺 (décision du 16 sept. 2026). Composant large mais nécessaire pour Hiyamikachibushi et autres |
 
-### Positions hautes (préfixes イ / ロ)
+### Positions hautes (préfixes イ et ロ)
 
 Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe katakana est accolé directement au kanji de position (token à deux caractères).
 
