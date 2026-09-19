@@ -235,7 +235,7 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 | Suffixe | Nom | Rendu SVG | Description |
 |---------|-----|-----------|-------------|
 | `*` | uchi-utu (打音) | caractère ｀ (accent grave) en haut-droite, même police et taille que la note | Presser la corde sans gratter (hammer-on) |
-| `^` | kaki-utu (掛音) | ┗ (U+2517) roté 180° en haut-droite | Upstroke (gratter de bas en haut avec l'ongle) |
+| `^` | kaki-utu (掛音) | ┗ (U+2517) pivoté de 180° en haut-droite | Upstroke (gratter de bas en haut avec le bachi) |
 | `v` | aki-utu (開音) | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
 | `<` | kachi-utu (掻音) | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s` | kuubanchi (小弾) | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
