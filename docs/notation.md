@@ -21,6 +21,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 | Token | Rendu | Note |
 |-------|-------|------|
 | 尺 | 尺 | Rendu standard |
+| 老 | 老 | Rendu standard |
 | 尺♯ | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle |
 | 下尺 | 尺 entouré d'un cercle | Toujours entouré, quelle que soit l'option @shaku_circled |
 | 下老 | 下 + 老 condensés en demi-largeur | Un seul `<text>` avec `textLength` à 100% de la largeur d'un kanji et `lengthAdjust="spacingAndGlyphs"`, pour tenir dans une case |
