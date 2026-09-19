@@ -8,7 +8,7 @@ Les caractères de position (勘所, kandokoro) représentent les positions sur 
 
 Répartition par corde :
 
-| Corde | Nom | Positions | Hauteurs (本調子, base do) |
+| Corde | Nom de corde | Positions | Hauteurs (本調子, base do) |
 |-------|-----|-----------|----------------------------|
 | Grave | 男絃 ou 男ジル (uojiru) | 合 乙 老 | do, ré, mi |
 | Moyenne | 中絃 ou 中ジル (nakajiru) | 四 上 中 尺 | fa, sol, la, si♭ |
