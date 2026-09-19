@@ -26,11 +26,11 @@ positions | syllabes
 
 ## Métadonnées reconnues
 
-- `@title` — titre de la chanson (rendu verticalement à droite de la grille en mode vertical)
-- `@tuning` — accordage (rendu verticalement sous le titre)
+- `@title` — titre de la chanson (rendu verticalement à droite de la grille en mode vertical). Défaut : vide (aucun titre affiché)
+- `@tuning` — accordage (rendu verticalement sous le titre). Défaut : `本調子`. Toute valeur est acceptée et affichée telle quelle (connues : `本調子`, `二揚げ`, `三下げ`) ; le mapping des accordages côté import Portama est fait par portama2kkml.py
 - `@genre` — genre musical (rendu dans l'en-tête). Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu. Si vide/non spécifié, non affiché.
-- `@author` — auteur de la chanson (rendu sous le genre). Défaut : `古典民謡` si inconnu. Si l'auteur est strictement égal au genre, seul l'auteur est affiché.
-- `@end_circle on|off` — ajoute un marqueur de fin de chanson dans la colonne marker : même géométrie que la flèche montante de boucle, mais avec un cercle creux (diamètre = base du triangle) au lieu d'un triangle. Positionné au bas de la dernière case remplie. Défaut : off. Note pour le futur support multi-pages : le cercle ne devra apparaître que sur la dernière page, pas en bas de chaque page.
+- `@author` — auteur de la chanson (rendu sous le genre). Défaut : vide (non affiché). Si l'auteur est strictement égal au genre, seul l'auteur est affiché.
+- `@end_circle on|off` — ajoute un marqueur de fin de chanson dans la colonne marker : même géométrie que la flèche montante de boucle, mais avec un cercle creux (diamètre = base du triangle) au lieu d'un triangle. Positionné au bas de la dernière case remplie. Défaut : on (`off` pour désactiver). En mode vertical, ne s'affiche que si une colonne marker existe (`@marker on` ou bloc `::vocal`). Note pour le futur support multi-pages : le cercle ne devra apparaître que sur la dernière page, pas en bas de chaque page.
 - `@lyrics_size small|medium|big` — taille de police des couplets : small = 50%, medium = 75%, big = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
 - `@ruby_size` — taille du ruby en pourcentage de la base (défaut : 50). Réservé pour usage futur.
 
@@ -59,7 +59,7 @@ Détails :
 - `@layout vertical|horizontal` — force le layout
 - `@font_style mincho|gothic|serif` — style de police japonais (défaut : serif, comportement historique). mincho = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), gothic = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.
 - `@shaku_circled on|off` — rend les 尺 en 尺 entourés d'un cercle (défaut : off). S'applique aux 尺 dans les noires ET dans les croches (note principale ou note à cheval). 尺♯ n'est jamais entouré. 下尺 est toujours entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est pas entouré : les 3 caractères sont rendus condensés.
-- `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : off, rendus comme 尺)
+- `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : on ; `off` les rend comme 尺)
 
 ## Blocs
 

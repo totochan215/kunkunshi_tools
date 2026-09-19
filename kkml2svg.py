@@ -18,9 +18,10 @@ Métadonnée @layout vertical|horizontal dans le .kkml, ou -l/--layout en CLI.
 Options supplémentaires en-tête KKML :
     @shaku_circled on   → rend les 尺 en 尺 entourés d'un cercle
     @shaku_sharp off    → masque les ♯ des 尺♯ (défaut: on, ♯ visibles)
-    @author Nom          → auteur (défaut: 古典民謡 si inconnu)
-    @end_circle on      → ajoute un marqueur de fin de chanson (cercle creux)
+    @author Nom          → auteur (défaut: vide)
+    @end_circle off      → désactive le marqueur de fin de chanson (cercle creux)
                            dans la colonne marker, au bas de la dernière case remplie
+                           (défaut: on)
     @lyrics_size small|medium|big → taille de police des couplets
                            (small=50%, medium=75%, big=100% de la taille des kanjis)
 
@@ -44,6 +45,9 @@ import argparse
 # noms de notes gongche (工尺譜), jamais attestés comme positions de sanshin.
 POSITION_CHARS = set("合乙老下四上中尺工五六七八九十")
 SPECIAL_CHARS = set("○〇▲Ⓡ□×◯・#")
+# Échelle du ruby par rapport à la taille de base (paramètre interne,
+# non exposé comme en-tête KKML : @ruby_size volontairement absent pour le moment)
+RUBY_SCALE = 0.5
 EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
 REST_TOKEN = "◯"
@@ -220,8 +224,8 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22)
     if layout is None:
         layout = song.layout
 
-    title = song.meta.get("title", "Sanshin")
-    tuning = song.meta.get("tuning", "")
+    title = song.meta.get("title", "")
+    tuning = song.meta.get("tuning", "本調子")
 
     # Regrouper les blocs en sections
     sections = []   # (section_title, content, kind, vocal_flat=None)
@@ -277,8 +281,8 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22)
     MARGIN_R = 16
     MARGIN_T = 16
     header_h = 70  # titre + accordage + métas
-    if layout == "vertical" and song.meta.get("title"):
-        header_h = 40  # titre rendu verticalement, en-tête réduit
+    if layout == "vertical" and (song.meta.get("title") or song.meta.get("tuning", "本調子")):
+        header_h = 40  # titre/accordage rendus verticalement, en-tête réduit
     # Le ruby du titre horizontal a besoin de ~13px au-dessus
     if layout != "vertical" and title and _has_ruby(_parse_ruby(title)):
         header_h = max(header_h, 80)
@@ -287,7 +291,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22)
     opts = {
         'shaku_circled': song.meta.get('shaku_circled', 'off') == 'on',
         'shaku_sharp': song.meta.get('shaku_sharp', 'on') == 'on',
-        'end_circle': song.meta.get('end_circle', 'off') == 'on',
+        'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', ''), FONT_STYLE_SERIF),
@@ -313,8 +317,8 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22)
 # --------------------------------------------------------------------------- #
 def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                      fs, ml, mr, mt, header_h, marker=False, opts=None):
-    title = song.meta.get("title", "Sanshin")
-    tuning = song.meta.get("tuning", "")
+    title = song.meta.get("title", "")
+    tuning = song.meta.get("tuning", "本調子")
 
     GAP_HEADER = 30       # saut après l'en-tête, avant la tablature
     VERSE_GAP = 16        # saut entre les couplets (ligne vide dans ::lyrics)
@@ -336,14 +340,15 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
     TITLE_SPACING = 30    # espacement vertical entre caractères du titre
     TUNING_SPACING = 22   # espacement vertical entre caractères de l'accordage
     title_ruby_w = _ruby_needs_extra_width(title, 26) if title else 0
-    title_offset = (TITLE_W + TITLE_GAP + title_ruby_w) if title else 0
+    # largeur de la colonne titre : présente dès que titre OU accordage affiché
+    title_offset = (TITLE_W + TITLE_GAP + title_ruby_w) if (title or tuning) else 0
     genre = song.meta.get("genre", "")
-    author = song.meta.get("author", "古典民謡")
+    author = song.meta.get("author", "")
     show_genre = genre and genre != author
     title_total_h = (len(title) * TITLE_SPACING +
                      len(tuning) * TUNING_SPACING +
                      (len(genre) if show_genre else 0) * TUNING_SPACING +
-                     len(author) * TUNING_SPACING + 20) if title else 0
+                     len(author) * TUNING_SPACING + 20) if (title or tuning) else 0
 
     # --- Paroles verticales (à gauche de la grille) --- #
     # Taille des couplets selon @lyrics_size : small=50%, medium=75%, big=100% de fs
@@ -443,8 +448,8 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             total_h += len(data) * 20 + 6
         prev_kind = kind
 
-    # s'assurer que la hauteur couvre le titre vertical
-    if title:
+    # s'assurer que la hauteur couvre le titre vertical (ou l'accordage seul)
+    if title or tuning:
         total_h = max(total_h, header_h + mt + GAP_HEADER + title_total_h)
 
     out = []
@@ -559,18 +564,20 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                     vi += 1
 
     # --- Titre vertical à droite de la grille --- #
-    if title:
+    if title or tuning:
         tx = total_w - mr - TITLE_W / 2
         ty = header_h + mt + GAP_HEADER
-        title_segments = _parse_ruby(title)
-        ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
-                                       TITLE_SPACING)
+        if title:
+            ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
+                                           TITLE_SPACING)
+        else:
+            ty_end = ty
         ty2 = ty_end
         for i, ch in enumerate(tuning):
             _vertical_char(out, ch, tx, ty2 + i * TUNING_SPACING + 15, 15, "#555")
         # Genre et auteur sous l'accordage
         genre = song.meta.get("genre", "")
-        author = song.meta.get("author", "古典民謡")
+        author = song.meta.get("author", "")
         show_genre = genre and genre != author
         ty3 = ty2 + len(tuning) * TUNING_SPACING + 15
         if show_genre:
@@ -798,8 +805,8 @@ def _draw_vertical_tab_lyrics(out, columns, rows_per_col, ml, y0,
 # --------------------------------------------------------------------------- #
 def _render_horizontal(song, sections, cols, cell_w, cell_h,
                        fs, ml, mr, mt, header_h, marker=False, opts=None):
-    title = song.meta.get("title", "Sanshin")
-    tuning = song.meta.get("tuning", "")
+    title = song.meta.get("title", "")
+    tuning = song.meta.get("tuning", "本調子")
 
     prepared = []
     for items in sections:
@@ -850,7 +857,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     if title and _has_ruby(_parse_ruby(title)):
         y_ruby = y - 26 * 0.55  # ruby au-dessus du titre
         _render_horizontal_text(out, title, ml, y, 26, "black")
-    else:
+    elif title:
         out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
                    f'font-size="26" fill="black">{escape(title)}</text>')
     if tuning:
@@ -860,12 +867,13 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     y += 14
     # Genre et auteur
     genre = song.meta.get("genre", "")
-    author = song.meta.get("author", "古典民謡")
+    author = song.meta.get("author", "")
     show_genre = genre and genre != author
     header_meta = []
     if show_genre:
         header_meta.append(genre)
-    header_meta.append(author)
+    if author:
+        header_meta.append(author)
     if header_meta:
         y += 14
         out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
@@ -1551,7 +1559,7 @@ def _ruby_needs_extra_width(text, fs):
     segments = _parse_ruby(text)
     if not _has_ruby(segments):
         return 0
-    ruby_fs = int(fs * 0.5)
+    ruby_fs = int(fs * RUBY_SCALE)
     return int(fs * 0.75 + ruby_fs * 0.5)
 
 
@@ -1561,7 +1569,7 @@ def _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family="serif"):
     y = position verticale de départ (baseline du 1er caractère)
     fs = taille de base, sp = espacement vertical entre caractères de base
     Retourne le y après le dernier segment."""
-    ruby_fs = int(fs * 0.5)
+    ruby_fs = int(fs * RUBY_SCALE)
     ruby_x = x + fs * 0.75  # ruby à droite, espacé de la base
     ruby_sp = sp * 0.55     # espacement ruby plus serré (car plus petit)
     # _vertical_char place y à la baseline ; le centre visuel est à y - fs*0.35.
@@ -1651,7 +1659,7 @@ def _render_horizontal_ruby(out, segments, x, y, fs, fill, family="serif"):
     x = position horizontale de départ
     y = position verticale du texte de base (baseline)
     Retourne le x après le dernier segment."""
-    ruby_fs = int(fs * 0.5)
+    ruby_fs = int(fs * RUBY_SCALE)
     ruby_y = y - fs * 0.55  # ruby au-dessus, contact cadre-à-cadre
     char_w = fs * 0.55       # largeur approximative d'un caractère CJK
     ruby_char_w = ruby_fs * 0.55
