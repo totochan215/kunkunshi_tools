@@ -6,13 +6,13 @@ Les caractères de position (勘所, kandokoro) représentent les positions sur 
 
 合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
 
-Répartition par corde (hauteurs absolues pour un accordage 本調子 avec hauteur de base accordée à do) :
+Répartition par corde :
 
 | Corde | Nom | Positions | Hauteurs (本調子, base do) |
 |-------|-----|-----------|----------------------------|
-| Grave | 男絃 (uojiru) | 合 乙 老 | do, ré, mi |
-| Moyenne | 中絃 (nakajiru) | 四 上 中 尺 | fa, sol, la, si♭ |
-| Aiguë | 女絃 (majiru) | 工 五 六 七 八 九 十 | do, ré, mi, fa, sol, la, si♭ |
+| Grave | 男絃 ou 男ジル (uojiru) | 合 乙 老 | do, ré, mi |
+| Moyenne | 中絃 ou 中ジル (nakajiru) | 四 上 中 尺 | fa, sol, la, si♭ |
+| Aiguë | 女絃 ou 女ジル (miijiru) | 工 五 六 七 八 九 十 | do, ré, mi, fa, sol, la, si♭ |
 
 Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-ton, quasi-équivalent du dièse ♯, combiné à un caractère de base. 下老 (シタロウ) = demi-ton au-dessus de 老 ; 下尺 = demi-ton au-dessus de 尺. Les sources traditionnelles (école 野村流) traitent 下老 et 下尺 comme des 勘所 à part entière, avec lectures et doigtés propres ; la pratique moderne écrit aussi 尺♯ pour 下尺 (d'où l'option `@shaku_sharp`). Terminologie retenue dans ce projet : « position de base » pour les 14 caractères ci-dessus, « préfixe » pour 下 (demi-ton), イ (octave supérieure) et ロ (même hauteur, autre corde).
 
@@ -106,9 +106,9 @@ Aucun composite 亻 attesté pour 老, 四, 中, 六, 七, 八, 九, 十.
 
 Statut KKML : non implémentés. À terme, ces caractères seront tolérés comme tokens d'entrée et normalisés vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.), mais jamais rendus tels quels.
 
-### Positions hautes + 下尺 (イ下尺, ロ下尺)
+### Cas des positions hautes + 下老 ou 下尺
 
-Le préfixe peut aussi s'appliquer à 下尺. Le token fait 3 caractères (イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé (décision du 16 sept. 2026) : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Hiyamikachibushi).
+Le préfixe peut aussi s'appliquer à 下老 et 下尺. Le token fait alors 3 caractères (ex. イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé (décision du 16 sept. 2026) : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Hiyamikachibushi).
 
 Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
