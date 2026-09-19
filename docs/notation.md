@@ -170,7 +170,7 @@ Rendu vertical : le caractère principal est aligné sur la note ; les caractèr
 ::
 
 ::vocal
-てぃん さ ぐ ぬ は な や ー
+てぃ ん さ ぐ ぬ は な や ー
 ::
 ```
 
