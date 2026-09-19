@@ -194,21 +194,21 @@ Chaque ligne dans un bloc `::vocal` correspond à la ligne de `::tab` de même i
 
 Le format d'un token encode son rythme :
 
-### Noire (note simple)
+### Une noire (A)
 - Format : un seul caractère (ex : `中`)
 - Rendu : caractère plein taille, parfaitement centré dans la case
 
-### Croche (A/B)
+### Deux croches (A/B)
 - Format : `合/工` (séparateur `/`)
 - Rendu : note principale `合` centrée en pleine taille (comme une noire) + note secondaire `工` plus petite (62% de la taille), positionnée sur le bord inférieur de la case (à cheval entre la case courante et la case du dessous)
 - La note principale est le premier temps, la note à cheval est le deuxième temps de la croche
 
-### Shuffle 早弾き (A:B)
+### Une croche pointée et une double croche (早弾き shuffle) (A:B)
 - Format : `合:工` (séparateur `:`)
 - Rendu : deux notes égales empilées verticalement, taille 72% de la noire
 - La note supérieure est au-dessus du centre, la note inférieure en dessous
 
-### Accord (notes simultanées)
+### Accord (notes simultanées) (A-B)
 - Format : `四-五` ou `合-工-尺` (séparateur `-`)
 - Rendu : caractères empilés verticalement, taille 72%, centrés sur l'axe vertical de la case
 - Maximum 3 notes (le sanshin n'a que 3 cordes)
@@ -228,7 +228,7 @@ Le format d'un token encode son rythme :
 
 Large mais fonctionnel. Le code traite ce cas dans une branche dédiée (3 caractères, `base_tok[1:] == "下尺"`).
 
-## Suffixes de technique (souhou)
+## Suffixes de technique (走法, souhou)
 
 Apposés après le caractère de position dans le token KKML. Peuvent se combiner (ex : `中s*` = jeu faible + hammer-on).
 
