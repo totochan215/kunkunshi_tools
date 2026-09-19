@@ -77,4 +77,17 @@ Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
   だんじゅかりゆし, 国頭ジントヨー, fixture de test vocal
 - `samples/portama-json/` — exports JSON Portama bruts (3 fichiers, dont かぎやで風節 avec allRubyData)
 - `samples/portama-pdf/` — PDF Portama sources correspondant aux échantillons
-- `samples/svg/` — rendus SVG de référence produits par kkml2svg
+- `samples/svg/` — rendus SVG de référence produits par kkml2svg (`python3 tests/run_tests.py --write-svg`)
+
+## Homologues et tests
+
+Des fichiers portant le même nom de base (sans suffixe) à travers `samples/kkml`,
+`samples/portama-json`, `samples/portama-pdf` et `samples/svg` sont des
+homologues : ils représentent la même chanson. Un suffixe de variante après
+`-` distingue les variantes (ex. `かぎやで風節-vocal.kkml`). Les segments ruby
+entre crochets sont ignorés dans l'appariement (`国頭[くんじゃん]ジントヨー.pdf`
+correspond à `国頭ジントヨー.kkml`).
+
+`python3 tests/run_tests.py` détecte les homologues et rend chaque `.kkml`
+(vertical + horizontal) : échec si kkml2svg sort non-zéro ou émet un
+AVERTISSEMENT. `--write-svg` écrit en plus les rendus dans `samples/svg/`.
