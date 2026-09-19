@@ -80,9 +80,9 @@ Séparateurs de token (à l'intérieur d'un token) :
 
 | Séparateur | Mode | Exemple |
 |------------|------|---------|
-| `/` | Croche (note principale + note à cheval) | `合/工` |
-| `:` | Shuffle 早弾き (deux notes égales empilées) | `合:工` |
-| `-` | Accord (notes simultanées, max 3) | `四-五` ou `合-工-尺` |
+| `/` | Deux croches sur un temps | `合/工` |
+| `:` | Une croche pointée et une double croche sur un temps (Shuffle 早弾き) | `合:工` |
+| `-` | Accord (notes simultanées, max 3) | `四-工` ou `合-四-工` |
 | (aucun) | Ornement (caractères empilés) ou position étendue | `合工尺`, `下老`, `イ尺` |
 
 Voir [notation musicale](notation.md) pour le détail des tokens, modes rythmiques, suffixes de technique, positions étendues, positions hautes (préfixes イ/ロ, dont イ下尺/ロ下尺), et options d'en-tête.
