@@ -11,7 +11,7 @@ Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
 ### portama2kkml.py
 
-Convertit un export JSON de Portama (portama.com/kunkun4) en KKML.
+Convertit un export JSON de [Portama](https://portama.com/) (page d'accueil ; [éditeur de kunkunshi](https://portama.com/editor)) en KKML.
 
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
