@@ -85,7 +85,18 @@ Composites 口偏 (série ロ — inventaire R. López García, email W3C public
 | 叭 | ロ八 | Non attesté (courant : 喇叭) |
 | 㕤 | ロ九 | Non attesté |
 
-Composites 亻 (série イ) : aucun composite dédié attesté en usage sanshin. 伍 (亻+五) existe comme caractère courant chinois mais n'est pas un signe de position ; les composites d'octave 仩/伬/仜/亿 relèvent du gongchepu cantonais, pas du kunkunshi.
+Composites 亻 (série イ) — aucun composite dédié attesté en usage sanshin ; les caractères suivants sont les signes d'octave haute du gongchepu cantonais, ou des caractères courants réutilisables graphiquement :
+
+| Caractère | Équivalent | Attestation d'usage |
+|-----------|------------|---------------------|
+| 仩 | イ上 | Gongchepu cantonais uniquement |
+| 伬 | イ尺 | Gongchepu cantonais uniquement |
+| 仜 | イ工 | Gongchepu cantonais uniquement |
+| 伍 | イ五 | Gongchepu cantonais ; caractère courant chinois (« compagnie », rang militaire), pas un signe de position sanshin |
+| 亿 | イ乙 | Gongchepu cantonais ; caractère courant (亿 = simplifié de 億, « cent millions ») |
+| 佮 | イ合 | Caractère courant cantonais (« ensemble »), pas attesté comme signe de position |
+
+Aucun composite 亻 attesté pour 老, 四, 中, 六, 七.
 
 Statut KKML : non implémentés. À terme, ces caractères devront être tolérés comme tokens d'entrée et normalisés vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.), jamais rendus tels quels.
 
