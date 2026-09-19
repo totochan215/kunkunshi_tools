@@ -1157,6 +1157,18 @@ def _note_svg(note, font_size, opts=None):
     return escape(note)
 
 
+_WARNED_TOKENS = set()
+
+
+def _warn_unknown_token(tok):
+    """Alerte stderr une seule fois par token non reconnu (anti-spam)."""
+    if tok not in _WARNED_TOKENS:
+        _WARNED_TOKENS.add(tok)
+        print(f"AVERTISSEMENT : token non reconnu {tok!r} "
+              f"(rendu dégradé : 3 premiers caractères condensés)",
+              file=sys.stderr)
+
+
 def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     """Affiche un token dans une cellule.
 
@@ -1164,7 +1176,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
       中        → noire (note seule, centrée, pleine taille)
       合/工     → croche (合 centrée + 工 à cheval sur le bord inférieur)
       合:工     → shuffle 早弾き (deux notes égales, empilées)
-      合工尺    → ornement (empilé verticalement)
+      合工尺    → token non reconnu : alerte stderr + rendu dégradé
+                  (3 premiers caractères max, condensés)
 
     Tokens spéciaux :
       -        → case vide
@@ -1310,8 +1323,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         return
 
     # Accords (jusqu'à 3 notes simultanées) : note-note[-note]
-    # Le séparateur - distingue les accords des ornements (sans séparateur).
-    # Rendu : caractères empilés verticalement, comme les ornements.
+    # Rendu : caractères empilés verticalement, taille 72%.
     if "-" in base_tok and len(base_tok) > 1:
         chord_notes = [n for n in base_tok.split("-") if n]
         if len(chord_notes) >= 2:
@@ -1399,15 +1411,17 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape(base_tok)}</text>')
     else:
-        # ornement : empilé verticalement
-        n = len(base_tok)
-        step = effective_fs * 0.82
-        start = cy - (n - 1) * step / 2
-        small = int(effective_fs * 0.72)
-        for j, c in enumerate(base_tok):
-            out.append(f'<text x="{cx}" y="{start + j*step + small/3}" '
-                       f'text-anchor="middle" font-family="serif" '
-                       f'font-size="{small}" fill="black">{escape(c)}</text>')
+        # Token non reconnu (ni position simple, ni étendue, ni séparateur).
+        # Repli dégradé assumé : premiers caractères (3 max) rendus condensés
+        # via textLength (patron イ中 à 120% pour 2 car., イ下尺 à 180% pour 3),
+        # et alerte stderr (une seule fois par token unique).
+        _warn_unknown_token(base_tok)
+        shown = base_tok[:3]
+        target_w = effective_fs * (1.2 if len(shown) == 2 else 1.8)
+        out.append(f'<text x="{cx - target_w/2}" y="{cy+7}" '
+                   f'font-family="serif" font-size="{effective_fs}" '
+                   f'fill="black" textLength="{target_w}" '
+                   f'lengthAdjust="spacingAndGlyphs">{escape(shown)}</text>')
 
     _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
 

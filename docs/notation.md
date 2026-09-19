@@ -168,15 +168,17 @@ Le format d'un token encode son rythme :
 - Rendu : deux notes égales empilées verticalement, taille 72% de la noire
 - La note supérieure est au-dessus du centre, la note inférieure en dessous
 
-### Ornement (multi-caractères)
-- Format : plusieurs caractères sans séparateur (ex : `合工尺`)
-- Rendu : caractères empilés verticalement, taille 72%, centrés sur l'axe vertical de la case
-
 ### Accord (notes simultanées)
 - Format : `四-五` ou `合-工-尺` (séparateur `-`)
-- Rendu : identique à l'ornement (empilé vertical à 72%), mais sémantiquement différent (notes simultanées)
+- Rendu : caractères empilés verticalement, taille 72%, centrés sur l'axe vertical de la case
 - Maximum 3 notes (le sanshin n'a que 3 cordes)
 - Cas d'usage : Hiyamikachibushi (accords Yon-Go)
+
+### Token non reconnu
+- Tout token sans séparateur qui n'est pas une position (simple ou étendue) est non reconnu
+- Rendu dégradé : 3 premiers caractères au maximum, condensés en largeur (patron `イ中` pour 2 caractères, `イ下尺` pour 3)
+- Alerte sur stderr à la première occurrence de chaque token unique
+- Historique : l'ancien « ornement » (empilement vertical de tous les caractères) est déprécié le 19 sept. 2026 — sans sémantique musicale ; les kanji empilés réels sont des croches (`A/B`), du hayabiki (`A:B`) ou des accords (`A-B`)
 
 ### Positions hautes 3-caractères
 
