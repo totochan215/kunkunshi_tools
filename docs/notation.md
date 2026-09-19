@@ -54,7 +54,7 @@ Tokens valides avec イ (1 octave au-dessus) :
 | イ六 | i-roku | 1 octave au-dessus de 六 |
 | イ七 | i-shichi | 1 octave au-dessus de 七 |
 
-イ六 et イ七 sont rares : attestés comme noms de 勘所 dans la nomenclature 野村流 (lus i-roku, i-shichi), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les emploient pas.
+イ六 et イ七 sont rares : attestés comme noms de 勘所 dans la nomenclature 野村流 (i-roku, i-shichi), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les emploient pas.
 
 3 caractères (préfixe + 下 + kanji) :
 
