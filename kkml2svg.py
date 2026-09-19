@@ -15,9 +15,12 @@ Layout horizontal : gauche à droite, haut en bas (style songbook).
 
 Métadonnée @layout vertical|horizontal dans le .kkml, ou -l/--layout en CLI.
 
-Options supplémentaires en-tête KKML :
-    @shaku_circled on   → rend les 尺 en 尺 entourés d'un cercle
-    @shaku_sharp off    → masque les ♯ des 尺♯ (défaut: on, ♯ visibles)
+Options supplémentaires en-tête KKML (défauts : @layout vertical,
+@marker on, @font_style mincho, @shaku_circled on, @shaku_sharp on) :
+    @marker off           → masque la colonne marker (défaut: on)
+    @font_style serif|gothic|mincho → style de police (défaut: mincho)
+    @shaku_circled off    → 尺 rendus sans cercle (défaut: on, entourés)
+    @shaku_sharp off      → masque les ♯ des 尺♯ (défaut: on, ♯ visibles)
     @author Nom          → auteur (défaut: vide)
     @end_circle off      → désactive le marqueur de fin de chanson (cercle creux)
                            dans la colonne marker, au bas de la dernière case remplie
@@ -304,15 +307,15 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22)
     # Le ruby du titre horizontal a besoin de ~13px au-dessus
     if layout != "vertical" and title and _has_ruby(_parse_ruby(title)):
         header_h = max(header_h, 80)
-    marker = song.meta.get("marker", "off") == "on"
+    marker = song.meta.get("marker", "on") == "on"
 
     opts = {
-        'shaku_circled': song.meta.get('shaku_circled', 'off') == 'on',
+        'shaku_circled': song.meta.get('shaku_circled', 'on') == 'on',
         'shaku_sharp': song.meta.get('shaku_sharp', 'on') == 'on',
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'font_family': FONT_STYLES.get(
-            song.meta.get('font_style', ''), FONT_STYLE_SERIF),
+            song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
 
     font_family = opts.get('font_family', 'serif')
