@@ -166,13 +166,11 @@ Rendu vertical : le caractère principal est aligné sur la note ; les caractèr
 
 ```kkml
 ::tab
-中 中 中 中
-工 工 工 工
+中 合-工 尺-中* 上 四 合-老* 四 工
 ::
 
 ::vocal
-てぃん さ ぐゎ ぬ
-は な や ー
+てぃん さ ぐ ぬ は な や ー
 ::
 ```
 
