@@ -85,7 +85,7 @@ Séparateurs de token (à l'intérieur d'un token) :
 | `/` | Deux croches | `合/工` |
 | `:` | Une croche pointée et une double croche (早弾き) | `合:工` |
 | `-` | Accord (notes simultanées, max 3) | `四-工` ou `合-四-工` |
-| (aucun) | Position étendue (`下老`, `イ尺`, `尺♯`…) | — |
+| (aucun) | Position étendue | `下老`, `イ尺`, `尺♯`… |
 
 Token non reconnu (ni position, ni séparateur, ex. `合工尺`) : le convertisseur émet une alerte sur stderr (une seule fois par token unique) et applique un rendu dégradé — les 3 premiers caractères au maximum, condensés en largeur comme `イ中` (2 caractères) ou `イ下尺` (3 caractères). L'ancien comportement « ornement » (empilement vertical de tous les caractères) est déprécié depuis le 19 sept. 2026 : il n'avait pas de sémantique musicale (les kanji empilés réels sont des croches `A/B`, du hayabiki `A:B` ou des accords `A-B`, chacun ayant son séparateur).
 
