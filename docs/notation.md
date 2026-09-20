@@ -33,7 +33,7 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 | Préfixe | Radical | Signification | Lecture |
 |---------|---------|---------------|---------|
 | イ | 人偏 (亻) | 1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
-| ロ | 口偏 (口) | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ) |
+| ロ | 口偏 (口) | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
 
 Tokens valides avec イ (1 octave au-dessus) :
 
@@ -68,10 +68,10 @@ Tokens valides avec ロ (même hauteur, autre corde) :
 
 | Token | Lecture | Position |
 |-------|---------|----------|
-| ロ上 | ro-jō | Même hauteur que 上 mais joué sur la corde grave (男絃, uojiru) |
-| ロ中 | ro-naka | Même hauteur que 中 mais joué sur la corde grave |
-| ロ尺 | ro-shaku | Même hauteur que 尺 mais joué sur la corde grave |
-| ロ五 | ro-go | Même hauteur que 五 mais joué sur la corde médiane (中絃, nakajiru) |
+| ロ上 | ro-jō ou kō-jō | Même hauteur que 上 mais joué sur la corde grave (男絃, uojiru) |
+| ロ中 | ro-naka ou kō-naka | Même hauteur que 中 mais joué sur la corde grave |
+| ロ尺 | ro-shaku ou kō-shaku | Même hauteur que 尺 mais joué sur la corde grave |
+| ロ五 | ro-go ou kō-go | Même hauteur que 五 mais joué sur la corde médiane (中絃, nakajiru) |
 
 Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Seules ces quatre formes sont attestées en usage. La lecture du préfixe varie selon l'école : ro- ou kō- (野村流, Nomura-ryu).
 
