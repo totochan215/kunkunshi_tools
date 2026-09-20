@@ -20,13 +20,14 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 | Token | Rendu | Note |
 |-------|-------|------|
-| 尺 | 尺 | Rendu standard |
 | 老 | 老 | Rendu standard |
+| 下老 | 下 + 老 condensés en demi-largeur | Un seul `<text>` avec `textLength` à 100% de la largeur d'un kanji et `lengthAdjust="spacingAndGlyphs"`, pour tenir dans une case |
+| 尺 | 尺 | Rendu standard |
 | 尺♯ | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle |
 | 下尺 | 尺 entouré d'un cercle | Toujours entouré, quelle que soit l'option @shaku_circled |
-| 下老 | 下 + 老 condensés en demi-largeur | Un seul `<text>` avec `textLength` à 100% de la largeur d'un kanji et `lengthAdjust="spacingAndGlyphs"`, pour tenir dans une case |
+| イ下尺 | Position haute イ + 下尺 | Les 3 caractères イ下尺 condensés, `textLength` à 180% de la largeur d'un kanji, sans cercle autour du 尺. Composant large mais nécessaire pour Hiyamikachibushi et autres |
+| 八 | 八 | Rendu standard |
 | 下八 | 下 + 八 condensés, même patron que 下老 | Sans cercle. Kandokoro propre (女絃 sous 八, octave de 中), pas un demi-ton |
-| イ下尺 | Position haute イ + 下尺 | Les 3 caractères イ下尺 condensés, `textLength` à 180% de la largeur d'un kanji, sans cercle autour du 尺 (décision du 16 sept. 2026). Composant large mais nécessaire pour Hiyamikachibushi et autres |
 
 ### Positions hautes (préfixes イ et ロ)
 
@@ -63,6 +64,8 @@ Tokens valides avec イ (1 octave au-dessus) :
 |-------|---------|----------|
 | イ下老 | i-shita-rō | 1 octave au-dessus de 下老 |
 | イ下尺 | i-shita-shaku | 1 octave au-dessus de 下尺 |
+
+L'existence de イ下八 n'est pas documentée.
 
 Tokens valides avec ロ (même hauteur, autre corde) :
 
