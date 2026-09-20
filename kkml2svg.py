@@ -44,7 +44,9 @@ import argparse
 # 14 positions de base (ordre croissant, 本調子) : 合乙老 (corde grave),
 # 四上中尺 (corde moyenne), 工五六七八九十 (corde aiguë).
 # 下 n'est PAS une position autonome : préfixe de demi-ton (下老, 下尺),
-# au même titre que イ/ロ (octave/corde). 三力土一二 retirés le 16 sept. 2026 :
+# au même titre que イ/ロ (octave/corde). Exception : 下八, kandokoro à part
+# entière (女絃, 無名指, octave de 中 — traité 野村流, 増訂琉球音樂樂典 p. 14),
+# rendu condensé comme 下老. 三力土一二 retirés le 16 sept. 2026 :
 # noms de notes gongche (工尺譜), jamais attestés comme positions de sanshin.
 POSITION_CHARS = set("合乙老下四上中尺工五六七八九十")
 SPECIAL_CHARS = set("○〇▲Ⓡ□×◯・#")
@@ -1225,6 +1227,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
       尺♯       → rendu en 尺♯ si @shaku_sharp on (défaut), sinon 尺 simple ; jamais entouré
       下尺      → 尺 entouré d'un cercle
       下老      → deux caractères condensés en demi-largeur
+      下八      → deux caractères condensés (patron 下老, sans cercle)
       イ下尺    → position haute イ + 下尺, 3 caractères condensés (large), sans cercle
 
     尺 entouré (@shaku_circled on) :
@@ -1306,6 +1309,20 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下老")}</text>')
+        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+                           effective_fs, text_w=effective_fs * 1.0)
+        return
+
+    # 下八 → kandokoro propre (女絃 sous 八, octave de 中) : deux caractères
+    # condensés via textLength, même patron que 下老, SANS cercle.
+    if base_tok == "下八":
+        target_w = effective_fs * 1.0
+        y_text = cy + 7
+        out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
+                   f'font-family="serif" font-size="{effective_fs}" '
+                   f'fill="black" textLength="{target_w}" '
+                   f'lengthAdjust="spacingAndGlyphs">'
+                   f'{escape("下八")}</text>')
         _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=effective_fs * 1.0)
         return
