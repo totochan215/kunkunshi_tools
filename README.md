@@ -54,7 +54,7 @@ Exemple :
     しゃ - - - - - - - や - - -
     ::
 
-(Extrait de "Kagiyadekajibushi")
+(Extrait de "Kajadifubushi")
 
 - En-têtes : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@end_circle`, `@lyrics_size`.
