@@ -15,15 +15,17 @@ Lectures usuelles :
 | 老 | ろう (rō) | |
 | 四 | よん (yon) | |
 | 上 | じょう (jō) | |
-| 中 | なか (naka) | ちゅう (chū) — on'yomi, certaines écoles, manuels récents, cercles amateurs ; きよむら三線会 écrit 中（チュウ） |
+| 中 | なか (naka) | ちゅう (chū) correspondant au on'yomi — certaines écoles, manuels récents, cercles amateurs ; きよむら三線会 écrit 中（チュウ） |
 | 尺 | しゃく (shaku) | |
 | 工 | こう (kō) | |
 | 五 | ご (go) | |
 | 六 | ろく (roku) | |
 | 七 | しち (shichi) | |
 | 八 | はち (hachi) | |
+| 九 | きゅう (kyū) | |
+| 十 | じゅう (jyū) | |
 
-Wikipédia JA signale des variations de lecture selon la région et l'école. Aucun impact KKML : les kanji sont identiques quelle que soit la lecture.
+Wikipédia JA signale des variations de lecture selon la région et l'école. Aucun impact en KKML : les kanji sont identiques quelle que soit la lecture.
 
 Répartition par corde :
 
