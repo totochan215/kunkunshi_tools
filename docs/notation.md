@@ -264,9 +264,9 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 | `v` | aki-utu (開音) | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
 | `<` | kachi-utu (掻音) | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s` | kuubanchi (小弾) | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
-| `=` | taachi (二弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
+| `=` | taachi (二弾) ou tsuiri-bichi (列弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
 
-Les marques diacritiques (`*`, `^`, `v`, `<`) sont rendues dans la même police (serif) et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
+Les marques diacritiques (`*`, `^`, `v`, `<`) sont rendues dans la même police et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
 
 - uchi-utu (`｀`) : `dx=0.22`, `dy=0.05` (en haut-droite)
 - kaki-utu (`┗` roté 180°, échelle 0.75) : `dx=0.28`, `dy=-0.22` (en haut-droite, barre supérieure au-dessus de la note)
