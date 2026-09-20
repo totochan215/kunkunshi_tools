@@ -10,20 +10,20 @@ Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) 
 
 | Position | Lecture | Hauteur (demi-tons) | Doigt | Variante |
 |----------|---------|---------------------|-------|----------|
-| 合 | あい (ai) | 0 | corde à vide | |
-| 乙 | おつ (otsu) | +2 | 人差指 (index) | |
-| 老 | ろう (rō) | +4 | 中指 (majeur) | |
-| 四 | よん (yon) | +5 | corde à vide | |
-| 上 | じょう (jō) | +7 | 人差指 (index) | |
-| 中 | なか (naka) | +9 | 中指 (majeur) | ちゅう (chū) correspondant au on'yomi — certaines écoles, manuels récents, cercles amateurs ; きよむら三線会 écrit 中（チュウ） |
-| 尺 | しゃく (shaku) | +10 | 小指 (auriculaire)* | |
-| 工 | こう (kō) | +12 | corde à vide | |
-| 五 | ご (go) | +14 | 人差指 (index) | |
-| 六 | ろく (roku) | +16 | 中指 (majeur) | |
-| 七 | しち (shichi) | +17 | 小指 (auriculaire)* | |
-| 八 | はち (hachi) | +19 | 小指 (auriculaire)* | |
-| 九 | きゅう (kyū) | +21 | 小指 (auriculaire)* | |
-| 十 | じゅう (jyū) | +22 | 小指 (auriculaire)* | |
+| 合 | あい (ai) | 0 | 開弦 corde à vide | |
+| 乙 | おつ (otsu) | +2 | ㊀ 人差指 (index) | |
+| 老 | ろう (rō) | +4 | ㊁ 中指 (majeur) | |
+| 四 | よん (yon) | +5 | 開弦 corde à vide | |
+| 上 | じょう (jō) | +7 | ㊀ 人差指 (index) | |
+| 中 | なか (naka) | +9 | ㊁ 中指 (majeur) | ちゅう (chū) correspondant au on'yomi — certaines écoles, manuels récents, cercles amateurs ; きよむら三線会 écrit 中（チュウ） |
+| 尺 | しゃく (shaku) | +10 | ㊃ 小指 (auriculaire)* | |
+| 工 | こう (kō) | +12 | 開弦 corde à vide | |
+| 五 | ご (go) | +14 | ㊀ 人差指 (index) | |
+| 六 | ろく (roku) | +16 | ㊁ 中指 (majeur) | |
+| 七 | しち (shichi) | +17 | ㊃ 小指 (auriculaire)* | |
+| 八 | はち (hachi) | +19 | ㊃ 小指 (auriculaire)* | |
+| 九 | きゅう (kyū) | +21 | ㊃ 小指 (auriculaire)* | |
+| 十 | じゅう (jyū) | +22 | ㊃ 小指 (auriculaire)* | |
 
 \* Doigtés des positions au-delà du majeur à confirmer : selon les écoles et la position de la main (上部/中部), 尺 et 七 peuvent se jouer index ou majeur (traité 野村流, position médiane : 老中六 index, 尺七 majeur, 八九 auriculaire). Les cordes à vide (合四工) et les doigtés index/majeur sont établis.
 
