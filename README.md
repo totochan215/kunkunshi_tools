@@ -71,11 +71,11 @@ Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
 - `docs/notation.md` — notation musicale (positions, modes rythmiques, souhou, vocal)
 - `docs/svg-layout.md` — layout SVG (dimensions, constantes, colonne marker)
 - `docs/converter-architecture.md` — architecture des deux scripts
-- `docs/portama-format.md` — format JSON Portama (PUA, allRubyData, géométrie mesurée des PDF)
+- `docs/portama-format.md` — description du format JSON Portama sur la base de sa rétro-ingénierie (PUA, allRubyData, géométrie mesurée des PDF)
 
-## Contenu
+## Echantillons de fichiers
 
-- `samples/kkml/` — fichiers KKML de référence : かぎやで風節 (avec et sans `::vocal`),
+- `samples/kkml/` — fichiers KKML de référence : かぎやで風節,
   だんじゅかりゆし, 国頭ジントヨー, fixture de test vocal
 - `samples/portama-json/` — exports JSON Portama bruts (3 fichiers, dont かぎやで風節 avec allRubyData)
 - `samples/portama-pdf/` — PDF Portama sources correspondant aux échantillons
