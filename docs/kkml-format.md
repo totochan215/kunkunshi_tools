@@ -29,7 +29,7 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée mais qu
 ## Métadonnées reconnues
 
 - `@title` — titre de la chanson (rendu verticalement à droite de la grille en mode vertical). Défaut : vide (aucun titre affiché)
-- `@tuning` — accordage (rendu verticalement sous le titre). Défaut : `本調子`. Toute valeur est acceptée et affichée telle quelle (connues : `本調子`, `二揚げ`, `三下げ`) ; le mapping des accordages côté import Portama est fait par portama2kkml.py
+- `@tuning` — accordage (rendu verticalement sous le titre). Défaut : `本調子`. Toute valeur est acceptée et affichée telle quelle (connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; le mapping des accordages côté import Portama est fait par portama2kkml.py
 - `@genre` — genre musical (rendu dans l'en-tête). Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu. Si vide/non spécifié, non affiché.
 - `@author` — auteur de la chanson (rendu sous le genre). Défaut : vide (non affiché). Si l'auteur est strictement égal au genre, seul l'auteur est affiché.
 - `@end_circle on|off` — ajoute un marqueur de fin de chanson dans la colonne marker : même géométrie que la flèche montante de boucle, mais avec un cercle creux (diamètre = base du triangle) au lieu d'un triangle. Positionné au bas de la dernière case remplie. Défaut : on (`off` pour désactiver). En mode vertical, ne s'affiche que si une colonne marker existe (`@marker on` ou bloc `::vocal`). Note pour le futur support multi-pages : le cercle ne devra apparaître que sur la dernière page, pas en bas de chaque page.
