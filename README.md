@@ -49,7 +49,9 @@ Exemple :
     ::
 
     ::vocal
-    - - - - - - - - きゆ - ぬ -
+   - - - - - - - - きゆ - ぬ -
+   - ふ - - - - く - - - ら -
+   しゃ - - - - - - - や - - -
     ::
 
 - En-têtes : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
