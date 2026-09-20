@@ -54,6 +54,8 @@ Exemple :
     しゃ - - - - - - - や - - -
     ::
 
+(Extrait de "Kagiyadekajibushi")
+
 - En-têtes : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@end_circle`, `@lyrics_size`.
 - `::tab` — une ligne par dan, 1 token = 1 case. `A/B` = croche, `A:B` = shuffle,
