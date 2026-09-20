@@ -14,7 +14,7 @@ Répartition par corde :
 | Médiane | 中絃 ou 中ジル (nakajiru) | 四 上 中 尺 | fa, sol, la, si♭ |
 | Aiguë | 女絃 ou 女ジル (miijiru) | 工 五 六 七 八 九 十 | do, ré, mi, fa, sol, la, si♭ |
 
-Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-ton, quasi-équivalent du dièse ♯, combiné à un caractère de base. 下老 (シタロウ) = demi-ton au-dessus de 老 ; 下尺 = demi-ton au-dessus de 尺. Les sources traditionnelles (école 野村流) traitent 下老 et 下尺 comme des 勘所 à part entière, avec lectures et doigtés propres ; la pratique moderne écrit aussi 尺♯ pour 下尺 (d'où l'option `@shaku_sharp`). Terminologie retenue dans ce projet : « position de base » pour les 14 caractères ci-dessus, « préfixe » pour 下 (demi-ton), イ (octave supérieure) et ロ (même hauteur, autre corde).
+Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-ton, quasi-équivalent du dièse ♯, combiné à un caractère de base. 下老 (シタロウ) = demi-ton au-dessus de 老 ; 下尺 = demi-ton au-dessus de 尺. Exception : 下八, qui n'est pas un demi-ton au-dessus de 八 mais un kandokoro propre — sur la 女絃 (corde aiguë), une case sous 八, doigté annulaire (無名指) selon la table 野村流 (source : 世禮國男, 増訂琉球音樂樂典, p. 14 : octave de 中, alias 仲). Les sources traditionnelles (école 野村流) traitent 下老 et 下尺 comme des 勘所 à part entière, avec lectures et doigtés propres ; la pratique moderne écrit aussi 尺♯ pour 下尺 (d'où l'option `@shaku_sharp`). Terminologie retenue dans ce projet : « position de base » pour les 14 caractères ci-dessus, « préfixe » pour 下 (demi-ton), イ (octave supérieure) et ロ (même hauteur, autre corde).
 
 ### Positions étendues
 
@@ -25,6 +25,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 | 尺♯ | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle |
 | 下尺 | 尺 entouré d'un cercle | Toujours entouré, quelle que soit l'option @shaku_circled |
 | 下老 | 下 + 老 condensés en demi-largeur | Un seul `<text>` avec `textLength` à 100% de la largeur d'un kanji et `lengthAdjust="spacingAndGlyphs"`, pour tenir dans une case |
+| 下八 | 下 + 八 condensés, même patron que 下老 | Sans cercle. Kandokoro propre (女絃 sous 八, octave de 中), pas un demi-ton |
 | イ下尺 | Position haute イ + 下尺 | Les 3 caractères イ下尺 condensés, `textLength` à 180% de la largeur d'un kanji, sans cercle autour du 尺 (décision du 16 sept. 2026). Composant large mais nécessaire pour Hiyamikachibushi et autres |
 
 ### Positions hautes (préfixes イ et ロ)
