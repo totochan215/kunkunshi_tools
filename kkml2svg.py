@@ -423,13 +423,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
         n_verses = 0
         for _, data in lyrics_sections:
             for verse in _split_verses(data):
-                # Compter les colonnes : | en fin de ligne force une nouvelle
-                # colonne ; sans |, tout le couplet tient dans une colonne.
-                n_col = 1
-                for line in verse:
-                    if line.endswith('|'):
-                        n_col += 1
-                n_verses += n_col
+                n_verses += len(_lyrics_columns(verse))
         lyrics_total_w = (n_verses * LYRICS_COL_W +
                           max(n_verses - 1, 0) * LYRICS_VERSE_GAP)
         # Calculer la largeur de ruby maximale dans les paroles (le ruby
@@ -538,32 +532,9 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
         vi = 0
         for _, data in lyrics_sections:
             for verse in _split_verses(data):
-                # Construire les colonnes : | en fin de ligne force une
-                # nouvelle colonne ; les autres lignes s'enchaînent dans
-                # la même colonne (saut de ligne = 1 espace).
-                columns = []
-                current_col = []
-                for line in verse:
-                    if line.endswith('||'):
-                        content = line[:-2]
-                        parts = [p for p in content.split('|') if p]
-                        current_col.extend(parts)
-                        if current_col:
-                            columns.append(current_col)
-                        columns.append([])  # colonne blanche
-                        current_col = []
-                    elif line.endswith('|'):
-                        content = line[:-1]
-                        parts = [p for p in content.split('|') if p]
-                        current_col.extend(parts)
-                        if current_col:
-                            columns.append(current_col)
-                        current_col = []
-                    else:
-                        parts = [p for p in line.split('|') if p]
-                        current_col.extend(parts)
-                if current_col:
-                    columns.append(current_col)
+                # Construire les colonnes via le helper partagé
+                # (même logique que l'estimation de largeur).
+                columns = _lyrics_columns(verse)
                 # Détecter le marqueur de couplet sur la 1re colonne
                 verse_indent = 0
                 if columns and columns[0]:
@@ -617,6 +588,38 @@ def _wrap_vertical(items, rows_per_col):
     columns = []
     for i in range(0, len(items), rows_per_col):
         columns.append(items[i : i + rows_per_col])
+    return columns
+
+
+def _lyrics_columns(verse):
+    """Construit les colonnes d'un couplet de paroles.
+    | en fin de ligne force une nouvelle colonne ; || force en plus
+    une colonne blanche après la colonne courante. Utilisé à la fois
+    pour l'estimation de largeur du canevas et pour le rendu —
+    source unique pour éviter toute dérive entre les deux."""
+    columns = []
+    current_col = []
+    for line in verse:
+        if line.endswith('||'):
+            content = line[:-2]
+            parts = [p for p in content.split('|') if p]
+            current_col.extend(parts)
+            if current_col:
+                columns.append(current_col)
+            columns.append([])  # colonne blanche
+            current_col = []
+        elif line.endswith('|'):
+            content = line[:-1]
+            parts = [p for p in content.split('|') if p]
+            current_col.extend(parts)
+            if current_col:
+                columns.append(current_col)
+            current_col = []
+        else:
+            parts = [p for p in line.split('|') if p]
+            current_col.extend(parts)
+    if current_col:
+        columns.append(current_col)
     return columns
 
 
