@@ -11,12 +11,12 @@ Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
 ### portama2kkml.py
 
-Convertit un export JSON de [Portama](https://portama.com/) (page d'accueil ; [éditeur de kunkunshi](https://portama.com/editor)) en KKML.
+Convertit un export JSON de [Portama](https://portama.com/) en KKML.
 
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
 
-Gère : mapping PUA→kanji, accordages (本調子, 二調子, 三調子), ornements
+Gère : mapping PUA→kanji, accordages (本調子, 二揚げ, 三下げ), ornements
 (uchi-utu), paires main/straddle (noire, croche `A/B`, shuffle `A:B`),
 repères de répétition `|:` `:|`, paroles (`::lyrics`).
 
