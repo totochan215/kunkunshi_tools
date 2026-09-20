@@ -6,7 +6,24 @@ Les caractères de position (勘所, kandokoro) représentent les positions sur 
 
 合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
 
-Lectures : les positions se lisent traditionnellement en kun'yomi okinawaïen — 合 (あい), 乙 (おつ), 老 (ろう), 四 (よん), 上 (じょう), 中 (なか), 尺 (しゃく), 工 (こう), 五 (ご), 六 (ろく), 七 (しち), 八 (はち). Variante attestée : 中 est parfois lu ちゅう (on'yomi) par certaines écoles et dans les manuels récents ou les cercles amateurs ; きよむら三線会 écrit 四（ヨン）・上（ジョウ）・中（チュウ）・尺（シャク）. Wikipédia JA signale des variations de lecture selon la région et l'école. Aucun impact KKML : les kanji sont identiques quelle que soit la lecture.
+Lectures usuelles :
+
+| Position | Lecture | Variante |
+|----------|---------|----------|
+| 合 | あい (ai) | |
+| 乙 | おつ (otsu) | |
+| 老 | ろう (rō) | |
+| 四 | よん (yon) | |
+| 上 | じょう (jō) | |
+| 中 | なか (naka) | ちゅう (chū) — on'yomi, certaines écoles, manuels récents, cercles amateurs ; きよむら三線会 écrit 中（チュウ） |
+| 尺 | しゃく (shaku) | |
+| 工 | こう (kō) | |
+| 五 | ご (go) | |
+| 六 | ろく (roku) | |
+| 七 | しち (shichi) | |
+| 八 | はち (hachi) | |
+
+Wikipédia JA signale des variations de lecture selon la région et l'école. Aucun impact KKML : les kanji sont identiques quelle que soit la lecture.
 
 Répartition par corde :
 
