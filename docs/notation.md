@@ -10,14 +10,14 @@ Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) 
 
 | Position | Lecture | Hauteur (demi-tons) | Doigt | Variante |
 |----------|---------|---------------------|-------|----------|
-| 合 | あい (ai) | 0 | 開弦 corde à vide | |
+| 合 | あい (ai) | 0 | 開弦 (corde à vide) | |
 | 乙 | おつ (otsu) | +2 | ㊀ 人差指 (index) | |
 | 老 | ろう (rō) | +4 | ㊁ 中指 (majeur) | |
-| 四 | よん (yon) | +5 | 開弦 corde à vide | |
+| 四 | よん (yon) | +5 | 開弦 (corde à vide) | |
 | 上 | じょう (jō) | +7 | ㊀ 人差指 (index) | |
 | 中 | なか (naka) | +9 | ㊁ 中指 (majeur) | Appelée ちゅう (chū) par certaines écoles et manuels récents |
 | 尺 | しゃく (shaku) | +10 | ㊃ 小指 (auriculaire)* | |
-| 工 | こう (kō) | +12 | 開弦 corde à vide | |
+| 工 | こう (kō) | +12 | 開弦 (corde à vide) | |
 | 五 | ご (go) | +14 | ㊀ 人差指 (index) | |
 | 六 | ろく (roku) | +16 | ㊁ 中指 (majeur) | |
 | 七 | しち (shichi) | +17 | ㊃ 小指 (auriculaire)* | |
