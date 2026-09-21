@@ -76,9 +76,10 @@ Détails :
     Les types de couplets peuvent être mélangés dans un même morceau.
 - `::tab-lyrics` — tablature avec syllabes alignées, format `positions | syllabes`
 - `::vocal` — bloc de syllabes vocales. Chaque ligne correspond à la ligne de `::tab` de même index (le bloc doit suivre immédiatement un bloc `::tab`). Les syllabes sont séparées par des espaces ; 1 token = 1 syllabe. Un token peut faire plusieurs caractères pour les consonnes complexes de l'uchi-na-guchi (ぐゎ, くゎ, てぃ, でぃ, とぅ, づぅ…) ou les voyelles longues (よー) — les caractères d'une même syllabe sont accolés sans espace. Rendu dans la colonne marker à droite de la grille : caractère principal aligné sur la note, caractères combinants empilés en dessous. Une ligne vocale plus courte que la ligne de tab est complétée par des vides (alignement préservé, ex. intro uta-mochi).
-- `::` — ferme le bloc courant
 - `::section label` — définit un titre de section (s'applique au bloc suivant)
 - `::ruby` — PROPOSITION non implémentée (15 sept. 2026) : variante compatible Portama de `::vocal`, tokens préfixés par leur position en unités Portama (`26.5:きゆ 32.5:ぬ`, 1 unité = 1/3 de case, 0 = haut de la grille du dan, demi-unités autorisées).
+
+`::` ferme le bloc courant.
 
 ## Tokens de tablature
 
