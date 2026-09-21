@@ -46,7 +46,7 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée, les li
 - `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : on ; `off` les rend comme 尺)
 - `@ruby_size` — taille du ruby en pourcentage de la base (défaut : 50). Réservé pour usage futur.
 
-## Ruby (guide phonétique)
+## Ruby
 
 Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture exacte des caractères, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car ces lectures divergent fréquemment du japonais standard. 
 
