@@ -37,7 +37,6 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée, les li
 - `@tuning` — accordage relatif. Défaut : `本調子`. Toute valeur est acceptée (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; lors de l'import d'un fichier Portama, le mapping des accordages est fait par portama2kkml.py
 - `@end_circle on|off` — indique si un marqueur spécifique de fin de chanson doit être affiché.
 - `@lyrics_size small|medium|big` — taille de police des couplets : small = 50%, medium = 75%, big = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
-
 - `@marker on|off` — active/désactive la colonne de marqueur à droite de chaque pile (défaut : on)
 - `@cols n` — nombre de lignes par colonne en mode vertical (défaut : 12)
 - `@layout vertical|horizontal` — force le layout (défaut : vertical)
@@ -68,7 +67,7 @@ Détails :
 
 - `::tab` — bloc de tablature, chaque ligne = tokens séparés par des espaces
 - `::lyrics` — bloc de paroles, lignes vides = séparateurs de couplets. Le caractère `|` en fin de ligne force un saut de colonne. `||` en fin de ligne force un saut de colonne et insère une colonne blanche avant le contenu suivant. Marqueurs de couplet reconnus en début de première ligne :
-  - `一、` `二、` etc. — numéro de couplet (numéraux CJK + 、). 
+  - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + 、). 
   - `⚫︎` ou `・` — marqueur générique.
   - `女　` ou `男　` — pour indiquer un couplet chanté par les femmes / les hommes (kanji + espace full-width). 
     Les types de couplets peuvent être mélangés dans un même morceau.
