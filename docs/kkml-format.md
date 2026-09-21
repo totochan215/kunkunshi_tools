@@ -29,12 +29,12 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée, les li
 ## Métadonnées reconnues
 
 - `@title` — titre de la chanson. Défaut : vide.
-- `@tuning` — accordage relatif. Défaut : `本調子`. Toute valeur est acceptée (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; lors de l'import d'un fichier Portama, le mapping des accordages est fait par portama2kkml.py
 - `@genre` — genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu.
 - `@author` — auteur du morceau. Défaut : vide.
 - `@composer` — compositeur
 - `@lyricist` — parolier
 - `@origin` — origine
+- `@tuning` — accordage relatif. Défaut : `本調子`. Toute valeur est acceptée (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; lors de l'import d'un fichier Portama, le mapping des accordages est fait par portama2kkml.py
 - `@end_circle on|off` — indique si un marqueur spécifique de fin de chanson doit être affiché.
 - `@lyrics_size small|medium|big` — taille de police des couplets : small = 50%, medium = 75%, big = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
 
