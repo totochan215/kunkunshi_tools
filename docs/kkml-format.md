@@ -37,13 +37,13 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée, les li
 - `@tuning` — accordage relatif. Défaut : `本調子`. Toute valeur est acceptée (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; lors de l'import d'un fichier Portama, le mapping des accordages est fait par portama2kkml.py
 - `@base_note` — note de base, correspondant à la hauteur de la position 合. Défaut : C3.
 - `@end_circle on|off` — indique si un marqueur spécifique de fin de chanson doit être affiché.
-- `@lyrics_size small|medium|big` — taille de police des couplets : small = 50%, medium = 75%, big = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
 - `@marker on|off` — active/désactive la colonne de marqueur à droite de chaque pile (défaut : on)
 - `@cols n` — nombre de lignes par colonne en mode vertical (défaut : 12)
 - `@layout vertical|horizontal` — force le layout (défaut : vertical)
 - `@font_style mincho|gothic|serif` — style de police japonais (défaut : mincho). mincho = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), gothic = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP), serif = police serif générique (comportement historique). La police réelle dépend du système qui affiche le SVG.
 - `@shaku_circled on|off` — rend les 尺 en 尺 entourés d'un cercle (défaut : on ; `off` les rend sans cercle). S'applique aux 尺 dans les noires ET dans les croches (note principale ou note à cheval). 尺♯ n'est jamais entouré. 下尺 est toujours entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est pas entouré : les 3 caractères sont rendus condensés.
 - `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : on ; `off` les rend comme 尺)
+- `@lyrics_size small|medium|big` — taille de police des couplets : small = 50%, medium = 75%, big = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
 - `@ruby_size` — taille du ruby en pourcentage de la base (défaut : 50). Réservé pour usage futur.
 
 Toutes les métadonnées sont optionnelles.
