@@ -39,7 +39,7 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée, les li
 - `@lyricist` — parolier (en-tête)
 - `@origin` — origine (en-tête)
 - `@marker on|off` — active/désactive la colonne de marqueur à droite de chaque pile (défaut : on)
-- `@cols N` — nombre de lignes par colonne en mode vertical (défaut : 12)
+- `@cols n` — nombre de lignes par colonne en mode vertical (défaut : 12)
 - `@layout vertical|horizontal` — force le layout (défaut : vertical)
 - `@font_style mincho|gothic|serif` — style de police japonais (défaut : mincho). mincho = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), gothic = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP), serif = police serif générique (comportement historique). La police réelle dépend du système qui affiche le SVG.
 - `@shaku_circled on|off` — rend les 尺 en 尺 entourés d'un cercle (défaut : on ; `off` les rend sans cercle). S'applique aux 尺 dans les noires ET dans les croches (note principale ou note à cheval). 尺♯ n'est jamais entouré. 下尺 est toujours entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est pas entouré : les 3 caractères sont rendus condensés.
