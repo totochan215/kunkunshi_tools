@@ -1,6 +1,6 @@
 # Format KKML (Kunkunshi Markup Language)
 
-Le KKML est un format texte simple pour encoder des tablatures de sanshin okinawaïen.
+Le KKML est un format texte simple pour encoder des tablatures de sanshin d'Okinawa.
 
 ## Structure générale
 
@@ -24,17 +24,19 @@ positions | syllabes
 ::section titre optionnel
 ```
 
-Tolérance (section implicite) : si aucune section `::` n'est déclarée mais que le fichier contient des lignes de tablature, celles-ci sont traitées comme une section `::tab` implicite — le convertisseur émet une simple information sur stderr (une seule fois par fichier). Objectif : quelques notes tapées dans un fichier texte vide restent représentables sans balisage. Les métadonnées (`@title`, `@cols`…) restent reconnues normalement ; dès qu'un marqueur `::` apparaît, le comportement implicite est désactivé et les lignes hors bloc sont ignorées (comportement historique).
+Tolérance (section implicite) : si aucune section `::` n'est déclarée, les lignes hors en-tête (métadonnées) et commentaire sont traitées comme une section `::tab` implicite. Ainsi, des positions saisies dans un fichier texte vide restent représentables sans balisage.
 
 ## Métadonnées reconnues
 
 - `@title` — titre de la chanson (rendu verticalement à droite de la grille en mode vertical). Défaut : vide (aucun titre affiché)
-- `@tuning` — accordage (rendu verticalement sous le titre). Défaut : `本調子`. Toute valeur est acceptée et affichée telle quelle (connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; le mapping des accordages côté import Portama est fait par portama2kkml.py
+- `@tuning` — accordage (rendu verticalement sous le titre). Défaut : `本調子`. Toute valeur est acceptée et affichée telle quelle (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; lors de l'import d'un fichier Portama, le mapping des accordages est fait par portama2kkml.py
 - `@genre` — genre musical (rendu dans l'en-tête). Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu. Si vide/non spécifié, non affiché.
 - `@author` — auteur de la chanson (rendu sous le genre). Défaut : vide (non affiché). Si l'auteur est strictement égal au genre, seul l'auteur est affiché.
 - `@end_circle on|off` — ajoute un marqueur de fin de chanson dans la colonne marker : même géométrie que la flèche montante de boucle, mais avec un cercle creux (diamètre = base du triangle) au lieu d'un triangle. Positionné au bas de la dernière case remplie. Défaut : on (`off` pour désactiver). En mode vertical, ne s'affiche que si une colonne marker existe (`@marker on` ou bloc `::vocal`). Note pour le futur support multi-pages : le cercle ne devra apparaître que sur la dernière page, pas en bas de chaque page.
 - `@lyrics_size small|medium|big` — taille de police des couplets : small = 50%, medium = 75%, big = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
 - `@ruby_size` — taille du ruby en pourcentage de la base (défaut : 50). Réservé pour usage futur.
+
+Les métadonnées non reconnues sont ignorées.
 
 ## Ruby (guide phonétique)
 
