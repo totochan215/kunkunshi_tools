@@ -24,7 +24,7 @@ positions | syllabes
 ::section titre optionnel
 ```
 
-Tolérance (section implicite) : si aucune section `::` n'est déclarée, les lignes hors en-tête (métadonnées) et commentaire sont traitées comme une section `::tab` implicite. Ainsi, des positions saisies dans un fichier texte vide restent représentables sans balisage.
+Tolérance (section implicite) : si aucune section `::` n'est déclarée, les lignes hors en-tête (métadonnées) et commentaire sont traitées comme une section `::tab` implicite.
 
 ## Métadonnées reconnues
 
