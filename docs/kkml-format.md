@@ -34,8 +34,8 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée, les li
 - `@composer` — compositeur
 - `@lyricist` — parolier
 - `@origin` — origine
-- `@tuning` — accordage relatif. Défaut : `本調子`. Toute valeur est acceptée (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; lors de l'import d'un fichier Portama, le mapping des accordages est fait par portama2kkml.py
-- `@base_note` — note de base, correspondant à la hauteur de la position 合. Défaut : C3.
+- `@tuning` — accordage relatif. Défaut : `本調子`. Toute valeur est acceptée (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`)
+- `@base_note` — note de base, correspondant à la hauteur de la position 合 (accordages 本調子, 二揚げ et 三下げ) ou 合 moins 2 demi-tons (accordages 一二揚げ et 一揚げ). Défaut : C3.
 - `@end_circle on|off` — indique si un marqueur spécifique de fin de chanson doit être affiché.
 - `@marker on|off` — active/désactive la colonne de marqueur à droite de chaque pile (défaut : on)
 - `@cols n` — nombre de lignes par colonne en mode vertical (défaut : 12)
