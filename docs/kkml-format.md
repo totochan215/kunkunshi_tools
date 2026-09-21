@@ -28,21 +28,29 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée, les li
 
 ## Métadonnées reconnues
 
-- `@title` — titre de la chanson (rendu verticalement à droite de la grille en mode vertical). Défaut : vide (aucun titre affiché)
-- `@tuning` — accordage (rendu verticalement sous le titre). Défaut : `本調子`. Toute valeur est acceptée et affichée telle quelle (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; lors de l'import d'un fichier Portama, le mapping des accordages est fait par portama2kkml.py
-- `@genre` — genre musical (rendu dans l'en-tête). Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu. Si vide/non spécifié, non affiché.
-- `@author` — auteur de la chanson (rendu sous le genre). Défaut : vide (non affiché). Si l'auteur est strictement égal au genre, seul l'auteur est affiché.
-- `@end_circle on|off` — ajoute un marqueur de fin de chanson dans la colonne marker : même géométrie que la flèche montante de boucle, mais avec un cercle creux (diamètre = base du triangle) au lieu d'un triangle. Positionné au bas de la dernière case remplie. Défaut : on (`off` pour désactiver). En mode vertical, ne s'affiche que si une colonne marker existe (`@marker on` ou bloc `::vocal`). Note pour le futur support multi-pages : le cercle ne devra apparaître que sur la dernière page, pas en bas de chaque page.
-- `@lyrics_size small|medium|big` — taille de police des couplets : small = 50%, medium = 75%, big = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
-- `@ruby_size` — taille du ruby en pourcentage de la base (défaut : 50). Réservé pour usage futur.
+- `@title` — titre de la chanson. Défaut : vide.
+- `@tuning` — accordage relatif. Défaut : `本調子`. Toute valeur est acceptée (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`) ; lors de l'import d'un fichier Portama, le mapping des accordages est fait par portama2kkml.py
+- `@genre` — genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu.
+- `@author` — auteur du morceau. Défaut : vide.
 
-Les métadonnées non reconnues sont ignorées.
+- `@end_circle on|off` — indique si un marqueur spécifique de fin de chanson doit être affiché.
+- `@lyrics_size small|medium|big` — taille de police des couplets : small = 50%, medium = 75%, big = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
+- `@composer` — compositeur (en-tête)
+- `@lyricist` — parolier (en-tête)
+- `@origin` — origine (en-tête)
+- `@marker on|off` — active/désactive la colonne de marqueur à droite de chaque pile (défaut : on)
+- `@cols N` — nombre de lignes par colonne en mode vertical (défaut : 12)
+- `@layout vertical|horizontal` — force le layout (défaut : vertical)
+- `@font_style mincho|gothic|serif` — style de police japonais (défaut : mincho). mincho = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), gothic = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP), serif = police serif générique (comportement historique). La police réelle dépend du système qui affiche le SVG.
+- `@shaku_circled on|off` — rend les 尺 en 尺 entourés d'un cercle (défaut : on ; `off` les rend sans cercle). S'applique aux 尺 dans les noires ET dans les croches (note principale ou note à cheval). 尺♯ n'est jamais entouré. 下尺 est toujours entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est pas entouré : les 3 caractères sont rendus condensés.
+- `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : on ; `off` les rend comme 尺)
+- `@ruby_size` — taille du ruby en pourcentage de la base (défaut : 50). Réservé pour usage futur.
 
 ## Ruby (guide phonétique)
 
-Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, au-dessus en écriture horizontale. Taille = 50% de la base, contact cadre-à-cadre (pas d'interstice). Le bloc ruby est centré sur le bloc base.
+Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture exacte des caractères, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car ces lectures divergent fréquemment du japonais standard. 
 
-Trois syntaxes :
+Trois syntaxes sont possibles, selon l'emploi, pour encoder les rubys en KKML :
 
 | Syntaxe | Type | Description | Exemple |
 |---------|------|-------------|---------|
@@ -54,16 +62,7 @@ Détails :
 - `《》` (U+300A / U+300B) = chevrons japonais doubles, délimitent l'annotation
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
 - En mono-ruby sans `｛｝`, seul le caractère immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
-- Le ruby s'applique au `@title` et aux blocs `::lyrics`. Pas applicable à `@tuning`, `@author`, `@genre`, ni aux blocs `::tab` / `::tab-lyrics`.
-- `@composer` — compositeur (en-tête)
-- `@lyricist` — parolier (en-tête)
-- `@origin` — origine (en-tête)
-- `@marker on|off` — active/désactive la colonne de marqueur à droite de chaque pile (défaut : on)
-- `@cols N` — nombre de lignes par colonne en mode vertical (défaut : 12)
-- `@layout vertical|horizontal` — force le layout (défaut : vertical)
-- `@font_style mincho|gothic|serif` — style de police japonais (défaut : mincho). mincho = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), gothic = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP), serif = police serif générique (comportement historique). La police réelle dépend du système qui affiche le SVG.
-- `@shaku_circled on|off` — rend les 尺 en 尺 entourés d'un cercle (défaut : on ; `off` les rend sans cercle). S'applique aux 尺 dans les noires ET dans les croches (note principale ou note à cheval). 尺♯ n'est jamais entouré. 下尺 est toujours entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est pas entouré : les 3 caractères sont rendus condensés.
-- `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : on ; `off` les rend comme 尺)
+- Le ruby s'applique aux métadonnées `@title` `@author`, `@genre` et aux blocs `::lyrics`. Il n'est pas applicable à `@tuning` ni aux blocs `::tab` / `::tab-lyrics`.
 
 ## Blocs
 
