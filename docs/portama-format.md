@@ -1,6 +1,6 @@
 # Format Portama JSON (portama.com/kunkun4)
 
-Portama est un éditeur de kunkunshi en ligne ([portama.com/kunkun4](https://portama.com/kunkun4/)) qui génère des tablatures de sanshin. Il exporte au format JSON et PDF. Le format JSON peut servir de source d'import pour le convertisseur KKML.
+Portama est un éditeur de kunkunshi en ligne ([portama.com/kunkun4](https://portama.com/kunkun4/)) qui génère des tablatures de sanshin. Il peut exporter le résultat au format JSON et PDF. Le format JSON peut servir de source d'import pour le convertisseur KKML.
 
 ## Structure du JSON
 
@@ -26,20 +26,27 @@ Portama est un éditeur de kunkunshi en ligne ([portama.com/kunkun4](https://por
 }
 ```
 
-## Champs principaux
+## Description des champs
 
 | Champ | Type | Description |
 |-------|------|-------------|
-| `score` | `Array<Array<Cell>>` | 2D : `[dan][cell]`. Chaque dan a 24 cellules (12 paires main+straddle). |
+| `version` | string | Numéro de version du JSON Portama |
 | `numDans` | int | Nombre de dans (段). |
 | `cellsPerDan` | int | Toujours 24 (12 notes × 2 cellules : main + straddle). |
+| `musicno` | int | Inconnu, probablement identifiant unique du morceau sur l'éditeur Kunkunshi Portama |
+| `score` | `Array<Array<Cell>>` | 2D : `[dan][cell]`. Chaque dan a 24 cellules (12 paires main+straddle). |
 | `title` | string | Titre de la chanson. |
 | `choshi` | string | Accordage : `"hon"` = 本調子. |
 | `chogen` | string | Génération/clé (4 ou 5 observé). Signification exacte inconnue. |
-| `speed` | string | Tempo (BPM ?). Ex : "68", "173", "181". |
+| `speed` | string | Tempo (BPM). Ex : "180". |
 | `rhythm` | string | Mode rythmique. "0" = ?, "100" = ?. |
 | `rhythmMode` | string | "0" ou "100". |
 | `orientation` | string | Toujours `"landscape"`. |
+| `allRubyData` | inconnu | inconnu. |
+| `allLyricsData` | inconnu | inconnu. |
+| `lyricsWritingMode` | string | inconnu. Ex : "vertical". |
+| `lyricsFontFamily` | string | inconnu. Ex : "mincho". |
+| `lyricsFontSize` | string | inconnu. Ex : "10pt". |
 
 ## Structure des cellules (`score[dan][cell]`)
 
