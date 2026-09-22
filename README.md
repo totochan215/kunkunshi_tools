@@ -63,12 +63,10 @@ Exemple :
 - Métadonnées : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@end_circle`, `@lyrics_size`.
 - Sections :
-    - `::tab` — une ligne par dan, 1 token = 1 case. `A/B` = croche, `A:B` = shuffle,
+    - `::tab` — tablature, une ligne par dan, 1 token = 1 case. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle,
       `|:` `:|` = répétitions, suffixes de technique `* ^ v < s =`.
-    - `::vocal` — alignement approximatif du chant, 1 token = 1 syllabe,
-      multi-caractères accolés (ぐゎ, てぃ, よー) possible, alignées note à note,
-      rendues dans la colonne marker.
-    - `::lyrics` — couplets en écriture horizontale, avec support du guide phonétique (ruby).
+    - `::vocal` — alignement approximatif du chant, 1 token = 1 case correspondante au cases de ::tab,
+    - `::lyrics` — couplets avec support du guide phonétique (ruby).
 
 Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
 
