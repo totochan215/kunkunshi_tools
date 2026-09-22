@@ -1,5 +1,11 @@
 # Notation musicale 工工四 (kunkunshi)
 
+## Le sanshin et la tablature 工工四
+
+Le sanshin (三線) est le luth à trois cordes d'Okinawa, dérivé du sanxian chinois importé au royaume de Ryūkyū aux XIVe-XVe siècles. Long manche sans frettes, caisse en peau de python (ou de chèvre), joué avec un petit plectre en corne de buffle (爪, tsumé). Instrument central de la musique classique ryukyuan (古典), du folklore (民謡) et de la danse, il est l'ancêtre du shamisen japonais, introduit à Osaka au XVIe siècle depuis le port de Sakai.
+
+Comme le manche est sans frettes, la musique ne se note pas en hauteurs absolues mais en positions de doigts : c'est le 工工四 (kunkunshi), tablature créée au XVIIIe siècle par 屋嘉比朝寄 (Yakabi Chōki), qui a adapté la notation chinoise 工尺譜 (gongchepu) en caractères kandokoro désignant chaque position. Chaque caractère indique où poser le doigt, pas quelle note sonnera — comme une tablature de guitare. Les trois cordes sont accordées différemment selon les 調子 (chōshi, accordages), la même tablature étant lue dans n'importe quel accordage. La transmission s'est longtemps faite oralement ; le kunkunshi imprimé, normalisé par l'école 野村流 au XIXe siècle, reste aujourd'hui le support standard de l'enseignement.
+
 ## Positions de base
 
 Les caractères de position (勘所, kandokoro) représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs, sont :
