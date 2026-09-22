@@ -68,7 +68,7 @@ Exemple :
     - `::vocal` — alignement approximatif du chant, 1 token = 1 syllabe,
       multi-caractères accolés (ぐゎ, てぃ, よー) possible, alignées note à note,
       rendues dans la colonne marker.
-    - `::lyrics` — couplets en écriture horizontale, ruby (guide phonétique) supporté.
+    - `::lyrics` — couplets en écriture horizontale, avec support du guide phonétique (ruby).
 
 Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
 
