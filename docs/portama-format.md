@@ -55,7 +55,7 @@ Chaque cellule est un objet avec :
 | Champ | Type | Description |
 |-------|------|-------------|
 | `note` | string | Caractère PUA Unicode (U+E000–U+E030) ou chaîne vide. |
-| `isSmall` | bool | `true` = note petite (straddle). Sur une note principale, indique un shuffle (deux notes égales). |
+| `isSmall` | bool | `true` = petite note (straddle), `false` = note standard. Sur une note principale, indique un shuffle (deux notes égales). |
 | `acc` | string | Altération : `"sharp"` = dièse (observé uniquement sur 尺 → 尺♯). |
 | `orn` | string | Ornement/souhou : `"u"` = uchi-utu. Autres valeurs non confirmées. |
 | `repeatStart` | bool | Début de répétition. |
