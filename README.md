@@ -60,14 +60,15 @@ Exemple :
 
 (Extrait de "Kajadifubushi")
 
-- En-têtes : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
+- Métadonnées : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@end_circle`, `@lyrics_size`.
-- `::tab` — une ligne par dan, 1 token = 1 case. `A/B` = croche, `A:B` = shuffle,
-  `|:` `:|` = répétitions, suffixes de technique `* ^ v < s =`.
-- `::vocal` — alignement approximatif du chant, 1 token = 1 syllabe,
-  multi-caractères accolés (ぐゎ, てぃ, よー) possible, alignées note à note,
-  rendues dans la colonne marker.
-- `::lyrics` — couplets en écriture horizontale, ruby (guide phonétique) supporté.
+- Sections :
+    - `::tab` — une ligne par dan, 1 token = 1 case. `A/B` = croche, `A:B` = shuffle,
+      `|:` `:|` = répétitions, suffixes de technique `* ^ v < s =`.
+    - `::vocal` — alignement approximatif du chant, 1 token = 1 syllabe,
+      multi-caractères accolés (ぐゎ, てぃ, よー) possible, alignées note à note,
+      rendues dans la colonne marker.
+    - `::lyrics` — couplets en écriture horizontale, ruby (guide phonétique) supporté.
 
 Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
 
