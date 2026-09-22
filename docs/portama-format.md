@@ -92,10 +92,6 @@ Confirmée par recoupement entre les fichiers JSON et les corrigés KKML manuels
 
 Structure : trois blocs séquentiels — E000–E002 (registre grave : 合 乙 老), E010–E013 (registre médian : 四 上 中 尺), E020–E025 (registre aigu : 工 五 六 七 八 九), E030 (silence). Les intervalles E003–E00F et E014–E01F sont inutilisés. L'ordre interne de chaque bloc suit l'ordre traditionnel du kunkunshi (grave → aigu). U+E024=八 et U+E025=九 sont confirmés par cohérence séquentielle avec l'utilisateur ; U+E025 n'a pas encore été observé dans un fichier Portama.
 
-Note : l'OCR du PDF 国頭ジントヨー a systématiquement confondu 工 (U+E020) avec 二. La correspondance U+E020 → 工 est confirmée par les deux autres fichiers.
-
-AVERTISSEMENT : le mapping PUA→kanji a été entièrement re-validé le 12 septembre 2026 à partir des corrigés manuels de だんじゅかりゆし ET 国頭ジントヨー. Le mapping précédent était FAUX à plusieurs positions. Le mapping ci-dessus est désormais confirmé pour 12 des 13 kanji (八/U+E024 reste inféré par séquence, 1 seule occurrence dans かぎやで風節, à valider visuellement).
-
 ## Ornements (souhou)
 
 Seul `"u"` (uchi-utu → suffixe `*` en KKML) est confirmé dans les fichiers analysés.
