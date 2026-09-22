@@ -72,11 +72,11 @@ Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
 
 ## Documentation
 
+- `docs/converter-architecture.md` — architecture des deux scripts
 - `docs/kkml-format.md` — syntaxe et règles du format KKML
 - `docs/notation.md` — notation musicale (positions, modes rythmiques, souhou, vocal)
-- `docs/svg-layout.md` — layout SVG (dimensions, constantes, colonne marker)
-- `docs/converter-architecture.md` — architecture des deux scripts
 - `docs/portama-format.md` — description du format JSON Portama sur la base de sa rétro-ingénierie (PUA, allRubyData, géométrie mesurée des PDF)
+- `docs/svg-layout.md` — layout SVG (dimensions, constantes, colonne marker)
 
 ## Echantillons de fichiers
 
