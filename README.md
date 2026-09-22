@@ -80,11 +80,10 @@ Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
 
 ## Echantillons de fichiers
 
-- `samples/kkml/` — fichiers KKML de référence : かぎやで風節,
-  だんじゅかりゆし, 国頭ジントヨー, fixture de test vocal
-- `samples/portama-json/` — exports JSON Portama bruts (3 fichiers, dont かぎやで風節 avec allRubyData)
-- `samples/portama-pdf/` — PDF Portama sources correspondant aux échantillons
-- `samples/svg/` — rendus SVG de référence produits par kkml2svg (`python3 tests/run_tests.py --write-svg`)
+- `samples/kkml/` — fichiers KKML de référence
+- `samples/portama-json/` — fichiers JSON Portama bruts
+- `samples/portama-pdf/` — fichiers Portama rendus au format PDF
+- `samples/svg/` — rendus SVG de référence produits par kkml2svg
 
 ## Homologues et tests
 
