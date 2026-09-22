@@ -42,8 +42,8 @@ Portama est un éditeur de kunkunshi en ligne ([portama.com/kunkun4](https://por
 | `rhythm` | string | Mode rythmique. "0" = ?, "100" = ?. |
 | `rhythmMode` | string | "0" ou "100". |
 | `orientation` | string | Toujours `"landscape"`. |
-| `allRubyData` | inconnu | inconnu. |
-| `allLyricsData` | inconnu | inconnu. |
+| `allRubyData` | inconnu | Voir section dédiée ci-dessous. |
+| `allLyricsData` | inconnu | Cadres de paroles avec `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Content = "歌詞を入力" si non renseigné. |
 | `lyricsWritingMode` | string | inconnu. Ex : "vertical". |
 | `lyricsFontFamily` | string | inconnu. Ex : "mincho". |
 | `lyricsFontSize` | string | inconnu. Ex : "10pt". |
@@ -109,11 +109,13 @@ Hypothèses non confirmées (à vérifier avec d'autres fichiers) :
 - `"c"` → kachi-utu → `<`
 - `"t"` → taachi → `=`
 
-## Colonne marker et données vocales (`allRubyData`) — étude des 15 sept. 2026
+## Encodage
+
+Le fichier JSON est en UTF-8.
+
+## Colonne marker et données vocales (`allRubyData`)
 
 `allRubyData` contient le texte vocal affiché dans la colonne marker (sous-colonne droite de chaque pile). Clé = numéro de page en string, valeur = tableau de lignes, 1 ligne par dan (19 lignes pour かぎやで風節 = 19 dans).
-
-Encodage : le fichier JSON est en UTF-8 propre (U+3000 et kana stockés directement). Le « double-encodage Latin-1 » conclu initialement était un artefact : le jq de cet environnement fait un explode par octets (octets UTF-8 renvoyés comme valeurs décimales), donc `bytes(explode).decode("utf-8")` reste la méthode d'extraction, mais ce n'est pas un encodage du fichier.
 
 Structure du positionnement (validée exactement contre le PDF rendu) :
 
