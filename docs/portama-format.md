@@ -194,6 +194,6 @@ Portama peut jouer l'audio des tablatures en interprétant chaque note PUA comme
 
 | Fichier | Dans | numDans | Notes spéciales |
 |---------|------|---------|-----------------|
-| かぎやで風節 | `/home/user/uploads/` | 19 | `orn:"u"` (7 occurrences), `acc:"sharp"` (fréquent), `repeatStart/End` |
-| 国頭[くんじゃん]ジントヨー | `/home/user/uploads/` | 9 | `repeatStart/End`, aucun ornement, aucune altération |
-| だんじゅかりゆし | `/home/user/uploads/` | 7 | `repeatStart/End`, aucun ornement, aucune altération |
+| かぎやで風節 | `./samples/` | 19 | `orn:"u"` (7 occurrences), `acc:"sharp"` (fréquent), `repeatStart/End` |
+| 国頭[くんじゃん]ジントヨー | `./samples/` | 9 | `repeatStart/End`, aucun ornement, aucune altération |
+| だんじゅかりゆし | `./samples/` | 7 | `repeatStart/End`, aucun ornement, aucune altération |
