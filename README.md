@@ -54,6 +54,10 @@ Exemple :
     しゃ - - - - - - - や - - -
     ::
 
+    ::lyrics
+    一、今日の誇らしゃや　何をにぎやなたてる　莟で居る花の　露行逢たごと
+    ::
+
 (Extrait de "Kajadifubushi")
 
 - En-têtes : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
