@@ -14,7 +14,7 @@ Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Por
 @cols 12
 
 ::tab
-<tokens séparés par des espaces>
+<tokens séparés par des espaces et organisés en lignes (dans)>
 ::
 
 ::lyrics
