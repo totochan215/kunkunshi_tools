@@ -1,6 +1,7 @@
 # Format KKML (Kunkunshi Markup Language)
 
-Le KKML est un format texte simple pour encoder des tablatures de sanshin d'Okinawa.
+Le KKML est un format texte simple pour encoder des tablatures de sanshin d'Okinawa. L'objectif est de proposer une alternative au format JSON de Portama, qui permette une approche visuelle : un musicien doit pouvoir exécuter le morceau en ayant le fichier KKML brut sous les yeux.
+Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Portama, par exemple des positions manquantes, etc.
 
 ## Structure générale
 
