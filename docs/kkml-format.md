@@ -56,8 +56,8 @@ Toutes les métadonnées sont optionnelles.
 
 - `::tab` — bloc de tablature, chaque ligne = tokens séparés par des espaces
 - `::lyrics` — bloc de paroles, lignes vides = séparateurs de couplets. Le caractère `|` en fin de ligne force un saut de colonne. `||` en fin de ligne force un saut de colonne et insère une colonne blanche avant le contenu suivant. Marqueurs de couplet reconnus en début de première ligne :
-  - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + 、). 
   - `⚫︎` `・` ou `、` — marqueur générique.
+  - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + 、). 
   - `女　` ou `男　` — pour spécifier un couplet chanté par les femmes `女　` ou les hommes `男　` (kanji + espace full-width). 
     Les types de couplets peuvent être mélangés dans un même morceau.
 - `::tab-lyrics` — paroles en phonétique alignées sur les temps de la tablature, format `positions | syllabes`. Souvent limité au premier couplet.
