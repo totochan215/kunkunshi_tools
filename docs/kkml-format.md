@@ -1,6 +1,6 @@
 # Format KKML (Kunkunshi Markup Language)
 
-Le KKML est un format texte simple pour encoder des tablatures Kunkunshi. L'objectif est de proposer une alternative au format JSON de Portama, qui réponde aux deux défis suivants :
+Le KKML est un format texte destiné à l'encodage des tablatures Kunkunshi. L'objectif est de proposer une alternative au format JSON de Portama, qui réponde aux deux défis suivants :
 - Il doit être possible de saisir facilement la tablature dans un simple fichier texte,
 - Un musicien doit pouvoir exécuter le morceau en ayant le fichier KKML brut sous les yeux.
 
