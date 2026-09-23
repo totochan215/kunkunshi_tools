@@ -58,7 +58,7 @@ Toutes les métadonnées sont optionnelles.
 - `::lyrics` — bloc de paroles, lignes vides = séparateurs de couplets. Le caractère `|` en fin de ligne force un saut de colonne. `||` en fin de ligne force un saut de colonne et insère une colonne blanche avant le contenu suivant. Marqueurs de couplet reconnus en début de première ligne :
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + 、). 
   - `⚫︎` `・` ou `、` — marqueur générique.
-  - `女　` ou `男　` — pour spécifier un couplet chanté par les femmes ou les hommes (kanji + espace full-width). 
+  - `女　` ou `男　` — pour spécifier un couplet chanté par les femmes `女` ou les hommes `男` (kanji + espace full-width). 
     Les types de couplets peuvent être mélangés dans un même morceau.
 - `::tab-lyrics` — paroles en phonétique alignées sur les temps de la tablature, format `positions | syllabes`. Souvent limité au premier couplet.
 - `::vocal` — bloc de syllabes vocales. Chaque ligne correspond à la ligne de `::tab` de même index (le bloc doit suivre immédiatement un bloc `::tab`). Les syllabes sont séparées par des espaces ; 1 token = 1 syllabe. Un token peut faire plusieurs caractères pour les consonnes complexes de l'uchi-na-guchi (ぐゎ, くゎ, てぃ, でぃ, とぅ, づぅ…) ou les voyelles longues (よー) — les caractères d'une même syllabe sont accolés sans espace. Rendu dans la colonne marker à droite de la grille : caractère principal aligné sur la note, caractères combinants empilés en dessous. Une ligne vocale plus courte que la ligne de tab est complétée par des vides (alignement préservé, ex. intro uta-mochi).
