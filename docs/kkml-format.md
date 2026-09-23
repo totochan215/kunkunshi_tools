@@ -56,7 +56,7 @@ Toutes les métadonnées sont optionnelles.
 
 Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture exacte des caractères, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car ces lectures divergent fréquemment du japonais standard. 
 
-Trois syntaxes sont possibles, selon l'emploi, pour encoder les rubys en KKML :
+Trois syntaxes sont possibles pour encoder les rubys en KKML :
 
 | Syntaxe | Type | Description | Exemple |
 |---------|------|-------------|---------|
