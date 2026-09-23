@@ -59,7 +59,7 @@ Trois syntaxes sont possibles, selon l'emploi, pour encoder les rubys en KKML :
 |---------|------|-------------|---------|
 | ` X《a》` | Mono-ruby | Le dernier caractère avant `《》` est la base | `安《あ》` → 安 + あ |
 | `｛XYZ｝《abc》` | Group-ruby | Le texte entre `｛｝` est la base groupée | `｛安里屋｝《あさとや》` → 安里屋 + あさとや |
-| `｛X《a》Y《b》｝` | Jukugo-ruby | Groupe avec annotations individuelles | `｛安《あ》里《さ》屋《や》｝` |
+| `｛X《a》Y《b》｝` | Jukugo-ruby | Groupe avec annotations individuelles | `｛安《あ》里《さと》屋《や》｝` → 安 + あ, 里 + さと, 屋 + や |
 
 Détails :
 - `《》` (U+300A / U+300B) = chevrons japonais doubles, délimitent l'annotation
