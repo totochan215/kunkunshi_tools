@@ -14,7 +14,7 @@ Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Por
 @cols 12
 
 ::tab
-<tokens séparés par des espaces. Un saut de ligne passe au dan suivant>
+<tokens séparés par des espaces>
 ::
 
 ::lyrics
@@ -22,7 +22,7 @@ Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Por
 ::
 
 ::tab-lyrics
-positions | syllabes
+<paroles en phonétique, positionnées sur le rythme>
 ::
 
 ::section titre optionnel
