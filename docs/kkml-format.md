@@ -37,7 +37,7 @@ Tolérance : si aucune section `::` n'est déclarée, les lignes hors métadonn�
 - `@origin` — origine
 - `@tuning` — accordage relatif. Défaut : `本調子`. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`.
 - `@base_note` — note de base, correspondant à la hauteur de la position 合 (cas des accordages 本調子, 二揚げ et 三下げ) ou 合 moins 2 demi-tons (cas des accordages 一二揚げ et 一揚げ). Défaut : `C3`.
-- `@layout vertical|horizontal` — force le layout (défaut : vertical)
+- `@layout vertical|horizontal` — indication de mise en forme lors du rendu (défaut : vertical)
 - `@cols n` — nombre de lignes par colonne en mode vertical (défaut : `12`)
 - `@marker on|off` — active/désactive la colonne de marqueur à droite de chaque pile (défaut : `on`)
 - `@end_circle on|off` — indique si un marqueur spécifique de fin de chanson doit être affiché.
