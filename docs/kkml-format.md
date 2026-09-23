@@ -35,7 +35,7 @@ Tolérance (section implicite) : si aucune section `::` n'est déclarée, les li
 - `@composer` — compositeur
 - `@lyricist` — parolier
 - `@origin` — origine
-- `@tuning` — accordage relatif. Défaut : `本調子`. Toute valeur est acceptée (valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`)
+- `@tuning` — accordage relatif. Défaut : `本調子`. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`.
 - `@base_note` — note de base, correspondant à la hauteur de la position 合 (accordages 本調子, 二揚げ et 三下げ) ou 合 moins 2 demi-tons (accordages 一二揚げ et 一揚げ). Défaut : `C3`.
 - `@layout vertical|horizontal` — force le layout (défaut : vertical)
 - `@cols n` — nombre de lignes par colonne en mode vertical (défaut : `12`)
