@@ -68,7 +68,7 @@ Détails :
 - `《》` (U+300A / U+300B) = chevrons japonais doubles, délimitent l'annotation
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
 - En mono-ruby sans `｛｝`, seul le caractère immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
-- Le ruby s'applique aux métadonnées `@title` `@author`, `@genre` et aux blocs `::lyrics`. Il n'est pas applicable à `@tuning` ni aux blocs `::tab` et `::tab-lyrics`.
+- Le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les blocs `::lyrics`. Il n'est pas utilisable pour les autres métadonnées et blocs. En particulier, `::tab` contient des caractères qui ne doivent pas être altérés,  et `::tab-lyrics` est par construction déjà écrit en phonétique.
 
 ## Blocs
 
