@@ -30,7 +30,7 @@ Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Por
 
 Tolérance : si aucune section `::` n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
-## Métadonnées reconnues
+## Métadonnées
 
 - `@title` — titre de la chanson. Défaut : vide.
 - `@genre` — genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu.
