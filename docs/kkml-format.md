@@ -34,9 +34,9 @@ Tolérance : si aucune section `::` n'est déclarée, les lignes hors métadonn�
 
 ## Métadonnées
 
-- `@title` — titre de la chanson. Défaut : vide.
+- `@title` — titre de la chanson
 - `@genre` — genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu.
-- `@author` — auteur du morceau. Défaut : vide.
+- `@author` — auteur du morceau
 - `@composer` — compositeur
 - `@lyricist` — parolier
 - `@origin` — origine
