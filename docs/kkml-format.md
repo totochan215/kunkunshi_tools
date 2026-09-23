@@ -84,7 +84,7 @@ Trois syntaxes sont possibles pour encoder les rubys en KKML :
 Détails :
 - `《》` (U+300A / U+300B) = chevrons japonais doubles, délimitent l'annotation
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
-- En mono-ruby sans `｛｝`, seul le caractère immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
+- En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
 - Le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les blocs `::lyrics`. Il n'est pas utilisable pour les autres métadonnées et blocs. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée,  et `::tab-lyrics` est par construction déjà écrit en phonétique.
 
 ## Tokens de tablature
