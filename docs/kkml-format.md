@@ -30,6 +30,8 @@ Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Por
 
 Tolérance : si aucune section `::` n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
+L'ordre des sections importe peu, toutefois il est logique de faire figurer tab:: en haut.
+
 ## Métadonnées
 
 - `@title` — titre de la chanson. Défaut : vide.
