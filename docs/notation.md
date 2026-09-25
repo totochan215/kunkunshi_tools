@@ -51,20 +51,20 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 | Token | Lecture | Rendu | Note |
 |-------|-------|---|------|
-| 下老   | Shita-Ro | 下 + 老 condensés en demi-largeur | Un seul `<text>` avec `textLength` à 100% de la largeur d'un kanji et `lengthAdjust="spacingAndGlyphs"`, pour tenir dans une case |
-| 尺♯   | Shaku-sharp | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle |
-| 下尺  | Shita-shaku | 尺 entouré d'un cercle | Toujours entouré, quelle que soit l'option @shaku_circled |
-| イ下尺 | i-Shita-shaku | Position haute イ + 下尺 | Les 3 caractères イ下尺 condensés, `textLength` à 180% de la largeur d'un kanji, sans cercle autour du 尺. Composant large mais nécessaire pour Hiyamikachibushi et autres |
-| 下八 | Shita-hachi |下 + 八 condensés, même patron que 下老 | Sans cercle. Kandokoro propre (女絃 sous 八, octave de 中), pas un demi-ton |
+| 下老   | shita-rō | 下 + 老 condensés en demi-largeur | Un seul `<text>` avec `textLength` à 100% de la largeur d'un kanji et `lengthAdjust="spacingAndGlyphs"`, pour tenir dans une case |
+| 尺♯   | shaku-sharp | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle |
+| 下尺  | shita-shaku | 尺 entouré d'un cercle | Toujours entouré, quelle que soit l'option @shaku_circled |
+| イ下尺 | i-shita-shaku | Position haute イ + 下尺 | Les 3 caractères イ下尺 condensés, `textLength` à 180% de la largeur d'un kanji, sans cercle autour du 尺. Composant large mais nécessaire pour Hiyamikachibushi et autres |
+| 下八 | shita-hachi |下 + 八 condensés, même patron que 下老 | Sans cercle. Kandokoro propre (女絃 sous 八, octave de 中), pas un demi-ton |
 
 ### Positions hautes (préfixes イ et ロ)
 
 Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe katakana est accolé directement au kanji de position (token à deux caractères).
 
-| Préfixe | Signification | Lecture |
-|---------|---------------|---------|
-| イ | 1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
-| ロ | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
+| Préfixe      | Lecture | Signification | Lecture |
+|--------------|---------|------|---------|
+| イ | i        |1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
+| ロ | ro ou kō | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
 
 Tokens valides avec イ (1 octave au-dessus) :
 
@@ -88,9 +88,9 @@ Tokens valides avec イ (1 octave au-dessus) :
 
 3 caractères (préfixe + 下 + kanji) :
 
-| Token | Lecture | Position |
-|-------|---------|----------|
-| イ下老 | i-shita-rō | 1 octave au-dessus de 下老 |
+| Token | Lecture       | Position                  |
+|-------|---------------|---------------------------|
+| イ下老 | i-shita-rō    | 1 octave au-dessus de 下老 |
 | イ下尺 | i-shita-shaku | 1 octave au-dessus de 下尺 |
 
 L'existence de イ下八 n'est pas documentée.
