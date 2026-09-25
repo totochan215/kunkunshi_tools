@@ -32,6 +32,20 @@ L'ordre des sections importe peu, toutefois il est logique de faire figurer tab:
 
 Tolérance : si aucune section `::` n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
+Tolérance de saisie (IME japonais, pleine chasse) — dans les blocs `::tab` et le côté positions de `::tab-lyrics`, les équivalents pleine chasse sont normalisés vers la forme canonique, avec une info sur stderr (une fois par variante) :
+
+| Saisie acceptée | Converti en | Usage |
+|---|---|---|
+| `／` | `/` | croches, accords |
+| `：` | `:` | shuffle |
+| `｜` | `\|` | marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
+| `＃` ou `#` | `♯` | altération (尺＃) |
+| `＋` | `+` | accords (variante `+`, non encore rendue comme accord — roadmap) |
+| `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
+| `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
+
+Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de tokens valides. La normalisation ne touche PAS les blocs `::vocal` et `::lyrics` (le ー y reste une voyelle longue).
+
 ## Métadonnées
 
 - `@title` — titre de la chanson
