@@ -65,6 +65,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 ## 4. Long terme
 
+- ⬜ Conversion KKML -> Portama JSON
 - ⬜ Pipeline de publication LaTeX : collaboration avec éditeurs et communauté large.
   Pas de LilyPond / portée standard.
 - ⬜ GUI : combler l'écart avec Portama (avantage GUI).
