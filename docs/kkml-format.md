@@ -6,6 +6,10 @@ Le KKML est un format texte destiné à l'encodage des tablatures Kunkunshi. L'o
 
 Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Portama : support des positions de base manquantes, des positions hautes, etc.
 
+## Format source
+
+KKML se base sur le format texte brut encodé en UTF-8.
+
 ## Structure générale
 
 ```
@@ -14,21 +18,21 @@ Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Por
 @cols 12
 
 ::tab
-<tokens séparés par des espaces>
-::
-
-::lyrics
-<paroles, lignes vides = séparateurs de couplets>
+<tablature sous forme de cases représentant des temps et séparés par des espaces ; au sein de chaque case, tokens représentant des notes, leurs altérations et leur techniques de jeu>
 ::
 
 ::tab-lyrics
-<paroles en phonétique, positionnées sur le rythme>
+<paroles en phonétique, positionnées approximativement sur le rythme>
+::
+
+::lyrics
+<paroles en texte libre, organisées par couplets>
 ::
 
 ::section titre optionnel
 ```
 
-L'ordre des sections importe peu, toutefois dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer tab:: en haut.
+L'ordre des sections n'est pas imposé, toutefois dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées.
 
 Tolérance : si aucune section `::` n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
@@ -90,7 +94,7 @@ Toutes les métadonnées sont optionnelles.
 
 ## Ruby
 
-Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture exacte des caractères, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car ces lectures divergent fréquemment du japonais standard. En japonais standard, cela reste utile pour les musiciens peu à l'aise avec la lecture des Kanji, ou dans le cas des Kanji rares. 
+Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture exacte des caractères, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car ces lectures divergent fréquemment du japonais standard, y compris dans certains cas les lectures de Kana (ex. の qui est lu ぬ). En japonais standard, cela reste utile pour les musiciens peu à l'aise avec la lecture des Kanji, ou dans le cas des Kanji rares. 
 
 Trois syntaxes sont possibles pour encoder les rubys en KKML :
 
@@ -106,16 +110,18 @@ Détails :
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
 - Le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les blocs `::lyrics`. Il n'est pas utilisable pour les autres métadonnées et blocs. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée,  et `::tab-lyrics` est par construction déjà écrit en phonétique.
 
-## Tokens de tablature
+## Cases de tablature
 
-Séparateurs de token (à l'intérieur d'un token) :
+Chaque case de tablature correspond à un temps. Les tablatures Kunkunshi ignorent la notion de mesure (3/4, 1/2 etc.)
 
-| Séparateur | Mode | Exemple |
-|------------|------|---------|
-| `/` | Deux croches | `合/工` |
-| `:` | Une croche pointée et une double croche (早弾き) | `合:工` |
-| `-` | Accord (notes simultanées, max 3) | `四-工` ou `合-四-工` |
-| (aucun) | Position étendue | `下老`, `イ尺`, `尺♯`… |
+Séparateurs de tokens (à l'intérieur d'une case) :
+
+| Séparateur | Mode                                    | Exemple              |
+|------------|-----------------------------------------|----------------------|
+| `/`        | Deux croches                            | `合/工`               |
+| `:`        | Une croche pointée et une double croche | `合:工`               |
+| `-`        | Accord (notes simultanées, max 3)       | `四-工` ou `合-四-工`  |
+| (aucun)    | Position étendue                        | `下老`, `イ尺`, `尺♯`… |
 
 Token non reconnu (ni position, ni séparateur, ex. `合工尺`) : le convertisseur émet une alerte sur stderr (une seule fois par token unique) et applique un rendu dégradé — les 3 premiers caractères au maximum, condensés en largeur comme `イ中` (2 caractères) ou `イ下尺` (3 caractères). L'ancien comportement « ornement » (empilement vertical de tous les caractères) est déprécié depuis le 19 sept. 2026 : il n'avait pas de sémantique musicale (les kanji empilés réels sont des croches `A/B`, du hayabiki `A:B` ou des accords `A-B`, chacun ayant son séparateur).
 
