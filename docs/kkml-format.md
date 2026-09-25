@@ -28,7 +28,7 @@ Par ailleurs, KKML tente de combler des manques inhérents au format JSON de Por
 ::section titre optionnel
 ```
 
-L'ordre des sections importe peu, toutefois il est logique de faire figurer tab:: en haut.
+L'ordre des sections importe peu, toutefois dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer tab:: en haut.
 
 Tolérance : si aucune section `::` n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
@@ -90,7 +90,7 @@ Toutes les métadonnées sont optionnelles.
 
 ## Ruby
 
-Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture exacte des caractères, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car ces lectures divergent fréquemment du japonais standard. 
+Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture exacte des caractères, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car ces lectures divergent fréquemment du japonais standard. En japonais standard, cela reste utile pour les musiciens peu à l'aise avec la lecture des Kanji, ou dans le cas des Kanji rares. 
 
 Trois syntaxes sont possibles pour encoder les rubys en KKML :
 
