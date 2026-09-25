@@ -4,7 +4,7 @@
 
 Le [sanshin (三線)](https://fr.wikipedia.org/wiki/Sanshin) est un luth à trois cordes originaire d'Okinawa, dérivé du sanxian chinois importé au royaume de Ryūkyū aux XIVe-XVe siècles. Il comprend un long manche sans frettes et une caisse en peau de python. Il est joué avec un plectre en corne de buffle (爪, tsumé). Instrument central de la musique classique Ryukyu (古典), du folklore (民謡) et de la danse, il est l'ancêtre du shamisen japonais, introduit à Osaka au XVIe siècle depuis le port de Sakai.
 
-Comme le manche est sans frettes, la musique ne se note pas en hauteurs absolues mais en positions de doigts : c'est le 工工四 (kunkunshi), système de tablatures créé au XVIIIe siècle par 屋嘉比朝寄 (Yakabi Chōki), qui a adapté la notation chinoise 工尺譜 (gongchepu) en caractères 勘所 (kandokoro) désignant chaque position. Chaque caractère indique où poser le doigt, et non pas quelle note sonnera — comme une tablature de guitare. Les trois cordes sont accordées différemment selon les 調子 (chōshi, accordages), la même tablature étant lue dans n'importe quel accordage. La transmission s'est longtemps faite oralement ; le kunkunshi imprimé, normalisé par l'école 野村流 au XIXe siècle, reste aujourd'hui le support standard de l'enseignement.
+Comme le manche est sans frettes, la musique ne se note pas en hauteurs absolues mais en positions de doigts : c'est le 工工四 (kunkunshi), système de tablatures créé au XVIIIe siècle par [屋嘉比朝寄 (Yakabi Chōki)](https://ja.wikipedia.org/wiki/屋嘉比朝寄), qui a adapté la notation chinoise [工尺譜 (gongchepu)](https://fr.wikipedia.org/wiki/Gongchepu) en caractères représentant des positions sur le manche du sanshin, ou 勘所 (kandokoro). Chaque caractère indique où poser le doigt, et non pas quelle note sonnera — comme une tablature de guitare. Les trois cordes sont accordées différemment selon les 調子 (chōshi, accordages), le système de notation s'appliquant à n'importe quel accordage. La transmission s'est longtemps faite oralement ; le kunkunshi imprimé, normalisé par l'école Nomura-ryū (野村流) au XIXe siècle, reste aujourd'hui le support standard de l'enseignement.
 
 ## Positions de base
 
@@ -16,20 +16,20 @@ Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) 
 
 | Position | Lecture | Hauteur (demi-tons) | Doigt | Variante |
 |----------|---------|---------------------|-------|----------|
-| 合 | あい (ai) | 0 | 開弦 (corde à vide) | |
-| 乙 | おつ (otsu) | +2 | ㊀ 人差指 (index) | |
-| 老 | ろう (rō) | +4 | ㊁ 中指 (majeur) | |
-| 四 | よん (yon) | +5 | 開弦 (corde à vide) | |
-| 上 | じょう (jō) | +7 | ㊀ 人差指 (index) | |
-| 中 | なか (naka) | +9 | ㊁ 中指 (majeur) | Appelée ちゅう (chū) par certaines écoles et manuels récents |
-| 尺 | しゃく (shaku) | +10 | ㊃ 小指 (auriculaire)* | |
-| 工 | こう (kō) | +12 | 開弦 (corde à vide) | |
-| 五 | ご (go) | +14 | ㊀ 人差指 (index) | |
-| 六 | ろく (roku) | +16 | ㊁ 中指 (majeur) | |
-| 七 | しち (shichi) | +17 | ㊃ 小指 (auriculaire)* | |
-| 八 | はち (hachi) | +19 | ㊃ 小指 (auriculaire)* | |
-| 九 | きゅう (kyū) | +21 | ㊃ 小指 (auriculaire)* | |
-| 十 | じゅう (jyū) | +22 | ㊃ 小指 (auriculaire)* | |
+| 合       | あい (ai) | 0 | 開弦 (corde à vide) | |
+| 乙       | おつ (otsu) | +2 | ㊀ 人差指 (index) | |
+| 老       | ろう (rō) | +4 | ㊁ 中指 (majeur) | |
+| 四       | よん (yon) | +5 | 開弦 (corde à vide) | |
+| 上       | じょう (jō) | +7 | ㊀ 人差指 (index) | |
+| 中       | なか (naka) | +9 | ㊁ 中指 (majeur) | Appelée ちゅう (chū) par certaines écoles et manuels récents |
+| 尺       | しゃく (shaku) | +10 | ㊃ 小指 (auriculaire)* | |
+| 工       | こう (kō) | +12 | 開弦 (corde à vide) | |
+| 五       | ご (go) | +14 | ㊀ 人差指 (index) | |
+| 六       | ろく (roku) | +16 | ㊁ 中指 (majeur) | |
+| 七       | しち (shichi) | +17 | ㊃ 小指 (auriculaire)* | |
+| 八       | はち (hachi) | +19 | ㊃ 小指 (auriculaire)* | |
+| 九       | きゅう (kyū) | +21 | ㊃ 小指 (auriculaire)* | |
+| 十       | じゅう (jyū) | +22 | ㊃ 小指 (auriculaire)* | |
 
 \* Doigtés des positions au-delà du majeur à confirmer : selon les écoles et la position de la main (上部/中部), 尺 et 七 peuvent se jouer index ou majeur (traité 野村流, position médiane : 老中六 index, 尺七 majeur, 八九 auriculaire). Les cordes à vide (合四工) et les doigtés index/majeur sont établis.
 
