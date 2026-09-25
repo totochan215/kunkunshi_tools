@@ -57,9 +57,9 @@ Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute fa�
 - `@tuning` — accordage relatif. Défaut : `本調子`. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`.
 - `@base_note` — note de base, correspondant à la hauteur de la position 合 (cas des accordages 本調子, 二揚げ et 三下げ) ou 合 moins 2 demi-tons (cas des accordages 一二揚げ et 一揚げ). Défaut : `C3`.
 - `@layout vertical|horizontal` — indication de mise en forme lors du rendu (défaut : vertical)
-- `@cols n` — nombre de blocs par dan (défaut : `12`)
-- `@marker on|off` — active/désactive les zones de marqueur (défaut : `on`)
-- `@end_circle on|off` — indique si un marqueur spécifique de fin de chanson doit être affiché.
+- `@cols n` — nombre de cellules par dan (défaut : `12`)
+- `@marker on|off` — active/désactive le marqueur (défaut : `on`)
+- `@end_circle on|off` — indique si un symbole spécifique de fin de chanson doit être affiché.
 - `@font_style mincho|gothic|serif` — style de police à utiliser pour le rendu (défaut : `mincho`). `mincho` = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), `gothic` = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP), serif = police serif générique (comportement historique). La police réelle dépend du système qui affiche le SVG.
 - `@shaku_circled on|off` — rend les 尺 entourés d'un cercle (défaut : `on` ; `off` les rend sans cercle). 尺♯ n'est jamais rendu entouré. 下尺 est toujours rendu entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est jamais rendu entouré.
 - `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : `on` ; `off` les rend comme 尺)
@@ -80,7 +80,7 @@ Toutes les métadonnées sont optionnelles.
   - `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + 、). 
   - `女　` ou `男　` — pour spécifier un couplet chanté par les femmes `女　` ou les hommes `男　` (kanji + espace full-width). 
-    Les types de couplets peuvent être mélangés dans un même morceau.
+    Plusieurs types de couplets peuvent être mélangés dans un même morceau.
 - `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature, format `positions | syllabes`. Souvent limité au premier couplet. Une ligne  plus courte que la ligne de tablature correspondante est complétée par des vides.
 - `::vocal` — bloc de syllabes vocales. Chaque ligne correspond à la ligne de `::tab` de même index (le bloc doit suivre immédiatement un bloc `::tab`). Les syllabes sont séparées par des espaces ; 1 token = 1 syllabe. Un token peut faire plusieurs caractères pour les consonnes complexes de l'uchi-na-guchi (ぐゎ, くゎ, てぃ, でぃ, とぅ, づぅ…) ou les voyelles longues (よー) — les caractères d'une même syllabe sont accolés sans espace. Rendu dans la colonne marker à droite de la grille : caractère principal aligné sur la note, caractères combinants empilés en dessous. Une ligne vocale plus courte que la ligne de tab est complétée par des vides (alignement préservé, ex. intro uta-mochi).
 - `::section label` — définit un titre de section (s'applique au bloc suivant)
