@@ -11,7 +11,7 @@ Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
 ### portama2kkml.py
 
-Convertit un export JSON de [Portama](https://portama.com/) en KKML.
+Convertit un fichier JSON de [Portama](https://portama.com/) en KKML.
 
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
@@ -22,9 +22,7 @@ repères de répétition `|:` `:|`, paroles (`::lyrics`).
 
 ### kkml2svg.py
 
-Convertit un fichier KKML en tablature SVG. Layout vertical traditionnel
-(cases lues de haut en bas, colonnes de droite à gauche) ou horizontal
-(style songbook).
+Rend un fichier KKML sous forme de tablature SVG, en appliquant des options de layouting.
 
     python3 kkml2svg.py chanson.kkml -o chanson.svg
     python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
