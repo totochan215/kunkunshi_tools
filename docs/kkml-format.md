@@ -65,6 +65,11 @@ Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute fa�
 - `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : `on` ; `off` les rend comme 尺)
 - `@lyrics_size small|medium|big` — taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
 - `@ruby_size` — taille du ruby en pourcentage de la base (défaut : `50`). Réservé pour usage futur.
+- `@musicno` — numéro de morceau (pour compatibilité Portama)
+- `@chogen` — accordage absolu (pour compatibilité Portama)
+- `@speed` — tempo (pour compatibilité Portama)
+- `@rythm` - rythme (pour compatibilité Portama)
+- `@rythm_mode` - mode_rythmique (pour compatibilité Portama)
 
 Toutes les métadonnées sont optionnelles.
 
