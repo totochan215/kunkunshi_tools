@@ -37,7 +37,7 @@ Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`.
 Format texte permettant de saisir et mettre en forme des tablatures 工工四 sous une forme intuitive.
 KKML pour Kunkunshi Markup Language.
 
-Exemple :
+- Exemple :
 
     @title かぎやで風節
     @tuning 本調子
