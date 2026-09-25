@@ -60,6 +60,37 @@ REST_VARIANTS = {"◯", "○", "〇", "O", "o", "0"}
 REPEAT_START = "|:"
 REPEAT_END = ":|"
 
+# Normalisation d'entrée pleine chasse (IME japonais) — blocs tab/tab-lyrics.
+# Objectif : un fichier tapé avec une méthode de saisie japonaise (pleine
+# chasse) reste valide. Les équivalents pleine chasse des séparateurs et
+# suffixes ASCII sont convertis vers la forme canonique au parsing.
+# NB : ー (chōonpu) n'est converti en - (case vide) QUE dans les blocs de
+# tablature — dans ::vocal / ::lyrics il reste une voyelle longue légitime.
+FULLWIDTH_MAP = {
+    '／': '/',    # croches, accords
+    '：': ':',    # shuffle
+    '｜': '|',    # marques de répétition, séparateur tab-lyrics
+    '＃': '♯',    # 尺＃ → 尺♯
+    '#':  '♯',
+    '＋': '+',    # accords (variante +)
+    '＊': '*',
+    '＾': '^',
+    '＜': '<',
+    '＝': '=',
+}
+
+# Variantes de saisie de la case vide : uniquement en token ISOLÉ.
+# ー/ｰ/－ collé à un kanji (ex. 中ー) reste un token non reconnu (le chōonpu
+# est une voyelle longue légitime ailleurs, on ne devine pas l'intention).
+EMPTY_INPUT_VARIANTS = {'ー', 'ｰ', '－'}
+
+
+def _normalize_tab_token(tok):
+    """Convertit les variantes pleine chasse d'un token de tablature vers
+    la forme canonique. Renvoie (token, a_été_modifié)."""
+    out = ''.join(FULLWIDTH_MAP.get(ch, ch) for ch in tok)
+    return out, out != tok
+
 # Suffixes de technique (souhou) — apposés après le caractère de position
 TECHNIQUE_SUFFIXES = {
     '*': {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
@@ -214,18 +245,37 @@ def parse_kkml(text):
         if current is not None:
             if current.kind == "tab":
                 toks = stripped.split()
-                # Normaliser les variantes de repos vers le token canonique ◯
+                # Espaces multiples / U+3000 : déjà tolérés par split().
+                # Normaliser les variantes pleine chasse (IME), puis les
+                # variantes de repos vers le token canonique ◯.
+                norm = []
+                for tk in toks:
+                    if tk in EMPTY_INPUT_VARIANTS:
+                        _info_input_variant(tk, EMPTY_TOKEN)
+                        norm.append(EMPTY_TOKEN)
+                        continue
+                    tk2, changed = _normalize_tab_token(tk)
+                    if changed:
+                        _info_input_variant(tk, tk2)
+                    norm.append(tk2)
                 current.lines.append(
-                    [REST_TOKEN if t in REST_VARIANTS else t for t in toks]
+                    [REST_TOKEN if tk in REST_VARIANTS else tk for tk in norm]
                 )
             elif current.kind == "lyrics":
                 current.lines.append(stripped)
             elif current.kind == "tab-lyrics":
-                if "|" in stripped:
-                    left, right = stripped.rsplit("|", 1)
+                # Le séparateur | accepte sa variante pleine chasse ｜ ;
+                # le côté positions est normalisé comme un bloc tab.
+                if "|" in stripped or "｜" in stripped:
+                    sep = "|" if "|" in stripped else "｜"
+                    left, right = stripped.rsplit(sep, 1)
+                    left = ''.join(FULLWIDTH_MAP.get(c, c) for c in left)
+                    if sep == "｜":
+                        _info_input_variant("｜", "|")
                     current.lines.append((left.split(), right.split()))
                 else:
-                    current.lines.append((stripped.split(), []))
+                    left = ''.join(FULLWIDTH_MAP.get(c, c) for c in stripped)
+                    current.lines.append((left.split(), []))
             elif current.kind == "vocal":
                 # Syllabes vocales : une ligne par ligne de tablature
                 # Chaque ligne contient des syllabes séparées par des espaces
@@ -1184,6 +1234,20 @@ def _note_svg(note, font_size, opts=None):
 
 
 _WARNED_TOKENS = set()
+
+
+def _info_input_variant(orig, canon):
+    """Info stderr (une seule fois par paire) : une variante de saisie
+    pleine chasse a été normalisée vers la forme canonique."""
+    key = (orig, canon)
+    if key not in _INFO_INPUT_SEEN:
+        _INFO_INPUT_SEEN.add(key)
+        print(f"kkml2svg: entrée '{orig}' normalisée en '{canon}' "
+              f"(variante de saisie acceptée)",
+              file=sys.stderr)
+
+
+_INFO_INPUT_SEEN = set()
 
 
 def _warn_unknown_token(tok):
