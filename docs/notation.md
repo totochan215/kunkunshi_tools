@@ -21,7 +21,7 @@ Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) 
 | 老       | ろう (rō) | +4 | ㊁ 中指 (majeur) | |
 | 四       | よん (yon) | +5 | 開弦 (corde à vide) | |
 | 上       | じょう (jō) | +7 | ㊀ 人差指 (index) | |
-| 中       | なか (naka) | +9 | ㊁ 中指 (majeur) | Appelée ちゅう (chū) par certaines écoles et manuels récents |
+| 中       | なか (naka) | +9 | ㊁ 中指 (majeur) | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
 | 尺       | しゃく (shaku) | +10 | ㊃ 小指 (auriculaire)* | |
 | 工       | こう (kō) | +12 | 開弦 (corde à vide) | |
 | 五       | ご (go) | +14 | ㊀ 人差指 (index) | |
