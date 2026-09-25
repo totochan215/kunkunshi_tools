@@ -99,10 +99,10 @@ Tokens valides avec ロ (même hauteur, autre corde) :
 
 | Token | Lecture | Position |
 |-------|---------|----------|
-| ロ上 | ro-jō ou kō-jō | Même hauteur que 上 mais joué sur la corde grave (男絃, uojiru) |
+| ロ上 | ro-jō ou kō-jō | Même hauteur que 上 mais joué sur la corde grave |
 | ロ中 | ro-naka ou kō-naka | Même hauteur que 中 mais joué sur la corde grave |
 | ロ尺 | ro-shaku ou kō-shaku | Même hauteur que 尺 mais joué sur la corde grave |
-| ロ五 | ro-go ou kō-go | Même hauteur que 五 mais joué sur la corde médiane (中絃, nakajiru) |
+| ロ五 | ro-go ou kō-go | Même hauteur que 五 mais joué sur la corde médiane |
 
 Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Seules ces quatre formes sont attestées en usage. La lecture du préfixe varie selon l'école : ro- ou kō- (野村流, Nomura-ryu).
 
