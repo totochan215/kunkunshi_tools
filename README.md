@@ -16,8 +16,8 @@ Convertit un export JSON de [Portama](https://portama.com/) en KKML.
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
 
-Gère : mapping PUA→kanji, accordages (本調子, 二揚げ, 三下げ etc.), ornements
-(打ち音, uchi-utu etc.), paires main/straddle (noire, croche `A/B`, shuffle `A:B`),
+Gère : mapping PUA → Kanji, accordages (本調子, 二揚げ, 三下げ etc.), ornements
+(uchi-utu, kaki-utu etc.), paires main/straddle (noire, deux croches `A/B`, shuffle `A:B`),
 repères de répétition `|:` `:|`, paroles (`::lyrics`).
 
 ### kkml2svg.py
