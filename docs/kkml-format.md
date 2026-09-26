@@ -51,6 +51,8 @@ Tolérance de saisie (IME japonais, pleine chasse) — dans les blocs `::tab` et
 | `（` `）` | `(` `)` | 声だし (préfixe `(kanji`) / 声切り (suffixe `kanji)`), voir notation.md |
 
 Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart, rendu ○) et `)|` (vocalRepEnd, rendu □) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
+
+Composition : le marqueur peut partager sa case avec du contenu. `|(XXX` = ○ décalé à gauche + XXX rendu normalement (décalé à droite) ; `XXX)|` = XXX + □ décalé à droite. Exemples : `|((◯` = début de boucle vocale + 声だし + repos (cas 安波節 : le chant commence pendant un silence du sanshin) ; `|(尺)` = ○ + 尺 + 声切り ; `◯)|` = fin de boucle posée sur un repos.
 | `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
 
 L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.

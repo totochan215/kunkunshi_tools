@@ -1432,6 +1432,24 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # ○/□ de répétition du chant (vocalRep Portama) : occupent la case
     # entière, taille note — distincts des petits ○/□ des suffixes ( )
     # et du repos ◯ (U+25EF, grand cercle centré).
+    # Composition : le marqueur de répétition du chant peut partager sa
+    # case avec du contenu. |(XXX = ○ de répétition + XXX rendu normalement
+    # (ex. |((◯ = début de boucle vocale + 声だし + repos, cas 安波節 ;
+    # |(尺) = ○ + 尺 + 声切り). Symétriquement XXX)| (ex. ◯)|, 尺)|).
+    if tok.startswith(VREPEAT_START) and len(tok) > len(VREPEAT_START):
+        out.append(f'<text x="{cx - cell_w * 0.28}" y="{cy+7}" text-anchor="middle" '
+                   f'font-family="serif" font-size="{int(fs*0.75)}" '
+                   f'fill="black">○</text>')
+        render_cell(out, tok[len(VREPEAT_START):], cx + cell_w * 0.14, cy,
+                    fs, cell_w, cell_h, opts)
+        return
+    if tok.endswith(VREPEAT_END) and len(tok) > len(VREPEAT_END):
+        render_cell(out, tok[:-len(VREPEAT_END)], cx - cell_w * 0.14, cy,
+                    fs, cell_w, cell_h, opts)
+        out.append(f'<text x="{cx + cell_w * 0.28}" y="{cy+7}" text-anchor="middle" '
+                   f'font-family="serif" font-size="{int(fs*0.75)}" '
+                   f'fill="black">□</text>')
+        return
     if tok == VREPEAT_START:
         out.append(f'<text x="{cx}" y="{cy+7}" text-anchor="middle" '
                    f'font-family="serif" font-size="{int(fs*0.75)}" '
