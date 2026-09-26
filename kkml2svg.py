@@ -77,6 +77,8 @@ FULLWIDTH_MAP = {
     '＾': '^',
     '＜': '<',
     '＝': '=',
+    '（': '(',    # 声だし
+    '）': ')',    # 声切り
 }
 
 # Variantes de saisie de la case vide : uniquement en token ISOLÉ.
@@ -103,6 +105,14 @@ TECHNIQUE_SUFFIXES = {
           'dx': 0.45, 'dy': 0.15},
     's': {'name': 'kuubanchi', 'type': 'small'},
     '=': {'name': 'taachi',    'type': 'line',   'pos': 'right'},
+    # 声だし/声切り (koe-dashi / koe-kiri) : bornes de chant ○/□ pour le
+    # chanteur (respirations). D'après 世禮 (増訂琉球音樂樂典 p. 9 et 26) :
+    # à l'intérieur de la case, côté droit — pas dans la colonne marker.
+    # Syntaxe mnémotechnique : ( = on commence à chanter, ) = on s'arrête.
+    '(': {'name': 'koe-dashi (声だし)', 'type': 'char', 'symbol': '○',
+          'pos': 'inside-right', 'dx': 0.30, 'dy': 0.35, 'scale': 0.55},
+    ')': {'name': 'koe-kiri (声切り)',   'type': 'char', 'symbol': '□',
+          'pos': 'inside-right', 'dx': 0.30, 'dy': 0.35, 'scale': 0.55},
 }
 # Positions hautes (préfixes イ / ロ)
 #   イ  = 人偏 (亻) — 1 octave au-dessus du kanji de droite
@@ -1167,6 +1177,15 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
             scale = tech.get('scale', 1.0)
             rotate = tech.get('rotate', 0)
             tech_fs = int(fs * 1.1 * scale)
+            if tech['pos'] == 'inside-right':
+                # ○/□ 声だし・声切り : petit glyphe DANS la case, côté
+                # droit, centré verticalement (区画中右方, traité 野村流).
+                out.append(f'<text x="{cx + cell_w * tech["dx"]}" '
+                           f'y="{cy + fs * tech["dy"]}" '
+                           f'text-anchor="middle" font-family="serif" '
+                           f'font-size="{int(fs * scale)}" '
+                           f'fill="black">{escape(sym)}</text>')
+                continue
             if text_w is not None:
                 # Positionnement par rapport au bord réel du texte.
                 # text-anchor est géré par le renderer SVG selon la police,
