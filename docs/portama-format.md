@@ -39,7 +39,7 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `cellsPerDan` | int | Nombre de cellules par dan (`24` ou `36`) |
 | `musicno` | int | Identifiant du morceau sur Portama (0 pour une création locale). |
 | `score` | `Array<Array<Cell>>` | 2D : `[dan][cell]`. Chaque dan a 24 cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
-| `title` | string | Titre de la chanson. |
+| `title` | string | Titre du morceau. |
 | `choshi` | string | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
 | `chogen` | string | demi-tons ajoutés à l'accordage nominal. Formule de main.js : `tuningOffset = chogen - 5`. Corpus : 十九の春=5 (base), てぃんさぐぬ花=4 (−1), 国頭ジントヨー=4, テスト節=7 (+2). Rendu dans le PDF comme label 本調子 fs14 (indépendant de chogen). |
 | `speed` | string | Tempo. Ex : "180". |
