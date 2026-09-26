@@ -7,7 +7,7 @@ En bref, un outil pour sanshin 🪕 sous python 🐍 ! 😂
 - Pipeline 1 : saisie dans l'éditeur Portama → JSON Portama → KKML → retouche manuelle en KKML → SVG
 - Pipeline 2 : saisie manuelle en KKML → SVG
 
-Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
+Réalisé en (grande) partie par intelligence artificielle (https://chat.mistral.ai/)
 
 ## Scripts
 
@@ -34,8 +34,7 @@ Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`.
 
 ## Le format KKML
 
-Format texte permettant de saisir et mettre en forme des tablatures 工工四 (kunkunshi) sous une forme simple et intuitive.
-KKML pour Kunkunshi Markup Language.
+Format texte permettant de saisir et mettre en forme des tablatures 工工四 (kunkunshi) sous une forme simple et intuitive. KKML pour Kunkunshi Markup Language. Et si ça marche pas, c'est 💩
 
 Exemple :
 
