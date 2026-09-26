@@ -66,8 +66,11 @@ Chaque cellule est un objet avec :
 | `vocalRepStart` | bool | Début de boucle vocale `|(...)`. |
 | `vocalRepEnd` | bool | Fin de boucle vocale. |
 | `vocalPosMarkers` | dict | `{top: null|\"vocalStart\"|\"vocalEnd\", mid: ..., bot: ...}` — placement de 声だし/声切り à un tiers de case. vocalStart rend ○ (U+25CB), vocalEnd rend □ (U+25A1), fs9 dans la colonne marker (+14,8 pt de la sous-colonne notes). Distinct de `vocalRepStart/End`. |
-| `note2`, `acc2`, `orn2` | — | Deuxième note/altération/ornement par case : présents dans le modèle de l'éditeur (main.js), non observés dans les fichiers du corpus. |
-| `isChiribichi`, `isOsaikudashi` | bool | Présents dans le modèle de l'éditeur (main.js), non observés dans le corpus. |
+| `note2`         | string | Deuxième note par case (rôle à préciser) |
+| `acc2`          | string | Deuxième altération par case (rôle à préciser) |
+| `orn2`          | string | Deuxième ornement par case (rôle à préciser) |
+| `isChiribichi`  | bool   | (rôle à préciser) | 
+| `isOsaikudashi` | bool   | (rôle à préciser) |
 
 ### Organisation des 24 cellules par dan
 
