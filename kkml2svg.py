@@ -156,6 +156,10 @@ FONT_STYLES = {
 # --------------------------------------------------------------------------- #
 # 2. Parseur KKML
 # --------------------------------------------------------------------------- #
+# Clés de métadonnées reconnues (pour la tolérance @cléValeur collée)
+META_KEYS = {"title", "tuning", "cols", "layout", "marker", "end_circle",
+             "lyrics_size", "genre", "author", "composer", "lyricist",
+             "origin", "shaku_circled", "shaku_sharp", "speed", "font_style"}
 class Song:
     def __init__(self):
         self.meta = {}
@@ -194,9 +198,22 @@ def parse_kkml(text):
             i += 1
             continue
 
+        # Métadonnées @clé valeur. L'espace séparateur est toléré absent :
+        # une clé connue collée à sa valeur (@title｛安波節｝…, saisie IME où
+        # l'espace pleine chasse est facile à omettre) est reconnue, avec
+        # une info stderr une seule fois par clé. Les clés inconnues
+        # suivent le comportement historique (@mot seul = clé, valeur vide
+        # après espaces éventuels).
         m = re.match(r"@(\S+)\s*(.*)", stripped)
+        key, val = (m.group(1), m.group(2).strip()) if m else (None, None)
+        if m and key not in META_KEYS and len(key) > 1:
+            for mk in META_KEYS:
+                if key.startswith(mk) and len(key) > len(mk):
+                    _info_input_variant("@" + key, "@" + mk + " " + key[len(mk):])
+                    val = key[len(mk):] + ((" " + val) if val else "")
+                    key = mk
+                    break
         if m and not stripped.startswith("::"):
-            key, val = m.group(1), m.group(2).strip()
             if key == "cols":
                 try:
                     song.cols = int(val)
