@@ -1,0 +1,570 @@
+{
+  "version": "2.2",
+  "musicno": 5418,
+  "userId": 5290,
+  "numDans": 8,
+  "cellsPerDan": 24,
+  "score": [
+    [
+      {
+        "note": "",
+        "repeatStart": true
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "repeatEnd": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "u",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "u",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "u",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "u",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      }
+    ]
+  ],
+  "allRubyData": {},
+  "price": 0,
+  "isPublished": 0,
+  "viewsize": 100,
+  "trackCount": 1,
+  "currentTrack": 1,
+  "title": "十九[じゅうく]の春[はる]",
+  "findname": "じゅうくのはる",
+  "speed": "100",
+  "chogen": "5",
+  "choshi": "hon",
+  "rhythm": "0",
+  "rhythmMode": "0",
+  "orientation": "landscape",
+  "allLyricsData": {
+    "1": [
+      {
+        "id": "frame-1780374796475",
+        "content": "歌詞を入力",
+        "x": 655.875,
+        "y": 20,
+        "width": 105.125,
+        "height": 267.5,
+        "fontSize": "10pt"
+      }
+    ]
+  },
+  "lyricsPageBreak": "auto",
+  "lyricsDisplayNumber": "yes",
+  "lyricsFontSize": "10pt",
+  "lyricsFontFamily": "mincho",
+  "lyricsWritingMode": "vertical",
+  "rubyPrintMode": "current",
+  "print_duration": "no"
+}
