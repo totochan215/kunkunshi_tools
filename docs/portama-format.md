@@ -76,21 +76,21 @@ Chaque cellule est un objet avec :
 
 Portama autorise deux réglages :
 
-- 12 paires de cellules (24 cellules) par dan : utilisation en layout au format paysage
-- 16 paires de cellules (32 cellules) par dan : utilisation en layout au format portrait
+- 12 paires de cellules (24 cellules) par dan : utilisation indiquée pour le layout au format paysage
+- 16 paires de cellules (32 cellules) par dan : utilisation indiquée pour le layout au format portrait
 
 Les cellules sont organisées comme sui :
 
 - Index pair (0, 2, 4, ...) = note principale
 - Index impair (1, 3, 5, ...) = note à cheval (straddle)
 
-| Main | Straddle | Mode KKML | Token |
-|------|----------|----------|-------|
-| note | vide | Noire | `A` |
-| note (isSmall=false) | note | Croche | `A/B` |
-| note (isSmall=true) | note | Shuffle 早弾き | `A:B` |
-| note (isSmall=true) | vide | Kuubanchi | `As` |
-| vide | vide | Case vide | `-` |
+| Main                 | Straddle | Equivalent KKML | Token |
+|----------------------|----------|-----------------|-------|
+| note                 | vide     | Noire           | `A`   |
+| note (isSmall=false) | note     | Croche          | `A/B` |
+| note (isSmall=true)  | note     | Shuffle 早弾き   | `A:B` |
+| note (isSmall=true)  | vide     | Kuubanchi       | `As`  |
+| vide                 | vide     | Case vide       | `-`   |
 
 ## Correspondance PUA → positions (carte complète)
 
