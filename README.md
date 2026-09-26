@@ -2,8 +2,10 @@
 
 Outils de génération de tablatures 工工四 (kunkunshi) pour le sanshin d'Okinawa.
 Python 3 autonome, aucune dépendance hors stdlib.
+En bref, un outil pour sanshin 🪕 sous python 🐍 ! 😂
 
-Pipeline : JSON Portama → KKML → SVG.
+- Pipeline 1 : saisie dans l'éditeur Portama → JSON Portama → KKML → retouche manuelle en KKML → SVG
+- Pipeline 2 : saisie manuelle en KKML → SVG
 
 Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
@@ -18,7 +20,7 @@ Convertit un fichier JSON de [Portama](https://portama.com/) en KKML.
 
 Gère : mapping PUA → Kanji, accordages (本調子, 二揚げ, 三下げ etc.), ornements
 (uchi-utu, kaki-utu etc.), paires main/straddle (noire, deux croches `A/B`, shuffle `A:B`),
-repères de répétition `|:` `:|`, paroles (`::lyrics`).
+repères de répétition `|:` `:|` `|(` `)|`, paroles (`::lyrics`).
 
 ### kkml2svg.py
 
