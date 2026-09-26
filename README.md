@@ -68,15 +68,15 @@ Exemple :
     - `::vocal` — alignement approximatif du chant, 1 token = 1 case correspondante au cases de ::tab,
     - `::lyrics` — couplets avec support du guide phonétique (ruby).
 
-Détail complet : [docs/kkml-format.md](docs/kkml-format.md) et [docs/notation.md](ocs/notation.md).
+Détail complet : [docs/kkml-format.md](docs/kkml-format.md) et [docs/notation.md](docs/notation.md).
 
 ## Documentation
 
-- `docs/converter-architecture.md` — architecture des deux scripts
-- `docs/kkml-format.md` — syntaxe et règles du format KKML
-- `docs/notation.md` — notation musicale (positions, modes rythmiques, souhou, vocal)
-- `docs/portama-format.md` — description du format JSON Portama sur la base de sa rétro-ingénierie (PUA, allRubyData, géométrie mesurée des PDF)
-- `docs/svg-layout.md` — layout SVG (dimensions, constantes, colonne marker)
+- [docs/converter-architecture.md](docs/converter-architecture.md) — architecture des deux scripts
+- [docs/kkml-format.md](docs/kkml-format.md) — syntaxe et règles du format KKML
+- [docs/notation.md](docs/notation.md) — notation musicale (positions, modes rythmiques, souhou, vocal)
+- [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama sur la base de sa rétro-ingénierie (PUA, allRubyData, géométrie mesurée des PDF)
+- [docs/svg-layout.md](docs/svg-layout.md) — layout SVG (dimensions, constantes, colonne marker)
 
 ## Echantillons de fichiers
 
