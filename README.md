@@ -61,12 +61,12 @@ Exemple :
 (Extrait de かぎやで風節 (Kajadifu bushi))
 
 - Métadonnées : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
-  `@shaku_circled`, `@shaku_sharp`, `@end_circle`, `@lyrics_size`.
+  `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
     - `::tab` — tablature, une ligne par dan, 1 token = 1 temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle (croche pointée + double croche),
       `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, suffixes de technique `* ^ v < s =`.
-    - `::vocal` — alignement approximatif du chant, 1 token = 1 case correspondante au cases de ::tab,
-    - `::lyrics` — couplets avec support du guide phonétique (ruby).
+    - `::vocal` — alignement approximatif du chant, une ligne par dan, 1 token = 1 case correspondante aux cases de ::tab,
+    - `::lyrics` — couplets avec support du guide phonétique (ruby) mais sans positionnement sur la musique.
 
 Détail complet : [docs/kkml-format.md](docs/kkml-format.md) et [docs/notation.md](docs/notation.md).
 
