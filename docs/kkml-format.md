@@ -50,7 +50,9 @@ Tolérance de saisie (IME japonais, pleine chasse) — dans les blocs `::tab` et
 | `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
 | `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
 
-Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de tokens valides. La normalisation ne touche PAS les blocs `::vocal` et `::lyrics` (le ー y reste une voyelle longue).
+Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de tokens valides. Dans les blocs `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Le reste de la normalisation ne touche PAS les blocs `::vocal` et `::lyrics` (le ー y reste une voyelle longue).
+
+Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
 
 ## Métadonnées
 
