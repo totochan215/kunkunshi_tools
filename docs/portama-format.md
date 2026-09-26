@@ -34,45 +34,45 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 
 | Champ | Type | Description |
 |-------|------|-------------|
-| `version` | string | Numéro de version du JSON Portama (2.2 observé). |
-| `numDans` | int | Nombre de dans (段) déclaré. |
-| `cellsPerDan` | int | Nombre de cellules par dan (`24` ou `36`) |
-| `musicno` | int | Identifiant du morceau sur Portama (0 pour une création locale). |
-| `score` | `Array<Array<Cell>>` | 2D : `[dan][cell]`. Chaque dan a 24 cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
-| `title` | string | Titre du morceau. |
-| `choshi` | string | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
-| `chogen` | string | demi-tons ajoutés à l'accordage nominal. Formule de main.js : `tuningOffset = chogen - 5`. Corpus : 十九の春=5 (base), てぃんさぐぬ花=4 (−1), 国頭ジントヨー=4, テスト節=7 (+2). Rendu dans le PDF comme label 本調子 fs14 (indépendant de chogen). |
-| `speed` | string | Tempo. Ex : "180". |
-| `rhythm` | string | Rythme. "0" = ?, "100" = ?. |
-| `rhythmMode` | string | Mode rythmique. "0" = ? ou "100" = ?. |
+| `version`     | string | Numéro de version du JSON Portama (2.2 observé). |
+| `numDans`     | int    | Nombre de dans (段) déclaré. |
+| `cellsPerDan` | int    | Nombre de cellules par dan (`24` ou `36`) |
+| `musicno`     | int    | Identifiant du morceau sur Portama (0 pour une création locale). |
+| `score`       | `Array<Array<Cell>>` | 2D : `[dan][cell]`. Contenu de la tablature en dans et cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
+| `title`       | string | Titre du morceau. |
+| `choshi`      | string | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
+| `chogen`      | string | demi-tons ajoutés à l'accordage nominal. Formule de main.js : `tuningOffset = chogen - 5`. Corpus : 十九の春=5 (base), てぃんさぐぬ花=4 (−1), 国頭ジントヨー=4, テスト節=7 (+2). Rendu dans le PDF comme label 本調子 fs14 (indépendant de chogen). |
+| `speed`       | string | Tempo. Ex : "180". |
+| `rhythm`      | string | Rythme. "0" = ?, "100" = ?. |
+| `rhythmMode`  | string | Mode rythmique. "0" = ? ou "100" = ?. |
 | `orientation` | string | `\"landscape\"` ou `\"portrait\"`. |
 | `allRubyData` | inconnu | Voir section dédiée ci-dessous. |
-| `allLyricsData` | inconnu | Cadres de paroles avec `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Content = \"歌詞を入力\" si non renseigné. |
-| `lyricsWritingMode` | string | inconnu. Ex : \"vertical\". |
-| `lyricsFontFamily` | string | inconnu. Ex : \"mincho\". |
-| `lyricsFontSize` | string | inconnu. Ex : \"10pt\". |
+| `allLyricsData`     | inconnu | Cadres de paroles avec `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Content = \"歌詞を入力\" si non renseigné. |
+| `lyricsWritingMode` | string  | inconnu. Ex : \"vertical\". |
+| `lyricsFontFamily`  | string  | inconnu. Ex : \"mincho\".   |
+| `lyricsFontSize`    | string  | inconnu. Ex : \"10pt\".     |
 
 ## Structure des cellules (`score[dan][cell]`)
 
 Chaque cellule est un objet avec :
 
-| Champ | Type | Description |
-|-------|------|-------------|
-| `note` | string | Caractère PUA Unicode (U+E000–U+E044) ou chaîne vide. |
-| `isSmall` | bool | `true` = petite note (straddle), `false` = note standard. Sur une note principale, indique un shuffle (deux notes égales). |
-| `acc` | string | Altération : `\"sharp\"` (♯) ou `\"flat\"` (♭). Rendu en fs14 à gauche de la note (dx −2,84 pt) ; fs10/dx −4,84 sur case isSmall. |
-| `orn` | string | Ornement/souhou : `\"k\"` (kaki-utu), `\"u\"` (uchi-utu), `\"nu\"` (nuki-utu 抜音). Seules ces trois valeurs existent. k et u s'excluent mutuellement dans l'éditeur. Portama ignore silencieusement `orn` sur une case vide. Rendu en fs14 à l'épaule droite (dx +6,16, dy +4,03) ; fs10/dx +8,07 sur isSmall. |
-| `yubii` | int | 指位記号 (doigté de main gauche) : 1 = 人差指, 2 = 中指, 3 = 無名指, 4 = 小指. Rendu fs12,5 dans une colonne à gauche de la note (dx −15,46 pt). |
-| `repeatStart` | bool | Début de répétition. |
-| `repeatEnd` | bool | Fin de répétition. |
-| `vocalRepStart` | bool | Début de boucle vocale `|(...)`. |
-| `vocalRepEnd` | bool | Fin de boucle vocale. |
-| `vocalPosMarkers` | dict | `{top: null|\"vocalStart\"|\"vocalEnd\", mid: ..., bot: ...}` — placement de 声だし/声切り à un tiers de case. vocalStart rend ○ (U+25CB), vocalEnd rend □ (U+25A1), fs9 dans la colonne marker (+14,8 pt de la sous-colonne notes). Distinct de `vocalRepStart/End`.                 |
-| `note2`         | string | Deuxième note par case (rôle à préciser)       |
-| `acc2`          | string | Deuxième altération par case (rôle à préciser) |
-| `orn2`          | string | Deuxième ornement par case (rôle à préciser)   |
-| `isChiribichi`  | bool   | Cas où un チリ弾き est joué sur ce temps         | 
-| `isOsaikudashi` | bool   | Cas où un osaikudachi est joué sur ce temps    |
+| Champ             | Type   | Description |
+|-------------------|--------|-------------|
+| `note`            | string | Caractère PUA Unicode (U+E000–U+E044) ou chaîne vide. |
+| `isSmall`         | bool   | `true` = petite note (straddle), `false` = note standard. Sur une note principale, indique un shuffle (deux notes égales).                                       |
+| `acc`             | string | Altération : `\"sharp\"` (♯) ou `\"flat\"` (♭). Rendu en fs14 à gauche de la note (dx −2,84 pt) ; fs10/dx −4,84 sur case isSmall.                               |
+| `orn`             | string | Ornement/souhou : `\"k\"` (kaki-utu), `\"u\"` (uchi-utu), `\"nu\"` (nuki-utu 抜音). Seules ces trois valeurs existent. k et u s'excluent mutuellement dans l'éditeur. Portama ignore silencieusement `orn` sur une case vide. Rendu en fs14 à l'épaule droite (dx +6,16, dy +4,03) ; fs10/dx +8,07 sur isSmall. |
+| `yubii`           | int    | 指位記号 (doigté de main gauche) : 1 = 人差指, 2 = 中指, 3 = 無名指, 4 = 小指. Rendu fs12,5 dans une colonne à gauche de la note (dx −15,46 pt).                   |
+| `repeatStart`     | bool   | Début de répétition.                           |
+| `repeatEnd`       | bool   | Fin de répétition.                             |
+| `vocalRepStart`   | bool   | Début de boucle vocale `|(...)`.               |
+| `vocalRepEnd`     | bool   | Fin de boucle vocale.                          |
+| `vocalPosMarkers` | dict   | `{top: null|\"vocalStart\"|\"vocalEnd\", mid: ..., bot: ...}` — placement de 声だし/声切り à un tiers de case. vocalStart rend ○ (U+25CB), vocalEnd rend □ (U+25A1), fs9 dans la colonne marker (+14,8 pt de la sous-colonne notes). Distinct de `vocalRepStart/End`.                |
+| `note2`           | string | Deuxième note par case (rôle à préciser)       |
+| `acc2`            | string | Deuxième altération par case (rôle à préciser) |
+| `orn2`            | string | Deuxième ornement par case (rôle à préciser)   |
+| `isChiribichi`    | bool   | Cas où un チリ弾き est joué sur ce temps         | 
+| `isOsaikudashi`   | bool   | Cas où un osaikudachi est joué sur ce temps    |
 
 ### Organisation des cellules par dan
 
@@ -86,13 +86,13 @@ Les cellules sont organisées comme sui :
 - Index pair (0, 2, 4, ...) = note principale
 - Index impair (1, 3, 5, ...) = note à cheval (straddle)
 
-| Main                 | Straddle | Equivalent KKML | Token |
-|----------------------|----------|-----------------|-------|
-| note                 | vide     | Noire           | `A`   |
-| note (isSmall=false) | note     | Croche          | `A/B` |
-| note (isSmall=true)  | note     | Shuffle 早弾き   | `A:B` |
-| note (isSmall=true)  | vide     | Kuubanchi       | `As`  |
-| vide                 | vide     | Case vide       | `-`   |
+| Main                 | Straddle | Equivalent KKML | Token KKML |
+|----------------------|----------|-----------------|------------|
+| note                 | vide     | Noire           | `A`        |
+| note (isSmall=false) | note     | Croche          | `A/B`      |
+| note (isSmall=true)  | note     | Shuffle 早弾き   | `A:B`      |
+| note (isSmall=true)  | vide     | Kuubanchi       | `As`       |
+| vide                 | vide     | Case vide       | `-`        |
 
 ## Correspondance PUA → positions (carte complète)
 
