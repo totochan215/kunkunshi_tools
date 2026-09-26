@@ -18,13 +18,13 @@ Convertit un fichier JSON de [Portama](https://portama.com/) en KKML.
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
 
-Gère : mapping PUA → Kanji, accordages (本調子, 二揚げ, 三下げ etc.), ornements
-(uchi-utu, kaki-utu etc.), paires main/straddle (noire, deux croches `A/B`, shuffle `A:B`),
-repères de répétition `|:` `:|` `|(` `)|`, paroles (`::lyrics`).
+Gère : mapping PUA → Kanji, récupération des accordages (本調子, 二揚げ, 三下げ etc.), ornements
+(uchi-utu, kaki-utu etc.), figures rythmiques (noire, deux croches `A/B`, shuffle `A:B`),
+repères de répétition `|:` `:|` `|(` `)|`, paroles (`::lyrics`), etc.
 
 ### kkml2svg.py
 
-Rend un fichier KKML sous forme de tablature SVG, en appliquant des options de layouting.
+Rend un fichier KKML sous forme de tablature SVG, en appliquant des options de mise en page.
 
     python3 kkml2svg.py chanson.kkml -o chanson.svg
     python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
@@ -83,16 +83,16 @@ Détail complet : [docs/kkml-format.md](docs/kkml-format.md) et [docs/notation.m
 ### Matériel disponible
 
 - [samples/kkml/](samples/kkml/) — fichiers KKML de référence
-- [samples/portama-json/](samples/portama-json/) — fichiers JSON Portama bruts
+- [samples/portama-json/](samples/portama-json/) — fichiers Portama bruts en JSON
 - [samples/portama-pdf/](samples/portama-pdf/) — fichiers Portama rendus au format PDF
-- [samples/svg/](samples/svg/) — rendus SVG de référence produits par kkml2svg
+- [samples/svg/](samples/svg/) — rendus SVG de référence produits par kkml2svg.py
 
 ### Homologues et tests
 
 - Les fichiers échantillons portant le même nom de base (sans suffixe) à travers `samples/kkml`,
 `samples/portama-json`, `samples/portama-pdf` et `samples/svg` sont des
-homologues : ils représentent la même chanson.
+homologues : ils représentent la même chanson et peuvent donc être utilisés pour des tests.
 - Un suffixe de variante après
-`-` distingue les variantes (ex. `かぎやで風節-vocal.kkml`). Les segments ruby
+`-` distingue des variantes (ex. `かぎやで風節-vocal.kkml`). Les segments ruby
 entre crochets éventuels sont ignorés dans l'appariement (`国頭[くんじゃん]ジントヨー.pdf`
 correspond à `国頭ジントヨー.kkml`).
