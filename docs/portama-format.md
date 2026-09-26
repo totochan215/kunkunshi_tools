@@ -36,7 +36,7 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 |-------|------|-------------|
 | `version` | string | Numéro de version du JSON Portama (2.2 observé). |
 | `numDans` | int | Nombre de dans (段) déclaré. |
-| `cellsPerDan` | int | Toujours 24 (12 notes × 2 cellules : main + straddle). |
+| `cellsPerDan` | int | Nombre de cellules par dan (`24` ou `36`) |
 | `musicno` | int | Identifiant du morceau sur Portama (0 pour une création locale). |
 | `score` | `Array<Array<Cell>>` | 2D : `[dan][cell]`. Chaque dan a 24 cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
 | `title` | string | Titre de la chanson. |
