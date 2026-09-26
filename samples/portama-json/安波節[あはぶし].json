@@ -1,0 +1,469 @@
+{
+  "version": "2.2",
+  "musicno": 5172,
+  "userId": 5290,
+  "numDans": 7,
+  "cellsPerDan": 24,
+  "score": [
+    [
+      {
+        "note": "",
+        "repeatStart": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "repeatEnd": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "vocalRepStart": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "vocalRepEnd": true
+      }
+    ]
+  ],
+  "allRubyData": {},
+  "price": 0,
+  "isPublished": 0,
+  "viewsize": 100,
+  "trackCount": 1,
+  "currentTrack": 1,
+  "title": "安波節[あはぶし]",
+  "findname": "あはぶし",
+  "speed": "100",
+  "chogen": "5",
+  "choshi": "hon",
+  "rhythm": "0",
+  "rhythmMode": "0",
+  "orientation": "landscape",
+  "allLyricsData": {
+    "1": [
+      {
+        "id": "frame-be662d98",
+        "content": "安波ぬまはんたや　ハリ肝すがり所奥ぬ松下や　ハリ寝なし所",
+        "x": 724,
+        "y": 25,
+        "width": 52,
+        "height": 247,
+        "fontSize": "10pt"
+      },
+      {
+        "id": "frame-6662feed",
+        "content": "安波ぬぬん殿内　ハリ黄金灯籠さぎてうりが明かりがりば　ハリ弥勒世果報",
+        "x": 657,
+        "y": 25,
+        "width": 52,
+        "height": 247,
+        "fontSize": "10pt"
+      },
+      {
+        "id": "frame-87dbce56",
+        "content": "嘉例吉ぬ遊び　ハリ打晴りてからや夜ぬ明きて太陽ぬ　ハリ上る迄ん",
+        "x": 590,
+        "y": 25,
+        "width": 52,
+        "height": 247,
+        "fontSize": "10pt"
+      },
+      {
+        "id": "frame-035cb499",
+        "content": "夜ぬ明きて太陽や　ハリ上らわんゆたさ己午時迄ん　ハリ御祝えしゃびら",
+        "x": 724,
+        "y": 322,
+        "width": 52,
+        "height": 247,
+        "fontSize": "10pt"
+      },
+      {
+        "id": "frame-6702534b",
+        "content": "今日や御逢拝で　ハリ色々ぬ遊び明日や面影ぬ　ハリ立ちゆと思ば",
+        "x": 657,
+        "y": 322,
+        "width": 52,
+        "height": 247,
+        "fontSize": "10pt"
+      },
+      {
+        "id": "frame-f20273c3",
+        "content": "弥勒代ぬ昔　ハリくい戻ち今に御万人ぬまぢり　ハリ遊ぶ嬉しゃ",
+        "x": 590,
+        "y": 322,
+        "width": 52,
+        "height": 247,
+        "fontSize": "10pt"
+      }
+    ]
+  },
+  "lyricsPageBreak": "auto",
+  "lyricsDisplayNumber": "yes",
+  "lyricsFontSize": "10pt",
+  "lyricsFontFamily": "mincho",
+  "lyricsWritingMode": "vertical",
+  "rubyPrintMode": "current",
+  "print_duration": "no"
+}
