@@ -52,9 +52,9 @@ Tolérance de saisie (IME japonais, pleine chasse) — dans les blocs `::tab` et
 
 Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart) et `)|` (vocalRepEnd) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
 
-Rendu : `)|` = ┘● (barre horizontale, montant vertical, cercle creux — même géométrie que l'ancien marqueur de fin `@end_circle`, désormais déprécié et ignoré) ; `|(` = image spéculaire └○. Le ┘● de fin de morceau ne s'affiche donc QUE là où un `)|` explicite est écrit dans la grille.
+Rendu : les marqueurs `|(` et `)|` vivent dans la colonne marker (comme les flèches de `|:` / `:|`) — les kanjis de notes ne sont JAMAIS décalés, le contenu de la case est rendu centré normalement. `)|` = ┘● : barre horizontale, montant vertical montant, disque creux au-dessus (même géométrie et même taille que l'ancien `@end_circle`, désormais déprécié et ignoré) ; `|(` = image spéculaire par rapport à l'axe HORIZONTAL : barre en haut, montant vertical descendant, disque creux en dessous.
 
-Composition : le marqueur peut partager sa case avec du contenu. `|(XXX` = symbole └○ à gauche + XXX rendu normalement (décalé à droite) ; `XXX)|` = XXX + symbole ┘● à droite. Exemples : `|((◯` = début de boucle vocale + 声だし + repos (cas 安波節 : le chant commence pendant un silence du sanshin) ; `|(尺)` = └○ + 尺 + 声切り ; `◯)|` = fin de boucle posée sur un repos.
+Composition : le marqueur partage librement sa case avec du contenu, rendu centré sans décalage. Exemples : `|((◯` = début de boucle vocale + 声だし + repos (cas 安波節 : le chant commence pendant un silence du sanshin) ; `|(尺)` = ┘○ miroir + 尺 + 声切り ; `◯)|` = fin de boucle posée sur un repos ; `合)|` = fin de boucle sur une note.
 | `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
 
 L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.
