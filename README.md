@@ -74,8 +74,8 @@ Détail complet : [docs/kkml-format.md](docs/kkml-format.md) et [docs/notation.m
 
 - [docs/converter-architecture.md](docs/converter-architecture.md) — architecture des deux scripts
 - [docs/kkml-format.md](docs/kkml-format.md) — syntaxe et règles du format KKML
-- [docs/notation.md](docs/notation.md) — notation musicale (positions, modes rythmiques, souhou, vocal)
-- [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama sur la base de sa rétro-ingénierie (PUA, allRubyData, géométrie mesurée des PDF)
+- [docs/notation.md](docs/notation.md) — notation musicale (positions, modes rythmiques, souhou, vocal etc.)
+- [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama sur la base de sa rétro-ingénierie
 - [docs/svg-layout.md](docs/svg-layout.md) — layout SVG (dimensions, constantes, colonne marker)
 
 ## Echantillons de fichiers
