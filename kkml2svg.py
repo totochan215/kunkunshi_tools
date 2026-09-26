@@ -112,12 +112,11 @@ TECHNIQUE_SUFFIXES = {
           'dx': 0.45, 'dy': 0.15},
     's': {'name': 'kuubanchi', 'type': 'small'},
     '=': {'name': 'taachi',    'type': 'line',   'pos': 'right'},
-    # 声だし/声切り (koe-dashi / koe-kiri) : bornes de chant ○/□ pour le
-    # chanteur (respirations). D'après 世禮 (増訂琉球音樂樂典 p. 9 et 26) :
-    # à l'intérieur de la case, côté droit — pas dans la colonne marker.
-    # Syntaxe mnémotechnique : ( = on commence à chanter, ) = on s'arrête.
-    '(': {'name': 'koe-dashi (声だし)', 'type': 'char', 'symbol': '○',
-          'pos': 'inside-right', 'dx': 0.30, 'dy': 0.35, 'scale': 0.55},
+    # 声切り (koe-kiri) : borne de fin de chant □ pour le chanteur.
+    # D'après 世禮 (増訂琉球音樂樂典 p. 9 et 26) : à l'intérieur de la
+    # case, côté droit — pas dans la colonne marker. Suffixe : la bouche
+    # se ferme APRÈS la note. (La borne d'ouverture ○ 声だし est un
+    # PRÉFIXE : la bouche s'ouvre AVANT la note, ex. (中.)
     ')': {'name': 'koe-kiri (声切り)',   'type': 'char', 'symbol': '□',
           'pos': 'inside-right', 'dx': 0.30, 'dy': 0.35, 'scale': 0.55},
 }
@@ -1455,9 +1454,12 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'↑</text>')
         return
 
-    # Extraire les suffixes de technique depuis la fin du token
+    # Extraire le préfixe 声だし ( (le chant s'ouvre AVANT la note),
+    # puis les suffixes de technique depuis la fin du token.
+    # (中) = 声だし + 中 + 声切り : les deux bornes peuvent cohabiter.
+    koe_prefix = tok.startswith('(')
+    base_tok = tok[1:] if koe_prefix else tok
     tech_suffixes = []
-    base_tok = tok
     while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
         tech_suffixes.insert(0, base_tok[-1])
         base_tok = base_tok[:-1]
@@ -1466,10 +1468,17 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # sur un repos ◯. Techniquement rendu (borne + cercle), mais le chant
     # ne démarre normalement pas sur un silence de sanshin — avertir une
     # fois par token, sans interdire (cas d'usage non prouvé inexistant).
-    if base_tok in REST_VARIANTS and ('(' in tech_suffixes or ')' in tech_suffixes):
+    if base_tok in REST_VARIANTS and (koe_prefix or ')' in tech_suffixes):
         print(f"AVERTISSEMENT : borne de chant ( ou ) sur le repos '{tok}' — "
               f"le chant ne démarre normalement pas sur un silence",
               file=sys.stderr)
+
+    # ○ 声だし en préfixe : même position que le □ 声切り suffixe —
+    # dans la case, côté droit (区画中右方, traité 野村流 p. 9).
+    if koe_prefix:
+        out.append(f'<text x="{cx + cell_w * 0.30}" y="{cy + fs * 0.35 + 7}" '
+                   f'text-anchor="middle" font-family="serif" '
+                   f'font-size="{int(fs * 0.55)}" fill="black">○</text>')
 
     is_small = 's' in tech_suffixes
     effective_fs = int(fs * 0.67) if is_small else fs
