@@ -682,33 +682,40 @@ def _wrap_vertical(items, rows_per_col):
 
 def _lyrics_columns(verse):
     """Construit les colonnes d'un couplet de paroles.
-    | en fin de ligne force une nouvelle colonne ; || force en plus
-    une colonne blanche après la colonne courante. Utilisé à la fois
-    pour l'estimation de largeur du canevas et pour le rendu —
-    source unique pour éviter toute dérive entre les deux."""
+
+    Règle : chaque | (où qu'il soit dans la ligne) ferme la colonne
+    courante et ouvre la suivante ; || ferme la colonne et insère en
+    plus une colonne blanche (séparation de couplets). Une ligne sans
+    aucun | s'enchaîne dans la colonne courante (saut de ligne = 1
+    espace). Segment vide entre deux | = colonne blanche.
+    Utilisé à la fois pour l'estimation de largeur du canevas et pour
+    le rendu — source unique pour éviter toute dérive entre les deux."""
     columns = []
     current_col = []
+
+    def _flush():
+        nonlocal current_col
+        if current_col:
+            columns.append(current_col)
+            current_col = []
+
     for line in verse:
-        if line.endswith('||'):
-            content = line[:-2]
-            parts = [p for p in content.split('|') if p]
-            current_col.extend(parts)
-            if current_col:
-                columns.append(current_col)
-            columns.append([])  # colonne blanche
-            current_col = []
-        elif line.endswith('|'):
-            content = line[:-1]
-            parts = [p for p in content.split('|') if p]
-            current_col.extend(parts)
-            if current_col:
-                columns.append(current_col)
-            current_col = []
-        else:
-            parts = [p for p in line.split('|') if p]
-            current_col.extend(parts)
-    if current_col:
-        columns.append(current_col)
+        parts = line.split('|')
+        for k, part in enumerate(parts):
+            if k == 0:
+                if part:
+                    current_col.append(part)
+            else:
+                # | rencontré : fermer la colonne, ouvrir la suivante
+                _flush()
+                if part:
+                    current_col.append(part)
+                elif k < len(parts) - 1:
+                    # segment vide entre deux | = colonne blanche (||)
+                    columns.append([])
+                # segment vide final (ligne finissant par |) : simple fin
+                # de colonne, rien à faire
+    _flush()
     return columns
 
 
