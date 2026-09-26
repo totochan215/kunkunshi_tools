@@ -80,12 +80,14 @@ Détail complet : [docs/kkml-format.md](docs/kkml-format.md) et [docs/notation.m
 
 ## Echantillons de fichiers
 
-- `samples/kkml/` — fichiers KKML de référence
-- `samples/portama-json/` — fichiers JSON Portama bruts
-- `samples/portama-pdf/` — fichiers Portama rendus au format PDF
-- `samples/svg/` — rendus SVG de référence produits par kkml2svg
+### Matériel disponible
 
-## Homologues et tests
+- [samples/kkml/](samples/kkml/) — fichiers KKML de référence
+- [samples/portama-json/](samples/portama-json/) — fichiers JSON Portama bruts
+- [samples/portama-pdf/](samples/portama-pdf/) — fichiers Portama rendus au format PDF
+- [samples/svg/](samples/svg/) — rendus SVG de référence produits par kkml2svg
+
+### Homologues et tests
 
 - Les fichiers échantillons portant le même nom de base (sans suffixe) à travers `samples/kkml`,
 `samples/portama-json`, `samples/portama-pdf` et `samples/svg` sont des
