@@ -131,7 +131,7 @@ Détails :
 
 ## Cases de tablature
 
-Chaque case de tablature correspond à un temps. Les tablatures Kunkunshi ignorent la notion de mesure (3/4, 1/2 etc.)
+Chaque case de tablature correspond à un temps. Les tablatures Kunkunshi ignorent la notion de mesure.
 
 Séparateurs de tokens (à l'intérieur d'une case) :
 
