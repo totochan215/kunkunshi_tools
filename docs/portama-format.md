@@ -72,9 +72,14 @@ Chaque cellule est un objet avec :
 | `isChiribichi`  | bool   | (rôle à préciser) | 
 | `isOsaikudashi` | bool   | (rôle à préciser) |
 
-### Organisation des 24 cellules par dan
+### Organisation des cellules par dan
 
-Les cellules sont organisées en 12 paires consécutives :
+Portama autorise deux réglages :
+
+- 12 paires de cellules (24 cellules) par dan : utilisation en layout au format paysage
+- 16 paires de cellules (32 cellules) par dan : utilisation en layout au format portrait
+
+Les cellules sont organisées comme sui :
 
 - Index pair (0, 2, 4, ...) = note principale
 - Index impair (1, 3, 5, ...) = note à cheval (straddle)
