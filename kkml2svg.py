@@ -262,6 +262,12 @@ def parse_kkml(text):
                     [REST_TOKEN if tk in REST_VARIANTS else tk for tk in norm]
                 )
             elif current.kind == "lyrics":
+                # Tolérance IME : ｜ (U+FF5C, barre pleine chasse) = |.
+                # Normalisé au parsing pour que la construction des colonnes
+                # et l'estimation de largeur ne voient qu'une seule forme.
+                if "｜" in stripped:
+                    _info_input_variant("｜", "|")
+                    stripped = stripped.replace("｜", "|")
                 current.lines.append(stripped)
             elif current.kind == "tab-lyrics":
                 # Le séparateur | accepte sa variante pleine chasse ｜ ;
@@ -519,6 +525,22 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
     if title or tuning:
         total_h = max(total_h, header_h + mt + GAP_HEADER + title_total_h)
 
+    # s'assurer que la hauteur couvre les paroles verticales (une colonne
+    # de couplet peut être plus haute que la grille — ex. 安波節)
+    if lyrics_sections:
+        ly0 = header_h + mt + GAP_HEADER
+        lyrics_bottom = ly0 + LYRICS_FS
+        for _, data in lyrics_sections:
+            for verse in _split_verses(data):
+                for col, indent in _lyrics_columns_layout(verse):
+                    if not col:
+                        continue
+                    h = (indent * LYRICS_SP
+                         + sum(len(ln) for ln in col) * LYRICS_SP
+                         + (len(col) - 1) * LYRICS_SP)
+                    lyrics_bottom = max(lyrics_bottom, ly0 + LYRICS_FS + h)
+        total_h = max(total_h, lyrics_bottom + mt)
+
     out = []
     out.append('<?xml version="1.0" encoding="UTF-8"?>')
     out.append(
@@ -586,18 +608,16 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             for verse in _split_verses(data):
                 # Construire les colonnes via le helper partagé
                 # (même logique que l'estimation de largeur).
-                columns = _lyrics_columns(verse)
-                # Détecter le marqueur de couplet sur la 1re colonne
-                verse_indent = 0
-                if columns and columns[0]:
-                    verse_indent = _verse_indent_len(columns[0][0])
-                for si, col_lines in enumerate(columns):
+                # Layout partagé avec l'estimation de hauteur :
+                # une colonne avec marqueur de couplet démarre en haut,
+                # une colonne de continuation s'indente sous le marqueur.
+                layout = _lyrics_columns_layout(verse)
+                for col_lines, verse_indent in layout:
                     vx = (ml + lyrics_total_w
                           - vi * (LYRICS_COL_W + LYRICS_VERSE_GAP)
                           - LYRICS_COL_W / 2)
                     cy = ly0 + LYRICS_FS
-                    # Indenter les colonnes 2+ sous le marqueur de couplet
-                    if si > 0 and verse_indent > 0:
+                    if verse_indent > 0:
                         cy += verse_indent * LYRICS_SP
                     for li, line in enumerate(col_lines):
                         # Saut de ligne dans la même colonne = 1 espace
@@ -673,6 +693,33 @@ def _lyrics_columns(verse):
     if current_col:
         columns.append(current_col)
     return columns
+
+
+def _lyrics_columns_layout(verse):
+    """Layout complet d'un couplet : liste de (col_lines, indent).
+
+    Source unique pour le rendu ET pour l'estimation de hauteur.
+    Règle d'indentation : une colonne qui commence par un marqueur de
+    couplet (一、二、… 女　男　) est alignée en haut (indent 0) et définit
+    l'indentation courante pour les colonnes de continuation du même
+    couplet (après |), qui s'indentent sous le marqueur. Une colonne
+    blanche (après ||) réinitialise l'indentation courante : le couplet
+    suivant, même sans marqueur, ne s'indente pas sous le précédent."""
+    layout = []
+    cur_marker_indent = 0
+    for col in _lyrics_columns(verse):
+        if col:
+            own = _verse_indent_len(col[0])
+            if own > 0:
+                indent = 0
+                cur_marker_indent = own
+            else:
+                indent = cur_marker_indent
+        else:
+            indent = 0
+            cur_marker_indent = 0
+        layout.append((col, indent))
+    return layout
 
 
 def _split_verses(lines):
