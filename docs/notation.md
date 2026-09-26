@@ -271,6 +271,10 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 | `<` | kachi-utu (掻音) | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s` | kuubanchi (小弾) | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
 | `=` | taachi (二弾) ou tsuiri-bichi (列弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
+| `(` | koe-dashi (声だし) | petit ○ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur commence à chanter à cette note — repère de respiration |
+| `)` | koe-kiri (声切り) | petit □ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur s'arrête de chanter à cette note |
+
+`(` et `)` sont des bornes de chant, pas des techniques de main : elles s'adressent au chanteur pour placer ses respirations. Source : 世禮國男, 増訂琉球音樂樂典, p. 9 ((10) ○ 声だし, 区画中右方) et p. 26 ((ホ)(1) ○□ 声出 声切) — le ○ marque le début du chant, le □ la fin. Elles se placent DANS la case (côté droit), pas dans la colonne marker — le traité précise qu'elles devraient être en colonne vocale mais sont dans la case par manque de place. Syntaxe mnémotechnique : `(` ouvre la bouche, `)` la ferme. Variantes pleine chasse （ ） acceptées (tolérance IME). Se combinent avec les autres suffixes (ex. `尺)*`).
 
 Les marques diacritiques (`*`, `^`, `v`, `<`) sont rendues dans la même police et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
 

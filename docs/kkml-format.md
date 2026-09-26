@@ -48,6 +48,7 @@ Tolérance de saisie (IME japonais, pleine chasse) — dans les blocs `::tab` et
 | `＃` ou `#` | `♯` | altération (尺＃) |
 | `＋` | `+` | accords (variante `+`, non encore rendue comme accord — roadmap) |
 | `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
+| `（` `）` | `(` `)` | 声だし / 声切り (bornes de chant, voir notation.md) |
 | `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
 
 L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.
