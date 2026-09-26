@@ -39,12 +39,66 @@ CHOSHI_MAP = {
     # À compléter selon les fichiers futurs
 }
 
+def portama_title_to_kkml(title):
+    """Convertit le titre Portama en titre KKML avec ruby.
+
+    Portama encode la lecture en segments inline `base[lecture]`
+    (ex. 十九[じゅうく]の春[はる]). Le KKML utilise le group-ruby
+    `｛base｝《lecture》`.
+
+    Règle : les segments annotés forment UN seul groupe couvrant du
+    premier au dernier. Le texte interstitiel ENTRE deux segments
+    annotés va dans la base ET dans la lecture (kana lu tel quel :
+    十九[じゅうく]の春[はる] → ｛十九の春｝《じゅうくのはる》).
+    Le texte AVANT le premier / APRÈS le dernier segment annoté reste
+    hors groupe, en clair (国頭[くんじゃん]ジントヨー →
+    ｛国頭｝《くんじゃん》ジントヨー). Un titre sans crochets est
+    retourné tel quel."""
+    import re, unicodedata
+    matches = list(re.finditer(r"([^\[]*)\[([^\]]*)\]", title))
+    if not matches:
+        return title
+
+    def _leading_kana(s):
+        """Initial kana of a base (hiragana/katakana, including ー):
+        particles such as の, read as-is, interstitial between two
+        annotated segments. The kanji tail is the base covered by the
+        following [reading]."""
+        i = 0
+        while i < len(s):
+            c = s[i]
+            if 0x3040 <= ord(c) <= 0x30FF or c == "ー":
+                i += 1
+            else:
+                break
+        return s[:i], s[i:]
+
+    out = [title[:matches[0].start()]]
+    group_base = ""
+    reading = ""
+    for k, m in enumerate(matches):
+        base_k = m.group(1)
+        reading_k = m.group(2)
+        if k > 0:
+            # The base of segment k can begin with interstitial kana
+            # (ex. の in 十九[じゅうく]の春[はる]) : read as-is.
+            kana, base_k = _leading_kana(base_k)
+            group_base += kana
+            reading += kana
+        group_base += base_k
+        reading += reading_k
+    out.append(f"｛{group_base}｝《{reading}》")
+    out.append(title[matches[-1].end():])
+    return "".join(out)
+
+
 # Ornements Portama → suffixes souhou KKML
-# Seul "u" (uchi-utu) est confirmé. Les autres sont des hypothèses.
+# "u" et "k" confirmés par le corpus. Les autres restent des hypothèses.
 ORN_TO_SUFFIX = {
-    "u": "*",   # uchi-utu (打音) — confirmé
+    "u": "*",   # uchi-utu (打音) — confirmé (かぎやで風節, てぃんさぐぬ花)
+    "k": "^",   # kaki-utu (掛音) — confirmé (十九の春 : 9 occurrences,
+                # validées manuellement par l'utilisateur)
     # Hypothèses (non confirmées) :
-    # "k": "^",  # kaki-utu ?
     # "a": "v",  # aki-utu ?
     # "c": "<",  # kachi-utu ?
     # "t": "=",  # taachi ?
@@ -144,7 +198,7 @@ def convert_portama_to_kkml(data):
     # Métadonnées
     title = data.get("title", "")
     if title:
-        lines.append(f"@title {title}")
+        lines.append(f"@title {portama_title_to_kkml(title)}")
 
     choshi = data.get("choshi", "")
     tuning = CHOSHI_MAP.get(choshi, choshi)
