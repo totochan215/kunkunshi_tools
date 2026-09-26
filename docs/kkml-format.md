@@ -26,11 +26,12 @@ techniques de jeu>
 ::
 
 ::tab-lyrics
-<paroles en phonétique, positionnées approximativement sur le rythme>
+<paroles en phonétique positionnées approximativement sur le rythme,
+en général premier couplet uniquement>
 ::
 
 ::lyrics
-<paroles en texte libre, organisées par couplets>
+<paroles en texte libre organisées par couplets, ruby supporté>
 ::
 
 ::<section-title>
