@@ -47,13 +47,14 @@ Tolérance de saisie (pour l'IME japonais, pleine chasse) — dans les blocs `::
 
 | Saisie acceptée | Converti en | Usage |
 |---              |---          |---|
-| `／`            | `/`         | croches, accords |
+| `／`            | `/`         | croches |
 | `：`            | `:`         | shuffle |
 | `｜`            | `\|` |       marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
-| `＃` ou `#` | `♯` | altération (尺＃) |
-| `＋` | `+` | accords (variante `+`, non encore rendue comme accord — roadmap) |
+| `♯` | `#` | altération (尺＃) |
+| `＋` | `+` | accords |
+| `ー` | `-` | accords |
 | `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
-| `（` `）` | `(` `)` | 声だし (préfixe `(kanji`) / 声切り (suffixe `kanji)`), voir notation.md |
+| `（` `）` | `(` `)` | 声だし (koedashi) / 声切り (koekiri)|
 
 Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart) et `)|` (vocalRepEnd) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
 
