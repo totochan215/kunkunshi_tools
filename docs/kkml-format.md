@@ -31,20 +31,22 @@ KKML se base sur le format texte brut encodé en UTF-8.
 <paroles en texte libre, organisées par couplets>
 ::
 
-::section titre optionnel
+::<section-title>
+<section-contents>
+::
 ```
 
 L'ordre des sections n'est pas imposé, toutefois dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées.
 
-Tolérance : si aucune section `::` n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
+Tolérance : si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
-Tolérance de saisie (IME japonais, pleine chasse) — dans les blocs `::tab` et le côté positions de `::tab-lyrics`, les équivalents pleine chasse sont normalisés vers la forme canonique, avec une info sur stderr (une fois par variante) :
+Tolérance de saisie (pour l'IME japonais, pleine chasse) — dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine chasse (full-width) sont normalisés vers leur forme canonique en demie chasse (half-width), avec une INFO sur stderr (une fois par variante) :
 
 | Saisie acceptée | Converti en | Usage |
-|---|---|---|
-| `／` | `/` | croches, accords |
-| `：` | `:` | shuffle |
-| `｜` | `\|` | marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
+|---              |---          |---|
+| `／`            | `/`         | croches, accords |
+| `：`            | `:`         | shuffle |
+| `｜`            | `\|` |       marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
 | `＃` ou `#` | `♯` | altération (尺＃) |
 | `＋` | `+` | accords (variante `+`, non encore rendue comme accord — roadmap) |
 | `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
