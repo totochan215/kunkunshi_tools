@@ -703,10 +703,19 @@ def _lyrics_columns(verse):
         parts = line.split('|')
         for k, part in enumerate(parts):
             if k == 0:
+                # Début de ligne : préserver l'indentation éventuelle,
+                # mais retirer les espaces de fin (avant un |).
+                part = part.rstrip()
                 if part:
                     current_col.append(part)
             else:
-                # | rencontré : fermer la colonne, ouvrir la suivante
+                # | rencontré : fermer la colonne, ouvrir la suivante.
+                # Les espaces autour du | (ex. "phrase|　奥ぬ…" ou
+                # "phrase | suite") sont du formatage visuel du KKML
+                # brut : ils sont retirés pour ne pas décaler l'aligne-
+                # ment des colonnes au rendu. Un segment réduit à des
+                # espaces équivaut au segment vide correspondant.
+                part = part.strip()
                 _flush()
                 if part:
                     current_col.append(part)
