@@ -2,7 +2,7 @@
 
 Outils de génération de tablatures 工工四 (kunkunshi) pour le sanshin d'Okinawa.
 Python 3 autonome, aucune dépendance hors stdlib.
-En bref, un outil pour sanshin 🪕 sous python 🐍 ! 😂
+En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 
 - Pipeline 1 : saisie dans l'éditeur Portama → JSON Portama → KKML → retouche manuelle en KKML → SVG
 - Pipeline 2 : saisie manuelle en KKML → SVG
