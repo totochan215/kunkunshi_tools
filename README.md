@@ -34,7 +34,7 @@ Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`.
 
 ## Le format KKML
 
-Format texte permettant de saisir et mettre en forme des tablatures 工工四 (kunkunshi) sous une forme simple et intuitive. KKML pour Kunkunshi Markup Language. Et si ça marche pas, c'est 💩
+Format texte permettant de saisir et mettre en forme des tablatures 工工四 (kunkunshi) sous une forme simple et intuitive. KKML pour KunKunshi Markup Language. Et si ça marche pas, c'est 💩
 
 Exemple :
 
@@ -63,8 +63,8 @@ Exemple :
 - Métadonnées : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@end_circle`, `@lyrics_size`.
 - Sections :
-    - `::tab` — tablature, une ligne par dan, 1 token = 1 case. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle,
-      `|:` `:|` = répétitions, suffixes de technique `* ^ v < s =`.
+    - `::tab` — tablature, une ligne par dan, 1 token = 1 temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle (croche pointée + double croche),
+      `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, suffixes de technique `* ^ v < s =`.
     - `::vocal` — alignement approximatif du chant, 1 token = 1 case correspondante au cases de ::tab,
     - `::lyrics` — couplets avec support du guide phonétique (ruby).
 
@@ -87,13 +87,10 @@ Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
 
 ## Homologues et tests
 
-Des fichiers portant le même nom de base (sans suffixe) à travers `samples/kkml`,
+- Les fichiers échantillons portant le même nom de base (sans suffixe) à travers `samples/kkml`,
 `samples/portama-json`, `samples/portama-pdf` et `samples/svg` sont des
-homologues : ils représentent la même chanson. Un suffixe de variante après
+homologues : ils représentent la même chanson.
+- Un suffixe de variante après
 `-` distingue les variantes (ex. `かぎやで風節-vocal.kkml`). Les segments ruby
-entre crochets sont ignorés dans l'appariement (`国頭[くんじゃん]ジントヨー.pdf`
+entre crochets éventuels sont ignorés dans l'appariement (`国頭[くんじゃん]ジントヨー.pdf`
 correspond à `国頭ジントヨー.kkml`).
-
-`python3 tests/run_tests.py` détecte les homologues et rend chaque `.kkml`
-(vertical + horizontal) : échec si kkml2svg sort non-zéro ou émet un
-AVERTISSEMENT. `--write-svg` écrit en plus les rendus dans `samples/svg/`.
