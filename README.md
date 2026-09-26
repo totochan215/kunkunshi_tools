@@ -68,7 +68,7 @@ Exemple :
     - `::vocal` — alignement approximatif du chant, 1 token = 1 case correspondante au cases de ::tab,
     - `::lyrics` — couplets avec support du guide phonétique (ruby).
 
-Détail complet : `docs/kkml-format.md` et `docs/notation.md`.
+Détail complet : [docs/kkml-format.md] et [docs/notation.md].
 
 ## Documentation
 
