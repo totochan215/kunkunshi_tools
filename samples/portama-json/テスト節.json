@@ -1,0 +1,438 @@
+{
+  "version": "2.2",
+  "musicno": 0,
+  "userId": 5290,
+  "numDans": 7,
+  "cellsPerDan": 24,
+  "score": [
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "orn": "k"
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "orn": "u"
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "orn": "nu"
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "acc": "sharp"
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "acc": "flat"
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "repeatStart": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "repeatEnd": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "vocalRepStart": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "vocalRepEnd": true
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "vocalPosMarkers": {
+          "mid": "vocalStart"
+        }
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "vocalPosMarkers": {
+          "mid": "vocalEnd"
+        }
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": "",
+        "vocalPosMarkers": {
+          "mid": "vocalEnd"
+        }
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "k",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "u",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "orn": "nu",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "acc": "sharp",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "acc": "flat",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true,
+        "vocalPosMarkers": {
+          "mid": "vocalStart"
+        }
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true,
+        "vocalPosMarkers": {
+          "mid": "vocalEnd"
+        }
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "yubii": 1
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "yubii": 2
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": "",
+        "yubii": 4
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      }
+    ],
+    [
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      },
+      {
+        "note": "",
+        "isSmall": true
+      },
+      {
+        "note": ""
+      }
+    ]
+  ],
+  "allRubyData": {},
+  "price": 0,
+  "isPublished": 0,
+  "viewsize": 100,
+  "trackCount": 1,
+  "currentTrack": 1,
+  "title": "テスト節",
+  "findname": "",
+  "speed": "120",
+  "chogen": "7",
+  "choshi": "hon",
+  "rhythm": "0",
+  "rhythmMode": "0",
+  "orientation": "landscape",
+  "allLyricsData": {
+    "1": [
+      {
+        "id": "frame-1790428505665",
+        "content": "歌詞を入力",
+        "x": 715.875,
+        "y": 20,
+        "width": 105.125,
+        "height": 267.5,
+        "fontSize": "10pt"
+      }
+    ]
+  },
+  "lyricsPageBreak": "auto",
+  "lyricsDisplayNumber": "yes",
+  "lyricsFontSize": "10pt",
+  "lyricsFontFamily": "mincho",
+  "lyricsWritingMode": "vertical",
+  "rubyPrintMode": "current",
+  "print_duration": "no"
+}
