@@ -1464,14 +1464,11 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         tech_suffixes.insert(0, base_tok[-1])
         base_tok = base_tok[:-1]
 
-    # Cas limite musicalement suspect : une borne de chant (声だし/声切り)
-    # sur un repos ◯. Techniquement rendu (borne + cercle), mais le chant
-    # ne démarre normalement pas sur un silence de sanshin — avertir une
-    # fois par token, sans interdire (cas d'usage non prouvé inexistant).
-    if base_tok in REST_VARIANTS and (koe_prefix or ')' in tech_suffixes):
-        print(f"AVERTISSEMENT : borne de chant ( ou ) sur le repos '{tok}' — "
-              f"le chant ne démarre normalement pas sur un silence",
-              file=sys.stderr)
+    # Bornes de chant (声だし/声切り) sur un repos ◯ : légitime, PAS
+    # d'avertissement. Les bornes s'adressent à la VOIX, et la ligne
+    # vocale ne suit pas nécessairement celle du sanshin — le chant peut
+    # démarrer ou s'arrêter pendant un silence de l'instrument.
+    # (Ligne de voix distincte : non implémentée ; 野村流 la pratique.)
 
     # ○ 声だし en préfixe : même position que le □ 声切り suffixe —
     # dans la case, côté droit (区画中右方, traité 野村流 p. 9).
