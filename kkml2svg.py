@@ -877,13 +877,17 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
         for ri in range(rows_per_col):
             cy = y0 + ri * cell_h
             tok = col[ri] if ri < len(col) else ""
-            rs, base_tok, re_ = _strip_repeat_marks(tok)
+            rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
             render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                         cell_w, cell_h, opts)
             if rs and marker_w > 0:
                 _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start')
             if re_ and marker_w > 0:
                 _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end')
+            if vs and marker_w > 0:
+                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
+            if ve and marker_w > 0:
+                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
 
     # Passe 3 : rendre les syllabes vocales dans la colonne marker
     if vocal_data is not None and marker_w > 0 and syllable_fs is not None:
@@ -943,7 +947,7 @@ def _draw_vertical_tab_lyrics(out, columns, rows_per_col, ml, y0,
                 pos_tok, syl = pair if isinstance(pair, tuple) else (pair, "")
             else:
                 pos_tok, syl = "", ""
-            rs, base_tok, re_ = _strip_repeat_marks(pos_tok)
+            rs, base_tok, re_, vs, ve = _strip_repeat_marks(pos_tok)
             render_cell(out, base_tok, x + cell_w / 2, cy + cell_h * 0.38,
                         fs - 2, cell_w, cell_h, opts)
             if syl:
@@ -954,6 +958,10 @@ def _draw_vertical_tab_lyrics(out, columns, rows_per_col, ml, y0,
                 _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start')
             if re_ and marker_w > 0:
                 _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end')
+            if vs and marker_w > 0:
+                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
+            if ve and marker_w > 0:
+                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
 
     # Marqueur de fin de chanson
     if end_circle and marker_w > 0 and len(col_positions) > 0:
@@ -1090,7 +1098,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     out.append(f'<rect x="{x}" y="{y}" width="{cell_w}" '
                                f'height="{cell_h}" fill="none" '
                                f'stroke="#999" stroke-width="0.75"/>')
-                    rs, base_tok, re_ = _strip_repeat_marks(tok)
+                    rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
                     render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
                                 cell_w, cell_h, opts)
                     if rs:
@@ -1099,6 +1107,12 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     if re_:
                         _render_repeat_arrow(out, x + cell_w * 0.85,
                                              y, cell_h, cell_w * 0.15, 'end')
+                    if vs:
+                        _render_vrep_marker(out, x + cell_w * 0.85,
+                                            y, cell_h, cell_w * 0.15, 'start')
+                    if ve:
+                        _render_vrep_marker(out, x + cell_w * 0.85,
+                                            y, cell_h, cell_w * 0.15, 'end')
                     if tok and tok != "-":
                         h_last_filled = (x + cell_w * 0.85, y)
                 y += cell_h
@@ -1116,7 +1130,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                                f'stroke="#bbb" stroke-width="0.75"/>')
                     pt = pos_list[j] if j < len(pos_list) else ""
                     st = syl_list[j] if j < len(syl_list) else ""
-                    rs, base_pt, re_ = _strip_repeat_marks(pt)
+                    rs, base_pt, re_, vs, ve = _strip_repeat_marks(pt)
                     render_cell(out, base_pt, x + cell_w / 2, y + cell_h * 0.38,
                                 fs - 2, cell_w, cell_h, opts)
                     out.append(f'<text x="{x + cell_w/2}" y="{y + cell_h*0.82}" '
@@ -1128,6 +1142,12 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     if re_:
                         _render_repeat_arrow(out, x + cell_w * 0.85,
                                              y, cell_h, cell_w * 0.15, 'end')
+                    if vs:
+                        _render_vrep_marker(out, x + cell_w * 0.85,
+                                            y, cell_h, cell_w * 0.15, 'start')
+                    if ve:
+                        _render_vrep_marker(out, x + cell_w * 0.85,
+                                            y, cell_h, cell_w * 0.15, 'end')
                     if pt and pt != "-":
                         h_last_filled = (x + cell_w * 0.85, y)
                 y += cell_h + 8
@@ -1239,18 +1259,29 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
 
 
 def _strip_repeat_marks(tok):
-    """Détache |: (début) et :| (fin) d'un token.
-    Retourne (repeat_start, base_tok, repeat_end) où repeat_start/repeat_end
-    sont des booléens et base_tok est le token sans les marqueurs."""
+    """Détache |: (début), :| (fin), |( (début boucle vocale) et )| (fin
+    boucle vocale) d'un token.
+    Retourne (repeat_start, base_tok, repeat_end, vrep_start, vrep_end) :
+    des booléens et le token sans les marqueurs. Le rendu des kanjis de
+    notes n'est PAS décalé — les marqueurs |( / )| vivent dans la colonne
+    marker, comme les flèches de |: / :|."""
     rs = False
     re_ = False
+    vs = False
+    ve = False
     if tok.startswith(REPEAT_START):
         rs = True
         tok = tok[len(REPEAT_START):]
+    if tok.startswith(VREPEAT_START):
+        vs = True
+        tok = tok[len(VREPEAT_START):]
     if tok.endswith(REPEAT_END):
         re_ = True
         tok = tok[:-len(REPEAT_END)]
-    return rs, tok, re_
+    if tok.endswith(VREPEAT_END):
+        ve = True
+        tok = tok[:-len(VREPEAT_END)]
+    return rs, tok, re_, vs, ve
 
 
 def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type):
@@ -1302,31 +1333,41 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type):
                    f'fill="none" stroke="black" stroke-width="{sw}"/>')
 
 
-def _render_vrep_symbol(out, cx, cy, cell_w, cell_h, mirror=False):
-    """Symbole de répétition du chant, même géométrie que le marqueur de
-    fin (_render_end_circle) : barre horizontale, montant vertical, cercle
-    creux. mirror=False → )| (┘●, côté droit) ; mirror=True → |( (└○,
-    image spéculaire, côté gauche). Dessiné à l'intérieur de la case."""
+def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type):
+    """Symbole de répétition du chant dans la colonne marker — même
+    géométrie et même taille que l'ancien marqueur @end_circle
+    (_render_end_circle) : barre horizontale sur 66% de marker_w, montant
+    vertical, disque creux (rayon 22% de marker_w).
+
+    marker_type: 'end' = )| → ┘● (barre à ~80% du bas, montant vers le
+    haut, disque au-dessus) ; 'start' = |( → image spéculaire par rapport
+    à l'axe HORIZONTAL : barre à ~20% du haut, montant vers le bas,
+    disque en dessous.
+    x_left = bordure gauche de la colonne marker. cy = haut de la case."""
     sw = 1.2
-    h_len = cell_w * 0.22
-    r = cell_w * 0.09
-    hy = cy + cell_h * 0.60
-    if not mirror:
-        hx = cx + cell_w * 0.16
-        out.append(f'<line x1="{hx}" y1="{hy}" x2="{hx + h_len}" y2="{hy}" '
+    h_len = marker_w * 0.66
+    v_len = h_len
+    r = marker_w * 0.22
+
+    hx = x_left + h_len
+    if marker_type == 'end':
+        hy = cy + cell_h * 0.80
+        out.append(f'<line x1="{x_left}" y1="{hy}" x2="{hx}" y2="{hy}" '
                    f'stroke="black" stroke-width="{sw}"/>')
-        out.append(f'<line x1="{hx + h_len}" y1="{hy}" x2="{hx + h_len}" '
-                   f'y2="{hy - h_len}" stroke="black" stroke-width="{sw}"/>')
-        out.append(f'<circle cx="{hx + h_len}" cy="{hy - h_len - r}" r="{r}" '
-                   f'fill="white" stroke="black" stroke-width="{sw}"/>')
-    else:
-        hx = cx - cell_w * 0.16
-        out.append(f'<line x1="{hx}" y1="{hy}" x2="{hx - h_len}" y2="{hy}" '
+        vy = hy - v_len
+        out.append(f'<line x1="{hx}" y1="{hy}" x2="{hx}" y2="{vy}" '
                    f'stroke="black" stroke-width="{sw}"/>')
-        out.append(f'<line x1="{hx - h_len}" y1="{hy}" x2="{hx - h_len}" '
-                   f'y2="{hy - h_len}" stroke="black" stroke-width="{sw}"/>')
-        out.append(f'<circle cx="{hx - h_len}" cy="{hy - h_len - r}" r="{r}" '
-                   f'fill="white" stroke="black" stroke-width="{sw}"/>')
+        out.append(f'<circle cx="{hx}" cy="{vy - r}" r="{r}" '
+                   f'fill="none" stroke="black" stroke-width="{sw}"/>')
+    else:  # 'start' : miroir horizontal — barre en haut, montant descendant
+        hy = cy + cell_h * 0.20
+        out.append(f'<line x1="{x_left}" y1="{hy}" x2="{hx}" y2="{hy}" '
+                   f'stroke="black" stroke-width="{sw}"/>')
+        vy = hy + v_len
+        out.append(f'<line x1="{hx}" y1="{hy}" x2="{hx}" y2="{vy}" '
+                   f'stroke="black" stroke-width="{sw}"/>')
+        out.append(f'<circle cx="{hx}" cy="{vy + r}" r="{r}" '
+                   f'fill="none" stroke="black" stroke-width="{sw}"/>')
 
 
 def _render_end_circle(out, x_left, cy, cell_h, marker_w):
@@ -1465,29 +1506,6 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # ○/□ de répétition du chant (vocalRep Portama) : occupent la case
     # entière, taille note — distincts des petits ○/□ des suffixes ( )
     # et du repos ◯ (U+25EF, grand cercle centré).
-    # Répétition du chant : )| = ┘● (même géométrie que l'ancien marqueur
-    # de fin @end_circle), |( = image spéculaire └○. Peut partager sa case
-    # avec du contenu : |(XXX (symbole à gauche, ex. |((◯ 安波節) et
-    # XXX)| (symbole à droite, ex. ◯)|, 合)|).
-    if tok.startswith(VREPEAT_START) and len(tok) > len(VREPEAT_START):
-        _render_vrep_symbol(out, cx - cell_w * 0.25, cy, cell_w, cell_h,
-                            mirror=True)
-        render_cell(out, tok[len(VREPEAT_START):], cx + cell_w * 0.14, cy,
-                    fs, cell_w, cell_h, opts)
-        return
-    if tok.endswith(VREPEAT_END) and len(tok) > len(VREPEAT_END):
-        render_cell(out, tok[:-len(VREPEAT_END)], cx - cell_w * 0.14, cy,
-                    fs, cell_w, cell_h, opts)
-        _render_vrep_symbol(out, cx + cell_w * 0.25, cy, cell_w, cell_h,
-                            mirror=False)
-        return
-    if tok == VREPEAT_START:
-        _render_vrep_symbol(out, cx, cy, cell_w, cell_h, mirror=True)
-        return
-    if tok == VREPEAT_END:
-        _render_vrep_symbol(out, cx, cy, cell_w, cell_h, mirror=False)
-        return
-
     if tok == REPEAT_START:
         out.append(f'<text x="{cx}" y="{cy+8}" text-anchor="middle" '
                    f'font-family="serif" font-size="{fs}" fill="black">'
