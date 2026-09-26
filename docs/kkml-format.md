@@ -50,9 +50,11 @@ Tolérance de saisie (IME japonais, pleine chasse) — dans les blocs `::tab` et
 | `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
 | `（` `）` | `(` `)` | 声だし (préfixe `(kanji`) / 声切り (suffixe `kanji)`), voir notation.md |
 
-Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart, rendu ○) et `)|` (vocalRepEnd, rendu □) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
+Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart) et `)|` (vocalRepEnd) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
 
-Composition : le marqueur peut partager sa case avec du contenu. `|(XXX` = ○ décalé à gauche + XXX rendu normalement (décalé à droite) ; `XXX)|` = XXX + □ décalé à droite. Exemples : `|((◯` = début de boucle vocale + 声だし + repos (cas 安波節 : le chant commence pendant un silence du sanshin) ; `|(尺)` = ○ + 尺 + 声切り ; `◯)|` = fin de boucle posée sur un repos.
+Rendu : `)|` = ┘● (barre horizontale, montant vertical, cercle creux — même géométrie que l'ancien marqueur de fin `@end_circle`, désormais déprécié et ignoré) ; `|(` = image spéculaire └○. Le ┘● de fin de morceau ne s'affiche donc QUE là où un `)|` explicite est écrit dans la grille.
+
+Composition : le marqueur peut partager sa case avec du contenu. `|(XXX` = symbole └○ à gauche + XXX rendu normalement (décalé à droite) ; `XXX)|` = XXX + symbole ┘● à droite. Exemples : `|((◯` = début de boucle vocale + 声だし + repos (cas 安波節 : le chant commence pendant un silence du sanshin) ; `|(尺)` = └○ + 尺 + 声切り ; `◯)|` = fin de boucle posée sur un repos.
 | `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
 
 L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.
@@ -74,7 +76,7 @@ Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur
 - `@layout vertical|horizontal` — indication de mise en forme lors du rendu (défaut : vertical)
 - `@cols n` — nombre de cellules par dan (défaut : `12`)
 - `@marker on|off` — active/désactive le marqueur (défaut : `on`)
-- `@end_circle on|off` — indique si un symbole spécifique de fin de chanson doit être affiché.
+- `@end_circle on|off` — **déprécié, ignoré** : le ┘● de fin s'obtient désormais par le token explicite `)|` posé dans la grille (cohérent avec Portama : marqueur attaché à une cellule, non déduit de la dernière case remplie).
 - `@font_style mincho|gothic|serif` — style de police à utiliser pour le rendu (défaut : `mincho`). `mincho` = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), `gothic` = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP), serif = police serif générique (comportement historique). La police réelle dépend du système qui affiche le SVG.
 - `@shaku_circled on|off` — rend les 尺 entourés d'un cercle (défaut : `on` ; `off` les rend sans cercle). 尺♯ n'est jamais rendu entouré. 下尺 est toujours rendu entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est jamais rendu entouré.
 - `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : `on` ; `off` les rend comme 尺)
