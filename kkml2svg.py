@@ -59,6 +59,13 @@ REST_TOKEN = "◯"
 REST_VARIANTS = {"◯", "○", "〇", "O", "o", "0"}
 REPEAT_START = "|:"
 REPEAT_END = ":|"
+# Marqueurs de répétition du chant (Portama vocalRepStart/vocalRepEnd) :
+# tokens autonomes occupant leur case, à l'instar de |: et :|. Contrairement
+# aux suffixes ( ) 声だし/声切り, ils ne sont pas attachés à une note —
+# ils marquent une section du chant que le playback rejoue (une fois par
+# piste, mécanique Portama trackCount).
+VREPEAT_START = "|("
+VREPEAT_END = ")|"
 
 # Normalisation d'entrée pleine chasse (IME japonais) — blocs tab/tab-lyrics.
 # Objectif : un fichier tapé avec une méthode de saisie japonaise (pleine
@@ -1423,6 +1430,20 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         return
 
     # Marques de répétition
+    # ○/□ de répétition du chant (vocalRep Portama) : occupent la case
+    # entière, taille note — distincts des petits ○/□ des suffixes ( )
+    # et du repos ◯ (U+25EF, grand cercle centré).
+    if tok == VREPEAT_START:
+        out.append(f'<text x="{cx}" y="{cy+7}" text-anchor="middle" '
+                   f'font-family="serif" font-size="{int(fs*0.75)}" '
+                   f'fill="black">○</text>')
+        return
+    if tok == VREPEAT_END:
+        out.append(f'<text x="{cx}" y="{cy+7}" text-anchor="middle" '
+                   f'font-family="serif" font-size="{int(fs*0.75)}" '
+                   f'fill="black">□</text>')
+        return
+
     if tok == REPEAT_START:
         out.append(f'<text x="{cx}" y="{cy+8}" text-anchor="middle" '
                    f'font-family="serif" font-size="{fs}" fill="black">'
