@@ -48,7 +48,7 @@ Tolérance de saisie (IME japonais, pleine chasse) — dans les blocs `::tab` et
 | `＃` ou `#` | `♯` | altération (尺＃) |
 | `＋` | `+` | accords (variante `+`, non encore rendue comme accord — roadmap) |
 | `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
-| `（` `）` | `(` `)` | 声だし / 声切り (bornes de chant, voir notation.md) |
+| `（` `）` | `(` `)` | 声だし (préfixe `(kanji`) / 声切り (suffixe `kanji)`), voir notation.md |
 
 Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart, rendu ○) et `)|` (vocalRepEnd, rendu □) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
 | `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
