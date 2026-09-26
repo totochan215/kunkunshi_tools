@@ -65,12 +65,12 @@ Chaque cellule est un objet avec :
 | `repeatEnd` | bool | Fin de répétition. |
 | `vocalRepStart` | bool | Début de boucle vocale `|(...)`. |
 | `vocalRepEnd` | bool | Fin de boucle vocale. |
-| `vocalPosMarkers` | dict | `{top: null|\"vocalStart\"|\"vocalEnd\", mid: ..., bot: ...}` — placement de 声だし/声切り à un tiers de case. vocalStart rend ○ (U+25CB), vocalEnd rend □ (U+25A1), fs9 dans la colonne marker (+14,8 pt de la sous-colonne notes). Distinct de `vocalRepStart/End`. |
-| `note2`         | string | Deuxième note par case (rôle à préciser) |
+| `vocalPosMarkers` | dict | `{top: null|\"vocalStart\"|\"vocalEnd\", mid: ..., bot: ...}` — placement de 声だし/声切り à un tiers de case. vocalStart rend ○ (U+25CB), vocalEnd rend □ (U+25A1), fs9 dans la colonne marker (+14,8 pt de la sous-colonne notes). Distinct de `vocalRepStart/End`.                 |
+| `note2`         | string | Deuxième note par case (rôle à préciser)       |
 | `acc2`          | string | Deuxième altération par case (rôle à préciser) |
-| `orn2`          | string | Deuxième ornement par case (rôle à préciser) |
-| `isChiribichi`  | bool   | (rôle à préciser) | 
-| `isOsaikudashi` | bool   | (rôle à préciser) |
+| `orn2`          | string | Deuxième ornement par case (rôle à préciser)   |
+| `isChiribichi`  | bool   | Cas où un チリ弾き est joué sur ce temps         | 
+| `isOsaikudashi` | bool   | Cas où un osaikudachi est joué sur ce temps    |
 
 ### Organisation des cellules par dan
 
@@ -96,21 +96,21 @@ Les cellules sont organisées comme sui :
 
 Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅかりゆし, 国頭ジントヨー), `puaToKanji` + `puaAudioMap` de main.js v2.55, et テスト節 (qui parcourt tout l'inventaire). Les positions sont notées corde/demi-tons (C = 男弦, B = 中弦, A = 女弦).
 
-| PUA | Kanji (main.js) | Position audio | Corde |
-|-----|-----------------|-----------------|-------|
-| U+E000 | 合 | C01 | 男弦 |
-| U+E001 | 乙 | C03 | 男弦 |
-| U+E002 | 老 | C05 | 男弦 |
-| U+E003 | 下老 | C06 | 男弦 |
-| U+E004 | 四 | C08 | 男弦 (octave haute) |
-| U+E005 | 上 | C10 | 男弦 |
-| U+E006 | 中 | C12 | 男弦 |
-| U+E007 | 尺 | C13 | 男弦 |
-| U+E008 | 工 | C15 | 男弦 |
-| U+E010 | 四 | B01 | 中弦 |
-| U+E011 | 上 | B03 | 中弦 |
-| U+E012 | 中 | B05 | 中弦 |
-| U+E013 | 尺 | B06 | 中弦 |
+| PUA    | Kanji | Position audio | Corde |
+|--------|-----------------|-----------------|-------|
+| U+E000 | 合   | C01 | 男弦 |
+| U+E001 | 乙   | C03 | 男弦 |
+| U+E002 | 老   | C05 | 男弦 |
+| U+E003 | 下老  | C06 | 男弦 |
+| U+E004 | 四   | C08 | 男弦 |
+| U+E005 | 上   | C10 | 男弦 |
+| U+E006 | 中   | C12 | 男弦 |
+| U+E007 | 尺   | C13 | 男弦 |
+| U+E008 | 工   | C15 | 男弦 |
+| U+E010 | 四   | B01 | 中弦 |
+| U+E011 | 上   | B03 | 中弦 |
+| U+E012 | 中   | B05 | 中弦 |
+| U+E013 | 尺   | B06 | 中弦 |
 | U+E014 | 下尺 | B08 | 中弦 |
 | U+E015 | (sans nom JS) | B10 | 中弦 |
 | U+E016 | (sans nom JS) | B12 | 中弦 |
@@ -126,10 +126,13 @@ Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅか
 | U+E027 | 斗 | A15 | 女弦 |
 | U+E028 | 為 | A17 | 女弦 |
 | U+E030 | ○ (silence) | — | — |
-| U+E031 | kaki-utu | — | glyphe d'ornement |
-| U+E032 | uchi-utu | — | glyphe d'ornement |
-| U+E033 | (nuki) | — | glyphe d'ornement : croissant d'uchi-utu avec contre-trou (anneau partiel) |
-| U+E041–E044 | yubii 1–4 | — | 指位記号 |
+| U+E031 | kaki-utu    | — | glyphe d'ornement |
+| U+E032 | uchi-utu    | — | glyphe d'ornement |
+| U+E033 | nuki-utu    | — | glyphe d'ornement |
+| U+E041 | yubii 1 | — | 指位記号 |
+| U+E042 | yubii 2 | — | 指位記号 |
+| U+E043 | yubii 3 | — | 指位記号 |
+| U+E044 | yubii 4 | — | 指位記号 |
 
 Notes :
 
