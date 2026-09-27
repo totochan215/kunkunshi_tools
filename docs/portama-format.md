@@ -176,7 +176,7 @@ Notes :
 
 ## Ornements (souhou)
 
-Valeurs de `orn` confirmées (テスト節, main.js) :
+Valeurs de `orn` possibles :
 
 | `orn` | PUA     | Suffixe KKML | Description |
 |-------|---------|--------------|-------------|
