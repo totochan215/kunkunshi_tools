@@ -172,7 +172,7 @@ Les cellules sont organisées comme suit :
 Notes :
 
 - Les PUA U+E009, U+E019, U+E029, et U+E034 à U+E040 ne sont pas utilisés. La liste s'arrête à U+E044.
-- Portama utilise les webfonts [kk4font1.ttf](https://www.portama.com/editor/fonts/kk4font1.ttf) (mincho) et [kk4font2.ttf](https://www.portama.com/editor/fonts/kk4font2.ttf) (gothic) pour représenter ces symboles à l'écran et dans les PDF exportés.
+- Portama utilise les webfonts [kk4font1.ttf](https://www.portama.com/editor/fonts/kk4font1.ttf) (mincho) et [kk4font2.ttf](https://www.portama.com/editor/fonts/kk4font2.ttf) (gothic) pour représenter ces symboles à l'écran et dans les PDF exportés. Ces fontes semblent avoir été composées sur mesure pour les besoins du kunkunshi.
 
 ## Ornements (souhou)
 
