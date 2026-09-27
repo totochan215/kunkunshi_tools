@@ -171,14 +171,8 @@ Les cellules sont organisées comme suit :
 
 Notes :
 
-- Les PUA U+E009, U+E019, U+E029, et U+E034 à U+E040 ne sont pas utilisés par Portama. La liste s'arrête à U+E044.
-- Portama utilise les webfonts [kk4font1.ttf](https://www.portama.com/editor/fonts/kk4font1.ttf) (mincho) et [kk4font2.ttf](https://www.portama.com/editor/fonts/kk4font2.ttf) (gothic) pour représenter ces symboles.
-- Les positions hautes E004–E008, E015–E018 et E026–E028 sont des GLYPHES COMPOSITES de la police de tablature (webfont kk4font1.ttf, identique au sous-ensemble PDF), formés d'un radical + le kanji de la position nominale. Identification par superposition exacte des contours (glyf upem 1024) croisée avec les hauteurs de puaAudioMap (1 unité de code = 1 demi-ton) et les conventions traditionnelles :
-  - Radical 亻 (= イ) : même kanji une octave au-dessus. Convention classique du kunkunshi (人偏 + kanji, lu « イ ») documentée par le blog 島袋りりあ (zurazura.com) et じょんからドットコム (« 高音部にはイ・ロをつけます »). Concerne E007/E008 (男弦), E016–E018 (中弦), E026–E028 (女弦). Les OCR du PDF lisent 亿/佬/仝/伍 pour ces glyphes (亻+乙, 亻+老, 亻+工, 亻+五).
-  - Radical ロ : même hauteur que le kanji de base, mais doigté sur une autre corde. Documenté par le site Mikuni うちなぁ (ロ五, ロ尺 existent « dans certaines pièces »). Concerne E004–E006 (男弦 : ロ上/ロ中/ロ尺) et E015 (中弦 : ロ五).
-- Les commentaires de main.js («四», «上», «中 », «尺», «工 » pour E004–E008) sont des noms de debug de position sur corde, pas la sémantique des glyphes ; ne pas s'y référer pour le rendu.
-- U+E029, E019, E034–E040, E045+ : non définis. U+E033 est référencé par le JS ; identifié comme glyphe nuki par テスト節 (orn `nu` → E033 dans le flux texte du PDF).
-- Correction d'une identification antérieure erronée : E026–E028 ne sont pas 十/斗/為 (positions koto qui n'existent pas dans Portama), mais イ尺/イ工/イ五.
+- Les PUA U+E009, U+E019, U+E029, et U+E034 à U+E040 ne sont pas utilisés. La liste s'arrête à U+E044.
+- Portama utilise les webfonts [kk4font1.ttf](https://www.portama.com/editor/fonts/kk4font1.ttf) (mincho) et [kk4font2.ttf](https://www.portama.com/editor/fonts/kk4font2.ttf) (gothic) pour représenter ces symboles à l'écran et dans les PDF exportés.
 
 ## Ornements (souhou)
 
