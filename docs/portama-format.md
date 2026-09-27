@@ -74,7 +74,7 @@ Chaque cellule est un objet avec :
 | `isSmall`         | bool   | Taille de note : `false` = note standard, `true` = petite note (straddle). Défaut : `false` |
 | `acc`             | string | Altération : `\"sharp\"` = Dièse (♯), `\"flat\"` = bémol (♭).|
 | `orn`             | string | Ornement/souhou : `\"k\"` (kaki-utu), `\"u\"` (uchi-utu), `\"nu\"` (nuki-utu). Seules ces trois valeurs sont supportées. k et u s'excluent mutuellement dans l'éditeur. Portama ignore silencieusement `orn` sur une case vide.|
-| `yubii`           | int    | 指位記号 (doigté de main gauche) : 1 = 人差指, 2 = 中指, 3 = 無名指, 4 = 小指.|
+| `yubii`           | int    | 指位記号 (doigté de main gauche) : `1` = 人差指, `2` = 中指, `3` = 無名指, `4` = 小指.|
 | `repeatStart`     | bool   | Début de répétition.                           |
 | `repeatEnd`       | bool   | Fin de répétition.                             |
 | `vocalRepStart`   | bool   | Début de boucle vocale.                        |
