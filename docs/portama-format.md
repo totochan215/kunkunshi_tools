@@ -55,9 +55,13 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `rhythmMode`  | string | Mode rythmique. "0" = ? ou "100" = ?. |
 | `orientation` | string | `\"landscape\"` ou `\"portrait\"`. |
 | `allLyricsData`    | array   | Cadres de paroles avec `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Content = \"歌詞を入力\" si non renseigné. Voir ci-dessous |
-| `lyricsWritingMode`| string  | inconnu. Ex : \"vertical\". |
-| `lyricsFontFamily` | string  | inconnu. Ex : \"mincho\".   |
-| `lyricsFontSize`   | string  | inconnu. Ex : \"10pt\".     |
+| `lyricsWritingMode` | string  | inconnu.|
+| `lyricsFontSize`    | string  | inconnu.|
+| `lyricsFontFamily`  | string  | inconnu.|
+| `lyricsWritingMode` | string  | inconnu.|
+| `rubyPrintMode `    | string  | inconnu.|
+| `print_duration`    | string  | inconnu.|
+
 
 ## Structure du tableau (`score[dan][cell]`)
 
