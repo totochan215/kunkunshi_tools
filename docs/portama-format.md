@@ -165,10 +165,10 @@ Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅか
 | U+E031 | kaki-utu    | —  | glyphe d'ornement |
 | U+E032 | uchi-utu    | —  | glyphe d'ornement |
 | U+E033 | nuki-utu    | —  | glyphe d'ornement |
-| U+E041 | ㊀     | —  | yubii-1            |
-| U+E042 | ㊁     | —  | yubii-2            |
-| U+E043 | ㊂     | —  | yubii-3            |
-| U+E044 | ㊃     | —  | yubii-4            |
+| U+E041 | ㊀     | —  | yubii-1 (index)        |
+| U+E042 | ㊁     | —  | yubii-2 (majeur)       |
+| U+E043 | ㊂     | —  | yubii-3 (non spécifié) |
+| U+E044 | ㊃     | —  | yubii-4 (auriculaire)  |
 
 Notes :
 
