@@ -62,7 +62,6 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `rubyPrintMode `    | string  | inconnu.|
 | `print_duration`    | string  | inconnu.|
 
-
 ## Structure du tableau score
 
 Tableau 2D ([dan][cell]).
@@ -172,6 +171,7 @@ Les cellules sont organisées comme suit :
 
 Notes :
 
+- Les PUA U+E009, U+E019, U+E029, et U+E034 à U+E040 ne sont pas utilisés par Portama. La liste s'arrête à U+E044. 
 - Les positions hautes E004–E008, E015–E018 et E026–E028 sont des GLYPHES COMPOSITES de la police de tablature (webfont kk4font1.ttf, identique au sous-ensemble PDF), formés d'un radical + le kanji de la position nominale. Identification par superposition exacte des contours (glyf upem 1024) croisée avec les hauteurs de puaAudioMap (1 unité de code = 1 demi-ton) et les conventions traditionnelles :
   - Radical 亻 (= イ) : même kanji une octave au-dessus. Convention classique du kunkunshi (人偏 + kanji, lu « イ ») documentée par le blog 島袋りりあ (zurazura.com) et じょんからドットコム (« 高音部にはイ・ロをつけます »). Concerne E007/E008 (男弦), E016–E018 (中弦), E026–E028 (女弦). Les OCR du PDF lisent 亿/佬/仝/伍 pour ces glyphes (亻+乙, 亻+老, 亻+工, 亻+五).
   - Radical ロ : même hauteur que le kanji de base, mais doigté sur une autre corde. Documenté par le site Mikuni うちなぁ (ロ五, ロ尺 existent « dans certaines pièces »). Concerne E004–E006 (男弦 : ロ上/ロ中/ロ尺) et E015 (中弦 : ロ五).
