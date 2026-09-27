@@ -77,9 +77,9 @@ Chaque cellule est un objet avec :
 | `yubii`           | int    | 指位記号 (doigté de main gauche) : 1 = 人差指, 2 = 中指, 3 = 無名指, 4 = 小指.|
 | `repeatStart`     | bool   | Début de répétition.                           |
 | `repeatEnd`       | bool   | Fin de répétition.                             |
-| `vocalRepStart`   | bool   | Début de boucle vocale `|(...)`.               |
+| `vocalRepStart`   | bool   | Début de boucle vocale.                        |
 | `vocalRepEnd`     | bool   | Fin de boucle vocale.                          |
-| `vocalPosMarkers` | dict   | `{top: null|\"vocalStart\"|\"vocalEnd\", mid: ..., bot: ...}` — placement de 声だし/声切り à un tiers de case. vocalStart rend ○ (U+25CB), vocalEnd rend □ (U+25A1), fs9 dans la colonne marker (+14,8 pt de la sous-colonne notes). Distinct de `vocalRepStart/End`.                |
+| `vocalPosMarkers` | array  | vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : ??; pos = "mid" : milieu de cellule, pos = ?? : ??  |
 | `note2`           | string | Deuxième note par case (rôle à préciser)       |
 | `acc2`            | string | Deuxième altération par case (rôle à préciser) |
 | `orn2`            | string | Deuxième ornement par case (rôle à préciser)   |
