@@ -79,12 +79,12 @@ Chaque cellule est un objet avec :
 | `repeatEnd`       | bool   | Fin de répétition.                             |
 | `vocalRepStart`   | bool   | Début de boucle vocale.                        |
 | `vocalRepEnd`     | bool   | Fin de boucle vocale.                          |
-| `vocalPosMarkers` | array  | vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : ??; pos = "mid" : milieu de cellule, pos = ?? : ??  |
+| `vocalPosMarkers` | array  | 1D : vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : ??; pos = "mid" : milieu de cellule, pos = ?? : ??  |
 | `note2`           | string | Deuxième note par case (rôle à préciser)       |
 | `acc2`            | string | Deuxième altération par case (rôle à préciser) |
 | `orn2`            | string | Deuxième ornement par case (rôle à préciser)   |
-| `isChiribichi`    | bool   | Cas où un チリ弾き est joué sur ce temps         | 
-| `isOsaikudashi`   | bool   | Cas où un osaikudachi est joué sur ce temps    |
+| `isChiribichi`    | bool   | Cas où un chiribichi (チリ弾き) est joué sur ce temps   | 
+| `isOsaikudashi`   | bool   | Cas où un osaikudachi (押さい下ち) est joué sur ce temps    |
 
 ## Structure du tableau allRubyData
 
