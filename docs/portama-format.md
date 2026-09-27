@@ -137,7 +137,7 @@ Les cellules sont organisées comme suit :
 | U+E000 | 合   | C01 | 男弦 | |
 | U+E001 | 乙   | C03 | 男弦 | |
 | U+E002 | 老   | C05 | 男弦 | |
-| U+E003 | 下老  | C06 | 男弦 | |
+| U+E003 | 下老  | C06 | 男弦 | glyphe composite 下+老 |
 | U+E004 | ロ上 | C08 | 男弦 | glyphe composite ロ+上 |
 | U+E005 | ロ中 | C10 | 男弦 | glyphe composite ロ+中 |
 | U+E006 | ロ尺 | C12 | 男弦 | glyphe composite ロ+尺 |
@@ -147,7 +147,7 @@ Les cellules sont organisées comme suit :
 | U+E011 | 上   | B03 | 中弦 | |
 | U+E012 | 中   | B05 | 中弦 | |
 | U+E013 | 尺          | B06 | 中弦 | |
-| U+E014 | 下尺        | B08 | 中弦 | |
+| U+E014 | 下尺        | B08 | 中弦 | glyphe composite 下+尺 |
 | U+E015 | ロ五 | B10 | 中弦 | glyphe composite ロ+五 |
 | U+E016 | イ老 | B12 | 中弦 | glyphe composite イ+老 |
 | U+E017 | イ四 | B13 | 中弦 | glyphe composite イ+四 |
