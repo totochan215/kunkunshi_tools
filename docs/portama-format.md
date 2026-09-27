@@ -257,10 +257,10 @@ L'alphabet Portama est plus riche que ce qui était documenté initialement : �
 ## Conversion Portama → KKML
 
 Le convertisseur (`portama2kkml.py`) mappe :
-- PUA → kanji (carte complète E000–E033, cf. ci-dessus)
+- PUA → kanji (carte complète E000–E044, cf. ci-dessus)
 - Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B)
 - `acc: "sharp"/"flat"` → ♯/♭
-- `orn: "k"/"u"/"nu"` → `^` / `*` / `n` (proposition)
+- `orn: "k"/"u"/"nu"` → `^` / `*` / `n`
 - `yubii: 1-4` → à définir
 - `vocalPosMarkers` → à définir
 - `repeatStart/repeatEnd` → `|:` / `:|`
@@ -271,12 +271,3 @@ Le convertisseur (`portama2kkml.py`) mappe :
 ## Capacités audio
 
 Portama peut jouer l'audio des tablatures en interprétant chaque note PUA comme une hauteur sonore basée sur `choshi` (décalages par corde) et `chogen` (décalage global en demi-tons, `chogen - 5`). `puaAudioMap` de main.js donne les positions exactes par corde.
-
-## Fichiers analysés
-
-| Fichier | Dans | numDans | Notes spéciales |
-|---------|------|---------|-----------------|
-| かぎやで風節 | `./samples/` | 19 | `orn:\"u\"` (7 occurrences), `acc:\"sharp\"` (fréquent), `repeatStart/End`, ruby |
-| 国頭[くんじゃん]ジントヨー | `./samples/` | 9 | `repeatStart/End`, chogen=4 |
-| だんじゅかりゆし | `./samples/` | 7 | `repeatStart/End` |
-| テスト節 | `./samples/` | 7 (réel : 5) | Pièce de test exhaustive : tous les ornements (k/u/nu), acc ♯/♭, yubii 1/2/4, vocalPosMarkers, repeatStart/End, vocalRep, tout l'inventaire PUA E000–E033 ; chogen=7 ; dan5 tronqué (5 cases) |
