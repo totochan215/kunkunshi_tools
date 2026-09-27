@@ -63,8 +63,9 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `print_duration`    | string  | inconnu.|
 
 
-## Structure du tableau (`score[dan][cell]`)
+## Structure du tableau score
 
+Tableau 2D ([dan][cell]).
 Chaque cellule est un objet avec :
 
 | Champ             | Type   | Description |
