@@ -39,7 +39,7 @@ en général premier couplet uniquement>
 ::
 ```
 
-L'ordre des sections n'est pas imposé, toutefois dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées.
+L'ordre des sections n'est pas imposé. Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées.
 
 Tolérance : si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
