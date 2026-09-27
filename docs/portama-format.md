@@ -40,7 +40,7 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `numDans`     | int    | Nombre de dans (段) déclaré. |
 | `cellsPerDan` | int    | Nombre de cellules par dan (`24` ou `36`). |
 | `score`       | array  | 2D : `[dan][cell]`. Contenu de la tablature en dans et cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
-| `allRubyData` | array  | Voir section dédiée ci-dessous. |
+| `allRubyData` | array  | Paroles en phonétique alignées sur les cellules. Voir section dédiée ci-dessous. |
 | `price`       | int    | Prix en Yen pour les morceaux publiés par Portama. Défaut : 0 |
 | `isPublished` | int    | Indique si le morceau est publié sur la plateforme. Défaut : 0 |
 | `viewSize`    | int    | Inconnu (présumé : niveau de zoom de la visualisation). Défaut : 100 |
@@ -54,7 +54,7 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `rhythm`      | string | Rythme. "0" = ?, "100" = ?. |
 | `rhythmMode`  | string | Mode rythmique. "0" = ? ou "100" = ?. |
 | `orientation` | string | `\"landscape\"` ou `\"portrait\"`. |
-| `allLyricsData`    | array   | Cadres de paroles avec `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Content = \"歌詞を入力\" si non renseigné. Voir ci-dessous |
+| `allLyricsData`     | array   | 2D. Paroles organisées par cadres. Voir ci-dessous |
 | `lyricsWritingMode` | string  | inconnu.|
 | `lyricsFontSize`    | string  | inconnu.|
 | `lyricsFontFamily`  | string  | inconnu.|
@@ -101,7 +101,7 @@ TODO:
 | Champ      | Type   | Description |
 |------------|--------|-------------|
 | `id`       | int    |             |
-| `content`  | string |             |
+| `content`  | string |  \"歌詞を入力\" si non renseigné            |
 | `x`        | real   |             |
 | `y`        | real   |             |
 | `width`    | real   |             |
