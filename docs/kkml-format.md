@@ -43,32 +43,6 @@ L'ordre des sections n'est pas imposé. Dans une logique d'exécution du morceau
 
 Tolérance : si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
-Tolérance de saisie (pour l'IME japonais, pleine chasse) — dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine chasse (full-width) sont normalisés vers leur forme canonique en demie chasse (half-width), avec une INFO sur stderr (une fois par variante) :
-
-| Saisie acceptée | Converti en | Usage |
-|---              |---          |---|
-| `／`            | `/`         | croches |
-| `：`            | `:`         | shuffle |
-| `｜`            | `\|` |       marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
-| `♯` | `#` | altération (尺＃) |
-| `＋` | `+` | accords |
-| `ー` | `-` | accords |
-| `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
-| `（` `）` | `(` `)` | 声だし (koedashi) / 声切り (koekiri)|
-
-Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart) et `)|` (vocalRepEnd) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
-
-Rendu : les marqueurs `|(` et `)|` vivent dans la colonne marker (comme les flèches de `|:` / `:|`) — les kanjis de notes ne sont JAMAIS décalés, le contenu de la case est rendu centré normalement. `)|` = ┘● : barre horizontale, montant vertical montant, disque creux au-dessus (même géométrie et même taille que l'ancien `@end_circle`, désormais déprécié et ignoré) ; `|(` = image spéculaire par rapport à l'axe HORIZONTAL : barre en haut, montant vertical descendant, disque creux en dessous.
-
-Composition : le marqueur partage librement sa case avec du contenu, rendu centré sans décalage. Exemples : `|((◯` = début de boucle vocale + 声だし + repos (cas 安波節 : le chant commence pendant un silence du sanshin) ; `|(尺)` = ┘○ miroir + 尺 + 声切り ; `◯)|` = fin de boucle posée sur un repos ; `合)|` = fin de boucle sur une note.
-| `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
-
-L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.
-
-Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de tokens valides. Dans les blocs `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Le reste de la normalisation ne touche PAS les blocs `::vocal` et `::lyrics` (le ー y reste une voyelle longue).
-
-Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
-
 ## Métadonnées
 
 - `@title` — titre de la chanson
@@ -143,5 +117,33 @@ Séparateurs de tokens (à l'intérieur d'une case) :
 | (aucun)    | Position étendue                        | `下老`, `イ尺`, `尺♯`… |
 
 Token non reconnu (ni position, ni séparateur, ex. `合工尺`) : le convertisseur émet une alerte sur stderr (une seule fois par token unique) et applique un rendu dégradé — les 3 premiers caractères au maximum, condensés en largeur comme `イ中` (2 caractères) ou `イ下尺` (3 caractères). L'ancien comportement « ornement » (empilement vertical de tous les caractères) est déprécié depuis le 19 sept. 2026 : il n'avait pas de sémantique musicale (les kanji empilés réels sont des croches `A/B`, du hayabiki `A:B` ou des accords `A-B`, chacun ayant son séparateur).
+
+Tolérance de saisie (pour l'IME japonais, pleine chasse) — dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine chasse (full-width) sont normalisés vers leur forme canonique en demie chasse (half-width), avec une INFO sur stderr (une fois par variante) :
+
+| Saisie acceptée | Converti en | Usage |
+|---              |---          |---|
+| `／`            | `/`         | croches |
+| `：`            | `:`         | shuffle |
+| `｜`            | `\|` |       marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
+| `♯` | `#` | altération (尺＃) |
+| `＋` | `+` | accords |
+| `ー` | `-` | accords |
+| `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
+| `（` `）` | `(` `)` | 声だし (koedashi) / 声切り (koekiri)|
+
+Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart) et `)|` (vocalRepEnd) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
+
+Rendu : les marqueurs `|(` et `)|` vivent dans la colonne marker (comme les flèches de `|:` / `:|`) — les kanjis de notes ne sont JAMAIS décalés, le contenu de la case est rendu centré normalement. `)|` = ┘● : barre horizontale, montant vertical montant, disque creux au-dessus (même géométrie et même taille que l'ancien `@end_circle`, désormais déprécié et ignoré) ; `|(` = image spéculaire par rapport à l'axe HORIZONTAL : barre en haut, montant vertical descendant, disque creux en dessous.
+
+Composition : le marqueur partage librement sa case avec du contenu, rendu centré sans décalage. Exemples : `|((◯` = début de boucle vocale + 声だし + repos (cas 安波節 : le chant commence pendant un silence du sanshin) ; `|(尺)` = ┘○ miroir + 尺 + 声切り ; `◯)|` = fin de boucle posée sur un repos ; `合)|` = fin de boucle sur une note.
+| `ー` `ｰ` `－` (token isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste un token non reconnu : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
+
+L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.
+
+Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de tokens valides. Dans les blocs `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Le reste de la normalisation ne touche PAS les blocs `::vocal` et `::lyrics` (le ー y reste une voyelle longue).
+
+Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
+
+== Pour en savoir plus
 
 Voir [notation musicale](notation.md) pour le détail des tokens, modes rythmiques, suffixes de technique, positions étendues, positions hautes (préfixes イ/ロ, dont イ下尺/ロ下尺), et options d'en-tête.
