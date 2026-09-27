@@ -162,7 +162,7 @@ Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅか
 | U+E026 | 十          | A14 | 女弦 | |
 | U+E027 | 斗          | A15 | 女弦 | |
 | U+E028 | 為          | A17 | 女弦 | |
-| U+E030 | ○ (silence) | —  | —                 | |
+| U+E030 | ○      | —  | —                 | silence |
 | U+E031 | kaki-utu    | —  | — | glyphe d'ornement |
 | U+E032 | uchi-utu    | —  | — | glyphe d'ornement |
 | U+E033 | nuki-utu    | —  | — | glyphe d'ornement |
