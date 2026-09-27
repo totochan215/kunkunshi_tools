@@ -41,7 +41,7 @@ en général premier couplet uniquement>
 
 Le fichier est composé d'un bloc de métadonnées, et de sections, dont l'ordre n'est pas imposé. Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées.
 
-Les lignes précédées du symbole commentaire \# sont ignorées.
+Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
 Tolérance : si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
