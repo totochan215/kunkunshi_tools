@@ -138,29 +138,29 @@ Les cellules sont organisées comme suit :
 | U+E001 | 乙   | C03 | 男弦 | |
 | U+E002 | 老   | C05 | 男弦 | |
 | U+E003 | 下老  | C06 | 男弦 | |
-| U+E004 | ロ上 | C08 | 男弦 | glyphe composite ロ+上 ; même hauteur que 上, doigté sur 男弦 |
-| U+E005 | ロ中 | C10 | 男弦 | glyphe composite ロ+中 ; même hauteur que 中, doigté sur 男弦 |
-| U+E006 | ロ尺 | C12 | 男弦 | glyphe composite ロ+尺 ; même hauteur que 尺, doigté sur 男弦 |
-| U+E007 | イ合 | C13 | 男弦 | glyphe composite 亻+合 ; 合 une octave au-dessus |
-| U+E008 | イ乙 | C15 | 男弦 | glyphe composite 亻+乙 ; 乙 une octave au-dessus |
+| U+E004 | ロ上 | C08 | 男弦 | glyphe composite ロ+上 |
+| U+E005 | ロ中 | C10 | 男弦 | glyphe composite ロ+中 |
+| U+E006 | ロ尺 | C12 | 男弦 | glyphe composite ロ+尺 |
+| U+E007 | イ合 | C13 | 男弦 | glyphe composite イ+合 |
+| U+E008 | イ乙 | C15 | 男弦 | glyphe composite イ+乙 |
 | U+E010 | 四   | B01 | 中弦 | |
 | U+E011 | 上   | B03 | 中弦 | |
 | U+E012 | 中   | B05 | 中弦 | |
 | U+E013 | 尺          | B06 | 中弦 | |
 | U+E014 | 下尺        | B08 | 中弦 | |
-| U+E015 | ロ五 | B10 | 中弦 | glyphe composite ロ+五 ; même hauteur que 五, doigté sur 中弦 |
-| U+E016 | イ老 | B12 | 中弦 | glyphe composite 亻+老 ; 老 une octave au-dessus |
-| U+E017 | イ四 | B13 | 中弦 | glyphe composite 亻+四 ; 四 une octave au-dessus |
-| U+E018 | イ上 | B15 | 中弦 | glyphe composite 亻+上 ; 上 une octave au-dessus |
+| U+E015 | ロ五 | B10 | 中弦 | glyphe composite ロ+五 |
+| U+E016 | イ老 | B12 | 中弦 | glyphe composite イ+老 |
+| U+E017 | イ四 | B13 | 中弦 | glyphe composite イ+四 |
+| U+E018 | イ上 | B15 | 中弦 | glyphe composite イ+上 |
 | U+E020 | 工          | A03 | 女弦 | |
 | U+E021 | 五          | A05 | 女弦 | |
 | U+E022 | 六          | A07 | 女弦 | |
 | U+E023 | 七          | A08 | 女弦 | |
 | U+E024 | 八          | A10 | 女弦 | |
 | U+E025 | 九          | A12 | 女弦 | |
-| U+E026 | イ尺 | A14 | 女弦 | glyphe composite 亻+尺 ; 尺 une octave au-dessus |
-| U+E027 | イ工 | A15 | 女弦 | glyphe composite 亻+工 ; 工 une octave au-dessus |
-| U+E028 | イ五 | A17 | 女弦 | glyphe composite 亻+五 ; 五 une octave au-dessus |
+| U+E026 | イ尺 | A14 | 女弦 | glyphe composite イ+尺 |
+| U+E027 | イ工 | A15 | 女弦 | glyphe composite イ+工 |
+| U+E028 | イ五 | A17 | 女弦 | glyphe composite イ+五 |
 | U+E030 | ○      | —  | —                 | silence |
 | U+E031 | kaki-utu    | —  | — | glyphe d'ornement |
 | U+E032 | uchi-utu    | —  | — | glyphe d'ornement |
