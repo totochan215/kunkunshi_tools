@@ -130,9 +130,7 @@ Les cellules sont organisées comme suit :
 | note (isSmall=true)  | vide     | Kuubanchi       | `As`       |
 | vide                 | vide     | Case vide       | `-`        |
 
-## Correspondance PUA → positions (carte complète)
-
-Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅかりゆし, 国頭ジントヨー), `puaToKanji` + `puaAudioMap` de main.js v2.55, et テスト節 (qui parcourt tout l'inventaire). Les positions sont notées corde/demi-tons (C = 男弦, B = 中弦, A = 女弦).
+## Correspondance PUA → positions
 
 | PUA    | Kanji           | Position audio  | Corde | Commentaire |
 |--------|-----------------|-----------------|-------|--------------
