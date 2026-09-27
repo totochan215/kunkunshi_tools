@@ -52,8 +52,8 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `chogen`      | string | Ajustement par rapport à l'accordage nominal, en demi-tons. Défaut : 5 (nominal) |
 | `choshi`      | string | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
 | `rhythm`      | string | Rythme. "0" = ?, "100" = ?. |
-| `rhythmMode`  | string | Mode rythmique. "0" = ? ou "100" = ?. |
-| `orientation` | string | `\"landscape\"` ou `\"portrait\"`. |
+| `rhythmMode`  | string | Mode rythmique. "0" = ?, "100" = ?. |
+| `orientation` | string | `\"landscape\"` : paysage, `\"portrait\"` : portrait. |
 | `allLyricsData`     | array   | 2D. Paroles organisées par cadres. Voir ci-dessous |
 | `lyricsWritingMode` | string  | inconnu.|
 | `lyricsFontSize`    | string  | inconnu.|
