@@ -102,13 +102,13 @@ TODO:
 
 | Champ      | Type   | Description |
 |------------|--------|-------------|
-| `id`       | int    |             |
-| `content`  | string |  \"歌詞を入力\" si non renseigné            |
-| `x`        | real   |             |
-| `y`        | real   |             |
-| `width`    | real   |             |
-| `height`   | real   |             |
-| `fontSize` | int    |             |
+| `id`       | int    | Identifiant du bloc                      |
+| `content`  | string | Paroles du couplet. Défaut : \"歌詞を入力\" |
+| `x`        | real   | Position x du bloc dans la mise en page  |
+| `y`        | real   | Position y du bloc dans la mise en page  |
+| `width`    | real   | Largeur du bloc dans la mise en page     |
+| `height`   | real   | Hauteur du bloc dans la mise en page     |
+| `fontSize` | int    | Taille de police du bloc.                |
 
 ### Organisation des cellules par dan
 
