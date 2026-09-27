@@ -56,8 +56,8 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `orientation` | string | `\"landscape\"` : paysage, `\"portrait\"` : portrait. |
 | `allLyricsData`     | array   | 2D. Paroles organisées par cadres. Voir ci-dessous |
 | `lyricsWritingMode` | string  | inconnu.|
-| `lyricsFontSize`    | string  | inconnu.|
-| `lyricsFontFamily`  | string  | inconnu.|
+| `lyricsFontSize`    | string  | Taille de police.|
+| `lyricsFontFamily`  | string  | Famille de police : `mincho` : mincho (serif), `gothic` : gothique (sans-serif), .|
 | `lyricsWritingMode` | string  | inconnu.|
 | `rubyPrintMode `    | string  | inconnu.|
 | `print_duration`    | string  | inconnu.|
