@@ -146,29 +146,29 @@ Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅか
 | U+E010 | 四   | B01 | 中弦 |
 | U+E011 | 上   | B03 | 中弦 |
 | U+E012 | 中   | B05 | 中弦 |
-| U+E013 | 尺   | B06 | 中弦 |
-| U+E014 | 下尺 | B08 | 中弦 |
+| U+E013 | 尺          | B06 | 中弦 |
+| U+E014 | 下尺        | B08 | 中弦 |
 | U+E015 | (sans nom JS) | B10 | 中弦 |
 | U+E016 | (sans nom JS) | B12 | 中弦 |
 | U+E017 | (sans nom JS) | B13 | 中弦 |
 | U+E018 | (sans nom JS) | B15 | 中弦 |
-| U+E020 | 工 | A03 | 女弦 |
-| U+E021 | 五 | A05 | 女弦 |
-| U+E022 | 六 | A07 | 女弦 |
-| U+E023 | 七 | A08 | 女弦 |
-| U+E024 | 八 | A10 | 女弦 |
-| U+E025 | 九 | A12 | 女弦 |
-| U+E026 | 十 | A14 | 女弦 |
-| U+E027 | 斗 | A15 | 女弦 |
-| U+E028 | 為 | A17 | 女弦 |
-| U+E030 | ○ (silence) | — | — |
-| U+E031 | kaki-utu    | — | glyphe d'ornement |
-| U+E032 | uchi-utu    | — | glyphe d'ornement |
-| U+E033 | nuki-utu    | — | glyphe d'ornement |
-| U+E041 | yubii 1 | — | 指位記号 |
-| U+E042 | yubii 2 | — | 指位記号 |
-| U+E043 | yubii 3 | — | 指位記号 |
-| U+E044 | yubii 4 | — | 指位記号 |
+| U+E020 | 工          | A03 | 女弦 |
+| U+E021 | 五          | A05 | 女弦 |
+| U+E022 | 六          | A07 | 女弦 |
+| U+E023 | 七          | A08 | 女弦 |
+| U+E024 | 八          | A10 | 女弦 |
+| U+E025 | 九          | A12 | 女弦 |
+| U+E026 | 十          | A14 | 女弦 |
+| U+E027 | 斗          | A15 | 女弦 |
+| U+E028 | 為          | A17 | 女弦 |
+| U+E030 | ○ (silence) | —  | —                 |
+| U+E031 | kaki-utu    | —  | glyphe d'ornement |
+| U+E032 | uchi-utu    | —  | glyphe d'ornement |
+| U+E033 | nuki-utu    | —  | glyphe d'ornement |
+| U+E041 | ㊀     | —  | yubii-1            |
+| U+E042 | ㊁     | —  | yubii-2            |
+| U+E043 | ㊂     | —  | yubii-3            |
+| U+E044 | ㊃     | —  | yubii-4            |
 
 Notes :
 
@@ -182,11 +182,9 @@ Valeurs de `orn` confirmées (テスト節, main.js) :
 
 | `orn` | Glyphe PUA | Suffixe KKML | Description |
 |-------|------------|--------------|-------------|
-| `k` | U+E031 | `^` | kaki-utu (┛ en coin, trait uniforme ~0,065 em) |
-| `u` | U+E032 | `*` | uchi-utu (croissant de pinceau, tête épaisse en bas-gauche, queue fine en haut) |
-| `nu` | U+E033 | `n` (proposition) | nuki 抜音 — croissant d'uchi-utu avec contre-trou (anneau partiel) |
-
-Exclusion mutuelle k/u dans l'éditeur. `nu` est composable avec les autres (à confirmer par l'UI). Hypothèses antérieures (`a`, `c`, `t`) : invalidées, elles n'existent pas dans Portama.
+| `k`   | U+E031     | `^`          | kaki-utu    |
+| `u`   | U+E032     | `*`          | uchi-utu    |
+| `nu`  | U+E033     | `n`          | nuchi-utu   |
 
 ## Encodage
 
