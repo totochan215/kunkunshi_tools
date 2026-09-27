@@ -92,8 +92,9 @@ TODO:
 
 | Champ      | Type   | Description |
 |------------|--------|-------------|
-|            |        |             |
-|            |        |             |
+| 1          | array  | 1D: Liste de rubys ; 1 ligne par dan ; 3 double largeur par cellule |
+| 2          | array  | idem        |
+| etc.       | array  | idem        |
 
 ## Structure du tableau allLyricsData
 
