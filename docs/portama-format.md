@@ -34,25 +34,33 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 
 | Champ | Type | Description |
 |-------|------|-------------|
-| `version`     | string | Numéro de version du JSON Portama (2.2 observé). |
+| `version`     | string | Numéro de version du JSON Portama. (2.2 = version courante au 26/09/2026). |
+| `musicno`     | int    | Identifiant du morceau sur Portama. Défaut 0. |
+| `userId`      | int    | Identifiant de l'utilisateur sur Portama. Défaut 0. |
 | `numDans`     | int    | Nombre de dans (段) déclaré. |
-| `cellsPerDan` | int    | Nombre de cellules par dan (`24` ou `36`) |
-| `musicno`     | int    | Identifiant du morceau sur Portama (0 pour une création locale). |
-| `score`       | `Array<Array<Cell>>` | 2D : `[dan][cell]`. Contenu de la tablature en dans et cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
+| `cellsPerDan` | int    | Nombre de cellules par dan (`24` ou `36`). |
+| `score`       | Array<Array<Cell>> | 2D : `[dan][cell]`. Contenu de la tablature en dans et cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
+| `allRubyData` | array  | Voir section dédiée ci-dessous. |
+| `price`       | int    | Prix en Yen pour les morceaux publiés par Portama. Défaut : 0 |
+| `isPublished` | int    | Indique si le morceau est publié sur la plateforme. Défaut : 0 |
+| `viewSize`    | int    | Inconnu (présumé : niveau de zoom de la visualisation). Défaut : 100 |
+| `trackCount`  | int    | Inconnu (présumé : nombre de répétitions de boucle vocale à faire). Défaut : 1 |
+| `currentTrack`| int    | Inconnu (présumé : nombre de répétitions actuel). Défaut : 1 |
 | `title`       | string | Titre du morceau. |
-| `choshi`      | string | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
-| `chogen`      | string | demi-tons ajoutés à l'accordage nominal. Formule de main.js : `tuningOffset = chogen - 5`. Corpus : 十九の春=5 (base), てぃんさぐぬ花=4 (−1), 国頭ジントヨー=4, テスト節=7 (+2). Rendu dans le PDF comme label 本調子 fs14 (indépendant de chogen). |
+| `findName`    | string | Inconnu (présumé : alias du titre pour les recherches). |
 | `speed`       | string | Tempo. Ex : "180". |
+| `chogen`      | string | demi-tons ajoutés à l'accordage nominal. Formule de main.js : `tuningOffset = chogen - 
+5`. Corpus : 十九の春=5 (base), てぃんさぐぬ花=4 (−1), 国頭ジントヨー=4, テスト節=7 (+2). Rendu dans le PDF comme label 本調子 fs14 (indépendant de chogen). |
+| `choshi`      | string | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
 | `rhythm`      | string | Rythme. "0" = ?, "100" = ?. |
 | `rhythmMode`  | string | Mode rythmique. "0" = ? ou "100" = ?. |
 | `orientation` | string | `\"landscape\"` ou `\"portrait\"`. |
-| `allRubyData` | inconnu | Voir section dédiée ci-dessous. |
-| `allLyricsData`     | inconnu | Cadres de paroles avec `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Content = \"歌詞を入力\" si non renseigné. |
-| `lyricsWritingMode` | string  | inconnu. Ex : \"vertical\". |
-| `lyricsFontFamily`  | string  | inconnu. Ex : \"mincho\".   |
-| `lyricsFontSize`    | string  | inconnu. Ex : \"10pt\".     |
+| `allLyricsData`    | array   | Cadres de paroles avec `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Content = \"歌詞を入力\" si non renseigné. Voir ci-dessous |
+| `lyricsWritingMode`| string  | inconnu. Ex : \"vertical\". |
+| `lyricsFontFamily` | string  | inconnu. Ex : \"mincho\".   |
+| `lyricsFontSize`   | string  | inconnu. Ex : \"10pt\".     |
 
-## Structure des cellules (`score[dan][cell]`)
+## Structure du tableau (`score[dan][cell]`)
 
 Chaque cellule est un objet avec :
 
@@ -74,6 +82,29 @@ Chaque cellule est un objet avec :
 | `isChiribichi`    | bool   | Cas où un チリ弾き est joué sur ce temps         | 
 | `isOsaikudashi`   | bool   | Cas où un osaikudachi est joué sur ce temps    |
 
+## Structure du tableau allRubyData
+
+TODO:
+
+| Champ      | Type   | Description |
+|------------|--------|-------------|
+|            |        |             |
+|            |        |             |
+
+## Structure du tableau allLyricsData
+
+TODO:
+
+| Champ      | Type   | Description |
+|------------|--------|-------------|
+| `id`       | int    |             |
+| `content`  | string |             |
+| `x`        | real   |             |
+| `y`        | real   |             |
+| `width`    | real   |             |
+| `height`   | real   |             |
+| `fontSize` | int    |             |
+
 ### Organisation des cellules par dan
 
 Portama autorise deux réglages :
@@ -81,7 +112,7 @@ Portama autorise deux réglages :
 - 12 paires de cellules (24 cellules) par dan : utilisation indiquée pour le layout au format paysage
 - 16 paires de cellules (32 cellules) par dan : utilisation indiquée pour le layout au format portrait
 
-Les cellules sont organisées comme sui :
+Les cellules sont organisées comme suit :
 
 - Index pair (0, 2, 4, ...) = note principale
 - Index impair (1, 3, 5, ...) = note à cheval (straddle)
@@ -98,7 +129,7 @@ Les cellules sont organisées comme sui :
 
 Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅかりゆし, 国頭ジントヨー), `puaToKanji` + `puaAudioMap` de main.js v2.55, et テスト節 (qui parcourt tout l'inventaire). Les positions sont notées corde/demi-tons (C = 男弦, B = 中弦, A = 女弦).
 
-| PUA    | Kanji | Position audio | Corde |
+| PUA    | Kanji           | Position audio  | Corde |
 |--------|-----------------|-----------------|-------|
 | U+E000 | 合   | C01 | 男弦 |
 | U+E001 | 乙   | C03 | 男弦 |
