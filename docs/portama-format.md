@@ -133,43 +133,43 @@ Les cellules sont organisées comme suit :
 
 Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅかりゆし, 国頭ジントヨー), `puaToKanji` + `puaAudioMap` de main.js v2.55, et テスト節 (qui parcourt tout l'inventaire). Les positions sont notées corde/demi-tons (C = 男弦, B = 中弦, A = 女弦).
 
-| PUA    | Kanji           | Position audio  | Corde |
-|--------|-----------------|-----------------|-------|
-| U+E000 | 合   | C01 | 男弦 |
-| U+E001 | 乙   | C03 | 男弦 |
-| U+E002 | 老   | C05 | 男弦 |
-| U+E003 | 下老  | C06 | 男弦 |
-| U+E004 | 四   | C08 | 男弦 |
-| U+E005 | 上   | C10 | 男弦 |
-| U+E006 | 中   | C12 | 男弦 |
-| U+E007 | 尺   | C13 | 男弦 |
-| U+E008 | 工   | C15 | 男弦 |
-| U+E010 | 四   | B01 | 中弦 |
-| U+E011 | 上   | B03 | 中弦 |
-| U+E012 | 中   | B05 | 中弦 |
-| U+E013 | 尺          | B06 | 中弦 |
-| U+E014 | 下尺        | B08 | 中弦 |
-| U+E015 | (sans nom JS) | B10 | 中弦 |
-| U+E016 | (sans nom JS) | B12 | 中弦 |
-| U+E017 | (sans nom JS) | B13 | 中弦 |
-| U+E018 | (sans nom JS) | B15 | 中弦 |
-| U+E020 | 工          | A03 | 女弦 |
-| U+E021 | 五          | A05 | 女弦 |
-| U+E022 | 六          | A07 | 女弦 |
-| U+E023 | 七          | A08 | 女弦 |
-| U+E024 | 八          | A10 | 女弦 |
-| U+E025 | 九          | A12 | 女弦 |
-| U+E026 | 十          | A14 | 女弦 |
-| U+E027 | 斗          | A15 | 女弦 |
-| U+E028 | 為          | A17 | 女弦 |
-| U+E030 | ○ (silence) | —  | —                 |
-| U+E031 | kaki-utu    | —  | glyphe d'ornement |
-| U+E032 | uchi-utu    | —  | glyphe d'ornement |
-| U+E033 | nuki-utu    | —  | glyphe d'ornement |
-| U+E041 | ㊀     | —  | yubii-1 (index)        |
-| U+E042 | ㊁     | —  | yubii-2 (majeur)       |
-| U+E043 | ㊂     | —  | yubii-3 (non spécifié) |
-| U+E044 | ㊃     | —  | yubii-4 (auriculaire)  |
+| PUA    | Kanji           | Position audio  | Corde | Commentaire |
+|--------|-----------------|-----------------|-------|--------------
+| U+E000 | 合   | C01 | 男弦 | |
+| U+E001 | 乙   | C03 | 男弦 | |
+| U+E002 | 老   | C05 | 男弦 | |
+| U+E003 | 下老  | C06 | 男弦 | |
+| U+E004 | 四   | C08 | 男弦 | |
+| U+E005 | 上   | C10 | 男弦 | |
+| U+E006 | 中   | C12 | 男弦 | |
+| U+E007 | 尺   | C13 | 男弦 | |
+| U+E008 | 工   | C15 | 男弦 | |
+| U+E010 | 四   | B01 | 中弦 | |
+| U+E011 | 上   | B03 | 中弦 | |
+| U+E012 | 中   | B05 | 中弦 | |
+| U+E013 | 尺          | B06 | 中弦 | |
+| U+E014 | 下尺        | B08 | 中弦 | |
+| U+E015 | (sans nom JS) | B10 | 中弦 | |
+| U+E016 | (sans nom JS) | B12 | 中弦 | |
+| U+E017 | (sans nom JS) | B13 | 中弦 | |
+| U+E018 | (sans nom JS) | B15 | 中弦 | |
+| U+E020 | 工          | A03 | 女弦 | |
+| U+E021 | 五          | A05 | 女弦 | |
+| U+E022 | 六          | A07 | 女弦 | |
+| U+E023 | 七          | A08 | 女弦 | |
+| U+E024 | 八          | A10 | 女弦 | |
+| U+E025 | 九          | A12 | 女弦 | |
+| U+E026 | 十          | A14 | 女弦 | |
+| U+E027 | 斗          | A15 | 女弦 | |
+| U+E028 | 為          | A17 | 女弦 | |
+| U+E030 | ○ (silence) | —  | —                 | |
+| U+E031 | kaki-utu    | —  | — | glyphe d'ornement |
+| U+E032 | uchi-utu    | —  | — | glyphe d'ornement |
+| U+E033 | nuki-utu    | —  | — | glyphe d'ornement |
+| U+E041 | ㊀     | —  | — | yubii-1 (index) |
+| U+E042 | ㊁     | —  | — | yubii-2 (majeur) |
+| U+E043 | ㊂     | —  | — | yubii-3 (non spécifié) |
+| U+E044 | ㊃     | —  | — | yubii-4 (auriculaire) |
 
 Notes :
 
