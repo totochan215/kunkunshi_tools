@@ -130,7 +130,7 @@ Les cellules sont organisées comme suit :
 | note (isSmall=true)  | vide     | Kuubanchi       | `As`       |
 | vide                 | vide     | Case vide       | `-`        |
 
-## Correspondance PUA → positions
+## Correspondance PUA → symboles
 
 | PUA    | Kanji           | Position audio  | Corde | Commentaire |
 |--------|-----------------|-----------------|-------|--------------
