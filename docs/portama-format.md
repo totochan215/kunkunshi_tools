@@ -183,11 +183,11 @@ Notes :
 
 Valeurs de `orn` confirmées (テスト節, main.js) :
 
-| `orn` | Glyphe PUA | Suffixe KKML | Description |
-|-------|------------|--------------|-------------|
-| `k`   | U+E031     | `^`          | kaki-utu    |
-| `u`   | U+E032     | `*`          | uchi-utu    |
-| `nu`  | U+E033     | `n`          | nuchi-utu   |
+| `orn` | PUA     | Suffixe KKML | Description |
+|-------|---------|--------------|-------------|
+| `k`   | U+E031  | `^`          | kaki-utu    |
+| `u`   | U+E032  | `*`          | uchi-utu    |
+| `nu`  | U+E033  | `n`          | nuchi-utu   |
 
 ## Encodage
 
