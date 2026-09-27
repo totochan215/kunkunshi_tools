@@ -40,7 +40,7 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 | `numDans`     | int    | Nombre de dans (段) déclaré. |
 | `cellsPerDan` | int    | Nombre de cellules par dan (`24` ou `36`). |
 | `score`       | array  | 2D : `[dan][cell]`. Contenu de la tablature en dans et cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
-| `allRubyData` | array  | Paroles en phonétique alignées sur les cellules. Voir section dédiée ci-dessous. |
+| `allRubyData` | array  | Paroles en phonétique avec alignement sur le rythme. Voir section dédiée ci-dessous. |
 | `price`       | int    | Prix en Yen pour les morceaux publiés sur la plateforme. Défaut : 0 |
 | `isPublished` | int    | Indique si le morceau est publié sur la plateforme. Défaut : 0 |
 | `viewSize`    | int    | Inconnu (présumé : niveau de zoom de la visualisation). Défaut : 100 |
