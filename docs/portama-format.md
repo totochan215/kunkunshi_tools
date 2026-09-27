@@ -1,4 +1,4 @@
-# Format Portama JSON (portama.com/kunkun4)
+# Le format JSON Portama
 
 Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunkun4/)) qui génère des tablatures kunknshi pour le sanshin. Son format de stockage natif est JSON. L'éditeur peut également exporter un rendu au format PDF (généré par TCPDF, polices sous-ensemblées et embarquées).
 
