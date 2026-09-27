@@ -7,7 +7,7 @@ En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 - Pipeline 1 : saisie dans l'éditeur Portama → JSON Portama → KKML → retouche manuelle en KKML → SVG
 - Pipeline 2 : saisie manuelle en KKML → SVG
 
-Réalisé en (grande) partie par intelligence artificielle (https://chat.mistral.ai/)
+Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
 ## Scripts
 
