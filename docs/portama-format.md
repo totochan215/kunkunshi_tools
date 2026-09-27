@@ -186,7 +186,7 @@ Valeurs de `orn` confirmées (テスト節, main.js) :
 
 ## Encodage
 
-Le fichier JSON est en UTF-8. Les notes, ornements et yubii sont codés par des caractères PUA à 3 octets.
+Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par des caractères PUA à 3 octets.
 
 ## Colonne marker et données vocales (`allRubyData`)
 
