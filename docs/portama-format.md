@@ -139,29 +139,29 @@ Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅか
 | U+E001 | 乙   | C03 | 男弦 | |
 | U+E002 | 老   | C05 | 男弦 | |
 | U+E003 | 下老  | C06 | 男弦 | |
-| U+E004 | 四   | C08 | 男弦 | |
-| U+E005 | 上   | C10 | 男弦 | |
-| U+E006 | 中   | C12 | 男弦 | |
-| U+E007 | 尺   | C13 | 男弦 | |
-| U+E008 | 工   | C15 | 男弦 | |
+| U+E004 | ロ上 | C08 | 男弦 | glyphe composite ロ+上 ; même hauteur que 上, doigté sur 男弦 |
+| U+E005 | ロ中 | C10 | 男弦 | glyphe composite ロ+中 ; même hauteur que 中, doigté sur 男弦 |
+| U+E006 | ロ尺 | C12 | 男弦 | glyphe composite ロ+尺 ; même hauteur que 尺, doigté sur 男弦 |
+| U+E007 | イ合 | C13 | 男弦 | glyphe composite 亻+合 ; 合 une octave au-dessus |
+| U+E008 | イ乙 | C15 | 男弦 | glyphe composite 亻+乙 ; 乙 une octave au-dessus |
 | U+E010 | 四   | B01 | 中弦 | |
 | U+E011 | 上   | B03 | 中弦 | |
 | U+E012 | 中   | B05 | 中弦 | |
 | U+E013 | 尺          | B06 | 中弦 | |
 | U+E014 | 下尺        | B08 | 中弦 | |
-| U+E015 | (sans nom JS) | B10 | 中弦 | |
-| U+E016 | (sans nom JS) | B12 | 中弦 | |
-| U+E017 | (sans nom JS) | B13 | 中弦 | |
-| U+E018 | (sans nom JS) | B15 | 中弦 | |
+| U+E015 | ロ五 | B10 | 中弦 | glyphe composite ロ+五 ; même hauteur que 五, doigté sur 中弦 |
+| U+E016 | イ老 | B12 | 中弦 | glyphe composite 亻+老 ; 老 une octave au-dessus |
+| U+E017 | イ四 | B13 | 中弦 | glyphe composite 亻+四 ; 四 une octave au-dessus |
+| U+E018 | イ上 | B15 | 中弦 | glyphe composite 亻+上 ; 上 une octave au-dessus |
 | U+E020 | 工          | A03 | 女弦 | |
 | U+E021 | 五          | A05 | 女弦 | |
 | U+E022 | 六          | A07 | 女弦 | |
 | U+E023 | 七          | A08 | 女弦 | |
 | U+E024 | 八          | A10 | 女弦 | |
 | U+E025 | 九          | A12 | 女弦 | |
-| U+E026 | 十          | A14 | 女弦 | |
-| U+E027 | 斗          | A15 | 女弦 | |
-| U+E028 | 為          | A17 | 女弦 | |
+| U+E026 | イ尺 | A14 | 女弦 | glyphe composite 亻+尺 ; 尺 une octave au-dessus |
+| U+E027 | イ工 | A15 | 女弦 | glyphe composite 亻+工 ; 工 une octave au-dessus |
+| U+E028 | イ五 | A17 | 女弦 | glyphe composite 亻+五 ; 五 une octave au-dessus |
 | U+E030 | ○      | —  | —                 | silence |
 | U+E031 | kaki-utu    | —  | — | glyphe d'ornement |
 | U+E032 | uchi-utu    | —  | — | glyphe d'ornement |
@@ -173,9 +173,12 @@ Confirmée par trois sources croisées : corrigés KKML manuels (だんじゅか
 
 Notes :
 
-- La nomenclature E004–E008 (四上中尺工 sur 男弦) et E015–E018 (中弦 hautes) vient de main.js ; ces positions n'ont pas de kanji propre dans la tradition écrite. Dans la police embarquée du PDF, les positions hautes 男弦/中弦 sont rendues avec des kanji-variantes homophones (cf. 対音表 : 吐=上, 呎=尺, 亿=五, 佬=六, 仝=八) — glyphes visuellement distincts des kanji des registres nominaux.
+- Les positions hautes E004–E008, E015–E018 et E026–E028 sont des GLYPHES COMPOSITES de la police de tablature (webfont kk4font1.ttf, identique au sous-ensemble PDF), formés d'un radical + le kanji de la position nominale. Identification par superposition exacte des contours (glyf upem 1024) croisée avec les hauteurs de puaAudioMap (1 unité de code = 1 demi-ton) et les conventions traditionnelles :
+  - Radical 亻 (= イ) : même kanji une octave au-dessus. Convention classique du kunkunshi (人偏 + kanji, lu « イ ») documentée par le blog 島袋りりあ (zurazura.com) et じょんからドットコム (« 高音部にはイ・ロをつけます »). Concerne E007/E008 (男弦), E016–E018 (中弦), E026–E028 (女弦). Les OCR du PDF lisent 亿/佬/仝/伍 pour ces glyphes (亻+乙, 亻+老, 亻+工, 亻+五).
+  - Radical ロ : même hauteur que le kanji de base, mais doigté sur une autre corde. Documenté par le site Mikuni うちなぁ (ロ五, ロ尺 existent « dans certaines pièces »). Concerne E004–E006 (男弦 : ロ上/ロ中/ロ尺) et E015 (中弦 : ロ五).
+- Les commentaires de main.js («四», «上», «中 », «尺», «工 » pour E004–E008) sont des noms de debug de position sur corde, pas la sémantique des glyphes ; ne pas s'y référer pour le rendu.
 - U+E029, E019, E034–E040, E045+ : non définis. U+E033 est référencé par le JS ; identifié comme glyphe nuki par テスト節 (orn `nu` → E033 dans le flux texte du PDF).
-- 十 (E026), 斗 (E027), 為 (E028) identifiés via les positions koto du traité (recoupement puaAudioMap).
+- Correction d'une identification antérieure erronée : E026–E028 ne sont pas 十/斗/為 (positions koto qui n'existent pas dans Portama), mais イ尺/イ工/イ五.
 
 ## Ornements (souhou)
 
@@ -244,7 +247,7 @@ Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne renden
 
 Deux polices sous-ensemblées par TCPDF :
 
-- Notes/kanji de tablature : Untitled1 (Type0, Identity-H, upem 1024, 40 glyphes dans テスト節). CIDToGIDMap intégré ; CID = codepoint PUA (ex. CID E033 → GID 35). TCPDF ne sous-ensemble que les glyphes utilisés : E026 (十) et E043 (yubii 3) sont vides dans テスト節.pdf car la pièce ne les emploie pas.
+- Notes/kanji de tablature : Untitled1 (Type0, Identity-H, upem 1024, 40 glyphes dans テスト節). CIDToGIDMap intégré ; CID = codepoint PUA (ex. CID E033 → GID 35). TCPDF ne sous-ensemble que les glyphes utilisés : E026 (イ尺) et E043 (yubii 3) sont vides dans テスト節.pdf car la pièce ne les emploie pas.
 - Texte (titre, ruby, ○/□, paroles) : IPAexMincho (Type0, Identity-H).
 - ♭ = U+266D, ♯ = U+266F rendus dans la police de tablature (GID 30/31 dans テスト節).
 
@@ -252,10 +255,10 @@ Les contours (chemins SVG en unités upem 1024) de tous les glyphes de テスト
 
 ## Limitations de Portama vs KKML
 
-L'alphabet Portama est plus riche que ce qui était documenté initialement (下老 E003 et les positions hautes E004–E008/E015–E018 existent), mais Portama ne connaît toujours pas les positions en イ (上半老, 上老, etc.) ni les kanji hors de sa carte PUA.
+L'alphabet Portama est plus riche que ce qui était documenté initialement : 下老 (E003), positions ロ (E004–E006, E015) et positions イ une octave au-dessus (E007–E008, E016–E018, E026–E028) existent. Portama ne connaît en revanche ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni les kanji hors de sa carte PUA.
 
-- Portama → KKML : sans perte (tout ce que Portama encode existe en KKML). Mapping requis : orn `nu` → suffixe `n` (proposition), yubii 1–4, acc ♯/♭ sur toute note, vocalPosMarkers, chogen → @tuning (décalage en demi-tons).
-- KKML → Portama : impossible pour les pièces utilisant les positions en イ ou tout kanji hors du sous-ensemble Portama.
+- Portama → KKML : sans perte (tout ce que Portama encode existe en KKML). Mapping requis : orn `nu` → suffixe `n` (proposition), yubii 1–4, acc ♯/♭ sur toute note, vocalPosMarkers, chogen → @tuning (décalage en demi-tons), notes E003–E028.
+- KKML → Portama : impossible pour les pièces utilisant des positions en イ hors carte Portama ou tout kanji hors du sous-ensemble Portama.
 
 ## Conversion Portama → KKML
 
