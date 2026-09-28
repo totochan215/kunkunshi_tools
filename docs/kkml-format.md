@@ -11,7 +11,7 @@ En développant KKML et ses outils, nous espérons rendre la génération de tab
 
 ## Format source
 
-KKML se base sur le format texte brut encodé en UTF-8, sans utilisation de PUA.
+KKML se base sur le format texte brut encodé en UTF-8, sans utilisation de PUA (private use area).
 
 ## Structure générale
 
