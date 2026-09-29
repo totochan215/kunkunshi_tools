@@ -18,9 +18,8 @@ Convertit un fichier JSON de [Portama](https://portama.com/) en KKML.
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
 
-Gère : notes, accordages (本調子, 二揚げ, 三下げ etc.), ornements
-(uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, shuffle, silence),
-repères de répétition `|:` `:|` `|(` `)|`, début et fin du chant (`(` `)`), paroles (`::lyrics`), etc.
+Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, shuffle, silence),
+repères de répétition `|:` `:|` `|(` `)|`, début et fin du chant (`(` `)`), accordages (本調子, 二揚げ, 三下げ, 一揚げ, 一にあげ), autres métadonnées, paroles, etc.
 
 ### kkml2svg.py
 
