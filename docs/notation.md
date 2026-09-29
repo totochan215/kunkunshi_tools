@@ -112,7 +112,7 @@ Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont
 
 ##### Composites en 口偏
 
-(Source : inventaire R. López García, email W3C public-music-notation 0005, 2017) :
+(Source : [inventaire R. López García, email W3C public-music-notation 0005, 2017](https://lists.w3.org/Archives/Public/public-music-notation/2017Feb/0006.html)) :
 
 | Caractère | Équivalent | Usage en japonais     |
 |-----------|------------|-----------------------|
