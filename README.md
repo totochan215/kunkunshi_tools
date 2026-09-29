@@ -18,7 +18,7 @@ Convertit un fichier JSON de [Portama](https://portama.com/) en KKML.
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
 
-Gère : mapping PUA → Kanji, récupération des accordages (本調子, 二揚げ, 三下げ etc.), ornements
+Gère : notes, accordages (本調子, 二揚げ, 三下げ etc.), ornements
 (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, shuffle, silence),
 repères de répétition `|:` `:|` `|(` `)|`, début et fin du chant (`(` `)`), paroles (`::lyrics`), etc.
 
