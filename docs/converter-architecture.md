@@ -1,6 +1,6 @@
 # Architecture des convertisseurs Python
 
-## Convertisseur `kkml2svg.py`
+## `kkml2svg.py`
 
 Python 3 autonome, ~1770 lignes. Ce dépôt est la source de vérité du code.
 
@@ -79,7 +79,7 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 | cols | 12 | lignes par colonne (vertical) — défaut depuis le 14 sept. 2026 (avant : 9) |
 | marker_w | cell_w // 2 | colonne marker (auto si ::vocal) |
 
-## Convertisseur `portama2kkml.py`
+## `portama2kkml.py`
 
 Python 3 autonome. Ce dépôt est la source de vérité du code.
 
