@@ -122,12 +122,12 @@ Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivale
 
 | Saisie acceptée | Converti en | Usage   |
 |--------------------|-------------|---------|
-| `／`               | `/`         | croches |
-| `：`               | `:`         | shuffle |
-| `｜`               | `\|`        | marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
-| `♯`                | `#`       | altération (尺＃) |
-| `＋`               | `+`      | accords |
-| `ー`               | `-`      | accords |
+| `／` (U+FF0F)      | `/`         | croches |
+| `：` (U+FF1A)      | `:`         | shuffle |
+| `｜` (U+FF5C)      | `\|`        | marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
+| `♯`  (U+266F)      | `#`       | altération (尺＃) |
+| `＋` (U+FF0B)      | `+`      | accords |
+| `ー` (U+30FC)      | `-`      | accords |
 | `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
 | `（` `）`          | `(` `)` | 声だし (koedashi) / 声切り (koekiri)|
 
