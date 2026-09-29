@@ -23,7 +23,7 @@ repères de répétition `|:` `:|` `|(` `)|`, repères de début et fin du chant
 
 ### kkml2svg.py
 
-Rend un fichier KKML sous forme de tablature SVG, en appliquant des options de mise en page.
+Rend un fichier KKML sous forme de tablature SVG, en appliquant les options de mise en page stockées dans les métadonnées ou forcées en ligne de commande.
 
     python3 kkml2svg.py chanson.kkml -o chanson.svg
     python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
