@@ -175,7 +175,7 @@ Les syllabes vocales sont placées dans la colonne marker (à droite de chaque p
 
 ### Syllabes spécifiques aux langues Ryukyu
 
-Certaines syllabes des langues Ryukyu n'ont pas d'équivalent en japonais et sont représentées ici pour mémoire :
+Certaines syllabes des langues Ryukyu n'ont pas d'équivalent en japonais standard et sont représentées ici pour mémoire :
 
 | Token | Lecture | Structure    |
 |-------|---------|--------------|
