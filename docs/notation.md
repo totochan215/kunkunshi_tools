@@ -126,25 +126,31 @@ Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont
 | 叭        | ロ八        | Trompette : 喇叭       |
 | 㕤        | ロ九        | Non attesté            |
 
-##### Composites en イ 
+##### Composites en イ
+
 Aucun composite dédié attesté en usage sanshin ; les caractères suivants sont les signes d'octave haute du gongchepu cantonais, ou des caractères courants réutilisables graphiquement :
 
 | Caractère | Équivalent | Attestation d'usage |
 |-----------|------------|---------------------|
 | 佮        | イ合        | Caractère courant cantonais (« ensemble »), pas attesté comme signe de position |
 | 亿        | イ乙        | Gongchepu cantonais ; caractère courant (亿 = simplifié de 億, « cent millions ») |
+| 佬        | イ老        | |
+| 伵        | イ四        | |
 | 仩        | イ上        | Gongchepu cantonais uniquement |
+| 仲        | イ中        | |
 | 伬        | イ尺        | Gongchepu cantonais uniquement |
 | 仜        | イ工        | Gongchepu cantonais uniquement |
 | 伍        | イ五        | Gongchepu cantonais ; caractère courant chinois (« compagnie », rang militaire) |
+| 仈        | イ八        | | 
+| 仇        | イ九        | |
 
-Aucun composite 亻 attesté pour 老, 四, 中, 六, 七, 八, 九, 十.
+Pas de kanji composite en イ trouvé pour イ六, イ七 et イ十.
 
 Statut KKML : non implémentés. À terme, ces caractères seront tolérés comme tokens d'entrée et normalisés vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.), mais jamais rendus tels quels.
 
 ### Cas des positions hautes + 下老 ou 下尺
 
-Le préfixe peut aussi s'appliquer à 下老 et 下尺. Le token fait alors 3 caractères (ex. イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé (décision du 16 sept. 2026) : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Hiyamikachibushi).
+Le préfixe イ ou 口 peut aussi s'appliquer à 下老 et 下尺. Le token fait alors 3 caractères (ex. イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Ex. utilisé dans Hiyamikachibushi).
 
 Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
@@ -152,14 +158,14 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 
 ### Caractères vocaux (non rendus sur le sanshin)
 
-才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — n'apparaissent que dans la transcription vocale.
+才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — représentent des hauteurs de note au-delà de 十 mais n'apparaissent que dans la transcription vocale.
 
 ## Tokens spéciaux
 
 - `◯` — repos (cercle). Variantes tolérées en KKML : ◯, ○, 〇, O, o, 0 — toutes normalisées en ◯ à l'analyse
-- `-` — case vide (EMPTY_TOKEN), rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est le token vide.
-- `|:` — début de boucle. Peut être utilisé comme token autonome ou préfixé à une note (`|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
-- `:|` — fin de boucle. Peut être utilisé comme token autonome ou suffixé à une note (`尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
+- `-` — case vide (EMPTY_TOKEN), en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est le token vide.
+- `|:` — début de boucle. Peut être utilisé comme token autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
+- `:|` — fin de boucle. Peut être utilisé comme token autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
 
 Les boucles de répétition (`|:` … `:|`) ne sont pas limitées au début d'une chanson (le terme « intro » est trompeur). Elles peuvent apparaître à n'importe quel endroit, et une chanson peut en contenir plusieurs. Les boucles ne peuvent pas être imbriquées.
 
@@ -169,20 +175,22 @@ Les syllabes vocales sont placées dans la colonne marker (à droite de chaque p
 
 ### Tokens multi-caractères (うちなぐち)
 
-Certaines consonnes de l'okinawaïen s'écrivent sur deux caractères : un caractère principal plein + un petit kana combinant. Ces tokens forment UNE seule syllabe et s'écrivent sans espace entre les caractères :
+Certaines syllabes des langues Ryukyu n'ont pas d'équivalent en japonais et sont représentées ici pour mémoire :
 
-| Token | Lecture | Structure |
-|-------|---------|-----------|
-| ぐゎ | gwa | ぐ + petit ゎ |
-| くゎ | kwa | く + petit ゎ |
-| てぃ | ti | て + petit ぃ |
-| でぃ | di | で + petit ぃ |
-| とぅ | tu | と + petit ぅ |
-| どぅ | du | ど + petit ぅ |
-| づぅ | dū | づ + petit ぅ |
-| ふぁ | fa | ふ + petit ぁ |
-| ふぃ | fi | ふ + petit ぃ |
-| よー | yō | よ + ー (voyelle longue) |
+| Token | Lecture | Structure    |
+|-------|---------|--------------|
+| ぐゎ   | gwa     | ぐ + petit ゎ |
+| くゎ   | kwa     | く + petit ゎ |
+| てぃ   | ti      | て + petit ぃ |
+| でぃ   | di      | で + petit ぃ |
+| とぅ   | tu      | と + petit ぅ |
+| どぅ   | du      | ど + petit ぅ |
+| づぅ   | dū      | づ + petit ぅ |
+| ふぁ   | fa      | ふ + petit ぁ |
+| ふぃ   | fi      | ふ + petit ぃ |
+| よー   | yō      | よ + ー (voyelle longue) |
+
+Ex. てぃんさぐぬ花 "Tinsagu nu hana" et non "Teinsagu nu hana" 
 
 Petits kana combinants reconnus : ぁぃぅぇぉゃゅょゎ (hiragana) et ァィゥェォャュョヮ (katakana), plus ー (chōonpu, voyelle longue).
 
