@@ -110,7 +110,7 @@ Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que s
 
 Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois/japonais préexistants (souvent rares ou dialectaux), réutilisés graphiquement dans certains recueils de kunkunshi parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五) et 亿 (乙).
 
-##### Composites en 口偏
+##### Composites en 口
 
 (Source : [inventaire R. López García, email W3C public-music-notation 0005, 2017](https://lists.w3.org/Archives/Public/public-music-notation/2017Feb/0006.html)) :
 
@@ -126,8 +126,8 @@ Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont
 | 叭        | ロ八        | Trompette : 喇叭       |
 | 㕤        | ロ九        | Non attesté            |
 
-##### Composites en 亻 
-(série イ) — aucun composite dédié attesté en usage sanshin ; les caractères suivants sont les signes d'octave haute du gongchepu cantonais, ou des caractères courants réutilisables graphiquement :
+##### Composites en イ 
+Aucun composite dédié attesté en usage sanshin ; les caractères suivants sont les signes d'octave haute du gongchepu cantonais, ou des caractères courants réutilisables graphiquement :
 
 | Caractère | Équivalent | Attestation d'usage |
 |-----------|------------|---------------------|
