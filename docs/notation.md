@@ -93,7 +93,7 @@ Tokens valides avec イ (1 octave au-dessus) :
 | イ下老 | i-shita-rō    | 1 octave au-dessus de 下老 |
 | イ下尺 | i-shita-shaku | 1 octave au-dessus de 下尺 |
 
-L'existence de イ下八 n'est pas documentée.
+L'existence de イ下八 n'est pas attestée.
 
 Tokens valides avec ロ (même hauteur, autre corde) :
 
