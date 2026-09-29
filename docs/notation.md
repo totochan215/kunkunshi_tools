@@ -173,7 +173,7 @@ Les boucles de répétition (`|:` … `:|`) ne sont pas limitées au début d'un
 
 Les syllabes vocales sont placées dans la colonne marker (à droite de chaque pile de cases) pour indiquer le placement des syllabes du chant sur le rythme. Règle : 1 token (séparé par des espaces) = 1 syllabe. Un token peut faire plusieurs caractères (consonnes complexes de l'uchi-na-guchi, voyelles longues). Au moins 4 syllabes par case sont acceptées, et les syllabes peuvent chevaucher la bordure inférieure.
 
-### Tokens multi-caractères (うちなぐち)
+### Syllabes spécifiques aux langues Ryukyu
 
 Certaines syllabes des langues Ryukyu n'ont pas d'équivalent en japonais et sont représentées ici pour mémoire :
 
