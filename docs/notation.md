@@ -282,6 +282,11 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 | `<`     | kachi-utu (掻音) | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s`     | kuubanchi (小弾) | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
 | `=`     | taachi (二弾) ou tsuiri-bichi (列弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
+
+## Contrôle du chant
+
+| Suffixe | Nom | Rendu SVG | Description |
+|---------|-----|-----------|-------------|
 | `(` (préfixe) | koe-dashi (声だし) | petit ○ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur commence à chanter sur cette note — repère de respiration |
 | `)` (suffixe) | koe-kiri (声切り) | petit □ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur s'arrête de chanter après cette note |
 
