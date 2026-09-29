@@ -61,10 +61,10 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe katakana est accolé directement au kanji de position (token à deux caractères).
 
-| Préfixe      | Lecture | Signification | Lecture |
-|--------------|---------|------|---------|
-| イ | i        |1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
-| ロ | ro ou kō | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
+| Préfix  | Lecture  | Signification | Lecture |
+|---------|----------|------|---------|
+| イ       | i        |1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
+| ロ       | ro ou kō | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
 
 Tokens valides avec イ (1 octave au-dessus) :
 
@@ -72,19 +72,19 @@ Tokens valides avec イ (1 octave au-dessus) :
 
 | Token | Lecture | Position |
 |-------|---------|----------|
-| イ合 | i-ai | 1 octave au-dessus de 合 |
-| イ乙 | i-otsu | 1 octave au-dessus de 乙 |
-| イ老 | i-rō | 1 octave au-dessus de 老 |
-| イ四 | i-yon | 1 octave au-dessus de 四 |
-| イ上 | i-jō | 1 octave au-dessus de 上 |
-| イ中 | i-naka | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
-| イ尺 | i-shaku | 1 octave au-dessus de 尺 |
-| イ工 | i-kō | 1 octave au-dessus de 工 |
-| イ五 | i-go | 1 octave au-dessus de 五 |
-| イ六 | i-roku | 1 octave au-dessus de 六 |
-| イ七 | i-shichi | 1 octave au-dessus de 七 |
+| イ合   | i-ai | 1 octave au-dessus de 合 |
+| イ乙   | i-otsu | 1 octave au-dessus de 乙 |
+| イ老   | i-rō | 1 octave au-dessus de 老 |
+| イ四   | i-yon | 1 octave au-dessus de 四 |
+| イ上   | i-jō | 1 octave au-dessus de 上 |
+| イ中   | i-naka | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
+| イ尺   | i-shaku | 1 octave au-dessus de 尺 |
+| イ工   | i-kō | 1 octave au-dessus de 工 |
+| イ五   | i-go | 1 octave au-dessus de 五 |
+| イ六   | i-roku | 1 octave au-dessus de 六 |
+| イ七   | i-shichi | 1 octave au-dessus de 七 |
 
-イ六 et イ七 sont rares : attestés comme noms de 勘所 dans la nomenclature 野村流 (nomura-ryū), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les emploient pas.
+イ六 et イ七 sont rares : attestés comme noms de 勘所 dans la nomenclature 野村流 (nomura-ryū), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les mentionnent pas.
 
 3 caractères (préfixe + 下 + kanji) :
 
