@@ -177,17 +177,17 @@ Les syllabes vocales sont placées dans la colonne marker (à droite de chaque p
 
 Certaines syllabes des langues Ryukyu n'ont pas d'équivalent en japonais standard et sont représentées ici pour mémoire :
 
-| Token | Lecture | Structure    |
-|-------|---------|--------------|
-| ぐゎ   | gwa     | ぐ + petit ゎ |
-| くゎ   | kwa     | く + petit ゎ |
-| てぃ   | ti      | て + petit ぃ |
-| でぃ   | di      | で + petit ぃ |
-| とぅ   | tu      | と + petit ぅ |
-| どぅ   | du      | ど + petit ぅ |
-| づぅ   | dū      | づ + petit ぅ |
-| ふぁ   | fa      | ふ + petit ぁ |
-| ふぃ   | fi      | ふ + petit ぃ |
+| Token | Lecture | Structure               |
+|-------|---------|-------------------------|
+| ぐゎ   | gwa     | ぐ + petit ゎ            |
+| くゎ   | kwa     | く + petit ゎ            |
+| てぃ   | ti      | て + petit ぃ            |
+| でぃ   | di      | で + petit ぃ            |
+| とぅ   | tu      | と + petit ぅ            |
+| どぅ   | du      | ど + petit ぅ            |
+| づぅ   | dū      | づ + petit ぅ            |
+| ふぁ   | fa      | ふ + petit ぁ            |
+| ふぃ   | fi      | ふ + petit ぃ            |
 | よー   | yō      | よ + ー (voyelle longue) |
 
 Ex. てぃんさぐぬ花 "Tinsagu nu hana" et non "Teinsagu nu hana" 
