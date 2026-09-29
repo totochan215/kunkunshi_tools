@@ -8,7 +8,7 @@ Comme le manche est sans frettes, la musique ne se note pas en hauteurs absolues
 
 ## Positions de base
 
-Les caractères de position (勘所, kandokoro) représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs, sont :
+Les caractères de position (勘所, kandokoro) représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs de notes, sont :
 
 合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
 
@@ -106,34 +106,37 @@ Tokens valides avec ロ (même hauteur, autre corde) :
 
 Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Bien que d'autres combinaisons soient théoriquement possibles, seules ces quatre formes sont attestées en usage. La lecture du préfixe varie selon l'école : ro- ou kō- (野村流, Nomura-ryu).
 
-#### Kanjis composés (pour information — non implémentés)
+#### Kanjis composés (pour information — non implémenté)
 
-Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois/japonais préexistants (souvent rares ou dialectaux), réutilisés graphiquement parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五), 亿 (乙).
+Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois/japonais préexistants (souvent rares ou dialectaux), réutilisés graphiquement dans certains recueils de kunkunshi parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五) et 亿 (乙).
 
-Composites 口偏 (Source : inventaire R. López García, email W3C public-music-notation 0005, 2017) :
+##### Composites en 口偏
+
+(Source : inventaire R. López García, email W3C public-music-notation 0005, 2017) :
+
+| Caractère | Équivalent | Usage en japonais     |
+|-----------|------------|-----------------------|
+| 㕶        | ロ五        | Non attesté           |
+| 呎        | ロ尺        | Unité « pied » (feet) |
+| 叿        | ロ工        | Non attesté           |
+| 呬        | ロ四        | Non attesté           |
+| 哈        | ロ合        | Noms propres, par ex. la ville de Harbin 哈爾浜 |
+| 咾        | ロ老        | Non attesté           |
+| 𠮟        | ロ七        | Variante de 叱 : « réprouver, gronder » |
+| 叭        | ロ八        | Trompette : 喇叭       |
+| 㕤        | ロ九        | Non attesté            |
+
+##### Composites en 亻 
+(série イ) — aucun composite dédié attesté en usage sanshin ; les caractères suivants sont les signes d'octave haute du gongchepu cantonais, ou des caractères courants réutilisables graphiquement :
 
 | Caractère | Équivalent | Attestation d'usage |
 |-----------|------------|---------------------|
-| 㕶 | ロ五 | Utilisé réellement |
-| 呎 | ロ尺 | Utilisé réellement (caractère courant : « pied », unité, en cantonais) |
-| 叿 | ロ工 | Non attesté |
-| 呬 | ロ四 | Non attesté |
-| 哈 | ロ合 | Non attesté |
-| 咾 | ロ老 | Non attesté |
-| 𠮟 | ロ七 | Non attesté (variante japonaise de 叱) |
-| 叭 | ロ八 | Non attesté (courant : 喇叭) |
-| 㕤 | ロ九 | Non attesté |
-
-Composites 亻 (série イ) — aucun composite dédié attesté en usage sanshin ; les caractères suivants sont les signes d'octave haute du gongchepu cantonais, ou des caractères courants réutilisables graphiquement :
-
-| Caractère | Équivalent | Attestation d'usage |
-|-----------|------------|---------------------|
-| 佮 | イ合 | Caractère courant cantonais (« ensemble »), pas attesté comme signe de position |
-| 亿 | イ乙 | Gongchepu cantonais ; caractère courant (亿 = simplifié de 億, « cent millions ») |
-| 仩 | イ上 | Gongchepu cantonais uniquement |
-| 伬 | イ尺 | Gongchepu cantonais uniquement |
-| 仜 | イ工 | Gongchepu cantonais uniquement |
-| 伍 | イ五 | Gongchepu cantonais ; caractère courant chinois (« compagnie », rang militaire) |
+| 佮        | イ合        | Caractère courant cantonais (« ensemble »), pas attesté comme signe de position |
+| 亿        | イ乙        | Gongchepu cantonais ; caractère courant (亿 = simplifié de 億, « cent millions ») |
+| 仩        | イ上        | Gongchepu cantonais uniquement |
+| 伬        | イ尺        | Gongchepu cantonais uniquement |
+| 仜        | イ工        | Gongchepu cantonais uniquement |
+| 伍        | イ五        | Gongchepu cantonais ; caractère courant chinois (« compagnie », rang militaire) |
 
 Aucun composite 亻 attesté pour 老, 四, 中, 六, 七, 八, 九, 十.
 
