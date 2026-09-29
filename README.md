@@ -68,8 +68,8 @@ Exemple :
 - Sections :
     - `::tab` — tablature, une ligne par dan, 1 token par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle (croche pointée + double croche),
       `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, suffixes de technique `* ^ v < s =`.
-    - `::vocal` — paroles en phonétique, alignement approximatif sur la musique, une ligne par dan, 1 token par temps, les cases correspondent à celles de ::tab,
-    - `::lyrics` — paroles complètes avec support du guide phonétique (ruby) mais sans alignement sur la musique.
+    - `::vocal` — paroles en phonétique, alignement approximatif sur la musique, une ligne par dan, 1 token par temps,
+    - `::lyrics` — paroles complètes avec support du guide phonétique (ruby), sans alignement sur la musique.
 
 Détail complet : [docs/notation.md](docs/notation.md) et [docs/kkml-format.md](docs/kkml-format.md).
 
