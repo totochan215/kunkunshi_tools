@@ -75,7 +75,7 @@ Toutes les métadonnées sont optionnelles.
 
 ## Blocs
 
-- `::tab` — bloc de tablature, chaque ligne = tokens séparés par des espaces
+- `::tab` — bloc de tablature, organisé en dans (lignes séparées par des sauts de ligne) et temps (tokens séparés par des espaces).
 - `::lyrics` — bloc de paroles, lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
