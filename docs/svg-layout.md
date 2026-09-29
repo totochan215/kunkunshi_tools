@@ -1,15 +1,17 @@
-# Layout SVG vertical
+# Référence des mises en page SVG
+
+## Mise en page verticale (portrait)
 
 Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cases se lisent de haut en bas et de droite à gauche.
 
-## Structure générale
+### Structure générale
 
 ```
 [paroles verticales]  [grille de tablature]  [titre vertical]
    gauche → droite         centre             droite
 ```
 
-## Constantes de dimensions
+### Constantes de dimensions
 
 - `cell_w = 52` — largeur de case
 - `cell_h = 58` — hauteur de case
@@ -19,7 +21,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - `header_h = 40` — en-tête réduit en mode vertical avec titre (le titre n'est pas dans l'en-tête mais rendu verticalement à droite). 70 en mode horizontal ou sans titre.
 - `marker_w = cell_w // 2` (= 26) quand `@marker on`, sinon 0
 
-## Grille de tablature
+### Grille de tablature
 
 - Les colonnes sont disposées de droite à gauche (colonne 0 = la plus à droite)
 - Chaque colonne contient `rows_per_col` cases (défaut 12, configurable via `@cols`)
@@ -27,7 +29,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Position x de la colonne ci : `x = total_w - mr - title_offset - (ci + 1) * group_w`
 - Deux passes : d'abord tous les rectangles (grille), puis toutes les notes par-dessus (pour que les notes à cheval ne soient pas masquées par les bordures)
 
-## Titre vertical (à droite de la grille)
+### Titre vertical (à droite de la grille)
 
 - `TITLE_W = 36` — largeur de la colonne titre
 - `TITLE_GAP = 10` — gap entre grille et titre
@@ -39,7 +41,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Genre : rendu verticalement sous l'accordage, `font-size = 15`, gris plus clair (#777)
 - L'accordage commence après le dernier caractère du titre + 20px, le genre après l'accordage + 15px
 
-## Paroles verticales (à gauche de la grille)
+### Paroles verticales (à gauche de la grille)
 
 - `LYRICS_CHAR_SP = 16` — espacement vertical entre caractères
 - `LYRICS_LINE_GAP = 10` — gap supplémentaire entre lignes d'un couplet
@@ -51,14 +53,14 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Numéros de couplet : les lignes commençant par `一、`, `二、`, etc. (numéraux CJK + 、) sont détectées via `VERSE_NUM_RE`. La longueur du numéro (ex : 2 pour `一、`) est utilisée comme indent : chaque ligne suivante du couplet reçoit un décalage vertical supplémentaire de `verse_indent * adjusted_sp` pour s'aligner sous le numéro.
 - Ajustement de hauteur : désactivé. Les paroles utilisent un espacement fixe (`LYRICS_SP = 18`) et un alignement en haut, sans justification.
 
-### Calcul de l'espace paroles
+#### Calcul de l'espace paroles
 
 1. Compter le nombre total de couplets (lignes vides séparent les couplets)
 2. `lyrics_total_w = n_verses * LYRICS_COL_W + (n_verses - 1) * LYRICS_VERSE_GAP`
 3. `lyrics_offset = lyrics_total_w + 12` (gap de 12 entre paroles et grille)
 4. `total_w` inclut `lyrics_offset`, ce qui décale automatiquement la grille vers la droite
 
-### Positionnement des couplets
+#### Positionnement des couplets
 
 - Chaque couplet est une colonne verticale, disposée de droite à gauche
 - Couplet 0 (verse 0) = le plus proche de la grille (à droite), couplet n-1 = le plus à gauche
@@ -66,7 +68,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Les caractères sont écrits de haut en bas dans chaque colonne, avec `LYRICS_LINE_GAP` entre les lignes du couplet
 - Les paroles sont rendues après la grille, avant le titre
 
-## Marques de répétition (flèches)
+### Marques de répétition (flèches)
 
 Les marqueurs `|:` (début) et `:|` (fin) peuvent être attachés aux tokens (`|:工`, `合/尺:|`) ou utilisés comme tokens autonomes. Le convertisseur les détache avant le rendu des notes via `_strip_repeat_marks()`.
 
@@ -85,11 +87,11 @@ Fonction de rendu : `_render_repeat_arrow(out, x, cy, cell_h, fs, arrow_type)` o
 
 `total_w = max_cols * group_w + ml + mr + title_offset + lyrics_offset`
 
-## Rotation des parenthèses en mode vertical
+### Rotation des parenthèses en mode vertical
 
 En typographie japonaise verticale, les parenthèses （）, (), les crochets 「」 et 『』 doivent être pivotés de 90° dans le sens horaire. Le convertisseur les détecte via `VERTICAL_ROTATE_CHARS = set("（）()「」『』")` et applique `transform="rotate(90 x cy)"` sur l'élément `text` SVG, où `cy` est le centre visuel approximatif du glyphe (`y - fs * 0.35`). Cette rotation s'applique au titre, à l'accordage et aux paroles.
 
-## Syllabes vocales dans la colonne marker
+### Syllabes vocales dans la colonne marker
 
 Les syllabes vocales sont rendues dans la colonne marker (largeur `marker_w`) à droite de chaque pile de cases. Chaque syllabe est un caractère double-largeur (hiragana/katakana) positionné à la même hauteur verticale que la note correspondante.
 
@@ -101,7 +103,11 @@ Les syllabes vocales sont rendues dans la colonne marker (largeur `marker_w`) à
 
 Les syllabes peuvent chevaucher la bordure inférieure de la case. Jusqu'à 4 syllabes ou plus peuvent être empilées verticalement dans une seule case, espacées de `SYLLABLE_FS * 0.9` pour éviter le chevauchement visuel.
 
-## Hauteur totale
+### Hauteur totale
 
 `total_h` est calculée en cumulant : en-tête, sections tab (max_col_height * cell_h), et au minimum la hauteur du titre vertical.
 Les paroles verticales n'ajoutent pas de hauteur (elles s'alignent sur la hauteur de la grille).
+
+## Mise en page horizontale (landscape)
+
+TODO:
