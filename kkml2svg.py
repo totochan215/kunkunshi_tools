@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 """
-kkml2svg.py — Convertit un fichier KKML (Kunkunshi Markup Language)
-en une tablature 工工四 au format SVG.
+kkml2svg.py — Rend un fichier KKML (Kunkunshi Markup Language)
+en une tablature 工工四 (kunkunshi) au format SVG.
 
 Usage:
     python3 kkml2svg.py chanson.kkml -o chanson.svg
@@ -11,7 +11,7 @@ Usage:
 
 Layout vertical (défaut) : les cases se lisent de haut en bas et de
 droite à gauche, comme dans les kunkunshi traditionnels.
-Layout horizontal : gauche à droite, haut en bas (style songbook).
+Layout horizontal : de gauche à droite et de haut en bas (style songbook).
 
 Métadonnée @layout vertical|horizontal dans le .kkml, ou -l/--layout en CLI.
 
@@ -46,10 +46,10 @@ import argparse
 # 下 n'est PAS une position autonome : préfixe de demi-ton (下老, 下尺),
 # au même titre que イ/ロ (octave/corde). Exception : 下八, kandokoro à part
 # entière (女絃, 無名指, octave de 中 — traité 野村流, 増訂琉球音樂樂典 p. 14),
-# rendu condensé comme 下老. 三力土一二 retirés le 16 sept. 2026 :
-# noms de notes gongche (工尺譜), jamais attestés comme positions de sanshin.
+
 POSITION_CHARS = set("合乙老下四上中尺工五六七八九十")
 SPECIAL_CHARS = set("○〇▲Ⓡ□×◯・#")
+
 # Échelle du ruby par rapport à la taille de base (paramètre interne,
 # non exposé comme en-tête KKML : @ruby_size volontairement absent pour le moment)
 RUBY_SCALE = 0.5
@@ -59,6 +59,7 @@ REST_TOKEN = "◯"
 REST_VARIANTS = {"◯", "○", "〇", "O", "o", "0"}
 REPEAT_START = "|:"
 REPEAT_END = ":|"
+
 # Marqueurs de répétition du chant (Portama vocalRepStart/vocalRepEnd) :
 # tokens autonomes occupant leur case, à l'instar de |: et :|. Contrairement
 # aux suffixes ( ) 声だし/声切り, ils ne sont pas attachés à une note —
@@ -74,25 +75,26 @@ VREPEAT_END = ")|"
 # NB : ー (chōonpu) n'est converti en - (case vide) QUE dans les blocs de
 # tablature — dans ::vocal / ::lyrics il reste une voyelle longue légitime.
 FULLWIDTH_MAP = {
-    '／': '/',    # croches, accords
-    '：': ':',    # shuffle
-    '｜': '|',    # marques de répétition, séparateur tab-lyrics
-    '＃': '♯',    # 尺＃ → 尺♯
-    '#':  '♯',
+    '／': '/',    # deux croches
+    '：': ':',    # croche pointée + double croche (shuffle)
+    '｜': '|',    # marques de répétition, séparateur de couplets
+    '＃': '♯',    # dièse
+    '#':  '♯',    # dièse
     '＋': '+',    # accords (variante +)
-    '＊': '*',
-    '＾': '^',
-    '＜': '<',
-    '＝': '=',
-    '（': '(',    # 声だし
-    '）': ')',    # 声切り
+    'ー': '-',    # accords (variante -)
+    '－': '-',    # accords (variante -)    
+    '＊': '*',    # uchi-utu
+    '＾': '^',    # kaki-utu
+    '＜': '<',    # kachi-utu
+    '＝': '=',    # taachi
+    '（': '(',    # koe-dashi 声だし
+    '）': ')',    # koe-kiri 声切り
 }
 
 # Variantes de saisie de la case vide : uniquement en token ISOLÉ.
 # ー/ｰ/－ collé à un kanji (ex. 中ー) reste un token non reconnu (le chōonpu
 # est une voyelle longue légitime ailleurs, on ne devine pas l'intention).
 EMPTY_INPUT_VARIANTS = {'ー', 'ｰ', '－'}
-
 
 def _normalize_tab_token(tok):
     """Convertit les variantes pleine chasse d'un token de tablature vers
@@ -112,6 +114,7 @@ TECHNIQUE_SUFFIXES = {
           'dx': 0.45, 'dy': 0.15},
     's': {'name': 'kuubanchi', 'type': 'small'},
     '=': {'name': 'taachi',    'type': 'line',   'pos': 'right'},
+
     # 声切り (koe-kiri) : borne de fin de chant □ pour le chanteur.
     # D'après 世禮 (増訂琉球音樂樂典 p. 9 et 26) : à l'intérieur de la
     # case, côté droit — pas dans la colonne marker. Suffixe : la bouche
@@ -124,8 +127,8 @@ TECHNIQUE_SUFFIXES = {
 #   イ  = 人偏 (亻) — 1 octave au-dessus du kanji de droite
 #   ロ  = 口偏 (口) — même hauteur que le kanji de droite, autre corde
 # Rendu : préfixe + kanji condensés en demi-largeur (comme 下老)
-HIGH_PREFIX_I = "イ"   # 1オクターブ上
-HIGH_PREFIX_RO = "ロ"  # 同音・別弦
+HIGH_PREFIX_I = "イ"   # i- 1オクターブ上
+HIGH_PREFIX_RO = "ロ"  # ro- / ko- 同音・別弦
 HIGH_POS_KANJI = {"合", "乙", "老", "四", "上", "尺", "工", "五", "中"}
 # Tokens valides : イ+kanji et ロ+kanji. On autorise tout préfixe 1-char + kanji.
 HIGH_PREFIXES = {HIGH_PREFIX_I, HIGH_PREFIX_RO}
