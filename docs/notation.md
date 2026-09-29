@@ -62,29 +62,29 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe katakana est accolé directement au kanji de position (token à deux caractères).
 
 | Préfix  | Lecture  | Signification | Lecture |
-|---------|----------|------|---------|
+|---------|----------|---------------|---------|
 | イ       | i        |1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
 | ロ       | ro ou kō | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
 
-Tokens valides avec イ (1 octave au-dessus) :
+Combinaisons valides avec イ (1 octave au-dessus) :
 
 2 caractères (préfixe + kanji) :
 
-| Token | Lecture | Position |
-|-------|---------|----------|
-| イ合   | i-ai | 1 octave au-dessus de 合 |
-| イ乙   | i-otsu | 1 octave au-dessus de 乙 |
-| イ老   | i-rō | 1 octave au-dessus de 老 |
-| イ四   | i-yon | 1 octave au-dessus de 四 |
-| イ上   | i-jō | 1 octave au-dessus de 上 |
-| イ中   | i-naka | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
-| イ尺   | i-shaku | 1 octave au-dessus de 尺 |
-| イ工   | i-kō | 1 octave au-dessus de 工 |
-| イ五   | i-go | 1 octave au-dessus de 五 |
-| イ六   | i-roku | 1 octave au-dessus de 六 |
+| Token | Lecture  | Position                 |
+|-------|----------|--------------------------|
+| イ合   | i-ai     | 1 octave au-dessus de 合 |
+| イ乙   | i-otsu   | 1 octave au-dessus de 乙 |
+| イ老   | i-rō     | 1 octave au-dessus de 老 |
+| イ四   | i-yon    | 1 octave au-dessus de 四 |
+| イ上   | i-jō     | 1 octave au-dessus de 上 |
+| イ中   | i-naka   | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
+| イ尺   | i-shaku  | 1 octave au-dessus de 尺 |
+| イ工   | i-kō     | 1 octave au-dessus de 工 |
+| イ五   | i-go     | 1 octave au-dessus de 五 |
+| イ六   | i-roku   | 1 octave au-dessus de 六 |
 | イ七   | i-shichi | 1 octave au-dessus de 七 |
 
-イ六 et イ七 sont rares : attestés comme noms de 勘所 dans la nomenclature 野村流 (nomura-ryū), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les mentionnent pas.
+イ六 et イ七 sont rares : attestés comme noms de 勘所 (kandokoro) dans la nomenclature 野村流 (nomura-ryū), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les mentionnent pas.
 
 3 caractères (préfixe + 下 + kanji) :
 
@@ -95,7 +95,7 @@ Tokens valides avec イ (1 octave au-dessus) :
 
 L'existence de イ下八 n'est pas attestée.
 
-Tokens valides avec ロ (même hauteur, autre corde) :
+Combinaisons valides avec ロ (même hauteur, autre corde) :
 
 | Token | Lecture              | Position                                           |
 |-------|----------------------|----------------------------------------------------|
@@ -109,22 +109,6 @@ Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que s
 #### Kanjis composés (pour information — non implémenté)
 
 Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois et/ou japonais préexistants, souvent rares ou dialectaux, réutilisés graphiquement dans certains recueils de kunkunshi parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五) et 亿 (乙).
-
-##### Composites en 口
-
-(Source : [inventaire R. López García, email W3C public-music-notation 0005, 2017](https://lists.w3.org/Archives/Public/public-music-notation/2017Feb/0006.html)) :
-
-| Caractère | Équivalent | Usage en japonais     |
-|-----------|------------|-----------------------|
-| 㕶        | ロ五        | Non attesté           |
-| 呎        | ロ尺        | Unité « pied » (feet) |
-| 叿        | ロ工        | Non attesté           |
-| 呬        | ロ四        | Non attesté           |
-| 哈        | ロ合        | Noms propres, par ex. la ville de Harbin 哈爾浜 |
-| 咾        | ロ老        | Non attesté           |
-| 𠮟        | ロ七        | Variante de 叱 : « réprouver, gronder » |
-| 叭        | ロ八        | Trompette : 喇叭       |
-| 㕤        | ロ九        | Non attesté           |
 
 ##### Composites en イ
 
@@ -145,6 +129,22 @@ Aucun composite dédié attesté en usage sanshin ; les caractères suivants son
 | 仇        | イ九        | |
 
 Pas de caractère composite en イ trouvé pour イ六, イ七 et イ十.
+
+##### Composites en 口
+
+(Source : [inventaire R. López García, email W3C public-music-notation 0005, 2017](https://lists.w3.org/Archives/Public/public-music-notation/2017Feb/0006.html)) :
+
+| Caractère | Équivalent | Usage en japonais     |
+|-----------|------------|-----------------------|
+| 㕶        | ロ五        | Non attesté           |
+| 呎        | ロ尺        | Unité « pied » (feet) |
+| 叿        | ロ工        | Non attesté           |
+| 呬        | ロ四        | Non attesté           |
+| 哈        | ロ合        | Noms propres, par ex. la ville de Harbin 哈爾浜 |
+| 咾        | ロ老        | Non attesté           |
+| 𠮟        | ロ七        | Variante de 叱 : « réprouver, gronder » |
+| 叭        | ロ八        | Trompette : 喇叭       |
+| 㕤        | ロ九        | Non attesté           |
 
 Statut KKML : non implémentés. À terme, ces caractères seront tolérés comme tokens d'entrée et normalisés vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.), mais jamais rendus tels quels.
 
