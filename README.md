@@ -1,6 +1,6 @@
 # kunkunshi_tools
 
-Outils de génération de tablatures 工工四 (kunkunshi) pour le sanshin d'Okinawa.
+Outils d'édition de tablatures 工工四 (kunkunshi) pour le sanshin d'Okinawa.
 Python 3 autonome, aucune dépendance hors stdlib.
 En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 
