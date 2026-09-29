@@ -5,7 +5,7 @@ Usage :
     python3 portama2kkml.py input.json [-o output.kkml]
     cat input.json | python3 portama2kkml.py - > output.kkml
 
-Le format KKML produit est compatible avec le convertisseur kkml2kunkunshi.py.
+Le format KKML produit est compatible avec le convertisseur kkml2svg.py.
 """
 
 import json
