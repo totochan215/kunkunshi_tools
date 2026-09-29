@@ -108,7 +108,7 @@ Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que s
 
 #### Kanjis composés (pour information — non implémenté)
 
-Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois/japonais préexistants (souvent rares ou dialectaux), réutilisés graphiquement dans certains recueils de kunkunshi parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五) et 亿 (乙).
+Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois et/ou japonais préexistants, souvent rares ou dialectaux, réutilisés graphiquement dans certains recueils de kunkunshi parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五) et 亿 (乙).
 
 ##### Composites en 口
 
@@ -124,7 +124,7 @@ Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont
 | 咾        | ロ老        | Non attesté           |
 | 𠮟        | ロ七        | Variante de 叱 : « réprouver, gronder » |
 | 叭        | ロ八        | Trompette : 喇叭       |
-| 㕤        | ロ九        | Non attesté            |
+| 㕤        | ロ九        | Non attesté           |
 
 ##### Composites en イ
 
@@ -144,7 +144,7 @@ Aucun composite dédié attesté en usage sanshin ; les caractères suivants son
 | 仈        | イ八        | | 
 | 仇        | イ九        | |
 
-Pas de kanji composite en イ trouvé pour イ六, イ七 et イ十.
+Pas de caractère composite en イ trouvé pour イ六, イ七 et イ十.
 
 Statut KKML : non implémentés. À terme, ces caractères seront tolérés comme tokens d'entrée et normalisés vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.), mais jamais rendus tels quels.
 
