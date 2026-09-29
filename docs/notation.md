@@ -275,13 +275,13 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 
 | Suffixe | Nom | Rendu SVG | Description |
 |---------|-----|-----------|-------------|
-| `*` | uchi-utu (打音) | caractère ｀ (accent grave) en haut-droite, même police et taille que la note | Presser la corde sans gratter (hammer-on) et tenir la note |
-| ? | uchi-nuchi-utu (打抜音) | caractère <à préciser> (apostrophe vide) | Hammer-on sans tenir la note |
-| `^` | kaki-utu (掛音) | ┗ (U+2517) pivoté de 180° en haut-droite | Upstroke (gratter de bas en haut avec le bachi) |
-| `v` | aki-utu (開音) | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
-| `<` | kachi-utu (掻音) | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
-| `s` | kuubanchi (小弾) | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
-| `=` | taachi (二弾) ou tsuiri-bichi (列弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
+| `*`     | uchi-utu (打音) | caractère ｀ (accent grave) en haut-droite, même police et taille que la note | Presser la corde sans gratter (hammer-on) et tenir la note |
+| ?       | uchi-nuchi-utu (打抜音) | caractère <à préciser> (apostrophe vide) | Hammer-on sans tenir la note |
+| `^`     | kaki-utu (掛音) | ┗ (U+2517) pivoté de 180° en haut-droite | Upstroke (gratter de bas en haut avec le bachi) |
+| `v`     | aki-utu (開音) | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
+| `<`     | kachi-utu (掻音) | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
+| `s`     | kuubanchi (小弾) | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
+| `=`     | taachi (二弾) ou tsuiri-bichi (列弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
 | `(` (préfixe) | koe-dashi (声だし) | petit ○ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur commence à chanter sur cette note — repère de respiration |
 | `)` (suffixe) | koe-kiri (声切り) | petit □ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur s'arrête de chanter après cette note |
 
