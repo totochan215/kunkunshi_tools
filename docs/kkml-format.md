@@ -136,7 +136,7 @@ Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivale
 | `（`               | `(`      | koedashi, boucle vocale |
 |  `）`              | `)`      | koekiri, boucle vocale  |
 
-NB: le bémol `♭` n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
+NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
 Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart) et `)|` (vocalRepEnd) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
 
