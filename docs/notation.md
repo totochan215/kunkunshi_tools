@@ -164,15 +164,15 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 
 | Position | Lecture      | Hauteur (demi-tons)   | Doigt | Variante |
 |----------|--------------|-----------------------|-------|----------|
-| 才       | さい　 (sai)   | -5                    | -     | 毛（もう） |
-| 凡       | ぼん　(bon)    | -3                    | -     | -　　     |
-| 勺       | しゃく (shaku) | -2                    | -     | 厘 (りん)  |
+| 才       | さい　 (sai)   | -5                    | —     | 毛（もう） |
+| 凡       | ぼん　(bon)    | -3                    | —     | —　　     |
+| 勺       | しゃく (shaku) | -2                    | —     | 厘 (りん)  |
 
 #### Positions étendues
 
 | Position | Lecture                | Hauteur (demi-tons) | Doigt | Variante |
 |----------|------------------------|---------------------|------|----------|
-| 下勺      | したしゃく (shita-shaku) | -1                  | -    | 尺♯       |     
+| 下勺      | したしゃく (shita-shaku) | -1                  | —    | 尺♯       |     
 
 
 ## Tokens spéciaux
