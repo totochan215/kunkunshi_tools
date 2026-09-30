@@ -133,8 +133,8 @@ Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivale
 | `＾`               | `^`      | suffixe de technique |
 | `＜`               | `<`      | suffixe de technique |
 | `＝`               | `=`      | suffixe de technique |
-| `（`               | `(`      | 声だし (koedashi), boucle vocale |
-|  `）`              | `)`      | 声切り (koekiri), boucle vocale  |
+| `（`               | `(`      | koedashi, boucle vocale |
+|  `）`              | `)`      | koekiri, boucle vocale  |
 
 NB: le bémol `♭` n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
