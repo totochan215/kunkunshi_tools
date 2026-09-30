@@ -170,9 +170,9 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 
 #### Positions étendues
 
-| Position | Lecture                | Hauteur | Doigt | Variante |
-|----------|------------------------|---------|------|----------|
-| 下勺      | したしゃく (shita-shaku) | -1      | -    | 尺♯       |     
+| Position | Lecture                | Hauteur (demi-tons) | Doigt | Variante |
+|----------|------------------------|---------------------|------|----------|
+| 下勺      | したしゃく (shita-shaku) | -1                  | -    | 尺♯       |     
 
 
 ## Tokens spéciaux
