@@ -28,7 +28,7 @@ PUA_TO_KANJI = {
     0xE022: "六",
     0xE023: "七",
     0xE024: "八",
-    0xE030: "○",  # silence / repos
+    0xE030: "○",
 }
 
 # Accordages Portama → KKML
