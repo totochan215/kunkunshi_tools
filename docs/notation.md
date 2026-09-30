@@ -177,8 +177,8 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 
 ## Tokens spéciaux
 
-- `◯` — repos (cercle). Variantes tolérées en KKML : ◯, ○, 〇, O, o, 0 — toutes normalisées en ◯ à l'analyse
-- `-` — case vide (EMPTY_TOKEN), en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est le token vide.
+- `◯` — repos. Variantes tolérées en KKML : ◯, ○, 〇, O, o, 0 — toutes normalisées en ◯ à l'analyse
+- `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est le token vide.
 - `|:` — début de boucle. Peut être utilisé comme token autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
 - `:|` — fin de boucle. Peut être utilisé comme token autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
 
@@ -320,10 +320,10 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 
 ## Options d'en-tête KKML
 
-| Métadonnée | Défaut | Effet |
-|------------|--------|-------|
-| `@shaku_circled on` | off | Rend tous les 尺 en 尺 entourés d'un cercle, y compris 尺 dans les croches (note principale ou note à cheval). 尺♯ et 下尺 ne sont pas affectés (下尺 est toujours entouré). |
-| `@shaku_sharp on` | off | Rend les 尺♯ explicitement avec le symbole ♯. Sinon, 尺♯ est rendu comme 尺. |
+| Métadonnée          | Défaut | Effet |
+|---------------------|--------|-------|
+| `@shaku_circled on` | off    | Rend tous les 尺 en 尺 entourés d'un cercle, y compris 尺 dans les croches (note principale ou note à cheval). 尺♯ et 下尺 ne sont pas affectés (下尺 est toujours entouré). |
+| `@shaku_sharp on`   | off    | Rend les 尺♯ explicitement avec le symbole ♯. Sinon, 尺♯ est rendu comme 尺. |
 
 ## Détails de rendu (fonction render_cell)
 
