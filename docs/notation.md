@@ -160,15 +160,19 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 
 才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — représentent des hauteurs de note inférieures à 合, n'apparaissent que dans la transcription vocale.
 
+#### Positions de base
+
 | Position | Lecture      | Hauteur (demi-tons)   | Doigt | Variante |
 |----------|--------------|-----------------------|-------|----------|
-| 才       | さい　 (sai)   | -5                    | -     |          |
-| 凡       | ぼん　(bon)    | -3                    | -     |          |
-| 勺       | しゃく (shaku) | -1                    | -     |          |
+| 才       | さい　 (sai)   | -5                    | -     | -        |
+| 凡       | ぼん　(bon)    | -3                    | -     | -        |
+| 勺       | しゃく (shaku) | -2                    | -     | -        |
+
+#### Positions étendues
 
 | Position | Lecture                | Hauteur | Doigt | Variante |
 |----------|------------------------|---------|------|----------|
-| 下勺      | したしゃく (shita-shaku) | -2      | -    | 尺♯       |     
+| 下勺      | したしゃく (shita-shaku) | -1      | -    | 尺♯       |     
 
 
 ## Tokens spéciaux
