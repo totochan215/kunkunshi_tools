@@ -65,9 +65,9 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 | イ       | i        |1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
 | ロ       | ro ou kō | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
 
-Combinaisons valides avec イ (1 octave au-dessus) :
+#### Combinaisons valides avec イ (1 octave au-dessus)
 
-2 caractères (préfixe + kanji) :
+##### 2 caractères (préfixe + kanji)
 
 | Token | Lecture  | Position                 |
 |-------|----------|--------------------------|
@@ -85,7 +85,7 @@ Combinaisons valides avec イ (1 octave au-dessus) :
 
 イ六 et イ七 sont rares : attestés comme noms de 勘所 (kandokoro) dans la nomenclature 野村流 (nomura-ryū), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les mentionnent pas.
 
-3 caractères (préfixe + 下 + kanji) :
+##### 3 caractères (préfixe + 下 + kanji)
 
 | Token | Lecture       | Position                  |
 |-------|---------------|---------------------------|
@@ -94,7 +94,7 @@ Combinaisons valides avec イ (1 octave au-dessus) :
 
 L'existence de イ下八 n'est pas attestée.
 
-Combinaisons valides avec ロ (même hauteur, autre corde) :
+#### Combinaisons valides avec ロ (même hauteur, autre corde)
 
 | Token | Lecture              | Position                                           |
 |-------|----------------------|----------------------------------------------------|
