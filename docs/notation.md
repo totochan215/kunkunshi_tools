@@ -52,8 +52,8 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 | Token | Lecture | Rendu | Note |
 |-------|-------|---|------|
 | 下老   | shita-rō | 下 + 老 condensés en demi-largeur | |
-| 尺♯   | shaku-sharp | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle |
-| 下尺  | shita-shaku | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle |
+| 尺♯   | shaku-sharp | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
+| 下尺  | shita-shaku | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
 | 下八 | shita-hachi |下 + 八 condensés en demi-largeur (idem 下老) | Sans cercle. Kandokoro propre (女絃 sous 八, octave de 中), pas un demi-ton |
 
 ### Positions hautes (préfixes イ et ロ)
