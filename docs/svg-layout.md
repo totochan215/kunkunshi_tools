@@ -8,7 +8,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 
 ```
 [paroles verticales]  [grille de tablature]  [titre vertical]
-   gauche → droite         centre             droite
+         gauche           centre             droite
 ```
 
 ### Constantes de dimensions
