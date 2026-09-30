@@ -58,11 +58,11 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 ### Positions hautes (préfixes イ et ロ)
 
-Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe katakana est accolé directement au kanji de position (token à deux caractères).
+Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe en katakana est accolé directement au kanji de position (token à deux caractères).
 
 | Préfixe | Lecture  | Signification | Lecture |
 |---------|----------|---------------|---------|
-| イ       | i        |1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
+| イ       | i        |1 octave au-dessus du kanji de droite, joué sur la même corde      | i- (い)                               |
 | ロ       | ro ou kō | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
 
 #### Combinaisons valides avec イ (1 octave au-dessus)
@@ -147,11 +147,7 @@ Pas de caractère composite en イ trouvé pour イ六, イ七 et イ十.
 
 Statut KKML : non implémentés. À terme, ces caractères seront tolérés comme tokens d'entrée et normalisés vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.), mais jamais rendus tels quels.
 
-### Cas des positions hautes + 下老 ou 下尺
 
-Le préfixe イ ou 口 peut aussi s'appliquer à 下老 et 下尺. Le token fait alors 3 caractères (ex. イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Ex. utilisé dans Hiyamikachibushi).
-
-Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
 Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du kanji 人. ロ est un raccourci du radical 口偏 (口). Les composites précomposés qui existent en Unicode sont listés plus haut à titre d'information ; le KKML utilise les préfixes katakana (2 caractères) comme forme canonique.
 
