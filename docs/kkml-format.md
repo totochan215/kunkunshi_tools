@@ -54,12 +54,13 @@ Tolérance : si aucune section n'est déclarée, les lignes hors métadonnées e
 - `@composer` — compositeur
 - `@lyricist` — parolier
 - `@origin` — origine
+- `@comment` — commentaire
 - `@tuning` — accordage relatif. Défaut : `本調子`. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`.
 - `@base_note` — note de base, correspondant à la hauteur de la position 合 (cas des accordages 本調子, 二揚げ et 三下げ) ou 合 moins 2 demi-tons (cas des accordages 一二揚げ et 一揚げ). Défaut : `C3`.
 - `@layout vertical|horizontal` — indication de mise en forme lors du rendu (défaut : vertical)
 - `@cols n` — nombre de cellules par dan (défaut : `12`)
 - `@marker on|off` — active/désactive le marqueur (défaut : `on`)
-- `@end_circle on|off` — **déprécié, ignoré** : le ┘● de fin s'obtient désormais par le token explicite `)|` posé dans la grille (cohérent avec Portama : marqueur attaché à une cellule, non déduit de la dernière case remplie).
+- `@end_circle on|off` — **déprécié**
 - `@font_style mincho|gothic|serif` — style de police à utiliser pour le rendu (défaut : `mincho`). `mincho` = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), `gothic` = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP), serif = police serif générique (comportement historique). La police réelle dépend du système qui affiche le SVG.
 - `@shaku_circled on|off` — rend les 尺 entourés d'un cercle (défaut : `on` ; `off` les rend sans cercle). 尺♯ n'est jamais rendu entouré. 下尺 est toujours rendu entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est jamais rendu entouré.
 - `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : `on` ; `off` les rend comme 尺)
