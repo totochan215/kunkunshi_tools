@@ -14,22 +14,22 @@ Les caractères de position (勘所, kandokoro) représentent les positions sur 
 
 Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) et doigtés :
 
-| Position | Lecture | Hauteur (demi-tons) | Doigt | Variante |
-|----------|---------|---------------------|-------|----------|
-| 合       | あい (ai) | 0 | 開弦 (corde à vide) | |
+| Position | Lecture   | Hauteur (demi-tons) | Doigt | Variante |
+|----------|-----------|---------------------|-------|----------|
+| 合       | あい (ai)   | 0 | 開弦 (corde à vide) | |
 | 乙       | おつ (otsu) | +2 | ㊀ 人差指 (index) | |
-| 老       | ろう (rō) | +4 | ㊁ 中指 (majeur) | |
-| 四       | よん (yon) | +5 | 開弦 (corde à vide) | |
+| 老       | ろう (rō)   | +4 | ㊁ 中指 (majeur) | |
+| 四       | よん (yon)  | +5 | 開弦 (corde à vide) | |
 | 上       | じょう (jō) | +7 | ㊀ 人差指 (index) | |
 | 中       | なか (naka) | +9 | ㊁ 中指 (majeur) | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
 | 尺       | しゃく (shaku) | +10 | ㊃ 小指 (auriculaire)* | |
-| 工       | こう (kō) | +12 | 開弦 (corde à vide) | |
-| 五       | ご (go) | +14 | ㊀ 人差指 (index) | |
-| 六       | ろく (roku) | +16 | ㊁ 中指 (majeur) | |
+| 工       | こう (kō)     | +12 | 開弦 (corde à vide) | |
+| 五       | ご (go)      | +14 | ㊀ 人差指 (index) | |
+| 六       | ろく (roku)   | +16 | ㊁ 中指 (majeur) | |
 | 七       | しち (shichi) | +17 | ㊃ 小指 (auriculaire)* | |
-| 八       | はち (hachi) | +19 | ㊃ 小指 (auriculaire)* | |
-| 九       | きゅう (kyū) | +21 | ㊃ 小指 (auriculaire)* | |
-| 十       | じゅう (jyū) | +22 | ㊃ 小指 (auriculaire)* | |
+| 八       | はち (hachi)  | +19 | ㊃ 小指 (auriculaire)* | |
+| 九       | きゅう (kyū)  | +21 | ㊃ 小指 (auriculaire)* | |
+| 十       | じゅう (jyū)  | +22 | ㊃ 小指 (auriculaire)* | |
 
 \* Doigtés des positions au-delà du majeur à confirmer : selon les écoles et la position de la main (上部/中部), 尺 et 七 peuvent se jouer index ou majeur (traité 野村流, position médiane : 老中六 index, 尺七 majeur, 八九 auriculaire). Les cordes à vide (合四工) et les doigtés index/majeur sont établis.
 
@@ -39,11 +39,11 @@ Wikipédia JA signale des variations de lecture selon la région et l'école. Au
 
 Répartition par corde :
 
-| Corde   | Nom de corde | Positions | Hauteurs (本調子, base do) |
-|---------|-----|-----------|----------------------------|
-| Grave   | 男絃 ou 男ジル (uojiru) | 合 乙 老 | do, ré, mi |
-| Médiane | 中絃 ou 中ジル (nakajiru) | 四 上 中 尺 | fa, sol, la, si♭ |
-| Aiguë   | 女絃 ou 女ジル (miijiru) | 工 五 六 七 八 九 十 | do, ré, mi, fa, sol, la, si♭ |
+| Corde   | Nom de corde            | Positions         | Hauteurs (本調子, base do)    |
+|---------|-------------------------|-------------------|------------------------------|
+| Grave   | 男絃 ou 男ジル (uojiru)   | 合 乙 老           | do, ré, mi                   |
+| Médiane | 中絃 ou 中ジル (nakajiru) | 四 上 中 尺         | fa, sol, la, si♭             |
+| Aiguë   | 女絃 ou 女ジル (miijiru)  | 工 五 六 七 八 九 十 | do, ré, mi, fa, sol, la, si♭ |
 
 Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-ton, quasi-équivalent du dièse ♯, combiné à un caractère de base. 下老 (シタロウ) = demi-ton au-dessus de 老 ; 下尺 = demi-ton au-dessus de 尺. Exception : 下八, qui n'est pas un demi-ton au-dessus de 八 mais un kandokoro propre — sur la 女絃 (corde aiguë), une case sous 八, doigté annulaire (無名指) selon la table 野村流 (source : 世禮國男, 増訂琉球音樂樂典, p. 14 : octave de 中, alias 仲). Les sources traditionnelles (école 野村流) traitent 下老 et 下尺 comme des 勘所 à part entière, avec lectures et doigtés propres ; la pratique moderne écrit aussi 尺♯ pour 下尺 (d'où l'option `@shaku_sharp`). Terminologie retenue dans ce projet : « position de base » pour les 14 caractères ci-dessus, « préfixe » pour 下 (demi-ton), イ (octave supérieure) et ロ (même hauteur, autre corde).
 
@@ -158,7 +158,18 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 
 ### Caractères vocaux (non rendus sur le sanshin)
 
-才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — représentent des hauteurs de note au-delà de 十 mais n'apparaissent que dans la transcription vocale.
+才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — représentent des hauteurs de note inférieures à 合, n'apparaissent que dans la transcription vocale.
+
+| Position | Lecture      | Hauteur (demi-tons)   | Doigt | Variante |
+|----------|--------------|-----------------------|-------|----------|
+| 才       | さい　 (sai)   | -5                    | -     |          |
+| 凡       | ぼん　(bon)    | -3                    | -     |          |
+| 勺       | しゃく (shaku) | -1                    | -     |          |
+
+| Position | Lecture                | Hauteur | Doigt | Variante |
+|----------|------------------------|---------|------|----------|
+| 下勺      | したしゃく (shita-shaku) | -2      | -    | 尺♯       |     
+
 
 ## Tokens spéciaux
 
