@@ -125,12 +125,16 @@ Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivale
 |--------------------|-------------|---------|
 | `／` (U+FF0F)      | `/`         | croches |
 | `：` (U+FF1A)      | `:`         | shuffle |
-| `｜` (U+FF5C)      | `\|`        | marques de répétition `\|:` / `:\|`, séparateur tab-lyrics |
-| `♯`  (U+266F)      | `#`       | altération (尺＃) |
+| `｜` (U+FF5C)      | `\|`        | marques de répétition, séparateur tab-lyrics |
+| `♯`  (U+266F)      | `#`        | altération (尺＃) |
 | `＋` (U+FF0B)      | `+`      | accords |
 | `ー` (U+30FC)      | `-`      | accords |
-| `＊` `＾` `＜` `＝` | `*` `^` `<` `=` | suffixes de technique |
-| `（` `）`          | `(` `)` | 声だし (koedashi) / 声切り (koekiri)|
+| `＊`               | `*`      | suffixe de technique |
+| `＾`               | `^`      | suffixe de technique |
+| `＜`               | `<`      | suffixe de technique |
+| `＝`               | `=`      | suffixe de technique |
+| `（`               | `(`      | 声だし (koedashi), boucle vocale |
+|  `）`              | `)`      | 声切り (koekiri), boucle vocale  |
 
 NB: le bémol `♭` n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
