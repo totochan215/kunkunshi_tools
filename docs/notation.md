@@ -179,8 +179,10 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 
 - `◯` — repos. Variantes tolérées en KKML : ◯, ○, 〇, O, o, 0 — toutes normalisées en ◯ à l'analyse
 - `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est le token vide.
-- `|:` — début de boucle. Peut être utilisé comme token autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
-- `:|` — fin de boucle. Peut être utilisé comme token autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
+- `|:` — début de boucle instrumentale. Peut être utilisé comme token autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
+- `:|` — fin de boucle instrumentale. Peut être utilisé comme token autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
+- `|(` — début de boucle vocale.
+- `|)` — fin de boucle vocqle.
 
 Les boucles de répétition (`|:` … `:|`) ne sont pas limitées au début d'une chanson (le terme « intro » est trompeur). Elles peuvent apparaître à n'importe quel endroit, et une chanson peut en contenir plusieurs. Les boucles ne peuvent pas être imbriquées.
 
@@ -278,8 +280,8 @@ Le format d'un token encode son rythme :
 
 ### Positions hautes 3-caractères
 
-| Token | Lecture | Rendu |
-|-------|---------|-------|
+| Token | Lecture       | Rendu |
+|-------|---------------|-------|
 | イ下尺 | i-shita-shaku | イ下尺 condensés (3 caractères), textLength 180% de fs, sans cercle |
 
 Large mais fonctionnel. Le code traite ce cas dans une branche dédiée (3 caractères, `base_tok[1:] == "下尺"`).
@@ -288,22 +290,22 @@ Large mais fonctionnel. Le code traite ce cas dans une branche dédiée (3 carac
 
 Apposés après le caractère de position dans le token KKML. Peuvent se combiner (ex : `中s*` = jeu faible + hammer-on).
 
-| Suffixe | Nom | Rendu SVG | Description |
-|---------|-----|-----------|-------------|
-| `*`     | uchi-utu (打音) | caractère ｀ (accent grave) en haut-droite, même police et taille que la note | Presser la corde sans gratter (hammer-on) et tenir la note |
+| Suffixe | Nom                    | Rendu SVG | Description |
+|---------|------------------------|-----------|-------------|
+| `*`     | uchi-utu (打音)         | caractère ｀ (accent grave) en haut-droite, même police et taille que la note | Presser la corde sans gratter (hammer-on) et tenir la note |
 | ?       | uchi-nuchi-utu (打抜音) | caractère <à préciser> (apostrophe vide) | Hammer-on sans tenir la note |
-| `^`     | kaki-utu (掛音) | ┗ (U+2517) pivoté de 180° en haut-droite | Upstroke (gratter de bas en haut avec le bachi) |
-| `v`     | aki-utu (開音) | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
-| `<`     | kachi-utu (掻音) | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
-| `s`     | kuubanchi (小弾) | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
+| `^`     | kaki-utu (掛音)        | ┗ (U+2517) pivoté de 180° en haut-droite | Upstroke (gratter de bas en haut avec le bachi) |
+| `v`     | aki-utu (開音)         | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
+| `<`     | kachi-utu (掻音)       | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
+| `s`     | kuubanchi (小弾)       | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
 | `=`     | taachi (二弾) ou tsuiri-bichi (列弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
 
 ## Contrôle du chant
 
-| Suffixe | Nom | Rendu SVG | Description |
-|---------|-----|-----------|-------------|
+| Suffixe       | Nom               | Rendu SVG | Description |
+|---------------|-------------------|-----------|-------------|
 | `(` (préfixe) | koe-dashi (声だし) | petit ○ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur commence à chanter sur cette note — repère de respiration |
-| `)` (suffixe) | koe-kiri (声切り) | petit □ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur s'arrête de chanter après cette note |
+| `)` (suffixe) | koe-kiri (声切り)  | petit □ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur s'arrête de chanter après cette note |
 
 `(` et `)` sont des bornes de chant, pas des techniques de main : elles s'adressent au chanteur pour placer ses respirations. Source : 世禮國男, 増訂琉球音樂樂典, p. 9 ((10) ○ 声だし, 区画中右方) et p. 26 ((ホ)(1) ○□ 声出 声切) — le ○ marque le début du chant, le □ la fin. Elles se placent DANS la case (côté droit), pas dans la colonne marker — le traité précise qu'elles devraient être en colonne vocale mais sont dans la case par manque de place. Syntaxe mnémotechnique : `(` ouvre la bouche — c'est un PRÉFIXE, placé avant le kanji (ex. `(中`) car on ouvre la bouche avant la note ; `)` la ferme — c'est un SUFFIXE, placé après (ex. `尺)`) car on ferme la bouche après la note. Les deux bornes peuvent cohabiter sur une même note : `(中)` = 声だし + 中 + 声切り. Variantes pleine chasse （ ） acceptées (tolérance IME). Se combinent avec les autres suffixes (ex. `(尺)*`).
 
