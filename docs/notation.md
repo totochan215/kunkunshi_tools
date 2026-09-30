@@ -61,7 +61,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe katakana est accolé directement au kanji de position (token à deux caractères).
 
-| Préfix  | Lecture  | Signification | Lecture |
+| Préfixe | Lecture  | Signification | Lecture |
 |---------|----------|---------------|---------|
 | イ       | i        |1 octave au-dessus du kanji de droite, joué sur la même corde | i- (い) |
 | ロ       | ro ou kō | Même hauteur que le kanji de droite mais joué sur une autre corde | ro- (ろ), ou kō- (こう) selon l'école |
