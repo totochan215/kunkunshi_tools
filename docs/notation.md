@@ -177,7 +177,7 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 - `|:` — début de boucle instrumentale. Peut être utilisé comme token autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
 - `:|` — fin de boucle instrumentale. Peut être utilisé comme token autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
 - `|(` — début de boucle vocale.
-- `|)` — fin de boucle vocqle.
+- `|)` — fin de boucle vocale.
 
 Les boucles de répétition (`|:` … `:|`) ne sont pas limitées au début d'une chanson (le terme « intro » est trompeur). Elles peuvent apparaître à n'importe quel endroit, et une chanson peut en contenir plusieurs. Les boucles ne peuvent pas être imbriquées.
 
