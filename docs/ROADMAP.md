@@ -7,7 +7,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 ## 1. Validations en attente (bloquantes ou quasi)
 
-- ⬜ Valider visuellement かぎやで風節 (KKML `songs/kagiya-defu.kkml`) contre le PDF :
+- ⬜ Valider visuellement かぎやで風節 (KKML `samples/kkml/かぎやで風節.kkml`) contre le PDF :
   occurrences de `八` (U+E024, dan 5), silences `◯/尺♯` (dan 14), ornements `*` (dans 3, 10, 12, 18).
   Confirme le mapping PUA U+E024 = 八.
 - ⬜ Régénérer et valider le SVG de test des souhou (uchi-utu `*`, kaki-utu `^`, aki-utu `v`,
