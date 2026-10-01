@@ -2,7 +2,7 @@
 
 ## `kkml2svg.py`
 
-Python 3 autonome, ~1770 lignes. Ce dépôt est la source de vérité du code.
+Python 3 autonome, ~2096 lignes. Ce dépôt est la source de vérité du code.
 
 ### CLI
 
