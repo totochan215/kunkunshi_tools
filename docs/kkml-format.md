@@ -65,7 +65,7 @@ Tolérance : si aucune section n'est déclarée, les lignes hors métadonnées e
 - `@shaku_circled on|off` — rend les 尺 entourés d'un cercle (défaut : `on` ; `off` les rend sans cercle). 尺♯ n'est jamais rendu entouré. 下尺 est toujours rendu comme 尺 entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est jamais rendu entouré.
 - `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : `on` ; `off` les rend comme 尺)
 - `@lyrics_size small|medium|big` — taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
-- `@ruby_size` — taille du ruby en pourcentage de la base (défaut : `50`). Réservé pour usage futur.
+- `@ruby_size` — taille du ruby en pourcentage de la base (défaut : `50`). Non utilisé à ce jour.
 - `@musicno` — numéro de morceau (pour compatibilité Portama)
 - `@chogen` — accordage absolu (pour compatibilité Portama)
 - `@speed` — tempo (pour compatibilité Portama)
@@ -117,7 +117,7 @@ Séparateurs de tokens (à l'intérieur d'une case) :
 | `-`        | Accord (notes simultanées, max 3)       | `四-工` ou `合-四-工`  |
 | (aucun)    | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
 
-En cas de token non reconnu (ni position, ni séparateur, ex. `合工尺`), le convertisseur émet une alerte sur stderr (une seule fois par token unique) et applique un rendu dégradé — les 3 premiers caractères au maximum, condensés en largeur comme `イ中` (2 caractères) ou `イ下尺` (3 caractères). L'ancien comportement « ornement » (empilement vertical de tous les caractères) est déprécié depuis le 19 sept. 2026 : il n'avait pas de sémantique musicale (les kanji empilés réels sont des croches `A/B`, du hayabiki `A:B` ou des accords `A-B`, chacun ayant son séparateur).
+En cas de token non reconnu (ni position, ni séparateur, ex. `合工尺`), le convertisseur émet une alerte sur stderr (une seule fois par token unique) et applique un rendu dégradé — les 3 premiers caractères au maximum, condensés en largeur comme `イ中` (2 caractères) ou `イ下尺` (3 caractères). L'ancien comportement « ornement » (empilement vertical de tous les caractères) est déprécié : il n'a pas de sémantique musicale (les kanji empilés réels sont des croches `A/B`, du hayabiki `A:B` ou des accords `A-B`, chacun ayant son séparateur).
 
 Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur sont normalisés vers leur forme canonique en demie chasse, avec une INFO sur stderr (une fois par variante) :
 

@@ -33,7 +33,7 @@ Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) 
 
 \* Doigtés des positions au-delà du majeur à confirmer : selon les écoles et la position de la main (上部/中部), 尺 et 七 peuvent se jouer index ou majeur (traité 野村流, position médiane : 老中六 index, 尺七 majeur, 八九 auriculaire). Les cordes à vide (合四工) et les doigtés index/majeur sont établis.
 
-Notation 野村流 des doigtés (指位記号) : les kanji numéraux encerclés sont utilisés dans la marge gauche des kunkunshi 野村流 pour indiquer le doigté et les changements de position de la main gauche — ㊀ (一) = 人差指 (index), ㊁ (二) = 中指 (majeur), ㊂ (三) = 無名指 (annulaire), ㊃ (四) = 小指 (auriculaire). Bloc Unicode U+3280–U+3283 (Enclosed CJK Letters and Months), la série complète allant jusqu'à ㊉ (十). NB kkml2svg : ces caractères ne doivent PAS apparaître comme tokens de position — les REST_VARIANTS du tokenizer normalisent les caractères encerclés vers le silence ◯, ce qui les rendrait ambiguës dans la grille.
+Notation 野村流 des doigtés (指位記号) : les kanji numéraux encerclés sont utilisés dans la marge gauche des kunkunshi 野村流 pour indiquer le doigté et les changements de position de la main gauche — ㊀ (一) = 人差指 (index), ㊁ (二) = 中指 (majeur), ㊂ (三) = 無名指 (annulaire), ㊃ (四) = 小指 (auriculaire). Bloc Unicode U+3280–U+3283 (Enclosed CJK Letters and Months), la série complète allant jusqu'à ㊉ (十). NB : ces caractères ne doivent pas apparaître comme tokens de position dans la grille — ils y seraient confondus avec le silence ◯.
 
 Wikipédia JA signale des variations de lecture selon la région et l'école. Aucun impact en KKML : les kanji sont identiques quelle que soit la lecture.
 
@@ -105,7 +105,7 @@ L'existence de イ下八 n'est pas attestée.
 
 Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Bien que d'autres combinaisons soient théoriquement possibles, seules ces quatre formes sont attestées en usage. La lecture du préfixe varie selon l'école : ro- ou kō- (野村流, Nomura-ryu).
 
-#### Kanjis composés (pour information — non implémenté)
+#### Kanjis composés (pour information)
 
 Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois et/ou japonais préexistants, souvent rares ou dialectaux, réutilisés graphiquement dans certains recueils de kunkunshi parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五) et 亿 (乙).
 
@@ -145,7 +145,7 @@ Pas de caractère composite en イ trouvé pour イ六, イ七 et イ十.
 | 叭        | ロ八        | Trompette : 喇叭       |
 | 㕤        | ロ九        | Non attesté           |
 
-Statut KKML : non implémentés. À terme, ces caractères seront tolérés comme tokens d'entrée et normalisés vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.), mais jamais rendus tels quels.
+Ces caractères ne sont pas rendus tels quels : l'usage prévu est de les normaliser vers leur décomposition (唬 → ロ四, 甫 → イ尺, etc.).
 
 
 
@@ -207,15 +207,6 @@ Ex. てぃんさぐぬ花 "Tinsagu nu hana" et non "Teinsagu nu hana"
 Petits kana combinants reconnus : ぁぃぅぇぉゃゅょゎ (hiragana) et ァィゥェォャュョヮ (katakana), plus ー (chōonpu, voyelle longue).
 
 Rendu vertical : le caractère principal est aligné sur la note ; les caractères combinants sont empilés en dessous, espacés de `syllable_fs * 0.85`. Les petits kana sont rendus à la même taille de police (leur glyphe est naturellement plus petit). Le ー (chōonpu) est pivoté de 90° pour devenir un trait vertical, comme en typographie japonaise verticale. Le chevauchement de la bordure inférieure de la case est accepté.
-
-### Positionnement
-
-- Taille de police : SYLLABLE_FS = min(int(cell_h * 0.35), int(marker_w * 0.8)) ≈ 20px avec les valeurs par défaut (cell_w=52, cell_h=58, marker_w=26)
-- Le caractère principal de chaque syllabe est positionné à la même hauteur verticale que la note correspondante
-- Position x : centre de la colonne marker = `x + cell_w + marker_w / 2`
-- Position y : `cy + cell_h / 2 + syllable_fs / 3` (centré verticalement sur la note)
-- Couleur : gris foncé (#333)
-- Police : serif (même que les notes)
 
 ### Syntaxe KKML
 
@@ -306,34 +297,9 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 
 À ne pas confondre : `|(` et `)|` sont des tokens autonomes occupant leur case (comme `|:` et `:|`) — ils représentent la répétition du chant (vocalRepStart/vocalRepEnd de Portama), section reprise au chant ou à la piste suivante. Rendu : ○ et □ à 75% de fs, centrés dans la case. Ils ne sont pas attachés à une note, contrairement aux suffixes `(` `)`.
 
-Les marques diacritiques (`*`, `^`, `v`, `<`) sont rendues dans la même police et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
-
-- uchi-utu (`｀`) : `dx=0.22`, `dy=0.05` (en haut-droite)
-- kaki-utu (`┗` roté 180°, échelle 0.75) : `dx=0.28`, `dy=-0.22` (en haut-droite, barre supérieure au-dessus de la note)
-- aki-utu (`V`) : `dx=0.45`, `dy=0.15` (en bas-gauche)
-- kachi-utu (`┗`) : `dx=0.45`, `dy=0.15` (en bas-gauche)
-
-Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 7 + fs * dy`. Aucun souhou ne modifie les coordonnées de la note, sauf `s` qui réduit la taille à 67% sans déplacer le centre.
-
 ## Options d'en-tête KKML
 
 | Métadonnée          | Défaut | Effet |
 |---------------------|--------|-------|
 | `@shaku_circled on` | off    | Rend tous les 尺 en 尺 entourés d'un cercle, y compris 尺 dans les croches (note principale ou note à cheval). 尺♯ et 下尺 ne sont pas affectés (下尺 est toujours entouré). |
 | `@shaku_sharp on`   | off    | Rend les 尺♯ explicitement avec le symbole ♯. Sinon, 尺♯ est rendu comme 尺. |
-
-## Détails de rendu (fonction render_cell)
-
-- Noire : `font-size = fs` (ou `int(fs*0.67)` si kuubanchi), `y = cy + 7`, `text-anchor = middle`
-- Croche, note principale : `font-size = effective_fs`, `y = cy + 7`
-- Croche, note à cheval : `font-size = int(effective_fs * 0.713)` (+15%), position `straddle_y` calculée sur `fs` de base (inchangée par `s`), `y = straddle_y`
-- Shuffle, note supérieure : `font-size = int(effective_fs * 0.72)`, `y = cy - fs * 0.18 + sh_pos/3` (position sur fs de base)
-- Shuffle, note inférieure : `font-size = int(effective_fs * 0.72)`, `y = cy + fs * 0.42 + sh_pos/3` (position sur fs de base)
-- 尺 entouré (noire) : cercle SVG `r = effective_fs * 0.6325` (+15%), centre `(cx, cy+2)`, `stroke-width=1`
-- 尺 entouré (croche, note principale) : même cercle que la noire, dessiné avant le texte
-- 尺 entouré (croche, note à cheval) : cercle `r = ss * 0.713` (+15%), centre décalé vers le bas
-- Marques diacritiques : police serif, `font-size = int(effective_fs * 1.1)` (+10%). Positionnement : voir les deux modes ci-dessus (notes simples vs tokens multi-caractères avec text_w)
-- uchi-utu : caractère ｀ (accent grave, U+FF40) en haut-droite
-- 下老 : un seul `<text>` avec `textLength = effective_fs * 1.0`, `lengthAdjust="spacingAndGlyphs"`, `text-anchor` non spécifié (left). Techniques passées avec `text_w=effective_fs * 1.0`
-- Positions hautes (イ尺, イ五, etc.) : un seul `<text>` avec `textLength = effective_fs * 1.2`, `lengthAdjust="spacingAndGlyphs"`. Techniques passées avec `text_w=effective_fs * 1.2`
-- fs (font_size) par défaut = 22, cell_w = 52, cell_h = 58

@@ -4,10 +4,10 @@ Outils d'édition de tablatures 工工四 (kunkunshi) pour le sanshin d'Okinawa.
 Python 3 autonome, aucune dépendance hors stdlib.
 En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 
+Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
+
 - Pipeline 1 : saisie dans l'éditeur Portama → JSON Portama → KKML → retouche manuelle en KKML → SVG
 - Pipeline 2 : saisie manuelle en KKML → SVG
-
-Réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
 ## Scripts
 
@@ -33,7 +33,7 @@ Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`.
 
 ### kkml2pdf.py
 
-TODO:
+Conversion KKML → PDF : script non écrit à ce jour.
 
 ## Le format KKML
 
@@ -75,11 +75,12 @@ Détail complet : [docs/notation.md](docs/notation.md) et [docs/kkml-format.md](
 
 ## Documentation
 
-- [docs/converter-architecture.md](docs/converter-architecture.md) — architecture des deux scripts
 - [docs/kkml-format.md](docs/kkml-format.md) — syntaxe et règles du format KKML
 - [docs/notation.md](docs/notation.md) — notation musicale (positions, modes rythmiques, souhou, vocal etc.)
 - [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama sur la base de sa rétro-ingénierie
 - [docs/svg-layout.md](docs/svg-layout.md) — layout SVG (dimensions, constantes, colonne marker)
+
+La roadmap du projet et le contexte technique pour contributeurs/agents IA sont dans [AGENTS.md](AGENTS.md).
 
 ## Echantillons de fichiers
 
