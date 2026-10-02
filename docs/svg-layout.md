@@ -116,4 +116,4 @@ Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `
 
 ## Mise en page horizontale (landscape)
 
-TODO:
+La mise en page horizontale (mode songbook) n'est pas encore documentée.
