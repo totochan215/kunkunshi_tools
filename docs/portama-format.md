@@ -87,7 +87,7 @@ Chaque cellule est un objet avec :
 
 ## Structure du tableau allRubyData
 
-TODO:
+1 array par page ; 1 ligne par dan ; 3 unités de double largeur par cellule. Description détaillée à compléter.
 
 | Champ      | Type   | Description |
 |------------|--------|-------------|
@@ -97,7 +97,7 @@ TODO:
 
 ## Structure du tableau allLyricsData
 
-TODO:
+Champs : `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Description détaillée à compléter.
 
 | Champ      | Type   | Description |
 |------------|--------|-------------|
@@ -192,66 +192,11 @@ Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par 
 
 `allRubyData` contient le texte vocal affiché dans la colonne marker (sous-colonne droite de chaque pile). Clé = numéro de page en string, valeur = tableau de lignes, 1 ligne par dan (19 lignes pour かぎやで風節 = 19 dans).
 
-Structure du positionnement (validée exactement contre le PDF rendu) :
-
-- U+3000 (espace pleine largeur) = 1 unité ; espace ASCII = 0,5 unité.
-- Champ de saisie d'environ 36 unités pour 12 cases = exactement 3 unités monospace par case (longueurs de ligne observées 14–36 unités).
-- Le rendu PDF est une application STRICTEMENT LINÉAIRE des unités source : `top_caractère = 36,9 + 2,74 + 14,646 × unités` (mesuré sur かぎやで風節.pdf, 58 caractères, résidu max 0,00 pt). L'unité = hauteur_case/3 = 43,94/3 = 14,646 pt.
-- Il existe une grille stricte de 3 lignes ruby par case (fractions de case 0,06 / 0,40 / 0,73 pour les unités entières mod 3), mais AUCUN arrimage des syllabes aux notes — l'auteur place librement les syllabes à la demi-unité près (fractions observées 0,06–0,90). C'est un champ texte vertical libre, pas un modèle syllabe↔note.
-
-Rendu des caractères (mesuré sur かぎやで風節.pdf) :
-
-- Police IPAexMincho 11 pt (ratio vs note fs 17 = 0,65 ; ratio vs hauteur de case = 0,25). Le JSON dit `lyricsFontSize: \"10pt\"` mais le ruby rendu est à 11 pt.
-- Colonne marker : sous-colonne de 24,1 pt à droite de chaque pile (largeur pile 52,4 = 28,3 notes + 24,1 marker, séparées par un trait vertical). Ruby dessiné à +3,7 pt du bord gauche de la sous-colonne marker (boîte de 11 pt, léger biais gauche).
-- Chaque caractère pleine largeur = 1 ligne à l'avance de 14,646 pt (1,33 × fs ruby), quelle que soit son appartenance à un token.
-- Petits kana (ぁぃぅぇぉゃゅょゎ) : rendus à +12,99 pt sous le caractère précédent (vs 14,646 sur la grille — tuck optique de 1,65 pt) et +1,12 pt à droite ; le caractère suivant reprend sa position de grille. Mesuré sur 17 instances, valeurs identiques au centième.
-- Caractères pleine taille dans un token multi-caractères (きゆ, やう) : avance pleine de 14,646 pt, pas de tuck. Donc Portama ne tuck que les petits kana, sans notion de syllabe.
-- ー (chōonpu) absent de ce fichier : comportement non mesuré.
-- Syllabes multi-caractères dans la source : caractères adjacents sans séparateur (てぃ, でぃ, をぅ, つぃ, とぅ, ちゃ, しゃ, やう, きゆ, et un token de 3 caractères つぃぶ). Confirme la règle KKML « 1 token = 1 syllabe ». Incohérence de saisie auteur : dan 3 utilise を+う (う pleine taille) alors que dans 6/11/14 c'est を+ぅ (petit).
-
-Implication pour notre convertisseur : l'alignement strict de `::vocal` (syllabe i ↔ note i, par padding) reste plus rigoureux que le positionnement libre de Portama — mais la convention Portama montre la tolérance de la tradition : 3 lignes ruby par case, placement à la demi-unité. Les constantes mesurées pour un éventuel calibrage : ruby_fs/note_fs = 0,65 ; avance ligne = cell_h/3 ; tuck petit kana = 1,18 × fs sous le haut du caractère précédent (notre espacement actuel : syllable_fs × 0,85).
-
-Un seul échantillon contient des données ruby : かぎやで風節.json (allRubyData vide pour les autres).
-
-## Géométrie du PDF Portama (A4 paysage, TCPDF)
-
-Grille commune à tous les PDF analysés (だんじゅかりゆし, かぎやで風節, テスト節) :
-
-- Cadre extérieur 28,3–819,2 × 28,3–575,4 pt. Piles au pas de 60,9 pt, cadre de pile 52,4 pt de large = sous-colonne notes 28,3 pt (gauche) + sous-colonne marker 24,1 pt (droite), séparées par un trait vertical. Jusqu'à 12 piles par page. Ordre de lecture des piles : droite → gauche (dan 1 = pile la plus à droite).
-- 12 cases par pile, hauteur 43,94 pt (grille y 36,9–564,1). Notes principales fs=17 pt centrées dans la sous-colonne notes. Straddle/isSmall fs=13.
-- Flèches de répétition rendues DANS la sous-colonne marker (ligne verticale vers le bord droit + pointes horizontales, hauteur ~28 pt) — confirme notre design `_render_repeat_arrow`.
-- Titre vertical fs20 en marge droite ; label d'accordage fs14 vertical en bas à droite.
-- Ratios Portama vs notre convertisseur : marker/note_subcol = 24,1/28,3 = 0,85 (nous 0,5) ; cell_h/note_subcol = 43,94/28,3 = 1,55 (nous 1,12) ; fs/cell_h = 17/43,94 = 0,39 (nous 0,38).
-
-Géométrie fine des marques (mesurée sur テスト節.pdf, positions Td absolues) :
-
-| Marque | fs (case main) | Position | fs (isSmall) |
-|--------|----------------|----------|--------------|
-| note principale | 17 | centre sous-colonne notes | 13 |
-| orn (k/u/nu) | 14 | dx +6,16, dy +4,03 pt (épaule droite) | 10, dx +8,07 |
-| acc (♯/♭) | 14 | dx −2,84, dy +4,02 pt (gauche de la note) | 10, dx −4,84 |
-| yubii 1–4 | 12,5 | dx −15,46, dy +0,93 pt (colonne dédiée à gauche) | — |
-| ○/□ (vocalPosMarkers) | 9 | colonne marker à +14,8 pt, dy +3,3 pt | +1,7 pt |
-
-La colonne isSmall d'une paire est décalée ~+2 pt à droite de la colonne principale du même dan.
-
-Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne rendent RIEN dans テスト節.pdf (dan 1, cases 13–19 : aucun graphique ni flèche), alors que d'autres pièces rendent des flèches dans la colonne marker. Le déclencheur exact du rendu des flèches reste à élucider.
-
-## Polices embarquées du PDF
-
-Deux polices sous-ensemblées par TCPDF :
-
-- Notes/kanji de tablature : Untitled1 (Type0, Identity-H, upem 1024, 40 glyphes dans テスト節). CIDToGIDMap intégré ; CID = codepoint PUA (ex. CID E033 → GID 35). TCPDF ne sous-ensemble que les glyphes utilisés : E026 (イ尺) et E043 (yubii 3) sont vides dans テスト節.pdf car la pièce ne les emploie pas.
-- Texte (titre, ruby, ○/□, paroles) : IPAexMincho (Type0, Identity-H).
-- ♭ = U+266D, ♯ = U+266F rendus dans la police de tablature (GID 30/31 dans テスト節).
-
-Les contours (chemins SVG en unités upem 1024) de tous les glyphes de テスト節.pdf ont été extraits — disponibles pour la rénovation du rendu des ornements.
-
 ## Limitations de Portama vs KKML
 
 L'alphabet Portama est plus riche que ce qui était documenté initialement : 下老 (E003), positions ロ (E004–E006, E015) et positions イ une octave au-dessus (E007–E008, E016–E018, E026–E028) existent. Portama ne connaît en revanche ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni les kanji hors de sa carte PUA.
 
-- Portama → KKML : sans perte (tout ce que Portama encode existe en KKML). Mapping requis : orn `nu` → suffixe `n` (proposition), yubii 1–4, acc ♯/♭ sur toute note, vocalPosMarkers, chogen → @tuning (décalage en demi-tons), notes E003–E028.
+- Portama → KKML : sans perte (tout ce que Portama encode existe en KKML). Mapping requis : orn `nu` → suffixe `n`, yubii 1–4, acc ♯/♭ sur toute note, vocalPosMarkers, chogen → @tuning (décalage en demi-tons), notes E003–E028.
 - KKML → Portama : impossible pour les pièces utilisant des positions en イ hors carte Portama ou tout kanji hors du sous-ensemble Portama.
 
 ## Conversion Portama → KKML
@@ -261,10 +206,8 @@ Le convertisseur (`portama2kkml.py`) mappe :
 - Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B)
 - `acc: "sharp"/"flat"` → ♯/♭
 - `orn: "k"/"u"/"nu"` → `^` / `*` / `n`
-- `yubii: 1-4` → à définir
-- `vocalPosMarkers` → à définir
 - `repeatStart/repeatEnd` → `|:` / `:|`
-- `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons ; pas encore implémenté)
+- `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons)
 - Nombre de dans : déduit de `score`, jamais de `numDans`
 - `cellsPerDan / 2` → `@cols`
 
