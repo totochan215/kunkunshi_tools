@@ -129,12 +129,12 @@ Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivale
 | `♯`  (U+266F)      | `#`        | altération (尺＃) |
 | `＋` (U+FF0B)      | `+`      | accords |
 | `ー` (U+30FC)      | `-`      | accords |
-| `＊`               | `*`      | suffixe de technique |
-| `＾`               | `^`      | suffixe de technique |
-| `＜`               | `<`      | suffixe de technique |
-| `＝`               | `=`      | suffixe de technique |
-| `（`               | `(`      | koedashi, boucle vocale |
-|  `）`              | `)`      | koekiri, boucle vocale  |
+| `＊` (U+FF0A)      | `*`      | suffixe de technique |
+| `＾` (U+FF3E)      | `^`      | suffixe de technique |
+| `＜` (U+FF1C)      | `<`      | suffixe de technique |
+| `＝` (U+FF1D)      | `=`      | suffixe de technique |
+| `（` (U+FF08)      | `(`      | koedashi, boucle vocale |
+| `）` (U+FF09)      | `)`      | koekiri, boucle vocale  |
 
 NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
