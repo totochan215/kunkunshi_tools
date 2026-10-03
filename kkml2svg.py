@@ -789,7 +789,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
 NOMURA_PAGE_W = 595.28
 NOMURA_PAGE_H = 841.89
 NOMURA_FRAME_MARGIN = 48.0     # filet à 48 pt des bords de page (haut/bas)
-NOMURA_FRAME_MARGIN_X = 14.0   # filet à ~14 pt des bords gauche/droite (mesuré)
+NOMURA_FRAME_MARGIN_X = 18.0   # filet à ~18 pt des bords gauche/droite (cadre médian 559 pt mesuré sur 12 pages)
 NOMURA_CELL_H = 60.6           # hauteur de case (direction de lecture)
 NOMURA_CELL_W = 30.6           # largeur de case (notes) = largeur marker (mesuré)
 NOMURA_ROWS = 12               # cases par dan
