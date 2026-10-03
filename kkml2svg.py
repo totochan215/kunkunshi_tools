@@ -969,7 +969,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
         # filet de cadre (origine du placement relatif)
         out.append(f'<rect x="{frame_x0}" y="{frame_y0}" '
                    f'width="{frame_x1 - frame_x0}" height="{frame_y1 - frame_y0}" '
-                   f'fill="none" stroke="#333" stroke-width="1"/>')
+                   f'fill="none" stroke="#333" stroke-width="1.5"/>')
 
         # numéro de page à l'extérieur du filet (bas)
         out.append(f'<text x="{NOMURA_PAGE_W / 2}" y="{frame_y1 + 24}" '
