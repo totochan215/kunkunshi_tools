@@ -148,6 +148,11 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 - Titre : centré exactement entre le filet droit de la première colonne marker et le filet droit de page (`tx = x_right − group_w/2`) ; taille `cell_h × 0,43` ; indentation `cell_h × 1,8` sous le haut de grille. Le centrage porte sur la colonne de base uniquement ; le ruby du titre (mono `安《あ》`, group `｛…｝《…》`, RUBY_SCALE 50 %) se colle à droite de la base (`ruby_x = x + fs × 0,75`) **sans déplacer ni le centrage ni la base** — comportement standard de `_render_vertical_ruby`, ne pas régresser.
 - Couplets (`::lyrics`, préfixés ⚪︎, `||` = saut sans colonne blanche) : **3 colonnes max par dan virtuel** calées pile sur la largeur d'un dan (`LYRICS_COL_W = group_w/3`) ; au-delà de 3 colonnes → dan virtuel supplémentaire espacé de M.
 - **Pagination couplets** : la musique remplit les pages normalement (p.1 = 7 − 1 si titre, puis 7 dans ; jamais réduite, jamais de dan de musique perdu). Les couplets occupent les dans LIBRES de la dernière page de musique ; l'excédent de dans virtuels passe sur des pages suivantes dédiées couplets (7 dans virtuels max/page). **Jamais de débordement du cadre.** Tuple de page : `(cols, vocal_cols, is_last, lyr_dans_here, lyr_col_offset)`.
+- **Colonne marker = 3 sous-colonnes virtuelles** (spec Nomura-ryu, non encore implémentées) :
+  1. **droite** : hauteur de chant — petits kanjis dérivés des kandokoro du sanshin (avec variantes vocales) ;
+  2. **milieu** : instructions de chant — points de positionnement exact des notes, lignes de glissando, etc. ;
+  3. **gauche** : texte du chant en syllabique (`::tab-lyrics` / `::vocal`).
+  Implémentation actuelle : syllabes centrées dans la bande marker (à déplacer vers la sous-colonne gauche) ; sous-colonnes hauteur/milieu à créer avec P3 声楽譜.
 - Aplatit les sections tab en flux de colonnes de 12 ; `tab-lyrics` → notes + syllabes dans le marker. Sélecteurs de variante (U+FE00–FE0F) non rendus (éviter l'« espace doublée » en tête de couplet).
 
 #### 3c. Rendu horizontal (`_render_horizontal`, ~794)
