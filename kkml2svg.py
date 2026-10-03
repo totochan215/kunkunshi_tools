@@ -808,7 +808,7 @@ NOMURA_FRAME_MARGIN_X = (NOMURA_PAGE_W - NOMURA_FRAME_W) / 2.0
 NOMURA_FRAME_MARGIN = (NOMURA_PAGE_H - NOMURA_FRAME_H) / 2.0
 NOMURA_CELL_W = (NOMURA_FRAME_W - 8 * NOMURA_DAN_GAP) / 14.0
 NOMURA_CELL_H = (NOMURA_FRAME_H - 2 * NOMURA_DAN_GAP) / NOMURA_ROWS
-NOMURA_FONT_FAMILY = 'Yuji Syuku, serif'
+NOMURA_FONT_FAMILY = 'Klee One, serif'
 
 
 def _render_nomura(song, sections, fs, marker=False, opts=None):
@@ -975,7 +975,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
             f'width="{NOMURA_PAGE_W}" height="{NOMURA_PAGE_H}" '
             f'viewBox="0 0 {NOMURA_PAGE_W} {NOMURA_PAGE_H}">')
         out.append('<style>@import url("https://fonts.googleapis.com/css2?'
-                   'family=Yuji+Syuku&amp;display=swap");</style>')
+                   'family=Klee+One&amp;display=swap");</style>')
         out.append(f'<rect width="100%" height="100%" fill="white"/>')
 
         # filet de cadre (origine du placement relatif)
