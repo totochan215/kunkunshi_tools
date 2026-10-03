@@ -943,11 +943,14 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
         # 1. colonne titre
         if has_title_col:
             # le bloc titre consomme un dan complet (cases + marker)
+            # calibré sur les planches Nomura-ryu : glyphes ~0,76 case de
+            # haut, démarrage ~1,8 case sous le haut de la grille
             tx = x_right - group_w / 2
-            ty = grid_y0 + 20
+            ty = grid_y0 + cell_h * 1.8
             if title:
-                ty_end = _render_vertical_text(out, title, tx, ty, 20.0,
-                                               "black", 26.0)
+                ty_end = _render_vertical_text(out, title, tx, ty,
+                                               cell_h * 0.72, "black",
+                                               cell_h * 0.82)
             else:
                 ty_end = ty
             for i, ch in enumerate(tuning):
