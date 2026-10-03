@@ -788,16 +788,26 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
 
 NOMURA_PAGE_W = 595.28
 NOMURA_PAGE_H = 841.89
-NOMURA_FRAME_MARGIN = 48.0     # filet à 48 pt des bords de page (haut/bas)
-NOMURA_FRAME_MARGIN_X = 18.0   # filet à ~18 pt des bords gauche/droite (cadre médian 559 pt mesuré sur 12 pages)
-NOMURA_CELL_H = 60.6           # hauteur de case (direction de lecture)
-NOMURA_CELL_W = 30.6           # largeur de case (notes) = largeur marker (mesuré)
-NOMURA_ROWS = 12               # cases par dan
-NOMURA_MAX_DANS = 7            # dans par page (pleine)
-# marge blanche entre dans : (largeur de cadre - 7 dans) / 9
-# (le cadre héberge 7 dans + 2 marges de bord + 6 marges inter-dans = 9 marges)
-NOMURA_DAN_GAP = ((NOMURA_PAGE_W - 2 * NOMURA_FRAME_MARGIN_X)
-                  - 7 * 2 * NOMURA_CELL_W) / 9.0
+# Constantes primaires de la mise en page : largeur et hauteur du cadre
+# de page, et la marge de dans M (unique) :
+#   - entre le haut du cadre et le sommet des dans
+#   - entre la droite du cadre et la droite du premier dan (marker inclus)
+#   - horizontale entre chaque dan
+#   - entre la gauche du 7ème dan et la gauche du cadre
+#   - entre le bas des dans et le bas du cadre
+# Tout le reste est dérivé : 7 dans = 14 sous-colonnes (notes + marker)
+# dans la largeur du cadre moins 8 marges ; 12 cases dans la hauteur du
+# cadre moins 2 marges.
+NOMURA_FRAME_W = 559.3          # largeur du cadre de page (mesurée, médiane 12 pages)
+NOMURA_FRAME_H = 745.9          # hauteur du cadre de page
+NOMURA_DAN_GAP = 14.5           # marge de dans M (unique)
+NOMURA_ROWS = 12                # cases par dan
+NOMURA_MAX_DANS = 7             # dans par page (pleine)
+# dérivés
+NOMURA_FRAME_MARGIN_X = (NOMURA_PAGE_W - NOMURA_FRAME_W) / 2.0
+NOMURA_FRAME_MARGIN = (NOMURA_PAGE_H - NOMURA_FRAME_H) / 2.0
+NOMURA_CELL_W = (NOMURA_FRAME_W - 8 * NOMURA_DAN_GAP) / 14.0
+NOMURA_CELL_H = (NOMURA_FRAME_H - 2 * NOMURA_DAN_GAP) / NOMURA_ROWS
 
 
 def _render_nomura(song, sections, fs, marker=False, opts=None):
@@ -906,8 +916,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     frame_x1 = NOMURA_PAGE_W - NOMURA_FRAME_MARGIN_X
     frame_y1 = NOMURA_PAGE_H - NOMURA_FRAME_MARGIN
     grid_h = rows * cell_h
-    # vertical centering of the grid inside the frame
-    grid_y0 = frame_y0 + max(0.0, (frame_y1 - frame_y0 - grid_h) / 2)
+    # la grille commence à une marge de dans M sous le haut du cadre
+    grid_y0 = frame_y0 + NOMURA_DAN_GAP
 
     LYRICS_FS = 14.0
     LYRICS_SP = 17.0
