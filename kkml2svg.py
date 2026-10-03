@@ -882,8 +882,12 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                 lyrics_layouts.append((col_lines, indent))
                 lyrics_col_count += 1
 
+    # au plus 3 colonnes de couplets par dan virtuel
+    LYRICS_MAX_COLS = 3
+    lyrics_dans = (lyrics_col_count + LYRICS_MAX_COLS - 1) // LYRICS_MAX_COLS
+
     first_cap = NOMURA_MAX_DANS - (1 if (title or tuning) else 0)
-    last_cap = NOMURA_MAX_DANS - (lyrics_col_count if lyrics_col_count else 0)
+    last_cap = NOMURA_MAX_DANS - lyrics_dans
 
     if last_cap <= 0:
         # paroles trop longues pour une page : on garde 1 dan minimum
@@ -919,15 +923,16 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     # la grille commence à une marge de dans M sous le haut du cadre
     grid_y0 = frame_y0 + NOMURA_DAN_GAP
 
-    LYRICS_FS = 14.0
-    LYRICS_SP = 17.0
-    LYRICS_COL_W = 20.0
+    # 3 colonnes de couplets = 1 dan virtuel exactement
+    LYRICS_COL_W = group_w / 3.0
+    LYRICS_FS = LYRICS_COL_W * 0.7
+    LYRICS_SP = LYRICS_FS * 1.2
 
     result = []
     n_pages = len(pages)
     for pi, (cols, cols_v, is_last) in enumerate(pages):
         has_title_col = (pi == 0 and (title or tuning))
-        n_lyr_on_page = lyrics_col_count if is_last and lyrics_layouts else 0
+        n_lyr_on_page = lyrics_dans if is_last and lyrics_layouts else 0
 
         # colonnes occupées : titre (droite), dans, paroles (gauche)
         total_groups = len(cols)
