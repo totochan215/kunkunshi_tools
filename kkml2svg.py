@@ -36,6 +36,7 @@ Ruby (guide phonétique) dans @title et ::lyrics :
 """
 import sys
 import re
+import unicodedata
 import argparse
 
 # --------------------------------------------------------------------------- #
@@ -1148,6 +1149,7 @@ def _split_verses(lines):
 # Petits kana combinants (うちなぐち) : s'attachent au caractère principal
 # pour former une seule syllabe — ぐゎ, くゎ, てぃ, でぃ, とぅ, づぅ, ふぃ…
 # En écriture verticale ils se placent SOUS le caractère principal.
+VARIATION_SELECTORS = {chr(c) for c in range(0xFE00, 0xFE10)}
 SMALL_KANA = set("ぁぃぅぇぉゃゅょゎァィゥェォャュョヮ")
 
 
@@ -2321,6 +2323,8 @@ def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif"):
         for ch in text:
             if ch.isspace():
                 y += sp
+                continue
+            if unicodedata.combining(ch) or ch in VARIATION_SELECTORS:
                 continue
             _vertical_char(out, ch, x, y, fs, fill, family)
             y += sp
