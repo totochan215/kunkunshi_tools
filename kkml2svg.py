@@ -141,7 +141,7 @@ TECHNIQUE_CHARS = set(TECHNIQUE_SUFFIXES.keys())
 #   女　/ 男　  → couplet chanté par femmes/hommes, indent sous l'espace full-width
 VERSE_NUM_RE = re.compile(r'^([一二三四五六七八九十]+)、')
 # ⚫ ・ ● : indent sous le caractère suivant (offset 1)
-VERSE_MARK_RE = re.compile(r'^[⚫・●]')
+VERSE_MARK_RE = re.compile(r'^[⚫○・●]')
 VERSE_GENDER_RE = re.compile(r'^([男女][　\s])')  # 女/男 + espace full-width
 
 
