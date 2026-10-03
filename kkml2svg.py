@@ -1056,7 +1056,13 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
         # 3. paroles (dernière page) : colonnes verticales à gauche
         if is_last and lyrics_layouts:
             for vi, (col_lines, verse_indent) in enumerate(lyrics_layouts):
-                vx = x_right - LYRICS_COL_W / 2 - vi * LYRICS_COL_W
+                # 3 colonnes par dan virtuel ; un dan supplémentaire est
+                # sauté (marge M) pour la suite des couplets
+                dan_i = vi // LYRICS_MAX_COLS
+                col_i = vi % LYRICS_MAX_COLS
+                vx = (x_right - LYRICS_COL_W / 2
+                      - dan_i * (group_w + NOMURA_DAN_GAP)
+                      - col_i * LYRICS_COL_W)
                 cy = grid_y0 + LYRICS_FS
                 if verse_indent > 0:
                     cy += verse_indent * LYRICS_SP
