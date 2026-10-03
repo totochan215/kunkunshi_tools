@@ -256,11 +256,19 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons ; pas encore implémenté).
 - Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne rendent RIEN dans テスト節.pdf (dan 1, cases 13–19 : aucun graphique ni flèche), alors que d'autres pièces rendent des flèches dans la colonne marker. Le déclencheur exact du rendu des flèches reste à élucider.
 - `kkml2pdf.py` : script non écrit. Pipeline KKML → PDF à définir.
-- ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés dans kkml2svg.py ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf. Suite : modèles de page (Portama A4 paysage fait implicitement ; Nomura-ryu portrait, chindami, Paris Sanshin Club en attente d'exemples à téléverser), puis assemblage PDF (embed polices CJK).
-✅ Layout Nomura-ryu (2026-10-03) : page A4 portrait, filet de cadre, 12 cases/dan, 7 dans/page, titre p.1, paroles dernière page — mesuré sur samples/nomura-ryu-pdf, premier test sur かぎやで風節 (3 pages).
-✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (commits e288f91…).
-✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées, jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
-✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml avec titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx = 531,13 inchangée, ruby à droite (x = 550,39), centrage du dan virtuel préservé (082d309).
+## Modèles de page — état (2026-10-03)
+
+- ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf.
+- ✅ Layout Nomura-ryu (2026-10-03) : portrait A4, cadre filet, 12 cases/dan, 7 dans/page — mesuré sur `samples/nomura-ryu-pdf/`, validé sur かぎやで風節 (3 pages : titre+6 / 7 / 6+couplets).
+- ✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (e288f91…).
+- ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées (7 dans virtuels max/page), jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
+- ✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx inchangée, ruby collé à droite, centrage du dan virtuel préservé (42d6699).
+- ⚪︎ Modèle chindami (paysage < A4) — en attente d'exemples.
+- ⚪︎ Modèle Paris Sanshin Club (paysage A4 + n° de recueil) — en attente d'exemples.
+- ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.
+- ⚪︎ Raffinements nomura en réserve : marqueur ⚪︎ de couplet, taille/espacement des paroles, calligraphie du titre.
+- ⚪︎ Tester le rendu d'安波節 (6 couplets = 2 dans virtuels) pour valider la pagination multi-dans virtuels.
+- ⚪︎ `samples/nomura-ryu-pdf/野村流工工四上巻 (glissés).pdf` : fichier temporaire de vérification, à retirer éventuellement.
 
 ## Constantes de calibrage mesurées sur les PDF Portama (recherche)
 
