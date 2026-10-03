@@ -972,13 +972,17 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                 render_cell(out, base_tok, gx + cell_w / 2, cy + cell_h / 2,
                             fs, cell_w, cell_h, opts)
                 if rs and marker_w > 0:
-                    _render_repeat_arrow(out, gx, cy, cell_h, marker_w, 'start')
+                    _render_repeat_arrow(out, gx - marker_w, cy, cell_h,
+                                          marker_w, 'start')
                 if re_ and marker_w > 0:
-                    _render_repeat_arrow(out, gx, cy, cell_h, marker_w, 'end')
+                    _render_repeat_arrow(out, gx - marker_w, cy, cell_h,
+                                          marker_w, 'end')
                 if vs and marker_w > 0:
-                    _render_vrep_marker(out, gx, cy, cell_h, marker_w, 'start')
+                    _render_vrep_marker(out, gx - marker_w, cy, cell_h,
+                                        marker_w, 'start')
                 if ve and marker_w > 0:
-                    _render_vrep_marker(out, gx, cy, cell_h, marker_w, 'end')
+                    _render_vrep_marker(out, gx - marker_w, cy, cell_h,
+                                        marker_w, 'end')
             # syllabes vocales dans le marker
             if vocal_col and marker_w > 0:
                 syl_fs = min(9.0, marker_w * 0.55)
