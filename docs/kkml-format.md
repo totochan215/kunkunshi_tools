@@ -21,7 +21,7 @@ KKML se base sur le format texte brut encodé en UTF-8, sans utilisation d'exten
 @cols 12
 
 ::tab
-<tablature sous forme de cases représentant des temps séparés par des espaces ;
+<tablature sous forme de cases représentant des temps séparées par des espaces ;
 au sein de chaque case, tokens représentant des notes, leurs altérations et leurs
 techniques de jeu (ornements)>
 ::
