@@ -794,7 +794,10 @@ NOMURA_CELL_H = 60.6           # hauteur de case (direction de lecture)
 NOMURA_CELL_W = 30.6           # largeur de case (notes) = largeur marker (mesuré)
 NOMURA_ROWS = 12               # cases par dan
 NOMURA_MAX_DANS = 7            # dans par page (pleine)
-NOMURA_DAN_GAP = 13.3          # marge blanche entre dans (mesurée)
+# marge blanche entre dans : (largeur de cadre - 7 dans) / 9
+# (le cadre héberge 7 dans + 2 marges de bord + 6 marges inter-dans = 9 marges)
+NOMURA_DAN_GAP = ((NOMURA_PAGE_W - 2 * NOMURA_FRAME_MARGIN_X)
+                  - 7 * 2 * NOMURA_CELL_W) / 9.0
 
 
 def _render_nomura(song, sections, fs, marker=False, opts=None):
