@@ -824,6 +824,10 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     # La colonne marker est cosubstantielle du layout nomura : forcer
     # @marker on, quelle que soit la méta (et même sans ::vocal).
     marker = True
+    # Idem 尺♯ : toujours rendus en 尺 simples, jamais encerclés.
+    if opts is not None:
+        opts['shaku_sharp'] = False
+        opts['shaku_circled'] = False
 
     cell_h = NOMURA_CELL_H
     cell_w = NOMURA_CELL_W
