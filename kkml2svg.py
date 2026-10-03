@@ -834,6 +834,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     marker_w = cell_w if marker else 0.0
     group_w = cell_w + marker_w
     rows = NOMURA_ROWS
+    # Taille des notes calée sur les planches : encre kanji ≈ 0,43 × case
+    # (mesure scan かぎやで風節 p.1), encre ≈ 0,88 × fs → fs ≈ case × 0,49.
+    fs = NOMURA_CELL_H * 0.43 / 0.88
 
     # --- Flux : aplatir toutes les sections tab en colonnes de 12 --- #
     tab_columns = []
