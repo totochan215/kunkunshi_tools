@@ -1,241 +1,241 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="595.28" height="841.89" viewBox="0 0 595.28 841.89">
 <rect width="100%" height="100%" fill="white"/>
-<rect x="48.0" y="48.0" width="499.28" height="745.89" fill="none" stroke="#333" stroke-width="1"/>
+<rect x="14.0" y="48.0" width="567.28" height="745.89" fill="none" stroke="#333" stroke-width="1"/>
 <text x="297.64" y="817.89" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="11" fill="#555">3</text>
-<line x1="515.58" y1="57.34499999999997" x2="515.58" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="547.28" y1="57.34499999999997" x2="547.28" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="515.58" y1="57.34499999999997" x2="547.28" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
-<line x1="515.58" y1="784.5450000000001" x2="547.28" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="239.14499999999998" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="299.745" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="360.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="420.945" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="481.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="542.145" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="602.7449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="663.345" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="483.88" y="723.9449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<text x="499.73" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
-<text x="499.73" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
-<text x="499.73" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<text x="499.73" y="244.14499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">工</text>
-<text x="499.73" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
-<text x="499.73" y="304.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">尺<tspan font-size="9" dx="0" dy="0">♯</tspan></text>
-<text x="499.73" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
-<text x="499.73" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="499.73" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="499.73" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">乙</text>
-<text x="499.73" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="499.73" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
-<text x="499.73" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="499.73" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
-<text x="499.73" y="789.5449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">四</text>
-<line x1="444.18" y1="57.34499999999997" x2="444.18" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="475.88" y1="57.34499999999997" x2="475.88" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="444.18" y1="57.34499999999997" x2="475.88" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
-<line x1="444.18" y1="784.5450000000001" x2="475.88" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="239.14499999999998" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="299.745" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="360.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="420.945" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="481.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="542.145" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="602.7449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="663.345" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="412.48" y="723.9449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<text x="428.33000000000004" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
-<text x="428.33000000000004" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<text x="428.33000000000004" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="428.33000000000004" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
-<text x="428.33000000000004" y="304.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">尺<tspan font-size="9" dx="0" dy="0">♯</tspan></text>
-<text x="428.33000000000004" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="428.33000000000004" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
-<text x="428.33000000000004" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="428.33000000000004" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<text x="428.33000000000004" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="428.33000000000004" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<text x="428.33000000000004" y="668.3449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">工</text>
-<text x="428.33000000000004" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
-<text x="428.33000000000004" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<line x1="372.78000000000003" y1="57.34499999999997" x2="372.78000000000003" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="404.48" y1="57.34499999999997" x2="404.48" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="372.78000000000003" y1="57.34499999999997" x2="404.48" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
-<line x1="372.78000000000003" y1="784.5450000000001" x2="404.48" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="239.14499999999998" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="299.745" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="360.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="420.945" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="481.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="542.145" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="602.7449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="663.345" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="341.08000000000004" y="723.9449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<text x="356.93000000000006" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="356.93000000000006" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
-<text x="356.93000000000006" y="183.545" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">尺<tspan font-size="9" dx="0" dy="0">♯</tspan></text>
-<text x="356.93000000000006" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="356.93000000000006" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
-<text x="356.93000000000006" y="304.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">尺<tspan font-size="9" dx="0" dy="0">♯</tspan></text>
-<text x="356.93000000000006" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="356.93000000000006" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
-<text x="356.93000000000006" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="356.93000000000006" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<text x="356.93000000000006" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
-<text x="356.93000000000006" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
-<text x="356.93000000000006" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="356.93000000000006" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
-<text x="356.93000000000006" y="789.5449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">四</text>
-<line x1="301.38000000000005" y1="57.34499999999997" x2="301.38000000000005" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="333.08000000000004" y1="57.34499999999997" x2="333.08000000000004" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="301.38000000000005" y1="57.34499999999997" x2="333.08000000000004" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
-<line x1="301.38000000000005" y1="784.5450000000001" x2="333.08000000000004" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="239.14499999999998" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="299.745" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="360.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="420.945" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="481.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="542.145" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="602.7449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="663.345" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="269.68000000000006" y="723.9449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<text x="285.5300000000001" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
-<text x="285.5300000000001" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<text x="285.5300000000001" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="285.5300000000001" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
-<text x="285.5300000000001" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="285.5300000000001" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<text x="285.5300000000001" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
-<text x="285.5300000000001" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
-<text x="285.5300000000001" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="285.5300000000001" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
-<text x="285.5300000000001" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="285.5300000000001" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">乙</text>
-<text x="285.5300000000001" y="789.5449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">四</text>
-<line x1="229.98000000000005" y1="57.34499999999997" x2="229.98000000000005" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="261.68000000000006" y1="57.34499999999997" x2="261.68000000000006" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="229.98000000000005" y1="57.34499999999997" x2="261.68000000000006" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
-<line x1="229.98000000000005" y1="784.5450000000001" x2="261.68000000000006" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="239.14499999999998" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="299.745" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="360.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="420.945" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="481.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="542.145" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="602.7449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="663.345" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="198.28000000000006" y="723.9449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<text x="214.13000000000005" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
-<text x="214.13000000000005" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
-<text x="214.13000000000005" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
-<text x="214.13000000000005" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
-<text x="214.13000000000005" y="304.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">老</text>
-<text x="225.13000000000005" y="305.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">｀</text>
-<text x="214.13000000000005" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="214.13000000000005" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
-<text x="225.13000000000005" y="398.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">｀</text>
-<text x="214.13000000000005" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
-<text x="214.13000000000005" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
-<text x="214.13000000000005" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
-<text x="214.13000000000005" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
-<text x="214.13000000000005" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="214.13000000000005" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">乙</text>
-<line x1="158.58000000000004" y1="57.34499999999997" x2="158.58000000000004" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="190.28000000000006" y1="57.34499999999997" x2="190.28000000000006" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<line x1="158.58000000000004" y1="57.34499999999997" x2="190.28000000000006" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
-<line x1="158.58000000000004" y1="784.5450000000001" x2="190.28000000000006" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="239.14499999999998" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="299.745" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="360.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="420.945" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="481.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="542.145" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="602.7449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="663.345" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<rect x="126.88000000000005" y="723.9449999999999" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
-<text x="142.73000000000005" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="142.73000000000005" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
-<text x="142.73000000000005" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="142.73000000000005" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
-<text x="142.73000000000005" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="142.73000000000005" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
-<text x="142.73000000000005" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="142.73000000000005" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">乙</text>
-<text x="142.73000000000005" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
-<text x="108.88000000000005" y="71.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">⚪</text>
-<text x="108.88000000000005" y="105.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">今</text>
-<text x="108.88000000000005" y="122.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">日</text>
-<text x="108.88000000000005" y="139.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">の</text>
-<text x="108.88000000000005" y="156.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">誇</text>
-<text x="108.88000000000005" y="173.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ら</text>
-<text x="108.88000000000005" y="190.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">し</text>
-<text x="108.88000000000005" y="207.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゃ</text>
-<text x="108.88000000000005" y="224.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">や</text>
-<text x="108.88000000000005" y="258.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">何</text>
-<text x="108.88000000000005" y="275.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">に</text>
-<text x="108.88000000000005" y="292.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぎ</text>
-<text x="108.88000000000005" y="309.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">や</text>
-<text x="108.88000000000005" y="326.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">な</text>
-<text x="108.88000000000005" y="343.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">辿</text>
-<text x="108.88000000000005" y="360.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">る</text>
-<text x="108.88000000000005" y="377.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">な</text>
-<text x="108.88000000000005" y="394.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">を</text>
-<text x="108.88000000000005" y="411.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぅ</text>
-<text x="108.88000000000005" y="428.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">に</text>
-<text x="108.88000000000005" y="445.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゃ</text>
-<text x="108.88000000000005" y="462.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゃ</text>
-<text x="108.88000000000005" y="479.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">た</text>
-<text x="108.88000000000005" y="496.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">て</text>
-<text x="108.88000000000005" y="513.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぃ</text>
-<text x="108.88000000000005" y="530.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">る</text>
-<text x="88.88000000000005" y="71.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">⚪</text>
-<text x="88.88000000000005" y="105.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">蕾</text>
-<text x="88.88000000000005" y="122.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">で</text>
-<text x="88.88000000000005" y="139.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">居</text>
-<text x="88.88000000000005" y="156.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">る</text>
-<text x="88.88000000000005" y="173.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">花</text>
-<text x="88.88000000000005" y="190.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">の</text>
-<text x="88.88000000000005" y="207.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">つ</text>
-<text x="88.88000000000005" y="224.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぃ</text>
-<text x="88.88000000000005" y="241.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぶ</text>
-<text x="88.88000000000005" y="258.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">で</text>
-<text x="88.88000000000005" y="275.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぃ</text>
-<text x="88.88000000000005" y="292.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">を</text>
-<text x="88.88000000000005" y="309.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぅ</text>
-<text x="88.88000000000005" y="326.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">る</text>
-<text x="88.88000000000005" y="343.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">は</text>
-<text x="88.88000000000005" y="360.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">な</text>
-<text x="88.88000000000005" y="377.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぬ</text>
-<text x="88.88000000000005" y="411.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">露</text>
-<text x="88.88000000000005" y="428.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">行</text>
-<text x="88.88000000000005" y="445.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">逢</text>
-<text x="88.88000000000005" y="462.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">た</text>
-<text x="88.88000000000005" y="479.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">如</text>
-<text x="88.88000000000005" y="496.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">つ</text>
-<text x="88.88000000000005" y="513.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぃ</text>
-<text x="88.88000000000005" y="530.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゆ</text>
-<text x="88.88000000000005" y="547.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ち</text>
-<text x="88.88000000000005" y="564.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゃ</text>
-<text x="88.88000000000005" y="581.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">た</text>
-<text x="88.88000000000005" y="598.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぐ</text>
-<text x="88.88000000000005" y="615.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">と</text>
-<text x="88.88000000000005" y="632.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぅ</text>
+<line x1="550.68" y1="57.34499999999997" x2="550.68" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="581.28" y1="57.34499999999997" x2="581.28" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="550.68" y1="57.34499999999997" x2="581.28" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="550.68" y1="784.5450000000001" x2="581.28" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="57.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="117.94499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="178.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="239.14499999999998" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="299.745" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="360.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="420.945" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="481.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="542.145" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="602.7449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="663.345" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="520.0799999999999" y="723.9449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<text x="535.3799999999999" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="535.3799999999999" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
+<text x="535.3799999999999" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<text x="535.3799999999999" y="244.14499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">工</text>
+<text x="535.3799999999999" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
+<text x="535.3799999999999" y="304.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">尺<tspan font-size="9" dx="0" dy="0">♯</tspan></text>
+<text x="535.3799999999999" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="535.3799999999999" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="535.3799999999999" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="535.3799999999999" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">乙</text>
+<text x="535.3799999999999" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="535.3799999999999" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
+<text x="535.3799999999999" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="535.3799999999999" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
+<text x="535.3799999999999" y="789.5449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">四</text>
+<line x1="476.18" y1="57.34499999999997" x2="476.18" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="506.78" y1="57.34499999999997" x2="506.78" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="476.18" y1="57.34499999999997" x2="506.78" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="476.18" y1="784.5450000000001" x2="506.78" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="57.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="117.94499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="178.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="239.14499999999998" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="299.745" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="360.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="420.945" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="481.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="542.145" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="602.7449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="663.345" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="445.58" y="723.9449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<text x="460.88" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
+<text x="460.88" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<text x="460.88" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="460.88" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="460.88" y="304.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">尺<tspan font-size="9" dx="0" dy="0">♯</tspan></text>
+<text x="460.88" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="460.88" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
+<text x="460.88" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="460.88" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<text x="460.88" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="460.88" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<text x="460.88" y="668.3449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">工</text>
+<text x="460.88" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
+<text x="460.88" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<line x1="401.68" y1="57.34499999999997" x2="401.68" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="432.28" y1="57.34499999999997" x2="432.28" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="401.68" y1="57.34499999999997" x2="432.28" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="401.68" y1="784.5450000000001" x2="432.28" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="57.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="117.94499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="178.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="239.14499999999998" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="299.745" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="360.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="420.945" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="481.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="542.145" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="602.7449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="663.345" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="371.08" y="723.9449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<text x="386.38" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="386.38" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="386.38" y="183.545" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">尺<tspan font-size="9" dx="0" dy="0">♯</tspan></text>
+<text x="386.38" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="386.38" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="386.38" y="304.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">尺<tspan font-size="9" dx="0" dy="0">♯</tspan></text>
+<text x="386.38" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="386.38" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
+<text x="386.38" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="386.38" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<text x="386.38" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
+<text x="386.38" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
+<text x="386.38" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="386.38" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
+<text x="386.38" y="789.5449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">四</text>
+<line x1="327.18" y1="57.34499999999997" x2="327.18" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="357.78" y1="57.34499999999997" x2="357.78" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="327.18" y1="57.34499999999997" x2="357.78" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="327.18" y1="784.5450000000001" x2="357.78" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="57.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="117.94499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="178.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="239.14499999999998" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="299.745" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="360.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="420.945" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="481.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="542.145" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="602.7449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="663.345" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="296.58" y="723.9449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<text x="311.88" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
+<text x="311.88" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<text x="311.88" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="311.88" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
+<text x="311.88" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="311.88" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<text x="311.88" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
+<text x="311.88" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
+<text x="311.88" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="311.88" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
+<text x="311.88" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="311.88" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">乙</text>
+<text x="311.88" y="789.5449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">四</text>
+<line x1="252.67999999999998" y1="57.34499999999997" x2="252.67999999999998" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="283.28" y1="57.34499999999997" x2="283.28" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="252.67999999999998" y1="57.34499999999997" x2="283.28" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="252.67999999999998" y1="784.5450000000001" x2="283.28" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="57.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="117.94499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="178.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="239.14499999999998" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="299.745" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="360.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="420.945" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="481.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="542.145" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="602.7449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="663.345" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="222.07999999999998" y="723.9449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<text x="237.38" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="237.38" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
+<text x="237.38" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="237.38" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="237.38" y="304.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">老</text>
+<text x="248.38" y="305.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">｀</text>
+<text x="237.38" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="237.38" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
+<text x="248.38" y="398.745" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">｀</text>
+<text x="237.38" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
+<text x="237.38" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">尺<tspan font-size="14" dx="0" dy="0">♯</tspan></text>
+<text x="237.38" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">上</text>
+<text x="237.38" y="640.0449999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
+<text x="237.38" y="700.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="237.38" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">乙</text>
+<line x1="178.17999999999998" y1="57.34499999999997" x2="178.17999999999998" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="208.77999999999997" y1="57.34499999999997" x2="208.77999999999997" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="178.17999999999998" y1="57.34499999999997" x2="208.77999999999997" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="178.17999999999998" y1="784.5450000000001" x2="208.77999999999997" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="57.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="117.94499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="178.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="239.14499999999998" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="299.745" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="360.34499999999997" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="420.945" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="481.54499999999996" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="542.145" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="602.7449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="663.345" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<rect x="147.57999999999998" y="723.9449999999999" width="30.6" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
+<text x="162.88" y="94.64499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="162.88" y="155.24499999999998" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
+<text x="162.88" y="215.84499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="162.88" y="276.445" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
+<text x="162.88" y="337.045" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="162.88" y="397.645" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">工</text>
+<text x="162.88" y="458.245" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="162.88" y="518.845" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">乙</text>
+<text x="162.88" y="579.4449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">四</text>
+<text x="124.27999999999997" y="71.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">⚪</text>
+<text x="124.27999999999997" y="105.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">今</text>
+<text x="124.27999999999997" y="122.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">日</text>
+<text x="124.27999999999997" y="139.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">の</text>
+<text x="124.27999999999997" y="156.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">誇</text>
+<text x="124.27999999999997" y="173.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ら</text>
+<text x="124.27999999999997" y="190.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">し</text>
+<text x="124.27999999999997" y="207.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゃ</text>
+<text x="124.27999999999997" y="224.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">や</text>
+<text x="124.27999999999997" y="258.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">何</text>
+<text x="124.27999999999997" y="275.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">に</text>
+<text x="124.27999999999997" y="292.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぎ</text>
+<text x="124.27999999999997" y="309.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">や</text>
+<text x="124.27999999999997" y="326.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">な</text>
+<text x="124.27999999999997" y="343.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">辿</text>
+<text x="124.27999999999997" y="360.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">る</text>
+<text x="124.27999999999997" y="377.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">な</text>
+<text x="124.27999999999997" y="394.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">を</text>
+<text x="124.27999999999997" y="411.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぅ</text>
+<text x="124.27999999999997" y="428.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">に</text>
+<text x="124.27999999999997" y="445.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゃ</text>
+<text x="124.27999999999997" y="462.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゃ</text>
+<text x="124.27999999999997" y="479.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">た</text>
+<text x="124.27999999999997" y="496.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">て</text>
+<text x="124.27999999999997" y="513.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぃ</text>
+<text x="124.27999999999997" y="530.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">る</text>
+<text x="104.27999999999997" y="71.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">⚪</text>
+<text x="104.27999999999997" y="105.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">蕾</text>
+<text x="104.27999999999997" y="122.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">で</text>
+<text x="104.27999999999997" y="139.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">居</text>
+<text x="104.27999999999997" y="156.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">る</text>
+<text x="104.27999999999997" y="173.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">花</text>
+<text x="104.27999999999997" y="190.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">の</text>
+<text x="104.27999999999997" y="207.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">つ</text>
+<text x="104.27999999999997" y="224.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぃ</text>
+<text x="104.27999999999997" y="241.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぶ</text>
+<text x="104.27999999999997" y="258.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">で</text>
+<text x="104.27999999999997" y="275.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぃ</text>
+<text x="104.27999999999997" y="292.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">を</text>
+<text x="104.27999999999997" y="309.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぅ</text>
+<text x="104.27999999999997" y="326.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">る</text>
+<text x="104.27999999999997" y="343.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">は</text>
+<text x="104.27999999999997" y="360.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">な</text>
+<text x="104.27999999999997" y="377.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぬ</text>
+<text x="104.27999999999997" y="411.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">露</text>
+<text x="104.27999999999997" y="428.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">行</text>
+<text x="104.27999999999997" y="445.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">逢</text>
+<text x="104.27999999999997" y="462.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">た</text>
+<text x="104.27999999999997" y="479.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">如</text>
+<text x="104.27999999999997" y="496.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">つ</text>
+<text x="104.27999999999997" y="513.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぃ</text>
+<text x="104.27999999999997" y="530.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゆ</text>
+<text x="104.27999999999997" y="547.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ち</text>
+<text x="104.27999999999997" y="564.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ゃ</text>
+<text x="104.27999999999997" y="581.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">た</text>
+<text x="104.27999999999997" y="598.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぐ</text>
+<text x="104.27999999999997" y="615.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">と</text>
+<text x="104.27999999999997" y="632.345" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.0" fill="#333">ぅ</text>
 </svg>
