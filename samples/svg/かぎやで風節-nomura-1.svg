@@ -14,6 +14,8 @@
 <text x="531.43" y="287.34499999999997" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="13.0" fill="#555">子</text>
 <line x1="475.88" y1="57.34499999999997" x2="475.88" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <line x1="507.58" y1="57.34499999999997" x2="507.58" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="475.88" y1="57.34499999999997" x2="507.58" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="475.88" y1="784.5450000000001" x2="507.58" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <rect x="444.18" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="444.18" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="444.18" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
@@ -48,6 +50,8 @@
 <text x="460.03000000000003" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
 <line x1="404.47999999999996" y1="57.34499999999997" x2="404.47999999999996" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <line x1="436.17999999999995" y1="57.34499999999997" x2="436.17999999999995" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="404.47999999999996" y1="57.34499999999997" x2="436.17999999999995" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="404.47999999999996" y1="784.5450000000001" x2="436.17999999999995" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <rect x="372.78" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="372.78" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="372.78" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
@@ -76,6 +80,8 @@
 <text x="388.63" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">五</text>
 <line x1="333.08" y1="57.34499999999997" x2="333.08" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <line x1="364.78" y1="57.34499999999997" x2="364.78" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="333.08" y1="57.34499999999997" x2="364.78" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="333.08" y1="784.5450000000001" x2="364.78" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <rect x="301.38" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="301.38" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="301.38" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
@@ -106,6 +112,8 @@
 <text x="317.23" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">老</text>
 <line x1="261.68" y1="57.34499999999997" x2="261.68" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <line x1="293.38" y1="57.34499999999997" x2="293.38" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="261.68" y1="57.34499999999997" x2="293.38" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="261.68" y1="784.5450000000001" x2="293.38" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <rect x="229.98" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="229.98" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="229.98" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
@@ -133,6 +141,8 @@
 <text x="245.82999999999998" y="761.2449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">◯</text>
 <line x1="190.27999999999997" y1="57.34499999999997" x2="190.27999999999997" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <line x1="221.98" y1="57.34499999999997" x2="221.98" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="190.27999999999997" y1="57.34499999999997" x2="221.98" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="190.27999999999997" y1="784.5450000000001" x2="221.98" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <rect x="158.57999999999998" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="158.57999999999998" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="158.57999999999998" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
@@ -161,6 +171,8 @@
 <text x="185.42999999999998" y="762.3449999999999" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">｀</text>
 <line x1="118.87999999999998" y1="57.34499999999997" x2="118.87999999999998" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <line x1="150.57999999999998" y1="57.34499999999997" x2="150.57999999999998" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
+<line x1="118.87999999999998" y1="57.34499999999997" x2="150.57999999999998" y2="57.34499999999997" stroke="#333" stroke-width="0.6"/>
+<line x1="118.87999999999998" y1="784.5450000000001" x2="150.57999999999998" y2="784.5450000000001" stroke="#333" stroke-width="0.6"/>
 <rect x="87.17999999999998" y="57.34499999999997" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="87.17999999999998" y="117.94499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>
 <rect x="87.17999999999998" y="178.54499999999996" width="31.7" height="60.6" fill="none" stroke="#333" stroke-width="0.6"/>

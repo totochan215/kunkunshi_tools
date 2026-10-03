@@ -957,12 +957,19 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
             # cases [gx, gx+cell_w], marker à DROITE [gx+cell_w, gx+group_w]
             nx = gx                     # bord gauche des cases
             mx = gx + cell_w            # bord gauche du marker
-            # filets du marker : pleine hauteur, des deux côtés de la bande
+            # filets du marker : deux verticales pleine hauteur + fermetures
+            # horizontales haut/bas de la bande
             if marker_w > 0:
                 out.append(f'<line x1="{mx}" y1="{grid_y0}" x2="{mx}" '
                            f'y2="{grid_y0 + grid_h}" stroke="#333" '
                            f'stroke-width="0.6"/>')
                 out.append(f'<line x1="{gx + group_w}" y1="{grid_y0}" '
+                           f'x2="{gx + group_w}" y2="{grid_y0 + grid_h}" '
+                           f'stroke="#333" stroke-width="0.6"/>')
+                out.append(f'<line x1="{mx}" y1="{grid_y0}" '
+                           f'x2="{gx + group_w}" y2="{grid_y0}" '
+                           f'stroke="#333" stroke-width="0.6"/>')
+                out.append(f'<line x1="{mx}" y1="{grid_y0 + grid_h}" '
                            f'x2="{gx + group_w}" y2="{grid_y0 + grid_h}" '
                            f'stroke="#333" stroke-width="0.6"/>')
             # grille : cases empilées
