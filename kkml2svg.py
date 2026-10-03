@@ -862,6 +862,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     for _, data in lyrics_sections:
         for verse in _split_verses(data):
             for col_lines, indent in _lyrics_columns_layout(verse):
+                if not col_lines:
+                    continue
                 lyrics_layouts.append((col_lines, indent))
                 lyrics_col_count += 1
 
