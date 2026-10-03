@@ -35,9 +35,6 @@ en général premier couplet uniquement>
 <paroles en texte libre organisées par couplets, ruby supporté>
 ::
 
-::<section-title>
-<section-contents>
-::
 ```
 
 Le fichier est composé d'un bloc de métadonnées, et de sections dont l'ordre n'est pas imposé. Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées.
