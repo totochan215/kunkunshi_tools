@@ -178,13 +178,15 @@ FONT_STYLES = {
 # Clés de métadonnées reconnues (pour la tolérance @cléValeur collée)
 META_KEYS = {"title", "tuning", "cols", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
-             "origin", "shaku_circled", "shaku_sharp", "speed", "font_style"}
+             "origin", "shaku_circled", "shaku_sharp", "speed", "font_style",
+             "page_dans"}
 class Song:
     def __init__(self):
         self.meta = {}
         self.blocks = []
         self.cols = 12         # lignes par colonne (mode vertical) — défaut
         self.layout = "vertical"
+        self.page_dans = None  # dans max par page (pagination), None = illimité
 
 
 class Block:
@@ -236,6 +238,11 @@ def parse_kkml(text):
             if key == "cols":
                 try:
                     song.cols = int(val)
+                except ValueError:
+                    pass
+            elif key == "page_dans":
+                try:
+                    song.page_dans = int(val)
                 except ValueError:
                     pass
             elif key == "layout":
@@ -333,11 +340,14 @@ def parse_kkml(text):
 # --------------------------------------------------------------------------- #
 # 3. Rendu SVG
 # --------------------------------------------------------------------------- #
-def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22):
+def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
+               page_dans=None):
     if cols is None:
         cols = song.cols
     if layout is None:
         layout = song.layout
+    if page_dans is None:
+        page_dans = song.page_dans
 
     title = song.meta.get("title", "")
     tuning = song.meta.get("tuning", "本調子")
@@ -414,24 +424,27 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22)
 
     font_family = opts.get('font_family', 'serif')
     if layout == "vertical":
-        svg = _render_vertical(song, sections, cols, cell_w, cell_h,
+        svgs = _render_vertical(song, sections, cols, cell_w, cell_h,
                                 font_size, MARGIN_L, MARGIN_R, MARGIN_T, header_h,
-                                marker, opts)
+                                marker, opts, page_dans=page_dans)
     else:
-        svg = _render_horizontal(song, sections, cols, cell_w, cell_h,
-                                 font_size, MARGIN_L, MARGIN_R, MARGIN_T, header_h,
-                                 marker, opts)
+        svgs = [_render_horizontal(song, sections, cols, cell_w, cell_h,
+                                   font_size, MARGIN_L, MARGIN_R, MARGIN_T, header_h,
+                                   marker, opts)]
+
     # Post-traitement : remplacer la police serif par défaut par le style choisi
     if font_family != 'serif':
-        svg = svg.replace('font-family="serif"', f'font-family="{font_family}"')
-    return svg
+        svgs = [s.replace('font-family="serif"', f'font-family="{font_family}"')
+                for s in svgs]
+    return svgs
 
 
 # --------------------------------------------------------------------------- #
 # 3a. Rendu vertical (haut→bas, droite→gauche)
 # --------------------------------------------------------------------------- #
 def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
-                     fs, ml, mr, mt, header_h, marker=False, opts=None):
+                     fs, ml, mr, mt, header_h, marker=False, opts=None,
+                     page_dans=None):
     title = song.meta.get("title", "")
     tuning = song.meta.get("tuning", "本調子")
 
@@ -502,196 +515,259 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
         else:  # lyrics
             prepared.append((sec_title, content, kind, None))
 
-    # Calculer le nombre max de colonnes parmi toutes les sections tab
+    # --- Pagination (SVG multipage) --- #
+    # Découpe des sections tab/tab-lyrics en pages de page_dans dans max,
+    # sur le modèle des PDF Portama (12 piles/page max). Les sections
+    # lyrics et le titre vertical sont répétés sur chaque page.
+    def _page_slice(sec, start, end):
+        sec_title, data, kind = sec[0], sec[1], sec[2]
+        vocal = sec[3] if len(sec) > 3 else None
+        if vocal is not None:
+            vocal = vocal[start:end]
+        return (sec_title, data[start:end], kind, vocal)
+
+    def _page_slice_rest(sec, data):
+        vocal = sec[3] if len(sec) > 3 else None
+        return (sec[0], data, sec[2], vocal)
+
+    pages = [prepared]
+    if page_dans:
+        n_tab_cols = sum(len(s[1]) for s in prepared
+                         if s[2] in ("tab", "tab-lyrics"))
+        if n_tab_cols > page_dans:
+            pages = []
+            remaining = list(prepared)
+            while any(len(s[1]) > 0 for s in remaining
+                     if s[2] in ("tab", "tab-lyrics")):
+                budget = page_dans
+                first = not pages
+                page_secs = []
+                new_remaining = []
+                for sec in remaining:
+                    kind = sec[2]
+                    data = sec[1]
+                    if kind in ("tab", "tab-lyrics"):
+                        take = min(budget, len(data))
+                        if take > 0:
+                            page_secs.append(_page_slice(sec, 0, take))
+                            data = data[take:]
+                            budget -= take
+                        if data:
+                            new_remaining.append(_page_slice_rest(sec, data))
+                        else:
+                            if take > 0:
+                                new_remaining.append((sec[0], [], sec[2], None))
+                            else:
+                                new_remaining.append(sec)
+                    else:
+                        # lyrics et sections non tab : sur la 1re page seulement
+                        if first:
+                            page_secs.append(sec)
+                        new_remaining.append(sec)
+                if not any(s[1] for s in page_secs
+                           if s[2] in ("tab", "tab-lyrics")):
+                    break  # sécurité contre boucle infinie
+                pages.append(page_secs)
+                remaining = new_remaining
+                if len(pages) > 200:
+                    break  # sécurité
+
+    # Nombre max de colonnes d'une page (toutes pages : rendu à largeur
+    # constante, la page la plus large gouverne total_w)
     max_cols = 1
     max_col_height = rows_per_col
-    for items in prepared:
-        kind = items[2]
-        data = items[1]
-        if kind in ("tab", "tab-lyrics"):
-            max_cols = max(max_cols, len(data))
+    for page_secs in pages:
+        for items in page_secs:
+            kind = items[2]
+            data = items[1]
+            if kind in ("tab", "tab-lyrics"):
+                max_cols = max(max_cols, len(data))
 
     # Calculer l'espace pour les paroles verticales
-    lyrics_sections = [(s[0], s[1]) for s in prepared if s[2] == "lyrics"]
-    if lyrics_sections:
-        n_verses = 0
-        for _, data in lyrics_sections:
-            for verse in _split_verses(data):
-                n_verses += len(_lyrics_columns(verse))
-        lyrics_total_w = (n_verses * LYRICS_COL_W +
-                          max(n_verses - 1, 0) * LYRICS_VERSE_GAP)
-        # Calculer la largeur de ruby maximale dans les paroles (le ruby
-        # va vers la droite, vers la grille)
-        max_ruby_w = 0
-        if lyrics_size:
+    # --- Rendu : un SVG complet par page --- #
+    result = []
+    for page_secs in pages:
+        lyrics_sections = [(s[0], s[1]) for s in page_secs if s[2] == "lyrics"]
+        if lyrics_sections:
+            n_verses = 0
             for _, data in lyrics_sections:
                 for verse in _split_verses(data):
-                    for line in verse:
-                        for seg in line.split('|'):
-                            if seg:
-                                rw = _ruby_needs_extra_width(seg, LYRICS_FS)
-                                max_ruby_w = max(max_ruby_w, rw)
-        lyrics_offset = (lyrics_total_w + 12 + LYRICS_COL_W + max_ruby_w
-                         if n_verses > 0 else 0)
-    else:
-        lyrics_total_w = 0
-        lyrics_offset = 0
-
-    group_w = cell_w + marker_w
-    total_w = max_cols * group_w + ml + mr + title_offset + lyrics_offset
-    total_h = header_h + mt + GAP_HEADER
-
-    # estimer hauteur totale
-    prev_kind = None
-    for items in prepared:
-        sec_title = items[0]
-        data = items[1]
-        kind = items[2]
-        if sec_title:
-            total_h += 22
-        if kind in ("tab", "tab-lyrics") and prev_kind in ("tab", "tab-lyrics", None):
-            total_h += max_col_height * cell_h + 6
-        elif kind == "lyrics":
-            pass  # paroles rendues verticalement à gauche, pas de hauteur supplémentaire
+                    n_verses += len(_lyrics_columns(verse))
+            lyrics_total_w = (n_verses * LYRICS_COL_W +
+                              max(n_verses - 1, 0) * LYRICS_VERSE_GAP)
+            # Calculer la largeur de ruby maximale dans les paroles (le ruby
+            # va vers la droite, vers la grille)
+            max_ruby_w = 0
+            if lyrics_size:
+                for _, data in lyrics_sections:
+                    for verse in _split_verses(data):
+                        for line in verse:
+                            for seg in line.split('|'):
+                                if seg:
+                                    rw = _ruby_needs_extra_width(seg, LYRICS_FS)
+                                    max_ruby_w = max(max_ruby_w, rw)
+            lyrics_offset = (lyrics_total_w + 12 + LYRICS_COL_W + max_ruby_w
+                             if n_verses > 0 else 0)
         else:
-            total_h += len(data) * 20 + 6
-        prev_kind = kind
+            lyrics_total_w = 0
+            lyrics_offset = 0
 
-    # s'assurer que la hauteur couvre le titre vertical (ou l'accordage seul)
-    if title or tuning:
-        total_h = max(total_h, header_h + mt + GAP_HEADER + title_total_h)
+        group_w = cell_w + marker_w
+        total_w = max_cols * group_w + ml + mr + title_offset + lyrics_offset
+        total_h = header_h + mt + GAP_HEADER
 
-    # s'assurer que la hauteur couvre les paroles verticales (une colonne
-    # de couplet peut être plus haute que la grille — ex. 安波節)
-    if lyrics_sections:
-        ly0 = header_h + mt + GAP_HEADER
-        lyrics_bottom = ly0 + LYRICS_FS
-        for _, data in lyrics_sections:
-            for verse in _split_verses(data):
-                for col, indent in _lyrics_columns_layout(verse):
-                    if not col:
-                        continue
-                    h = (indent * LYRICS_SP
-                         + sum(len(ln) for ln in col) * LYRICS_SP
-                         + (len(col) - 1) * LYRICS_SP)
-                    lyrics_bottom = max(lyrics_bottom, ly0 + LYRICS_FS + h)
-        total_h = max(total_h, lyrics_bottom + mt)
+        # estimer hauteur totale
+        prev_kind = None
+        for items in page_secs:
+            sec_title = items[0]
+            data = items[1]
+            kind = items[2]
+            if sec_title:
+                total_h += 22
+            if kind in ("tab", "tab-lyrics") and prev_kind in ("tab", "tab-lyrics", None):
+                total_h += max_col_height * cell_h + 6
+            elif kind == "lyrics":
+                pass  # paroles rendues verticalement à gauche, pas de hauteur supplémentaire
+            else:
+                total_h += len(data) * 20 + 6
+            prev_kind = kind
 
-    out = []
-    out.append('<?xml version="1.0" encoding="UTF-8"?>')
-    out.append(
-        f'<svg xmlns="http://www.w3.org/2000/svg" '
-        f'width="{total_w}" height="{total_h}" '
-        f'viewBox="0 0 {total_w} {total_h}">'
-    )
-    out.append('<rect width="100%" height="100%" fill="white"/>')
+        # s'assurer que la hauteur couvre le titre vertical (ou l'accordage seul)
+        if title or tuning:
+            total_h = max(total_h, header_h + mt + GAP_HEADER + title_total_h)
 
-    # En-tête : métadonnées secondaires uniquement (genre, compositeur…)
-    y = mt + 18
-    meta_extras = []
-    for k in ("composer", "lyricist", "origin"):
-        if k in song.meta and song.meta[k]:
-            meta_extras.append(song.meta[k])
-    if meta_extras:
-        out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                   f'font-size="12" fill="#777">{escape("  ".join(meta_extras))}</text>')
+        # s'assurer que la hauteur couvre les paroles verticales (une colonne
+        # de couplet peut être plus haute que la grille — ex. 安波節)
+        if lyrics_sections:
+            ly0 = header_h + mt + GAP_HEADER
+            lyrics_bottom = ly0 + LYRICS_FS
+            for _, data in lyrics_sections:
+                for verse in _split_verses(data):
+                    for col, indent in _lyrics_columns_layout(verse):
+                        if not col:
+                            continue
+                        h = (indent * LYRICS_SP
+                             + sum(len(ln) for ln in col) * LYRICS_SP
+                             + (len(col) - 1) * LYRICS_SP)
+                        lyrics_bottom = max(lyrics_bottom, ly0 + LYRICS_FS + h)
+            total_h = max(total_h, lyrics_bottom + mt)
 
-    y = header_h + mt + GAP_HEADER
+        out = []
+        out.append('<?xml version="1.0" encoding="UTF-8"?>')
+        out.append(
+            f'<svg xmlns="http://www.w3.org/2000/svg" '
+            f'width="{total_w}" height="{total_h}" '
+            f'viewBox="0 0 {total_w} {total_h}">'
+        )
+        out.append('<rect width="100%" height="100%" fill="white"/>')
 
-    # Trouver l'index de la dernière section tab/tab-lyrics pour end_circle
-    last_tab_idx = -1
-    for si, items in enumerate(prepared):
-        kind = items[2]
-        if kind in ("tab", "tab-lyrics"):
-            last_tab_idx = si
-    # @end_circle déprécié/ignoré : le ┘● est désormais rendu par le token
-    # explicite )| (vocalRepEnd), cohérent avec Portama où le marqueur est
-    # posé sur une cellule et non déduit de la dernière case remplie.
-    do_end_circle = False
-
-    prev_kind = None
-    for si, items in enumerate(prepared):
-        sec_title = items[0]
-        data = items[1]
-        kind = items[2]
-        vocal_data = items[3] if len(items) > 3 else None
-        if sec_title:
+        # En-tête : métadonnées secondaires uniquement (genre, compositeur…)
+        y = mt + 18
+        meta_extras = []
+        for k in ("composer", "lyricist", "origin"):
+            if k in song.meta and song.meta[k]:
+                meta_extras.append(song.meta[k])
+        if meta_extras:
             out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                       f'font-size="14" fill="#333">{escape(sec_title)}</text>')
-            y += 20
+                       f'font-size="12" fill="#777">{escape("  ".join(meta_extras))}</text>')
 
-        is_last_tab = (si == last_tab_idx)
-        ec = do_end_circle and is_last_tab
+        y = header_h + mt + GAP_HEADER
 
-        if kind == "tab":
-            y = _draw_vertical_tab(out, data, rows_per_col, ml, y,
-                                   cell_w, cell_h, fs, total_w, mr, marker_w,
-                                   title_offset, opts, end_circle=ec,
-                                   vocal_data=vocal_data, syllable_fs=SYLLABLE_FS)
-            y += 6
-        elif kind == "tab-lyrics":
-            y = _draw_vertical_tab_lyrics(out, data, rows_per_col, ml, y,
-                                          cell_w, cell_h, fs, total_w, mr,
-                                          marker_w, title_offset, opts,
-                                          end_circle=ec)
-            y += 6
-        else:  # lyrics — rendu vertical après la grille, ignoré ici
-            pass
-        prev_kind = kind
+        # Trouver l'index de la dernière section tab/tab-lyrics pour end_circle
+        last_tab_idx = -1
+        for si, items in enumerate(page_secs):
+            kind = items[2]
+            if kind in ("tab", "tab-lyrics"):
+                last_tab_idx = si
+        # @end_circle déprécié/ignoré : le ┘● est désormais rendu par le token
+        # explicite )| (vocalRepEnd), cohérent avec Portama où le marqueur est
+        # posé sur une cellule et non déduit de la dernière case remplie.
+        do_end_circle = False
 
-    # --- Paroles verticales à gauche de la grille --- #
-    if lyrics_sections:
-        ly0 = header_h + mt + GAP_HEADER
-        vi = 0
-        for _, data in lyrics_sections:
-            for verse in _split_verses(data):
-                # Construire les colonnes via le helper partagé
-                # (même logique que l'estimation de largeur).
-                # Layout partagé avec l'estimation de hauteur :
-                # une colonne avec marqueur de couplet démarre en haut,
-                # une colonne de continuation s'indente sous le marqueur.
-                layout = _lyrics_columns_layout(verse)
-                for col_lines, verse_indent in layout:
-                    vx = (ml + lyrics_total_w
-                          - vi * (LYRICS_COL_W + LYRICS_VERSE_GAP)
-                          - LYRICS_COL_W / 2)
-                    cy = ly0 + LYRICS_FS
-                    if verse_indent > 0:
-                        cy += verse_indent * LYRICS_SP
-                    for li, line in enumerate(col_lines):
-                        # Saut de ligne dans la même colonne = 1 espace
-                        if li > 0:
-                            cy += LYRICS_SP
-                        cy = _render_vertical_text(out, line, vx, cy,
-                                                   LYRICS_FS, "#333", LYRICS_SP)
-                    vi += 1
+        prev_kind = None
+        for si, items in enumerate(page_secs):
+            sec_title = items[0]
+            data = items[1]
+            kind = items[2]
+            vocal_data = items[3] if len(items) > 3 else None
+            if sec_title:
+                out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
+                           f'font-size="14" fill="#333">{escape(sec_title)}</text>')
+                y += 20
 
-    # --- Titre vertical à droite de la grille --- #
-    if title or tuning:
-        tx = total_w - mr - TITLE_W / 2
-        ty = header_h + mt + GAP_HEADER
-        if title:
-            ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
-                                           TITLE_SPACING)
-        else:
-            ty_end = ty
-        ty2 = ty_end
-        for i, ch in enumerate(tuning):
-            _vertical_char(out, ch, tx, ty2 + i * TUNING_SPACING + 15, 15, "#555")
-        # Genre et auteur sous l'accordage
-        genre = song.meta.get("genre", "")
-        author = song.meta.get("author", "")
-        show_genre = genre and genre != author
-        ty3 = ty2 + len(tuning) * TUNING_SPACING + 15
-        if show_genre:
-            for i, ch in enumerate(genre):
+            is_last_tab = (si == last_tab_idx)
+            ec = do_end_circle and is_last_tab
+
+            if kind == "tab":
+                y = _draw_vertical_tab(out, data, rows_per_col, ml, y,
+                                       cell_w, cell_h, fs, total_w, mr, marker_w,
+                                       title_offset, opts, end_circle=ec,
+                                       vocal_data=vocal_data, syllable_fs=SYLLABLE_FS)
+                y += 6
+            elif kind == "tab-lyrics":
+                y = _draw_vertical_tab_lyrics(out, data, rows_per_col, ml, y,
+                                              cell_w, cell_h, fs, total_w, mr,
+                                              marker_w, title_offset, opts,
+                                              end_circle=ec)
+                y += 6
+            else:  # lyrics — rendu vertical après la grille, ignoré ici
+                pass
+            prev_kind = kind
+
+        # --- Paroles verticales à gauche de la grille --- #
+        if lyrics_sections:
+            ly0 = header_h + mt + GAP_HEADER
+            vi = 0
+            for _, data in lyrics_sections:
+                for verse in _split_verses(data):
+                    # Construire les colonnes via le helper partagé
+                    # (même logique que l'estimation de largeur).
+                    # Layout partagé avec l'estimation de hauteur :
+                    # une colonne avec marqueur de couplet démarre en haut,
+                    # une colonne de continuation s'indente sous le marqueur.
+                    layout = _lyrics_columns_layout(verse)
+                    for col_lines, verse_indent in layout:
+                        vx = (ml + lyrics_total_w
+                              - vi * (LYRICS_COL_W + LYRICS_VERSE_GAP)
+                              - LYRICS_COL_W / 2)
+                        cy = ly0 + LYRICS_FS
+                        if verse_indent > 0:
+                            cy += verse_indent * LYRICS_SP
+                        for li, line in enumerate(col_lines):
+                            # Saut de ligne dans la même colonne = 1 espace
+                            if li > 0:
+                                cy += LYRICS_SP
+                            cy = _render_vertical_text(out, line, vx, cy,
+                                                       LYRICS_FS, "#333", LYRICS_SP)
+                        vi += 1
+
+        # --- Titre vertical à droite de la grille --- #
+        if title or tuning:
+            tx = total_w - mr - TITLE_W / 2
+            ty = header_h + mt + GAP_HEADER
+            if title:
+                ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
+                                               TITLE_SPACING)
+            else:
+                ty_end = ty
+            ty2 = ty_end
+            for i, ch in enumerate(tuning):
+                _vertical_char(out, ch, tx, ty2 + i * TUNING_SPACING + 15, 15, "#555")
+            # Genre et auteur sous l'accordage
+            genre = song.meta.get("genre", "")
+            author = song.meta.get("author", "")
+            show_genre = genre and genre != author
+            ty3 = ty2 + len(tuning) * TUNING_SPACING + 15
+            if show_genre:
+                for i, ch in enumerate(genre):
+                    _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+                ty3 += len(genre) * TUNING_SPACING + 15
+            for i, ch in enumerate(author):
                 _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
-            ty3 += len(genre) * TUNING_SPACING + 15
-        for i, ch in enumerate(author):
-            _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
 
-    out.append("</svg>")
-    return "\n".join(out)
+        out.append("</svg>")
+        result.append("\n".join(out))
+    return result
 
 
 def _wrap_vertical(items, rows_per_col):
@@ -2074,6 +2150,8 @@ def main():
                     help="lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
     ap.add_argument("-l", "--layout", choices=["vertical", "horizontal"],
                     help="force le layout (surcharge @layout)")
+    ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
+                    help="nombre max de dans par page (pagination multipage, surcharge @page_dans)")
     args = ap.parse_args()
 
     if args.input == "-":
@@ -2085,11 +2163,22 @@ def main():
         out_path = args.output or (args.input.rsplit(".", 1)[0] + ".svg")
 
     song = parse_kkml(text)
-    svg = render_svg(song, cols=args.cols, layout=args.layout)
-
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write(svg)
-    print(f"OK: {out_path}  ({len(svg)} octets)", file=sys.stderr)
+    svgs = render_svg(song, cols=args.cols, layout=args.layout,
+                       page_dans=args.page_dans)
+    if len(svgs) == 1:
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(svgs[0])
+        print(f"OK: {out_path}  ({len(svgs[0])} octets)", file=sys.stderr)
+    else:
+        base, dot, ext = out_path.rpartition(".")
+        stem = base if dot else out_path
+        ext = ("." + ext) if dot else ""
+        for i, svg in enumerate(svgs, 1):
+            page_path = f"{stem}-{i}{ext}"
+            with open(page_path, "w", encoding="utf-8") as f:
+                f.write(svg)
+            print(f"OK: {page_path}  ({len(svg)} octets)", file=sys.stderr)
+        print(f"{len(svgs)} pages générées", file=sys.stderr)
 
 
 if __name__ == "__main__":

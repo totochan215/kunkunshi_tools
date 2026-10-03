@@ -107,6 +107,14 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 
 ### Structure du code
 
+### 0. Rendu multipage (`render_svg`)
+
+- `render_svg(...)` retourne désormais une **liste de SVG** (un par page).
+- Pagination : `@page_dans N` (méta) ou `-p/--page-dans N` (CLI). Défaut : None = une seule page (comportement historique).
+- `_render_vertical` découpe les sections tab/tab-lyrics en pages de N dans ; les colonnes vocales (`vocal_data`) sont tranchées en synchronisation avec les colonnes de tab (même slice).
+- Sections lyrics et titre vertical : répétés sur chaque page.
+- `main()` : 1 page → sortie simple ; n pages → `stem-1.svg` … `stem-n.svg`.
+
 ### 1. Parseur KKML (`parse_kkml`, lignes ~129-210)
 
 - Classes `Song` (meta, blocks, cols, layout) et `Block` (kind, label, lines)
@@ -239,8 +247,11 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons ; pas encore implémenté).
 - Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne rendent RIEN dans テスト節.pdf (dan 1, cases 13–19 : aucun graphique ni flèche), alors que d'autres pièces rendent des flèches dans la colonne marker. Le déclencheur exact du rendu des flèches reste à élucider.
 - `kkml2pdf.py` : script non écrit. Pipeline KKML → PDF à définir.
+- ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés dans kkml2svg.py ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf. Suite : modèles de page (Portama A4 paysage fait implicitement ; Nomura-ryu portrait, chindami, Paris Sanshin Club en attente d'exemples à téléverser), puis assemblage PDF (embed polices CJK).
 
 ## Constantes de calibrage mesurées sur les PDF Portama (recherche)
+
+**Pagination vérifiée (かぎやで風節.pdf, 2 pages)** : maximum 12 piles (dans) par page — page 1 = 12 séparateurs verticaux au pas de 60,9 pt, page 2 = 7 piles (12+7 = 19 dans). A4 paysage (841,89 × 595,28 pt), 12 cases/pile de 43,94 pt. Le titre vertical (fs 20) et l'accordage (fs 14) sont répétés sur chaque page.
 
 Ces mesures (かぎやで風節.pdf, テスト節.pdf) servent au calibrage du rendu ; elles ne sont pas des spécifications utilisateur.
 
