@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="595.28" height="841.89" viewBox="0 0 595.28 841.89">
 <rect width="100%" height="100%" fill="white"/>
-<rect x="17.99000000000001" y="47.995000000000005" width="559.3" height="745.9" fill="none" stroke="#333" stroke-width="1"/>
+<rect x="17.99000000000001" y="47.995000000000005" width="559.3" height="745.9" fill="none" stroke="#333" stroke-width="1.5"/>
 <text x="297.64" y="817.895" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="11" fill="#555">3</text>
 <line x1="531.1257142857143" y1="62.495000000000005" x2="531.1257142857143" y2="779.395" stroke="#333" stroke-width="0.6"/>
 <line x1="562.79" y1="62.495000000000005" x2="562.79" y2="779.395" stroke="#333" stroke-width="0.6"/>
