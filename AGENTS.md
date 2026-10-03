@@ -153,6 +153,7 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
   2. **milieu** : instructions de chant — points de positionnement exact des notes, lignes de glissando, etc. ;
   3. **gauche** : texte du chant en syllabique (`::tab-lyrics` / `::vocal`).
   Implémentation actuelle : syllabes centrées dans la bande marker (à déplacer vers la sous-colonne gauche) ; sous-colonnes hauteur/milieu à créer avec P3 声楽譜.
+- **尺♯ en nomura-ryu** : `@shaku_sharp off` **et** `@shaku_circled off` systématiques — les 尺♯ sont rendus en 尺 simples, jamais encerclés ; c'est au lecteur de deviner la hauteur exacte des shaku à jouer. Le layout nomura doit forcer ces deux options (comme `@marker on`), indépendamment des méta KKML.
 - Aplatit les sections tab en flux de colonnes de 12 ; `tab-lyrics` → notes + syllabes dans le marker. Sélecteurs de variante (U+FE00–FE0F) non rendus (éviter l'« espace doublée » en tête de couplet).
 
 #### 3c. Rendu horizontal (`_render_horizontal`, ~794)
