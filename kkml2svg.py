@@ -949,8 +949,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
             ty = grid_y0 + cell_h * 1.8
             if title:
                 ty_end = _render_vertical_text(out, title, tx, ty,
-                                               cell_h * 0.72, "black",
-                                               cell_h * 0.82)
+                                               cell_h * 0.43, "black",
+                                               cell_h * 0.5)
             else:
                 ty_end = ty
             for i, ch in enumerate(tuning):
