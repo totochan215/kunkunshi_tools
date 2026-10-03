@@ -279,3 +279,9 @@ Sources : `samples/nomura-ryu-pdf/かぎやで風節.pdf` (3 pages), `後に屋�
 - Ordre de lecture : droite→gauche (dan 1 = colonne la plus à droite), cases haut→bas dans chaque dan.
 - Implications modèle de page : pagination par **nombre de cases par dan** (12 par dan, systématique), **jusqu'à 7 dan/page** ; lorsque nécessaire un dan est retiré (décalé) pour placer le titre et/ou les paroles. Structure différente de Portama (paysage, piles horizontales de cases).
 - Spécification utilisateur (à considérer comme la règle, les mesures ci-dessus n'étant que 3 exemples) : chaque page est encadrée par un **filet** (seul le numéro de page est à l'extérieur) — utiliser ce filet comme origine pour le placement relatif de tous les objets. Page toujours portrait. Dans toujours à 12 cases. Composition manuelle (~1930) d'une régularité exceptionnelle.
+**Structures exactes vérifiées (description de droite à gauche, haut→bas = ordre de lecture japonais)** :
+- かぎやで風節 (3 pages) : p1 = titre + 6 dans ; p2 = 7 dans ; p3 = 6 dans (les 3 dernières cases du 6e dan sont vides mais présentes) + paroles.
+- 恩納節 (2 pages) : p1 = titre + 6 dans ; p2 = 6 dans + paroles.
+- 後に屋節 (2 pages) : p1 = titre + 6 dans ; p2 = 4 dans (5 cases vides à la fin du 4e dan) + couplets + titre de la chanson suivante (équivalent 1 dan, à ignorer) + couplets suivants (équivalent 1 dan, à ignorer).
+
+En conséquence : le titre occupe l'équivalent d'**1 dan de large** en haut à droite (colonne la plus à droite) ; les paroles occupent l'équivalent d'**1 colonne de dan** en bas à gauche de la dernière page ; une page pleine = 7 dans ; page avec titre ou paroles = 6 dans utiles ; les deux = 5 dans utiles. Cases vides en fin de morceau : présentes mais non remplies.
