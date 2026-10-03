@@ -1906,13 +1906,13 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         return
 
     if tok == SUSTAIN_TOKEN:
-        out.append(f'<text x="{cx}" y="{cy+5}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + fs * 0.227}" text-anchor="middle" '
                    f'font-family="serif" font-size="{fs}" fill="#888">・</text>')
         return
 
     # Repos (cercle)
     if tok == REST_TOKEN:
-        out.append(f'<text x="{cx}" y="{cy+7}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{fs}" fill="black">'
                    f'{escape(REST_TOKEN)}</text>')
         return
@@ -1922,12 +1922,12 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # entière, taille note — distincts des petits ○/□ des suffixes ( )
     # et du repos ◯ (U+25EF, grand cercle centré).
     if tok == REPEAT_START:
-        out.append(f'<text x="{cx}" y="{cy+8}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + fs * 0.364}" text-anchor="middle" '
                    f'font-family="serif" font-size="{fs}" fill="black">'
                    f'↓</text>')
         return
     if tok == REPEAT_END:
-        out.append(f'<text x="{cx}" y="{cy+8}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + fs * 0.364}" text-anchor="middle" '
                    f'font-family="serif" font-size="{fs}" fill="black">'
                    f'↑</text>')
         return
@@ -1951,7 +1951,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # ○ 声だし en préfixe : même position que le □ 声切り suffixe —
     # dans la case, côté droit (区画中右方, traité 野村流 p. 9).
     if koe_prefix:
-        out.append(f'<text x="{cx + cell_w * 0.30}" y="{cy + fs * 0.35 + 7}" '
+        out.append(f'<text x="{cx + cell_w * 0.30}" y="{cy + fs * 0.675}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="{int(fs * 0.55)}" fill="black">○</text>')
 
@@ -1960,7 +1960,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
 
     # 尺♯ — jamais entouré
     if base_tok == "尺♯":
-        out.append(f'<text x="{cx}" y="{cy+7}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                   f'font-family="serif" font-size="{effective_fs}" '
                   f'fill="black">{_note_svg(base_tok, effective_fs, opts)}</text>')
         _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
@@ -1971,7 +1971,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         r = effective_fs * 0.6325
         out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
                    f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy+7}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape("尺")}</text>')
         _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
@@ -1980,7 +1980,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # 下老 → deux caractères condensés en demi-largeur via textLength
     if base_tok == "下老":
         target_w = effective_fs * 1.0
-        y_text = cy + 7
+        y_text = cy + fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -1994,7 +1994,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # condensés via textLength, même patron que 下老, SANS cercle.
     if base_tok == "下八":
         target_w = effective_fs * 1.0
-        y_text = cy + 7
+        y_text = cy + fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -2012,7 +2012,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1] in HIGH_POS_KANJI):
         target_w = effective_fs * 1.2
-        y_text = cy + 7
+        y_text = cy + fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -2030,7 +2030,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1:] == "下尺"):
         target_w = effective_fs * 1.8
-        y_text = cy + 7
+        y_text = cy + fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -2073,7 +2073,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy+7}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
         # Techniques de la note principale
@@ -2095,7 +2095,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                        f'{_note_svg(straddle_note, ss, opts)}</text>')
             # Les techniques de fin de token s'appliquent à la note à cheval :
             if tech_suffixes:
-                _render_techniques(out, tech_suffixes, cx, straddle_y - 7,
+                _render_techniques(out, tech_suffixes, cx, straddle_y - fs * 0.318,
                                    cell_w, cell_h, effective_fs)
         else:
             # Pas de note à cheval : les techniques s'appliquent à la note principale
@@ -2125,7 +2125,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy+7}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape(base_tok)}</text>')
     else:
@@ -2136,7 +2136,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         _warn_unknown_token(base_tok)
         shown = base_tok[:3]
         target_w = effective_fs * (1.2 if len(shown) == 2 else 1.8)
-        out.append(f'<text x="{cx - target_w/2}" y="{cy+7}" '
+        out.append(f'<text x="{cx - target_w/2}" y="{cy + fs * 0.318}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">{escape(shown)}</text>')
