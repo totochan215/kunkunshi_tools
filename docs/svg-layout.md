@@ -114,6 +114,34 @@ Le préfixe イ ou 口 peut aussi s'appliquer à 下老 et 下尺. Le token fait
 
 Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
+## Pagination multipage
+
+Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sortie imprimable (PDF, impression), la méta `@page_dans N` ou l'option CLI `-p N` / `--page-dans N` limite le nombre de dans par page : le rendu produit alors un SVG complet par page (`chanson-1.svg`, `chanson-2.svg`, …).
+
+- Chaque page est un SVG autonome avec ses propres dimensions ; l'en-tête, le titre vertical et la colonne marker sont répétés sur chaque page.
+- Les dans ne sont jamais coupés : la découpe se fait entre colonnes.
+- Les blocs `::lyrics` (paroles verticales) apparaissent sur la première page.
+- Référence : les PDF Portama affichent au maximum 12 piles (dans) par page en A4 paysage.
+
+## Mise en page Nomura-ryu (portrait, `@layout nomura`)
+
+Le layout `nomura` reproduit les planches des recueils Nomura-ryu (工工四
+traditionnel) : une page A4 **portrait** encadrée par un filet (seul le
+numéro de page est à l'extérieur), jusqu'à **7 colonnes (dans)** par page,
+chacune de **12 cases empilées** lues de haut en bas — l'ensemble se lit de
+droite à gauche.
+
+- Chaque dan est un groupe cases + sous-colonne **marker** (même largeur
+  qu'une case) : les flèches de répétition et les syllabes vocales s'y
+  placent.
+- Le **titre** (avec accordage) occupe la colonne la plus à droite de la
+  première page ; les **paroles** occupent les dernières colonnes de la
+  dernière page.
+- Cases plus hautes que larges (~31,7 pt × 60,6 pt), dans séparés par une
+  marge blanche.
+- La sortie est automatiquement multipage : chaque page est un SVG
+  autonome (`fichier-1.svg`, `fichier-2.svg`…).
+
 ## Mise en page horizontale (landscape)
 
 La mise en page horizontale (mode songbook) n'est pas encore documentée.
