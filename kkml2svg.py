@@ -806,8 +806,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     """
     title = song.meta.get("title", "")
     tuning = song.meta.get("tuning", "本調子")
-    has_vocal = any(s[3] or s[2] == "vocal" for s in sections)
-    marker = marker or has_vocal
+    # La colonne marker est cosubstantielle du layout nomura : forcer
+    # @marker on, quelle que soit la méta (et même sans ::vocal).
+    marker = True
 
     cell_h = NOMURA_CELL_H
     cell_w = NOMURA_CELL_W
