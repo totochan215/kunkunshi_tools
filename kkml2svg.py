@@ -887,32 +887,52 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     lyrics_dans = (lyrics_col_count + LYRICS_MAX_COLS - 1) // LYRICS_MAX_COLS
 
     first_cap = NOMURA_MAX_DANS - (1 if (title or tuning) else 0)
-    last_cap = NOMURA_MAX_DANS - lyrics_dans
-
-    if last_cap <= 0:
-        # paroles trop longues pour une page : on garde 1 dan minimum
-        last_cap = 1
-
-    pages = []
+    # La musique remplit les pages normalement (p.1 : 7 - 1 si titre,
+    # puis 7 dans). Les couplets occupent les dans LIBRES de la dernière
+    # page de musique ; l'excédent de dans virtuels passe sur des pages
+    # suivantes dédiées aux couplets (7 dans virtuels max par page).
+    # Jamais de débordement du cadre, jamais de dan de musique perdu.
+    music_pages = []
     remaining = list(tab_columns)
     remaining_vocal = list(vocal_columns)
-    page_idx = 0
-    while remaining or page_idx == 0:
-        cap = first_cap if not pages else (last_cap if len(remaining) <= last_cap
-                                          else NOMURA_MAX_DANS)
-        if not remaining and lyrics_layouts and page_idx == 0:
-            # morceau sans tab : paroles seules
-            cap = 0
+    pi = 0
+    while remaining:
+        cap = first_cap if pi == 0 else NOMURA_MAX_DANS
         take = remaining[:cap]
         take_v = remaining_vocal[:cap] if remaining_vocal else [None] * len(take)
         remaining = remaining[cap:]
         if remaining_vocal:
             remaining_vocal = remaining_vocal[cap:]
-        is_last = not remaining
-        pages.append((take, take_v, is_last))
-        if is_last:
-            break
-        page_idx += 1
+        music_pages.append((take, take_v))
+        pi += 1
+
+    # dans virtuels de couplets acceptés sur la dernière page de musique
+    if music_pages:
+        last_cols = music_pages[-1][0]
+        last_cap = first_cap if len(music_pages) == 1 else NOMURA_MAX_DANS
+        free = last_cap - len(last_cols)
+    else:
+        free = first_cap
+    lyr_here = min(lyrics_dans, max(0, free))
+    lyr_left = lyrics_dans - lyr_here
+
+    pages = []          # (cols, vocal_cols, is_last, lyr_dans_here, lyr_col_offset)
+    lyr_col_offset = 0
+    for mi, (mcols, mcols_v) in enumerate(music_pages):
+        is_last = (mi == len(music_pages) - 1) and lyr_left == 0
+        here = lyr_here if mi == len(music_pages) - 1 else 0
+        pages.append((mcols, mcols_v, is_last, here, lyr_col_offset))
+        if here:
+            lyr_col_offset += here * LYRICS_MAX_COLS
+    if not music_pages:
+        is_last = lyr_left == 0
+        pages.append(([], [], is_last, lyr_here, 0))
+        lyr_col_offset += lyr_here * LYRICS_MAX_COLS
+    while lyr_left > 0:
+        here = min(lyr_left, NOMURA_MAX_DANS)
+        lyr_left -= here
+        pages.append(([], [], lyr_left == 0, here, lyr_col_offset))
+        lyr_col_offset += here * LYRICS_MAX_COLS
 
     # --- Géométrie page --- #
     frame_x0 = NOMURA_FRAME_MARGIN_X
@@ -930,9 +950,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
 
     result = []
     n_pages = len(pages)
-    for pi, (cols, cols_v, is_last) in enumerate(pages):
+    for pi, (cols, cols_v, is_last, lyr_here, lyr_col_offset) in enumerate(pages):
         has_title_col = (pi == 0 and (title or tuning))
-        n_lyr_on_page = lyrics_dans if is_last and lyrics_layouts else 0
+        n_lyr_on_page = lyr_here
 
         # colonnes occupées : titre (droite), dans, paroles (gauche)
         total_groups = len(cols)
@@ -1053,9 +1073,10 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                                        f'fill="#333">{escape(ch)}</text>')
             x_right -= (group_w + NOMURA_DAN_GAP)
 
-        # 3. paroles (dernière page) : colonnes verticales à gauche
-        if is_last and lyrics_layouts:
-            for vi, (col_lines, verse_indent) in enumerate(lyrics_layouts):
+        # 3. paroles : colonnes verticales à gauche (dans virtuels de CETTE page)
+        if lyr_here > 0:
+            for vi, (col_lines, verse_indent) in enumerate(
+                    lyrics_layouts[lyr_col_offset:lyr_col_offset + lyr_here * LYRICS_MAX_COLS]):
                 # 3 colonnes par dan virtuel ; un dan supplémentaire est
                 # sauté (marge M) pour la suite des couplets
                 dan_i = vi // LYRICS_MAX_COLS
