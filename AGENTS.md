@@ -269,11 +269,13 @@ Ces mesures (かぎやで風節.pdf, テスト節.pdf) servent au calibrage du r
 
 ## Constantes de calibrage mesurées sur les scans Nomura-ryu (recherche)
 
-Sources : `samples/nomura-ryu-pdf/かぎやで風節-nomura.pdf` (3 pages), `後に屋節.pdf` (2 pages). Scans : chaque page PDF A4 **paysage** (841,89 × 595,28 pt) est composée de 5 images JPEG empilées (~841,8 pt × ~121 pt chacune, opérateurs `cm`/`Do`). Interprétation vérifiée : le recueil physique est **portrait**, scannié tourné de 90° — chaque bande JPEG est une **colonne (dan) complète** de la page physique. Échelle : 3396 px ↔ 841,8 pt → **4,04 px/pt** (~290 dpi).
+Sources : `samples/nomura-ryu-pdf/かぎやで風節.pdf` (3 pages), `後に屋節.pdf` (2 pages), `恩納節.pdf` (2 pages) — rééditions scannées de planches calligraphiées (~1930). Chaque page PDF A4 **paysage** (841,89 × 595,28 pt) est composée de 5 images JPEG empilées (~841,8 × ~121 pt, opérateurs `cm`/`Do`). Le recueil physique est **portrait**, scanné tourné de 90° : chaque bande JPEG est un **dan (colonne) complet** de la page physique. Échelle : 3396 px ↔ 841,8 pt → **4,04 px/pt** (~290 dpi). Les 3 morceaux choisis commencent en haut de page ; dans les recueils originaux les chansons s'enchaînent en flux continu (nouveau titre en cours de page, « rouleau découpé en feuilles ») — variante non implémentée pour l'instant.
 
-- Page physique : A4 portrait (595,28 × 841,89 pt), **5 dan/page** (largeur de bande ~119,5–121,8 pt, pitch moyen ~120,5 pt ; dernière bande légèrement réduite ~108–117 pt).
-- Colonne de notation bornée par 2 filets horizontaux dans la bande (donc 2 filets verticaux par dan physique) : y ≈ 63 et y ≈ 417 px → largeur de colonne notation ≈ 354 px ≈ **87,7 pt** ; les filets ne s'étendent que sur la colonne (pas de cadre complet, pas de grille).
-- **Pas de cases** contrairement à Portama : flux continu de glyphes kunkunshi sur 1 ligne par dan. Glyphes : largeur médiane ~30 px (≈7,4 pt), inter-glyphe ~13 px → avance ≈ 43 px ≈ **10,6 pt**. Détection : pas de séparateurs verticaux intérieurs (>0,75 de couverture) sur aucune des 25 images.
-- Paroles (lyrics) sous la ligne de notation dans la même bande (zone y ≈ 420–495 px), kanji/kana pleine largeur.
-- Marges de page : bord gauche de notation à x ≈ 190–200 px (~48 pt) et bord droit à x ≈ 3265–3275 px — marge réduite côté reliure.
-- Implications modèle de page Nomura-ryu (à confirmer avec d'autres scans) : pagination par **budget de glyphes par colonne** (et non par cases), 5 colonnes/page, ordre de lecture droite→gauche, paroles alignées sous chaque dan.
+- Page physique : A4 portrait, **5 dan/page** (largeur de bande ~119,5–121,8 pt, la dernière parfois réduite).
+- Grille de cases **dans chaque dan** : cases empilées le long de la direction de lecture (haut→bas), séparateurs au pas très stable de **245 px ≈ 60,6 pt** (mesuré sur 50+ intervalles, dispersion 244–247 px). Cases pleines : ~12 par dan courant (max observé 12, souvent moins en fin de morceau), séparées de filets pleine largeur de dan.
+- Case : hauteur 245 px ≈ **60,6 pt**, largeur ~128 px ≈ **31,7 pt** — plus haute que large (ratio ≈ 1,9). Le dan contient une sous-colonne **notes** + une sous-colonne **marker** de même largeur (~128 px), séparées par un filet vertical court (voir filets internes détectés à ~135/260/317/381/451 px dans 後に屋節-2) ; groupes de cases + marker séparés par des **marges blanches** entre dans.
+- Titre : vertical, en haut à droite de la **première page** de chaque morceau (position à mesurer finement ; non détectée automatiquement sur ces scans).
+- Paroles : sur la **dernière page**, à gauche des dernières notes, dans la bande marker (phonétique, boucles, indications de chant spécifiques Nomura-ryu) — bandes marker très chargées.
+- Ordre de lecture : droite→gauche (dan 1 = colonne la plus à droite), cases haut→bas dans chaque dan.
+- Implications modèle de page : pagination par **nombre de cases par dan** (12 par dan plein), titre vertical à droite de la première page, paroles dans la colonne marker du dernier dan — structure différente de Portama (paysage, piles horizontales de cases).
+
