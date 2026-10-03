@@ -808,6 +808,7 @@ NOMURA_FRAME_MARGIN_X = (NOMURA_PAGE_W - NOMURA_FRAME_W) / 2.0
 NOMURA_FRAME_MARGIN = (NOMURA_PAGE_H - NOMURA_FRAME_H) / 2.0
 NOMURA_CELL_W = (NOMURA_FRAME_W - 8 * NOMURA_DAN_GAP) / 14.0
 NOMURA_CELL_H = (NOMURA_FRAME_H - 2 * NOMURA_DAN_GAP) / NOMURA_ROWS
+NOMURA_FONT_FAMILY = 'Yuji Syuku, serif'
 
 
 def _render_nomura(song, sections, fs, marker=False, opts=None):
@@ -828,6 +829,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     if opts is not None:
         opts['shaku_sharp'] = False
         opts['shaku_circled'] = False
+        # Expérience branche : Yuji Syuku en tête de pile (repli mincho)
+        opts['font_family'] = NOMURA_FONT_FAMILY + ', ' + opts['font_family']
 
     cell_h = NOMURA_CELL_H
     cell_w = NOMURA_CELL_W
@@ -971,6 +974,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
             f'<svg xmlns="http://www.w3.org/2000/svg" '
             f'width="{NOMURA_PAGE_W}" height="{NOMURA_PAGE_H}" '
             f'viewBox="0 0 {NOMURA_PAGE_W} {NOMURA_PAGE_H}">')
+        out.append('<style>@import url("https://fonts.googleapis.com/css2?'
+                   'family=Yuji+Syuku&amp;display=swap");</style>')
         out.append(f'<rect width="100%" height="100%" fill="white"/>')
 
         # filet de cadre (origine du placement relatif)
@@ -1101,7 +1106,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                                                "#333", LYRICS_SP)
 
         out.append("</svg>")
-        result.append("\n".join(out))
+        page_svg = "\n".join(out).replace(
+            'font-family="serif"', f'font-family="{NOMURA_FONT_FAMILY}"')
+        result.append(page_svg)
     return result
 
 

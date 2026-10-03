@@ -1,146 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="595.28" height="841.89" viewBox="0 0 595.28 841.89">
+<style>@import url("https://fonts.googleapis.com/css2?family=Yuji+Syuku&amp;display=swap");</style>
 <rect width="100%" height="100%" fill="white"/>
 <rect x="17.99000000000001" y="47.995000000000005" width="559.3" height="745.9" fill="none" stroke="#333" stroke-width="1.5"/>
-<text x="297.64" y="817.895" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="11" fill="#555">2</text>
-<text x="552.2352380952381" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">て</text>
-<text x="552.2352380952381" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">う</text>
-<text x="552.2352380952381" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">り</text>
-<text x="552.2352380952381" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">が</text>
-<text x="552.2352380952381" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">明</text>
-<text x="552.2352380952381" y="201.39566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">か</text>
-<text x="552.2352380952381" y="219.12766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">り</text>
-<text x="552.2352380952381" y="236.85966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">が</text>
-<text x="552.2352380952381" y="254.59166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">り</text>
-<text x="552.2352380952381" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ば</text>
-<text x="552.2352380952381" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="552.2352380952381" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="552.2352380952381" y="343.25166666666655" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">弥</text>
-<text x="552.2352380952381" y="360.9836666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">勒</text>
-<text x="552.2352380952381" y="378.7156666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">世</text>
-<text x="552.2352380952381" y="396.44766666666646" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">果</text>
-<text x="552.2352380952381" y="414.17966666666644" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">報</text>
-<text x="531.1257142857143" y="77.27166666666668" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">三</text>
-<text x="531.1257142857143" y="95.00366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">、</text>
-<text x="531.1257142857143" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">嘉</text>
-<text x="531.1257142857143" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">例</text>
-<text x="531.1257142857143" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">吉</text>
-<text x="531.1257142857143" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
-<text x="531.1257142857143" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">遊</text>
-<text x="531.1257142857143" y="201.39566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">び</text>
-<text x="531.1257142857143" y="236.85966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="531.1257142857143" y="254.59166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="531.1257142857143" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">打</text>
-<text x="531.1257142857143" y="290.05566666666664" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">晴</text>
-<text x="531.1257142857143" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">り</text>
-<text x="531.1257142857143" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">て</text>
-<text x="531.1257142857143" y="343.25166666666655" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">か</text>
-<text x="531.1257142857143" y="360.9836666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ら</text>
-<text x="531.1257142857143" y="378.7156666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">や</text>
-<text x="510.01619047619045" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">夜</text>
-<text x="510.01619047619045" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
-<text x="510.01619047619045" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">明</text>
-<text x="510.01619047619045" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">き</text>
-<text x="510.01619047619045" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">て</text>
-<text x="510.01619047619045" y="201.39566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">太</text>
-<text x="510.01619047619045" y="219.12766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">陽</text>
-<text x="510.01619047619045" y="236.85966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
-<text x="510.01619047619045" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="510.01619047619045" y="290.05566666666664" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="510.01619047619045" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">上</text>
-<text x="510.01619047619045" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">る</text>
-<text x="510.01619047619045" y="343.25166666666655" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">迄</text>
-<text x="510.01619047619045" y="360.9836666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ん</text>
-<text x="474.40666666666664" y="77.27166666666668" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">四</text>
-<text x="474.40666666666664" y="95.00366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">、</text>
-<text x="474.40666666666664" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">夜</text>
-<text x="474.40666666666664" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
-<text x="474.40666666666664" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">明</text>
-<text x="474.40666666666664" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">き</text>
-<text x="474.40666666666664" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">て</text>
-<text x="474.40666666666664" y="201.39566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">太</text>
-<text x="474.40666666666664" y="219.12766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">陽</text>
-<text x="474.40666666666664" y="236.85966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">や</text>
-<text x="474.40666666666664" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="474.40666666666664" y="290.05566666666664" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="474.40666666666664" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">上</text>
-<text x="474.40666666666664" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ら</text>
-<text x="474.40666666666664" y="343.25166666666655" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">わ</text>
-<text x="474.40666666666664" y="360.9836666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ん</text>
-<text x="474.40666666666664" y="378.7156666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ゆ</text>
-<text x="453.29714285714283" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">た</text>
-<text x="453.29714285714283" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">さ</text>
-<text x="453.29714285714283" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">己</text>
-<text x="453.29714285714283" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">午</text>
-<text x="453.29714285714283" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">時</text>
-<text x="453.29714285714283" y="201.39566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">迄</text>
-<text x="453.29714285714283" y="219.12766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ん</text>
-<text x="453.29714285714283" y="254.59166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="453.29714285714283" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="453.29714285714283" y="290.05566666666664" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">御</text>
-<text x="453.29714285714283" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">祝</text>
-<text x="453.29714285714283" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">え</text>
-<text x="453.29714285714283" y="343.25166666666655" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">し</text>
-<text x="453.29714285714283" y="360.9836666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ゃ</text>
-<text x="453.29714285714283" y="378.7156666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">び</text>
-<text x="453.29714285714283" y="396.44766666666646" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ら</text>
-<text x="432.187619047619" y="77.27166666666668" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">五</text>
-<text x="432.187619047619" y="95.00366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">、</text>
-<text x="432.187619047619" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">今</text>
-<text x="432.187619047619" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">日</text>
-<text x="432.187619047619" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">や</text>
-<text x="432.187619047619" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">御</text>
-<text x="432.187619047619" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">逢</text>
-<text x="432.187619047619" y="201.39566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">拝</text>
-<text x="432.187619047619" y="219.12766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">で</text>
-<text x="432.187619047619" y="254.59166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="432.187619047619" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="432.187619047619" y="290.05566666666664" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">色</text>
-<text x="432.187619047619" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">々</text>
-<text x="432.187619047619" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
-<text x="432.187619047619" y="343.25166666666655" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">遊</text>
-<text x="432.187619047619" y="360.9836666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">び</text>
-<text x="432.187619047619" y="378.7156666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">明</text>
-<text x="396.5780952380952" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">日</text>
-<text x="396.5780952380952" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">や</text>
-<text x="396.5780952380952" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">面</text>
-<text x="396.5780952380952" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">影</text>
-<text x="396.5780952380952" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
-<text x="396.5780952380952" y="219.12766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="396.5780952380952" y="236.85966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="396.5780952380952" y="254.59166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">立</text>
-<text x="396.5780952380952" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ち</text>
-<text x="396.5780952380952" y="290.05566666666664" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ゆ</text>
-<text x="396.5780952380952" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">と</text>
-<text x="396.5780952380952" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">思</text>
-<text x="396.5780952380952" y="343.25166666666655" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ば</text>
-<text x="375.4685714285714" y="77.27166666666668" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">六</text>
-<text x="375.4685714285714" y="95.00366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">、</text>
-<text x="375.4685714285714" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">弥</text>
-<text x="375.4685714285714" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">勒</text>
-<text x="375.4685714285714" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">代</text>
-<text x="375.4685714285714" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
-<text x="375.4685714285714" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">昔</text>
-<text x="375.4685714285714" y="219.12766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="375.4685714285714" y="236.85966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="375.4685714285714" y="254.59166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">く</text>
-<text x="375.4685714285714" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">い</text>
-<text x="375.4685714285714" y="290.05566666666664" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">戻</text>
-<text x="375.4685714285714" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ち</text>
-<text x="375.4685714285714" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">今</text>
-<text x="375.4685714285714" y="343.25166666666655" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">に</text>
-<text x="375.4685714285714" y="360.9836666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">御</text>
-<text x="375.4685714285714" y="378.7156666666665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">万</text>
-<text x="354.3590476190476" y="112.73566666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">人</text>
-<text x="354.3590476190476" y="130.46766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
-<text x="354.3590476190476" y="148.19966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ま</text>
-<text x="354.3590476190476" y="165.93166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぢ</text>
-<text x="354.3590476190476" y="183.66366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">り</text>
-<text x="354.3590476190476" y="219.12766666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ハ</text>
-<text x="354.3590476190476" y="236.85966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">リ</text>
-<text x="354.3590476190476" y="254.59166666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">遊</text>
-<text x="354.3590476190476" y="272.32366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ぶ</text>
-<text x="354.3590476190476" y="290.05566666666664" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">嬉</text>
-<text x="354.3590476190476" y="307.7876666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">し</text>
-<text x="354.3590476190476" y="325.5196666666666" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="14.776666666666664" fill="#333">ゃ</text>
+<text x="297.64" y="817.895" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="11" fill="#555">2</text>
+<text x="552.2352380952381" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">て</text>
+<text x="552.2352380952381" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">う</text>
+<text x="552.2352380952381" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">り</text>
+<text x="552.2352380952381" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">が</text>
+<text x="552.2352380952381" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">明</text>
+<text x="552.2352380952381" y="201.39566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">か</text>
+<text x="552.2352380952381" y="219.12766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">り</text>
+<text x="552.2352380952381" y="236.85966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">が</text>
+<text x="552.2352380952381" y="254.59166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">り</text>
+<text x="552.2352380952381" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ば</text>
+<text x="552.2352380952381" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="552.2352380952381" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="552.2352380952381" y="343.25166666666655" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">弥</text>
+<text x="552.2352380952381" y="360.9836666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">勒</text>
+<text x="552.2352380952381" y="378.7156666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">世</text>
+<text x="552.2352380952381" y="396.44766666666646" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">果</text>
+<text x="552.2352380952381" y="414.17966666666644" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">報</text>
+<text x="531.1257142857143" y="77.27166666666668" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">三</text>
+<text x="531.1257142857143" y="95.00366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">、</text>
+<text x="531.1257142857143" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">嘉</text>
+<text x="531.1257142857143" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">例</text>
+<text x="531.1257142857143" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">吉</text>
+<text x="531.1257142857143" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
+<text x="531.1257142857143" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">遊</text>
+<text x="531.1257142857143" y="201.39566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">び</text>
+<text x="531.1257142857143" y="236.85966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="531.1257142857143" y="254.59166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="531.1257142857143" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">打</text>
+<text x="531.1257142857143" y="290.05566666666664" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">晴</text>
+<text x="531.1257142857143" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">り</text>
+<text x="531.1257142857143" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">て</text>
+<text x="531.1257142857143" y="343.25166666666655" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">か</text>
+<text x="531.1257142857143" y="360.9836666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ら</text>
+<text x="531.1257142857143" y="378.7156666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">や</text>
+<text x="510.01619047619045" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">夜</text>
+<text x="510.01619047619045" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
+<text x="510.01619047619045" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">明</text>
+<text x="510.01619047619045" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">き</text>
+<text x="510.01619047619045" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">て</text>
+<text x="510.01619047619045" y="201.39566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">太</text>
+<text x="510.01619047619045" y="219.12766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">陽</text>
+<text x="510.01619047619045" y="236.85966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
+<text x="510.01619047619045" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="510.01619047619045" y="290.05566666666664" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="510.01619047619045" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">上</text>
+<text x="510.01619047619045" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">る</text>
+<text x="510.01619047619045" y="343.25166666666655" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">迄</text>
+<text x="510.01619047619045" y="360.9836666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ん</text>
+<text x="474.40666666666664" y="77.27166666666668" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">四</text>
+<text x="474.40666666666664" y="95.00366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">、</text>
+<text x="474.40666666666664" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">夜</text>
+<text x="474.40666666666664" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
+<text x="474.40666666666664" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">明</text>
+<text x="474.40666666666664" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">き</text>
+<text x="474.40666666666664" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">て</text>
+<text x="474.40666666666664" y="201.39566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">太</text>
+<text x="474.40666666666664" y="219.12766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">陽</text>
+<text x="474.40666666666664" y="236.85966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">や</text>
+<text x="474.40666666666664" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="474.40666666666664" y="290.05566666666664" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="474.40666666666664" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">上</text>
+<text x="474.40666666666664" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ら</text>
+<text x="474.40666666666664" y="343.25166666666655" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">わ</text>
+<text x="474.40666666666664" y="360.9836666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ん</text>
+<text x="474.40666666666664" y="378.7156666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ゆ</text>
+<text x="453.29714285714283" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">た</text>
+<text x="453.29714285714283" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">さ</text>
+<text x="453.29714285714283" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">己</text>
+<text x="453.29714285714283" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">午</text>
+<text x="453.29714285714283" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">時</text>
+<text x="453.29714285714283" y="201.39566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">迄</text>
+<text x="453.29714285714283" y="219.12766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ん</text>
+<text x="453.29714285714283" y="254.59166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="453.29714285714283" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="453.29714285714283" y="290.05566666666664" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">御</text>
+<text x="453.29714285714283" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">祝</text>
+<text x="453.29714285714283" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">え</text>
+<text x="453.29714285714283" y="343.25166666666655" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">し</text>
+<text x="453.29714285714283" y="360.9836666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ゃ</text>
+<text x="453.29714285714283" y="378.7156666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">び</text>
+<text x="453.29714285714283" y="396.44766666666646" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ら</text>
+<text x="432.187619047619" y="77.27166666666668" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">五</text>
+<text x="432.187619047619" y="95.00366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">、</text>
+<text x="432.187619047619" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">今</text>
+<text x="432.187619047619" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">日</text>
+<text x="432.187619047619" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">や</text>
+<text x="432.187619047619" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">御</text>
+<text x="432.187619047619" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">逢</text>
+<text x="432.187619047619" y="201.39566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">拝</text>
+<text x="432.187619047619" y="219.12766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">で</text>
+<text x="432.187619047619" y="254.59166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="432.187619047619" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="432.187619047619" y="290.05566666666664" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">色</text>
+<text x="432.187619047619" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">々</text>
+<text x="432.187619047619" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
+<text x="432.187619047619" y="343.25166666666655" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">遊</text>
+<text x="432.187619047619" y="360.9836666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">び</text>
+<text x="432.187619047619" y="378.7156666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">明</text>
+<text x="396.5780952380952" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">日</text>
+<text x="396.5780952380952" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">や</text>
+<text x="396.5780952380952" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">面</text>
+<text x="396.5780952380952" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">影</text>
+<text x="396.5780952380952" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
+<text x="396.5780952380952" y="219.12766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="396.5780952380952" y="236.85966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="396.5780952380952" y="254.59166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">立</text>
+<text x="396.5780952380952" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ち</text>
+<text x="396.5780952380952" y="290.05566666666664" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ゆ</text>
+<text x="396.5780952380952" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">と</text>
+<text x="396.5780952380952" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">思</text>
+<text x="396.5780952380952" y="343.25166666666655" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ば</text>
+<text x="375.4685714285714" y="77.27166666666668" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">六</text>
+<text x="375.4685714285714" y="95.00366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">、</text>
+<text x="375.4685714285714" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">弥</text>
+<text x="375.4685714285714" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">勒</text>
+<text x="375.4685714285714" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">代</text>
+<text x="375.4685714285714" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
+<text x="375.4685714285714" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">昔</text>
+<text x="375.4685714285714" y="219.12766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="375.4685714285714" y="236.85966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="375.4685714285714" y="254.59166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">く</text>
+<text x="375.4685714285714" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">い</text>
+<text x="375.4685714285714" y="290.05566666666664" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">戻</text>
+<text x="375.4685714285714" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ち</text>
+<text x="375.4685714285714" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">今</text>
+<text x="375.4685714285714" y="343.25166666666655" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">に</text>
+<text x="375.4685714285714" y="360.9836666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">御</text>
+<text x="375.4685714285714" y="378.7156666666665" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">万</text>
+<text x="354.3590476190476" y="112.73566666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">人</text>
+<text x="354.3590476190476" y="130.46766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぬ</text>
+<text x="354.3590476190476" y="148.19966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ま</text>
+<text x="354.3590476190476" y="165.93166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぢ</text>
+<text x="354.3590476190476" y="183.66366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">り</text>
+<text x="354.3590476190476" y="219.12766666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ハ</text>
+<text x="354.3590476190476" y="236.85966666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">リ</text>
+<text x="354.3590476190476" y="254.59166666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">遊</text>
+<text x="354.3590476190476" y="272.32366666666667" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ぶ</text>
+<text x="354.3590476190476" y="290.05566666666664" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">嬉</text>
+<text x="354.3590476190476" y="307.7876666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">し</text>
+<text x="354.3590476190476" y="325.5196666666666" text-anchor="middle" font-family="Yuji Syuku, serif" font-size="14.776666666666664" fill="#333">ゃ</text>
 </svg>
