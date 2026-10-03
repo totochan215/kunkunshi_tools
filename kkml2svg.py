@@ -2317,6 +2317,9 @@ def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif"):
     segments = _parse_ruby(text)
     if not _has_ruby(segments):
         for ch in text:
+            if ch.isspace():
+                y += sp
+                continue
             _vertical_char(out, ch, x, y, fs, fill, family)
             y += sp
         return y
