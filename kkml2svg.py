@@ -942,10 +942,14 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
         x_right = frame_x1
         # 1. colonne titre
         if has_title_col:
-            # le bloc titre consomme un dan complet (cases + marker)
-            # calibré sur les planches Nomura-ryu : glyphes ~0,76 case de
-            # haut, démarrage ~1,8 case sous le haut de la grille
-            tx = x_right - group_w / 2
+            # le bloc titre consomme un dan complet (cases + marker).
+            # Centré exactement entre le filet droit de la première
+            # colonne marker et le filet droit de la page ; calibré sur
+            # les planches : démarrage ~1,8 case sous le haut de grille.
+            if cols:
+                tx = x_right - (group_w + NOMURA_DAN_GAP) / 2
+            else:
+                tx = x_right - group_w / 2
             ty = grid_y0 + cell_h * 1.8
             if title:
                 ty_end = _render_vertical_text(out, title, tx, ty,
