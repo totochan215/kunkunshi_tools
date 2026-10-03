@@ -123,6 +123,25 @@ Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sorti
 - Les blocs `::lyrics` (paroles verticales) apparaissent sur la première page.
 - Référence : les PDF Portama affichent au maximum 12 piles (dans) par page en A4 paysage.
 
+## Mise en page Nomura-ryu (portrait, `@layout nomura`)
+
+Le layout `nomura` reproduit les planches des recueils Nomura-ryu (工工四
+traditionnel) : une page A4 **portrait** encadrée par un filet (seul le
+numéro de page est à l'extérieur), jusqu'à **7 colonnes (dans)** par page,
+chacune de **12 cases empilées** lues de haut en bas — l'ensemble se lit de
+droite à gauche.
+
+- Chaque dan est un groupe cases + sous-colonne **marker** (même largeur
+  qu'une case) : les flèches de répétition et les syllabes vocales s'y
+  placent.
+- Le **titre** (avec accordage) occupe la colonne la plus à droite de la
+  première page ; les **paroles** occupent les dernières colonnes de la
+  dernière page.
+- Cases plus hautes que larges (~31,7 pt × 60,6 pt), dans séparés par une
+  marge blanche.
+- La sortie est automatiquement multipage : chaque page est un SVG
+  autonome (`fichier-1.svg`, `fichier-2.svg`…).
+
 ## Mise en page horizontale (landscape)
 
 La mise en page horizontale (mode songbook) n'est pas encore documentée.

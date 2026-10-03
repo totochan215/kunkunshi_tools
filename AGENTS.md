@@ -141,6 +141,10 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 - Token multi-caractères empilé : caractère principal aligné sur la note, caractères combinants dessous (espacement `syllable_fs * 0.85`), ー pivoté 90°
 - Chevauchement du bord inférieur de case accepté
 
+#### 3c-nomura. Rendu Nomura-ryu (`_render_nomura`)
+- Layout `nomura` (`@layout nomura` / `-l nomura`) : page A4 portrait 595,28 × 841,89 pt, filet à 48 pt (constantes `NOMURA_*`), 12 cases/dan (case 31,7 × 60,6 pt), marker = largeur d'une case à gauche des notes, jusqu'à 7 dans/page, titre en colonne droite p.1, paroles en dernières colonnes de la dernière page, multipage automatique (1 SVG/page).
+- Aplatit les sections tab en flux de colonnes de 12 ; `tab-lyrics` → notes + syllabes dans le marker ; pagination : p.1 = 7 - 1 (titre), dernière page = 7 - colonnes de couplets.
+
 #### 3c. Rendu horizontal (`_render_horizontal`, ~794)
 
 - Mode songbook : gauche→droite, haut→bas. Vocal horizontal non implémenté (priorité au vertical)
@@ -248,6 +252,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne rendent RIEN dans テスト節.pdf (dan 1, cases 13–19 : aucun graphique ni flèche), alors que d'autres pièces rendent des flèches dans la colonne marker. Le déclencheur exact du rendu des flèches reste à élucider.
 - `kkml2pdf.py` : script non écrit. Pipeline KKML → PDF à définir.
 - ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés dans kkml2svg.py ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf. Suite : modèles de page (Portama A4 paysage fait implicitement ; Nomura-ryu portrait, chindami, Paris Sanshin Club en attente d'exemples à téléverser), puis assemblage PDF (embed polices CJK).
+✅ Layout Nomura-ryu (2026-10-03) : page A4 portrait, filet de cadre, 12 cases/dan, 7 dans/page, titre p.1, paroles dernière page — mesuré sur samples/nomura-ryu-pdf, premier test sur かぎやで風節 (3 pages).
 
 ## Constantes de calibrage mesurées sur les PDF Portama (recherche)
 
