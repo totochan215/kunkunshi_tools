@@ -788,12 +788,13 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
 
 NOMURA_PAGE_W = 595.28
 NOMURA_PAGE_H = 841.89
-NOMURA_FRAME_MARGIN = 48.0     # filet à 48 pt des bords de page
+NOMURA_FRAME_MARGIN = 48.0     # filet à 48 pt des bords de page (haut/bas)
+NOMURA_FRAME_MARGIN_X = 14.0   # filet à ~14 pt des bords gauche/droite (mesuré)
 NOMURA_CELL_H = 60.6           # hauteur de case (direction de lecture)
-NOMURA_CELL_W = 31.7           # largeur de case (notes) = largeur marker
+NOMURA_CELL_W = 30.6           # largeur de case (notes) = largeur marker (mesuré)
 NOMURA_ROWS = 12               # cases par dan
 NOMURA_MAX_DANS = 7            # dans par page (pleine)
-NOMURA_DAN_GAP = 8.0           # marge blanche entre groupes case+marker
+NOMURA_DAN_GAP = 13.3          # marge blanche entre dans (mesurée)
 
 
 def _render_nomura(song, sections, fs, marker=False, opts=None):
@@ -897,9 +898,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
         page_idx += 1
 
     # --- Géométrie page --- #
-    frame_x0 = NOMURA_FRAME_MARGIN
+    frame_x0 = NOMURA_FRAME_MARGIN_X
     frame_y0 = NOMURA_FRAME_MARGIN
-    frame_x1 = NOMURA_PAGE_W - NOMURA_FRAME_MARGIN
+    frame_x1 = NOMURA_PAGE_W - NOMURA_FRAME_MARGIN_X
     frame_y1 = NOMURA_PAGE_H - NOMURA_FRAME_MARGIN
     grid_h = rows * cell_h
     # vertical centering of the grid inside the frame
