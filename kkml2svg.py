@@ -939,18 +939,17 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                    f'font-size="11" fill="#555">{pi + 1}</text>')
 
         # --- placement des groupes, droite -> gauche --- #
-        # positions x (bord droit de chaque groupe), depuis le filet droit
-        x_right = frame_x1
+        # positions x (bord droit de chaque groupe), depuis le filet droit ;
+        # le premier groupe (titre ou dan) est décalé d'une marge de dan
+        # du filet, comme sur les planches
+        x_right = frame_x1 - NOMURA_DAN_GAP
         # 1. colonne titre
         if has_title_col:
             # le bloc titre consomme un dan complet (cases + marker).
             # Centré exactement entre le filet droit de la première
             # colonne marker et le filet droit de la page ; calibré sur
             # les planches : démarrage ~1,8 case sous le haut de grille.
-            if cols:
-                tx = x_right - (group_w + NOMURA_DAN_GAP) / 2
-            else:
-                tx = x_right - group_w / 2
+            tx = x_right - group_w / 2
             ty = grid_y0 + cell_h * 1.8
             if title:
                 ty_end = _render_vertical_text(out, title, tx, ty,
