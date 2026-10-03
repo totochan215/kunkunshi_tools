@@ -939,7 +939,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
         x_right = frame_x1
         # 1. colonne titre
         if has_title_col:
-            tx = x_right - cell_w / 2
+            # le bloc titre consomme un dan complet (cases + marker)
+            tx = x_right - group_w / 2
             ty = grid_y0 + 20
             if title:
                 ty_end = _render_vertical_text(out, title, tx, ty, 20.0,
@@ -948,7 +949,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                 ty_end = ty
             for i, ch in enumerate(tuning):
                 _vertical_char(out, ch, tx, ty_end + i * 20.0 + 14, 13.0, "#555")
-            x_right -= (cell_w + NOMURA_DAN_GAP)
+            x_right -= (group_w + NOMURA_DAN_GAP)
 
         # 2. dans (cases + marker)
         for ci, col in enumerate(cols):
