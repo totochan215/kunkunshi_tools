@@ -954,35 +954,38 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
         for ci, col in enumerate(cols):
             vocal_col = cols_v[ci] if ci < len(cols_v) else None
             gx = x_right - group_w
+            # bande marker [gx, gx+marker_w], cases [gx+marker_w, gx+group_w]
+            mx = gx                 # bord gauche du marker
+            nx = gx + marker_w      # bord gauche des cases
+            # filet gauche du marker (colonne entière)
+            if marker_w > 0:
+                out.append(f'<line x1="{mx}" y1="{grid_y0}" x2="{mx}" '
+                           f'y2="{grid_y0 + grid_h}" stroke="#333" '
+                           f'stroke-width="0.6"/>')
             # grille : cases empilées
             for ri in range(rows):
                 cy = grid_y0 + ri * cell_h
-                out.append(f'<rect x="{gx}" y="{cy}" width="{cell_w}" '
+                out.append(f'<rect x="{nx}" y="{cy}" width="{cell_w}" '
                            f'height="{cell_h}" fill="none" stroke="#333" '
-                           f'stroke-width="0.6"/>')
-            # filet du marker (colonne entière à gauche des cases)
-            if marker_w > 0:
-                out.append(f'<line x1="{gx}" y1="{grid_y0}" x2="{gx}" '
-                           f'y2="{grid_y0 + grid_h}" stroke="#333" '
                            f'stroke-width="0.6"/>')
             # notes
             for ri in range(rows):
                 cy = grid_y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
                 rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
-                render_cell(out, base_tok, gx + cell_w / 2, cy + cell_h / 2,
+                render_cell(out, base_tok, nx + cell_w / 2, cy + cell_h / 2,
                             fs, cell_w, cell_h, opts)
                 if rs and marker_w > 0:
-                    _render_repeat_arrow(out, gx - marker_w, cy, cell_h,
+                    _render_repeat_arrow(out, mx, cy, cell_h,
                                           marker_w, 'start')
                 if re_ and marker_w > 0:
-                    _render_repeat_arrow(out, gx - marker_w, cy, cell_h,
+                    _render_repeat_arrow(out, mx, cy, cell_h,
                                           marker_w, 'end')
                 if vs and marker_w > 0:
-                    _render_vrep_marker(out, gx - marker_w, cy, cell_h,
+                    _render_vrep_marker(out, mx, cy, cell_h,
                                         marker_w, 'start')
                 if ve and marker_w > 0:
-                    _render_vrep_marker(out, gx - marker_w, cy, cell_h,
+                    _render_vrep_marker(out, mx, cy, cell_h,
                                         marker_w, 'end')
             # syllabes vocales dans le marker
             if vocal_col and marker_w > 0:
@@ -994,7 +997,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                     if not syllable or syllable == "-":
                         continue
                     cy = grid_y0 + ri * cell_h
-                    sx = gx - marker_w / 2
+                    sx = gx + marker_w / 2
                     sy = cy + cell_h / 2 + syl_fs / 3
                     for k, ch in enumerate(syllable):
                         yy = sy + k * step
