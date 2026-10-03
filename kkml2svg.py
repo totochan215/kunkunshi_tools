@@ -954,14 +954,17 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
         for ci, col in enumerate(cols):
             vocal_col = cols_v[ci] if ci < len(cols_v) else None
             gx = x_right - group_w
-            # bande marker [gx, gx+marker_w], cases [gx+marker_w, gx+group_w]
-            mx = gx                 # bord gauche du marker
-            nx = gx + marker_w      # bord gauche des cases
-            # filet gauche du marker (colonne entière)
+            # cases [gx, gx+cell_w], marker à DROITE [gx+cell_w, gx+group_w]
+            nx = gx                     # bord gauche des cases
+            mx = gx + cell_w            # bord gauche du marker
+            # filets du marker : pleine hauteur, des deux côtés de la bande
             if marker_w > 0:
                 out.append(f'<line x1="{mx}" y1="{grid_y0}" x2="{mx}" '
                            f'y2="{grid_y0 + grid_h}" stroke="#333" '
                            f'stroke-width="0.6"/>')
+                out.append(f'<line x1="{gx + group_w}" y1="{grid_y0}" '
+                           f'x2="{gx + group_w}" y2="{grid_y0 + grid_h}" '
+                           f'stroke="#333" stroke-width="0.6"/>')
             # grille : cases empilées
             for ri in range(rows):
                 cy = grid_y0 + ri * cell_h
@@ -997,7 +1000,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                     if not syllable or syllable == "-":
                         continue
                     cy = grid_y0 + ri * cell_h
-                    sx = gx + marker_w / 2
+                    sx = gx + cell_w + marker_w / 2
                     sy = cy + cell_h / 2 + syl_fs / 3
                     for k, ch in enumerate(syllable):
                         yy = sy + k * step
