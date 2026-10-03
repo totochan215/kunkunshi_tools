@@ -107,6 +107,14 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 
 ### Structure du code
 
+### 0. Rendu multipage (`render_svg`)
+
+- `render_svg(...)` retourne désormais une **liste de SVG** (un par page).
+- Pagination : `@page_dans N` (méta) ou `-p/--page-dans N` (CLI). Défaut : None = une seule page (comportement historique).
+- `_render_vertical` découpe les sections tab/tab-lyrics en pages de N dans ; les colonnes vocales (`vocal_data`) sont tranchées en synchronisation avec les colonnes de tab (même slice).
+- Sections lyrics et titre vertical : répétés sur chaque page.
+- `main()` : 1 page → sortie simple ; n pages → `stem-1.svg` … `stem-n.svg`.
+
 ### 1. Parseur KKML (`parse_kkml`, lignes ~129-210)
 
 - Classes `Song` (meta, blocks, cols, layout) et `Block` (kind, label, lines)
@@ -132,6 +140,22 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 - Un token = une syllabe, rendu dans la colonne marker centré sur la note
 - Token multi-caractères empilé : caractère principal aligné sur la note, caractères combinants dessous (espacement `syllable_fs * 0.85`), ー pivoté 90°
 - Chevauchement du bord inférieur de case accepté
+
+#### 3c-nomura. Rendu Nomura-ryu (`_render_nomura`)
+- **`nomura` est une FLAVEUR, pas seulement un layout** : elle modifie substantiellement le rendu du KKML, au-delà de la géométrie — options forcées (`@marker on`, `@shaku_sharp off`, `@shaku_circled off`), pagination propre (titre/couplets en dans virtuels, excédent sur page suivante), colonne marker à droite en 3 sous-colonnes. Toute nouvelle contrainte Nomura-ryu doit être forcée dans `_render_nomura`, pas laissée aux méta KKML.
+- Layout `nomura` (`@layout nomura` / `-l nomura`) : page A4 portrait 595,28 × 841,89 pt, cadre filet, 12 cases/dan, marker = largeur d'une case à DROITE des notes (filets vertical ×2 + haut/bas), jusqu'à 7 dans/page, titre = 1 dan complet en colonne droite p.1, paroles en colonnes verticales, multipage automatique (1 SVG/page). `@marker on` forcé (cosubstantiel).
+- **3 constantes primaires** (tout le reste est dérivé) : `NOMURA_FRAME_W = 559,3` (largeur cadre, médiane 12 pages), `NOMURA_FRAME_H = 745,9` (hauteur cadre), `NOMURA_DAN_GAP = 14,5` (marge de dans M unique). Dérivés : `FRAME_MARGIN_X = (595,28 − 559,3)/2 ≈ 18` ; `FRAME_MARGIN = (841,89 − 745,9)/2 ≈ 48` ; `CELL_W = (FRAME_W − 8M)/14 ≈ 31,7` ; `CELL_H = (FRAME_H − 2M)/12 ≈ 59,7` ; `group_w = 2×CELL_W`.
+- **Marge M unique partout** : haut cadre→grille, droite cadre→1er dan (marker), entre dans, gauche 7e dan→gauche cadre, bas grille→bas cadre. Géométrie : `grid_y0 = frame_y0 + M` ; `x_right = frame_x1 − M` ; chaque dan décrémente `x_right −= (group_w + M)`. Vérifié : boucle au pt près.
+- Titre : centré exactement entre le filet droit de la première colonne marker et le filet droit de page (`tx = x_right − group_w/2`) ; taille `cell_h × 0,43` ; indentation `cell_h × 1,8` sous le haut de grille. Le centrage porte sur la colonne de base uniquement ; le ruby du titre (mono `安《あ》`, group `｛…｝《…》`, RUBY_SCALE 50 %) se colle à droite de la base (`ruby_x = x + fs × 0,75`) **sans déplacer ni le centrage ni la base** — comportement standard de `_render_vertical_ruby`, ne pas régresser.
+- Couplets (`::lyrics`, préfixés ⚪︎, `||` = saut sans colonne blanche) : **3 colonnes max par dan virtuel** calées pile sur la largeur d'un dan (`LYRICS_COL_W = group_w/3`) ; au-delà de 3 colonnes → dan virtuel supplémentaire espacé de M.
+- **Pagination couplets** : la musique remplit les pages normalement (p.1 = 7 − 1 si titre, puis 7 dans ; jamais réduite, jamais de dan de musique perdu). Les couplets occupent les dans LIBRES de la dernière page de musique ; l'excédent de dans virtuels passe sur des pages suivantes dédiées couplets (7 dans virtuels max/page). **Jamais de débordement du cadre.** Tuple de page : `(cols, vocal_cols, is_last, lyr_dans_here, lyr_col_offset)`.
+- **Colonne marker = 3 sous-colonnes virtuelles** (spec Nomura-ryu, non encore implémentées) :
+  1. **droite** : hauteur de chant — petits kanjis dérivés des kandokoro du sanshin (avec variantes vocales) ;
+  2. **milieu** : instructions de chant — points de positionnement exact des notes, lignes de glissando, etc. ;
+  3. **gauche** : texte du chant en syllabique (`::tab-lyrics` / `::vocal`).
+  Implémentation actuelle : syllabes centrées dans la bande marker (à déplacer vers la sous-colonne gauche) ; sous-colonnes hauteur/milieu à créer avec P3 声楽譜.
+- **尺♯ en nomura-ryu** : `@shaku_sharp off` **et** `@shaku_circled off` systématiques — les 尺♯ sont rendus en 尺 simples, jamais encerclés ; c'est au lecteur de deviner la hauteur exacte des shaku à jouer. Le layout nomura doit forcer ces deux options (comme `@marker on`), indépendamment des méta KKML.
+- Aplatit les sections tab en flux de colonnes de 12 ; `tab-lyrics` → notes + syllabes dans le marker. Sélecteurs de variante (U+FE00–FE0F) non rendus (éviter l'« espace doublée » en tête de couplet).
 
 #### 3c. Rendu horizontal (`_render_horizontal`, ~794)
 
@@ -239,8 +263,23 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons ; pas encore implémenté).
 - Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne rendent RIEN dans テスト節.pdf (dan 1, cases 13–19 : aucun graphique ni flèche), alors que d'autres pièces rendent des flèches dans la colonne marker. Le déclencheur exact du rendu des flèches reste à élucider.
 - `kkml2pdf.py` : script non écrit. Pipeline KKML → PDF à définir.
+## Modèles de page — état (2026-10-03)
+
+- ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf.
+- ✅ Layout Nomura-ryu (2026-10-03) : portrait A4, cadre filet, 12 cases/dan, 7 dans/page — mesuré sur `samples/nomura-ryu-pdf/`, validé sur かぎやで風節 (3 pages : titre+6 / 7 / 6+couplets).
+- ✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (e288f91…).
+- ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées (7 dans virtuels max/page), jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
+- ✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx inchangée, ruby collé à droite, centrage du dan virtuel préservé (42d6699).
+- ⚪︎ Modèle chindami (paysage < A4) — en attente d'exemples.
+- ⚪︎ Modèle Paris Sanshin Club (paysage A4 + n° de recueil) — en attente d'exemples.
+- ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.
+- ⚪︎ Raffinements nomura en réserve : marqueur ⚪︎ de couplet, taille/espacement des paroles, calligraphie du titre.
+- ⚪︎ Tester le rendu d'安波節 (6 couplets = 2 dans virtuels) pour valider la pagination multi-dans virtuels.
+- ⚪︎ `samples/nomura-ryu-pdf/野村流工工四上巻 (glissés).pdf` : fichier temporaire de vérification, à retirer éventuellement.
 
 ## Constantes de calibrage mesurées sur les PDF Portama (recherche)
+
+**Pagination vérifiée (かぎやで風節.pdf, 2 pages)** : maximum 12 piles (dans) par page — page 1 = 12 séparateurs verticaux au pas de 60,9 pt, page 2 = 7 piles (12+7 = 19 dans). A4 paysage (841,89 × 595,28 pt), 12 cases/pile de 43,94 pt. Le titre vertical (fs 20) et l'accordage (fs 14) sont répétés sur chaque page.
 
 Ces mesures (かぎやで風節.pdf, テスト節.pdf) servent au calibrage du rendu ; elles ne sont pas des spécifications utilisateur.
 
@@ -255,3 +294,25 @@ Ces mesures (かぎやで風節.pdf, テスト節.pdf) servent au calibrage du r
 - Géométrie fine des marques (テスト節.pdf) : orn fs 14 (dx +6,16, dy +4,03 ; isSmall 10, dx +8,07) ; acc fs 14 (dx −2,84, dy +4,02 ; isSmall 10, dx −4,84) ; yubii fs 12,5 (dx −15,46, dy +0,93, colonne dédiée à gauche) ; ○/□ fs 9 (marker +14,8 pt, dy +3,3).
 - Polices embarquées : Untitled1 (Type0, Identity-H, upem 1024 ; CID = codepoint PUA) pour les notes, IPAexMincho pour le texte. Contours des glyphes de テスト節.pdf extraits (chemins SVG upem 1024) — disponibles pour la rénovation du rendu des ornements.
 - Constantes pour un éventuel bloc `::ruby` : ruby_fs/note_fs = 0,65 ; avance ligne = cell_h/3 ; tuck petit kana = 1,18 × fs (notre espacement actuel : syllable_fs × 0,85).
+
+## Constantes de calibrage mesurées sur les scans Nomura-ryu (recherche)
+
+Sources : `samples/nomura-ryu-pdf/かぎやで風節.pdf` (3 pages), `後に屋節.pdf` (2 pages), `恩納節.pdf` (2 pages) — rééditions scannées de planches calligraphiées (~1930). Chaque page PDF A4 **paysage** (841,89 × 595,28 pt) est composée de 5 images JPEG empilées (~841,8 × ~121 pt, opérateurs `cm`/`Do`). Le recueil physique est **portrait**, scanné tourné de 90° : chaque bande JPEG est un **dan (colonne) complet** de la page physique. Échelle : 3396 px ↔ 841,8 pt → **4,04 px/pt** (~290 dpi). Les 3 morceaux choisis commencent en haut de page ; dans les recueils originaux les chansons s'enchaînent en flux continu (nouveau titre en cours de page, « rouleau découpé en feuilles ») — variante non implémentée pour l'instant.
+
+- Page physique : A4 portrait, **5 dan/page** (largeur de bande ~119,5–121,8 pt, la dernière parfois réduite).
+- Grille de cases **dans chaque dan** : cases empilées le long de la direction de lecture (haut→bas), séparateurs au pas très stable de **245 px ≈ 60,6 pt** (mesuré sur 50+ intervalles, dispersion 244–247 px). Cases pleines : ~12 par dan courant (max observé 12, souvent moins en fin de morceau), séparées de filets pleine largeur de dan.
+- Case : hauteur 245 px ≈ **60,6 pt**, largeur ~128 px ≈ **31,7 pt** — plus haute que large (ratio ≈ 1,9). Le dan contient une sous-colonne **notes** + une sous-colonne **marker** de même largeur (~128 px), séparées par un filet vertical court (voir filets internes détectés à ~135/260/317/381/451 px dans 後に屋節-2) ; groupes de cases + marker séparés par des **marges blanches** entre dans.
+- Titre : vertical, en haut à droite de la **première page** de chaque morceau (position à mesurer finement ; non détectée automatiquement sur ces scans).
+- Paroles : sur la **dernière page**, à gauche des dernières notes, dans la bande marker (phonétique, boucles, indications de chant spécifiques Nomura-ryu) — bandes marker très chargées.
+- Ordre de lecture : droite→gauche (dan 1 = colonne la plus à droite), cases haut→bas dans chaque dan.
+- Implications modèle de page : pagination par **nombre de cases par dan** (12 par dan, systématique), **jusqu'à 7 dan/page** ; lorsque nécessaire un dan est retiré (décalé) pour placer le titre et/ou les paroles. Structure différente de Portama (paysage, piles horizontales de cases).
+- Spécification utilisateur (à considérer comme la règle, les mesures ci-dessus n'étant que 3 exemples) : chaque page est encadrée par un **filet** (seul le numéro de page est à l'extérieur) — utiliser ce filet comme origine pour le placement relatif de tous les objets. Page toujours portrait. Dans toujours à 12 cases. Composition manuelle (~1930) d'une régularité exceptionnelle.
+**Structures exactes vérifiées (description de droite à gauche, haut→bas = ordre de lecture japonais)** :
+- かぎやで風節 (3 pages) : p1 = titre + 6 dans ; p2 = 7 dans ; p3 = 6 dans (les 3 dernières cases du 6e dan sont vides mais présentes) + paroles.
+- 恩納節 (2 pages) : p1 = titre + 6 dans ; p2 = 6 dans + paroles.
+- 後に屋節 (2 pages) : p1 = titre + 6 dans ; p2 = 4 dans (5 cases vides à la fin du 4e dan) + couplets + titre de la chanson suivante (équivalent 1 dan, à ignorer) + couplets suivants (équivalent 1 dan, à ignorer).
+
+En conséquence : le titre occupe l'équivalent d'**1 dan de large** en haut à droite (colonne la plus à droite) ; les paroles occupent l'équivalent d'**1 colonne de dan** en bas à gauche de la dernière page ; une page pleine = 7 dans ; page avec titre ou paroles = 6 dans utiles ; les deux = 5 dans utiles. Cases vides en fin de morceau : présentes mais non remplies.
+- Couplets : débutent par un marqueur générique ⚪︎ (un par couplet) ; coût variable — 1 dan en général, jusqu'à 2 dans si les couplets sont très longs.
+- Variations d'éditeur : quelques libéralités possibles par rapport à la structure ; le modèle de page doit s'en tenir aux basiques communs à tous les morceaux et ignorer les rares variantes.
+**Vérification sur les pages supplémentaires (野村流工工四上巻, fichier temporaire « glissés », 11 pages)** : assemblage des 5 bandes par page en portrait confirme — filet de cadre page (top/bottom ~189 et ~3260 px ≈ 48 pt des bords), grille de cases **12 par dan** (13 filets au pas 245 px, ex. dan complet : 261→507→752→997→1241→1486→1731→1976→2221→2466→2711→2956→3201), sous-colonne marker à droite de chaque dan, plusieurs dans par page (5-7 détectés selon pages, cohérent avec titre/paroles/couplets consommant des colonnes). L'assemblage des bandes JPEG par page PDF est nécessaire pour la mesure : chaque bande PDF (~841,8 × ~121 pt) est une **tranche horizontale** de la page portrait, pas un dan complet (correction de l'interprétation initiale).
