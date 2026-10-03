@@ -260,6 +260,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 ✅ Layout Nomura-ryu (2026-10-03) : page A4 portrait, filet de cadre, 12 cases/dan, 7 dans/page, titre p.1, paroles dernière page — mesuré sur samples/nomura-ryu-pdf, premier test sur かぎやで風節 (3 pages).
 ✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (commits e288f91…).
 ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées, jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
+✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml avec titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx = 531,13 inchangée, ruby à droite (x = 550,39), centrage du dan virtuel préservé (082d309).
 
 ## Constantes de calibrage mesurées sur les PDF Portama (recherche)
 
