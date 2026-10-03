@@ -266,3 +266,14 @@ Ces mesures (かぎやで風節.pdf, テスト節.pdf) servent au calibrage du r
 - Géométrie fine des marques (テスト節.pdf) : orn fs 14 (dx +6,16, dy +4,03 ; isSmall 10, dx +8,07) ; acc fs 14 (dx −2,84, dy +4,02 ; isSmall 10, dx −4,84) ; yubii fs 12,5 (dx −15,46, dy +0,93, colonne dédiée à gauche) ; ○/□ fs 9 (marker +14,8 pt, dy +3,3).
 - Polices embarquées : Untitled1 (Type0, Identity-H, upem 1024 ; CID = codepoint PUA) pour les notes, IPAexMincho pour le texte. Contours des glyphes de テスト節.pdf extraits (chemins SVG upem 1024) — disponibles pour la rénovation du rendu des ornements.
 - Constantes pour un éventuel bloc `::ruby` : ruby_fs/note_fs = 0,65 ; avance ligne = cell_h/3 ; tuck petit kana = 1,18 × fs (notre espacement actuel : syllable_fs × 0,85).
+
+## Constantes de calibrage mesurées sur les scans Nomura-ryu (recherche)
+
+Sources : `samples/nomura-ryu-pdf/かぎやで風節-nomura.pdf` (3 pages), `後に屋節.pdf` (2 pages). Scans : chaque page PDF A4 **paysage** (841,89 × 595,28 pt) est composée de 5 images JPEG empilées (~841,8 pt × ~121 pt chacune, opérateurs `cm`/`Do`). Interprétation vérifiée : le recueil physique est **portrait**, scannié tourné de 90° — chaque bande JPEG est une **colonne (dan) complète** de la page physique. Échelle : 3396 px ↔ 841,8 pt → **4,04 px/pt** (~290 dpi).
+
+- Page physique : A4 portrait (595,28 × 841,89 pt), **5 dan/page** (largeur de bande ~119,5–121,8 pt, pitch moyen ~120,5 pt ; dernière bande légèrement réduite ~108–117 pt).
+- Colonne de notation bornée par 2 filets horizontaux dans la bande (donc 2 filets verticaux par dan physique) : y ≈ 63 et y ≈ 417 px → largeur de colonne notation ≈ 354 px ≈ **87,7 pt** ; les filets ne s'étendent que sur la colonne (pas de cadre complet, pas de grille).
+- **Pas de cases** contrairement à Portama : flux continu de glyphes kunkunshi sur 1 ligne par dan. Glyphes : largeur médiane ~30 px (≈7,4 pt), inter-glyphe ~13 px → avance ≈ 43 px ≈ **10,6 pt**. Détection : pas de séparateurs verticaux intérieurs (>0,75 de couverture) sur aucune des 25 images.
+- Paroles (lyrics) sous la ligne de notation dans la même bande (zone y ≈ 420–495 px), kanji/kana pleine largeur.
+- Marges de page : bord gauche de notation à x ≈ 190–200 px (~48 pt) et bord droit à x ≈ 3265–3275 px — marge réduite côté reliure.
+- Implications modèle de page Nomura-ryu (à confirmer avec d'autres scans) : pagination par **budget de glyphes par colonne** (et non par cases), 5 colonnes/page, ordre de lecture droite→gauche, paroles alignées sous chaque dan.
