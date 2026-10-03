@@ -142,8 +142,13 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 - Chevauchement du bord inférieur de case accepté
 
 #### 3c-nomura. Rendu Nomura-ryu (`_render_nomura`)
-- Layout `nomura` (`@layout nomura` / `-l nomura`) : page A4 portrait 595,28 × 841,89 pt, filet à 48 pt (constantes `NOMURA_*`), 12 cases/dan (case 31,7 × 60,6 pt), marker = largeur d'une case à gauche des notes, jusqu'à 7 dans/page, titre en colonne droite p.1, paroles en dernières colonnes de la dernière page, multipage automatique (1 SVG/page).
-- Aplatit les sections tab en flux de colonnes de 12 ; `tab-lyrics` → notes + syllabes dans le marker ; pagination : p.1 = 7 - 1 (titre), dernière page = 7 - colonnes de couplets.
+- Layout `nomura` (`@layout nomura` / `-l nomura`) : page A4 portrait 595,28 × 841,89 pt, cadre filet, 12 cases/dan, marker = largeur d'une case à DROITE des notes (filets vertical ×2 + haut/bas), jusqu'à 7 dans/page, titre = 1 dan complet en colonne droite p.1, paroles en colonnes verticales, multipage automatique (1 SVG/page). `@marker on` forcé (cosubstantiel).
+- **3 constantes primaires** (tout le reste est dérivé) : `NOMURA_FRAME_W = 559,3` (largeur cadre, médiane 12 pages), `NOMURA_FRAME_H = 745,9` (hauteur cadre), `NOMURA_DAN_GAP = 14,5` (marge de dans M unique). Dérivés : `FRAME_MARGIN_X = (595,28 − 559,3)/2 ≈ 18` ; `FRAME_MARGIN = (841,89 − 745,9)/2 ≈ 48` ; `CELL_W = (FRAME_W − 8M)/14 ≈ 31,7` ; `CELL_H = (FRAME_H − 2M)/12 ≈ 59,7` ; `group_w = 2×CELL_W`.
+- **Marge M unique partout** : haut cadre→grille, droite cadre→1er dan (marker), entre dans, gauche 7e dan→gauche cadre, bas grille→bas cadre. Géométrie : `grid_y0 = frame_y0 + M` ; `x_right = frame_x1 − M` ; chaque dan décrémente `x_right −= (group_w + M)`. Vérifié : boucle au pt près.
+- Titre : centré exactement entre le filet droit de la première colonne marker et le filet droit de page (`tx = x_right − group_w/2`) ; taille `cell_h × 0,43` ; indentation `cell_h × 1,8` sous le haut de grille.
+- Couplets (`::lyrics`, préfixés ⚪︎, `||` = saut sans colonne blanche) : **3 colonnes max par dan virtuel** calées pile sur la largeur d'un dan (`LYRICS_COL_W = group_w/3`) ; au-delà de 3 colonnes → dan virtuel supplémentaire espacé de M.
+- **Pagination couplets** : la musique remplit les pages normalement (p.1 = 7 − 1 si titre, puis 7 dans ; jamais réduite, jamais de dan de musique perdu). Les couplets occupent les dans LIBRES de la dernière page de musique ; l'excédent de dans virtuels passe sur des pages suivantes dédiées couplets (7 dans virtuels max/page). **Jamais de débordement du cadre.** Tuple de page : `(cols, vocal_cols, is_last, lyr_dans_here, lyr_col_offset)`.
+- Aplatit les sections tab en flux de colonnes de 12 ; `tab-lyrics` → notes + syllabes dans le marker. Sélecteurs de variante (U+FE00–FE0F) non rendus (éviter l'« espace doublée » en tête de couplet).
 
 #### 3c. Rendu horizontal (`_render_horizontal`, ~794)
 
@@ -253,6 +258,8 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - `kkml2pdf.py` : script non écrit. Pipeline KKML → PDF à définir.
 - ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés dans kkml2svg.py ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf. Suite : modèles de page (Portama A4 paysage fait implicitement ; Nomura-ryu portrait, chindami, Paris Sanshin Club en attente d'exemples à téléverser), puis assemblage PDF (embed polices CJK).
 ✅ Layout Nomura-ryu (2026-10-03) : page A4 portrait, filet de cadre, 12 cases/dan, 7 dans/page, titre p.1, paroles dernière page — mesuré sur samples/nomura-ryu-pdf, premier test sur かぎやで風節 (3 pages).
+✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (commits e288f91…).
+✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées, jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
 
 ## Constantes de calibrage mesurées sur les PDF Portama (recherche)
 
