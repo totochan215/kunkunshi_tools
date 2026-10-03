@@ -274,6 +274,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - ⚪︎ Modèle Paris Sanshin Club (paysage A4 + n° de recueil) — en attente d'exemples.
 - ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.
 - ⚪︎ Raffinements nomura en réserve : marqueur ⚪︎ de couplet, taille/espacement des paroles, calligraphie du titre.
+- ⚪︎ Raffinements supplémentaires de la mise en page nomura à définir plus tard (retours visuels utilisateur sur かぎやで風節 et 安波節 ; typiquement : ajustement fin du placement des couplets sur page dédiée, sous-colonnes marker, etc.).
 - ⚪︎ Tester le rendu d'安波節 (6 couplets = 2 dans virtuels) pour valider la pagination multi-dans virtuels.
 - ⚪︎ `samples/nomura-ryu-pdf/野村流工工四上巻 (glissés).pdf` : fichier temporaire de vérification, à retirer éventuellement.
 
