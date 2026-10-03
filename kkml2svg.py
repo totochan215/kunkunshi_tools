@@ -246,7 +246,7 @@ def parse_kkml(text):
                 except ValueError:
                     pass
             elif key == "layout":
-                song.layout = val if val in ("vertical", "horizontal") else "vertical"
+                song.layout = val if val in ("vertical", "horizontal", "nomura") else "vertical"
             else:
                 song.meta[key] = val
             i += 1
@@ -423,7 +423,9 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     }
 
     font_family = opts.get('font_family', 'serif')
-    if layout == "vertical":
+    if layout == "nomura":
+        svgs = _render_nomura(song, sections, font_size, marker, opts)
+    elif layout == "vertical":
         svgs = _render_vertical(song, sections, cols, cell_w, cell_h,
                                 font_size, MARGIN_L, MARGIN_R, MARGIN_T, header_h,
                                 marker, opts, page_dans=page_dans)
@@ -764,6 +766,258 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                 ty3 += len(genre) * TUNING_SPACING + 15
             for i, ch in enumerate(author):
                 _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+
+        out.append("</svg>")
+        result.append("\n".join(out))
+    return result
+
+
+# --------------------------------------------------------------------------- #
+# 3c. Rendu Nomura-ryu (page A4 portrait,工工四 traditionnel)
+# --------------------------------------------------------------------------- #
+# Modèle de page mesuré/spécifié sur les recueils Nomura-ryu (AGENTS.md) :
+#   - page A4 portrait (595.28 x 841.89 pt), filet de cadre à ~48 pt des bords
+#     (le numéro de page seul est à l'extérieur du filet)
+#   - dans = colonnes de 12 cases empilées (haut->bas), lecture droite->gauche
+#   - case plus haute que large : 31.7 pt (l) x 60.6 pt (h)
+#   - sous-colonne marker à gauche des notes (côté lecture suivante),
+#     même largeur qu'une case, séparée par un filet
+#   - jusqu'à 7 dans par page ; le titre (p.1) et les paroles (dernière
+#     colonne de la dernière page) consomment chacun l'équivalent d'un dan
+
+NOMURA_PAGE_W = 595.28
+NOMURA_PAGE_H = 841.89
+NOMURA_FRAME_MARGIN = 48.0     # filet à 48 pt des bords de page
+NOMURA_CELL_H = 60.6           # hauteur de case (direction de lecture)
+NOMURA_CELL_W = 31.7           # largeur de case (notes) = largeur marker
+NOMURA_ROWS = 12               # cases par dan
+NOMURA_MAX_DANS = 7            # dans par page (pleine)
+NOMURA_DAN_GAP = 8.0           # marge blanche entre groupes case+marker
+
+
+def _render_nomura(song, sections, fs, marker=False, opts=None):
+    """Rendu multipage calqué sur les planches Nomura-ryu.
+
+    Retourne une liste de SVG (un par page). Chaque dan est un groupe
+    case-notes + marker ; la colonne marker héberge les syllabes vocales
+    et les flèches de répétition. Le titre (vertical, calligraphique)
+    occupe la colonne la plus à droite de la page 1 ; les paroles
+    occupent la dernière colonne de la dernière page.
+    """
+    title = song.meta.get("title", "")
+    tuning = song.meta.get("tuning", "本調子")
+    has_vocal = any(s[3] or s[2] == "vocal" for s in sections)
+    marker = marker or has_vocal
+
+    cell_h = NOMURA_CELL_H
+    cell_w = NOMURA_CELL_W
+    marker_w = cell_w if marker else 0.0
+    group_w = cell_w + marker_w
+    rows = NOMURA_ROWS
+
+    # --- Flux : aplatir toutes les sections tab en colonnes de 12 --- #
+    tab_columns = []
+    vocal_columns = []
+    for sec in sections:
+        kind = sec[2]
+        content = sec[1]
+        vocal_lines = sec[3] if len(sec) > 3 else None
+        if kind == "tab":
+            flat = list(content)
+            cols = _wrap_vertical(flat, rows)
+            tab_columns.extend(cols)
+            if vocal_lines:
+                vocal_columns.extend(_wrap_vertical(list(vocal_lines), rows))
+            else:
+                vocal_columns.extend([None] * len(cols))
+        elif kind == "tab-lyrics":
+            # lignes de (positions, syllabes) : positions -> notes,
+            # syllabes -> colonne marker
+            pflat, sflat = [], []
+            for pos_list, syl_list in content:
+                n = max(len(pos_list), len(syl_list))
+                for j in range(n):
+                    pflat.append(pos_list[j] if j < len(pos_list) else "")
+                    sflat.append(syl_list[j] if j < len(syl_list) else "")
+            cols = _wrap_vertical(pflat, rows)
+            tab_columns.extend(cols)
+            vocal_columns.extend(_wrap_vertical(sflat, rows))
+        elif kind == "vocal":
+            vflat = []
+            for toks in content:
+                vflat.extend(toks)
+            vocal_columns.extend(_wrap_vertical(vflat, rows))
+    if vocal_columns and len(vocal_columns) < len(tab_columns):
+        vocal_columns += [None] * (len(tab_columns) - len(vocal_columns))
+
+    # --- Sections lyrics (couplets) : colonnes verticales --- #
+    lyrics_sections = [(s[0], s[1]) for s in sections if s[2] == "lyrics"]
+
+    # --- Pagination : 7 dans par page ; titre en p.1, paroles en dernière --- #
+    # capacité par page : 7 - 1 (titre p.1) ; la dernière page réserve
+    # autant de colonnes que nécessaire pour les couplets (>= 1 si paroles)
+    lyrics_col_count = 0
+    lyrics_layouts = []   # [(col_lines, indent)]
+    for _, data in lyrics_sections:
+        for verse in _split_verses(data):
+            for col_lines, indent in _lyrics_columns_layout(verse):
+                lyrics_layouts.append((col_lines, indent))
+                lyrics_col_count += 1
+
+    first_cap = NOMURA_MAX_DANS - (1 if (title or tuning) else 0)
+    last_cap = NOMURA_MAX_DANS - (lyrics_col_count if lyrics_col_count else 0)
+
+    if last_cap <= 0:
+        # paroles trop longues pour une page : on garde 1 dan minimum
+        last_cap = 1
+
+    pages = []
+    remaining = list(tab_columns)
+    remaining_vocal = list(vocal_columns)
+    page_idx = 0
+    while remaining or page_idx == 0:
+        cap = first_cap if not pages else (last_cap if len(remaining) <= last_cap
+                                          else NOMURA_MAX_DANS)
+        if not remaining and lyrics_layouts and page_idx == 0:
+            # morceau sans tab : paroles seules
+            cap = 0
+        take = remaining[:cap]
+        take_v = remaining_vocal[:cap] if remaining_vocal else [None] * len(take)
+        remaining = remaining[cap:]
+        if remaining_vocal:
+            remaining_vocal = remaining_vocal[cap:]
+        is_last = not remaining
+        pages.append((take, take_v, is_last))
+        if is_last:
+            break
+        page_idx += 1
+
+    # --- Géométrie page --- #
+    frame_x0 = NOMURA_FRAME_MARGIN
+    frame_y0 = NOMURA_FRAME_MARGIN
+    frame_x1 = NOMURA_PAGE_W - NOMURA_FRAME_MARGIN
+    frame_y1 = NOMURA_PAGE_H - NOMURA_FRAME_MARGIN
+    grid_h = rows * cell_h
+    # vertical centering of the grid inside the frame
+    grid_y0 = frame_y0 + max(0.0, (frame_y1 - frame_y0 - grid_h) / 2)
+
+    LYRICS_FS = 14.0
+    LYRICS_SP = 17.0
+    LYRICS_COL_W = 20.0
+
+    result = []
+    n_pages = len(pages)
+    for pi, (cols, cols_v, is_last) in enumerate(pages):
+        has_title_col = (pi == 0 and (title or tuning))
+        n_lyr_on_page = lyrics_col_count if is_last and lyrics_layouts else 0
+
+        # colonnes occupées : titre (droite), dans, paroles (gauche)
+        total_groups = len(cols)
+        occupied = total_groups + (1 if has_title_col else 0) + n_lyr_on_page
+
+        out = []
+        out.append('<?xml version="1.0" encoding="UTF-8"?>')
+        out.append(
+            f'<svg xmlns="http://www.w3.org/2000/svg" '
+            f'width="{NOMURA_PAGE_W}" height="{NOMURA_PAGE_H}" '
+            f'viewBox="0 0 {NOMURA_PAGE_W} {NOMURA_PAGE_H}">')
+        out.append(f'<rect width="100%" height="100%" fill="white"/>')
+
+        # filet de cadre (origine du placement relatif)
+        out.append(f'<rect x="{frame_x0}" y="{frame_y0}" '
+                   f'width="{frame_x1 - frame_x0}" height="{frame_y1 - frame_y0}" '
+                   f'fill="none" stroke="#333" stroke-width="1"/>')
+
+        # numéro de page à l'extérieur du filet (bas)
+        out.append(f'<text x="{NOMURA_PAGE_W / 2}" y="{frame_y1 + 24}" '
+                   f'text-anchor="middle" font-family="serif" '
+                   f'font-size="11" fill="#555">{pi + 1}</text>')
+
+        # --- placement des groupes, droite -> gauche --- #
+        # positions x (bord droit de chaque groupe), depuis le filet droit
+        x_right = frame_x1
+        # 1. colonne titre
+        if has_title_col:
+            tx = x_right - cell_w / 2
+            ty = grid_y0 + 20
+            if title:
+                ty_end = _render_vertical_text(out, title, tx, ty, 20.0,
+                                               "black", 26.0)
+            else:
+                ty_end = ty
+            for i, ch in enumerate(tuning):
+                _vertical_char(out, ch, tx, ty_end + i * 20.0 + 14, 13.0, "#555")
+            x_right -= (cell_w + NOMURA_DAN_GAP)
+
+        # 2. dans (cases + marker)
+        for ci, col in enumerate(cols):
+            vocal_col = cols_v[ci] if ci < len(cols_v) else None
+            gx = x_right - group_w
+            # grille : cases empilées
+            for ri in range(rows):
+                cy = grid_y0 + ri * cell_h
+                out.append(f'<rect x="{gx}" y="{cy}" width="{cell_w}" '
+                           f'height="{cell_h}" fill="none" stroke="#333" '
+                           f'stroke-width="0.6"/>')
+            # filet du marker (colonne entière à gauche des cases)
+            if marker_w > 0:
+                out.append(f'<line x1="{gx}" y1="{grid_y0}" x2="{gx}" '
+                           f'y2="{grid_y0 + grid_h}" stroke="#333" '
+                           f'stroke-width="0.6"/>')
+            # notes
+            for ri in range(rows):
+                cy = grid_y0 + ri * cell_h
+                tok = col[ri] if ri < len(col) else ""
+                rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
+                render_cell(out, base_tok, gx + cell_w / 2, cy + cell_h / 2,
+                            fs, cell_w, cell_h, opts)
+                if rs and marker_w > 0:
+                    _render_repeat_arrow(out, gx, cy, cell_h, marker_w, 'start')
+                if re_ and marker_w > 0:
+                    _render_repeat_arrow(out, gx, cy, cell_h, marker_w, 'end')
+                if vs and marker_w > 0:
+                    _render_vrep_marker(out, gx, cy, cell_h, marker_w, 'start')
+                if ve and marker_w > 0:
+                    _render_vrep_marker(out, gx, cy, cell_h, marker_w, 'end')
+            # syllabes vocales dans le marker
+            if vocal_col and marker_w > 0:
+                syl_fs = min(9.0, marker_w * 0.55)
+                step = syl_fs * 0.85
+                for ri, syllable in enumerate(vocal_col):
+                    if ri >= rows:
+                        break
+                    if not syllable or syllable == "-":
+                        continue
+                    cy = grid_y0 + ri * cell_h
+                    sx = gx - marker_w / 2
+                    sy = cy + cell_h / 2 + syl_fs / 3
+                    for k, ch in enumerate(syllable):
+                        yy = sy + k * step
+                        if ch == "ー":
+                            ry = yy - syl_fs * 0.35
+                            out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
+                                       f'font-family="serif" font-size="{syl_fs}" '
+                                       f'fill="#333" '
+                                       f'transform="rotate(90 {sx} {ry})">'
+                                       f'{escape(ch)}</text>')
+                        else:
+                            out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
+                                       f'font-family="serif" font-size="{syl_fs}" '
+                                       f'fill="#333">{escape(ch)}</text>')
+            x_right -= (group_w + NOMURA_DAN_GAP)
+
+        # 3. paroles (dernière page) : colonnes verticales à gauche
+        if is_last and lyrics_layouts:
+            for vi, (col_lines, verse_indent) in enumerate(lyrics_layouts):
+                vx = x_right - LYRICS_COL_W / 2 - vi * (LYRICS_COL_W + 6.0)
+                cy = grid_y0 + LYRICS_FS
+                if verse_indent > 0:
+                    cy += verse_indent * LYRICS_SP
+                for li, line in enumerate(col_lines):
+                    if li > 0:
+                        cy += LYRICS_SP
+                    cy = _render_vertical_text(out, line, vx, cy, LYRICS_FS,
+                                               "#333", LYRICS_SP)
 
         out.append("</svg>")
         result.append("\n".join(out))
@@ -2148,7 +2402,7 @@ def main():
     ap.add_argument("-o", "--output", help="fichier SVG de sortie")
     ap.add_argument("-c", "--cols", type=int,
                     help="lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
-    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal"],
+    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura"],
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
                     help="nombre max de dans par page (pagination multipage, surcharge @page_dans)")
