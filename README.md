@@ -70,7 +70,7 @@ Exemple :
       `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, suffixes de technique `* ^ v < s =`.
     - `::vocal` — paroles en phonétique, alignement approximatif sur la musique, une ligne par dan, 1 token par temps,
     - `::lyrics` — paroles complètes avec support du guide phonétique (ruby), sans alignement sur la musique.
-      Variantes phonétiques : `::lyrics-kanji`, `::lyrics-ruby`, `::lyrics-romaji`, `::lyrics-kana`.
+      Variantes phonétiques : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana`, `::lyrics-kana-ruby`, `::lyrics-romaji`, .
       `::lyrics` est un alias de `::lyrics-ruby` (kanji + rubys).
 
 Détail complet : [docs/notation.md](docs/notation.md) et [docs/kkml-format.md](docs/kkml-format.md).
