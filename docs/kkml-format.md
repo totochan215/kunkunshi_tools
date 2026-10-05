@@ -131,7 +131,7 @@ Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur
 
 ## Tolérances de saisie
 
-Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur sont tolérés. C'est la forme en demie-largeur qui est canonique. 
+Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
 | Saisie acceptée | Converti en | Usage (pour mémoire)  |
 |-----------------|-------------|---------|
