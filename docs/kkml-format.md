@@ -21,18 +21,19 @@ KKML se base sur le format texte brut encodé en UTF-8, sans utilisation d'exten
 @cols 12
 
 ::tab
-<tablature sous forme de cases représentant des temps et séparées par des espaces ;
+<tablature sous forme de cases représentant des temps, séparées par des espaces ;
 au sein de chaque case, tokens représentant des notes, leurs altérations et leurs
 techniques de jeu (ornements)>
 ::
 
 ::tab-lyrics
-<paroles en phonétique positionnées approximativement sur le rythme,
+<paroles en phonétique positionnées approximativement sur les temps,
 en général premier couplet uniquement>
 ::
 
 ::lyrics
-<paroles en texte libre organisées par couplets, ruby supporté>
+<paroles en texte libre organisées par couplets, indépendamment des temps ;
+ruby supporté>
 ::
 
 ```
