@@ -81,6 +81,12 @@ Toutes les métadonnées sont optionnelles.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
   - `女　` ou `男　` — pour spécifier un couplet chanté par les femmes `女　` ou les hommes `男　` (kanji + espace full-width). 
     Plusieurs types de couplets peuvent être mélangés dans un même morceau.
+- Variantes phonétiques des paroles : `::lyrics-kanji`, `::lyrics-ruby`, `::lyrics-romaji`, `::lyrics-kana` —
+  pour les chansons dont on conserve plusieurs versions phonétiques (par ex. une en kanji pour les japonais,
+  une en romaji pour les étrangers). Toutes ces variantes partagent la grammaire et le rendu de `::lyrics`
+  (couplets, colonnes `|`/`||`, rubys). `::lyrics` est un alias de `::lyrics-ruby` : kanji avec support des rubys.
+  `::lyrics-kanji` désigne une version en kanjis seuls (sans rubys), `::lyrics-kana` une transcription en kanas,
+  `::lyrics-romaji` une romanisation.
 - `::vocal` — bloc de syllabes vocales. Chaque ligne correspond à la ligne de `::tab` de même index (le bloc doit suivre immédiatement un bloc `::tab`). Les syllabes sont séparées par des espaces ; 1 token = 1 syllabe. Un token peut faire plusieurs caractères pour les consonnes complexes de l'uchi-na-guchi (ぐゎ, くゎ, てぃ, でぃ, とぅ, づぅ…) ou les voyelles longues (よー) — les caractères d'une même syllabe sont accolés sans espace. Rendu dans la colonne marker à droite de la grille : caractère principal aligné sur la note, caractères combinants empilés en dessous. Une ligne vocale plus courte que la ligne de tab est complétée par des vides (alignement préservé, ex. intro uta-mochi).
 - `::` ferme le bloc courant.
 
@@ -100,7 +106,7 @@ Détails :
 - `《》` (U+300A / U+300B) = chevrons japonais pleine largeur, délimitent l'annotation
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
-- En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les blocs `::lyrics`. Il n'est pas utilisable pour les autres métadonnées et blocs. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::tab-lyrics` est par construction déjà écrit en phonétique.
+- En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les blocs `::lyrics` (et ses variantes `::lyrics-kanji`/`-ruby`/`-kana`/`-romaji`). Il n'est pas utilisable pour les autres métadonnées et blocs. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::tab-lyrics` est par construction déjà écrit en phonétique.
 
 ## Cases de tablature
 
