@@ -116,25 +116,6 @@ Séparateurs de tokens (à l'intérieur d'une case) :
 
 En cas de token non reconnu (ni position, ni séparateur, ex. `合工尺`), le convertisseur émet une alerte sur stderr (une seule fois par token unique) et applique un rendu dégradé — les 3 premiers caractères au maximum, condensés en largeur comme `イ中` (2 caractères) ou `イ下尺` (3 caractères). L'ancien comportement « ornement » (empilement vertical de tous les caractères) est déprécié : il n'a pas de sémantique musicale (les kanji empilés réels sont des croches `A/B`, du hayabiki `A:B` ou des accords `A-B`, chacun ayant son séparateur).
 
-Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur sont normalisés vers leur forme canonique en demie chasse, avec une INFO sur stderr (une fois par variante) :
-
-| Saisie acceptée | Converti en | Usage   |
-|--------------------|-------------|---------|
-| `／` (U+FF0F)      | `/`         | croches |
-| `：` (U+FF1A)      | `:`         | shuffle |
-| `｜` (U+FF5C)      | `\|`        | marques de répétition, séparateur tab-lyrics |
-| `♯`  (U+266F)      | `#`        | altération (尺＃) |
-| `＋` (U+FF0B)      | `+`      | accord (à venir) |
-| `ー` (U+30FC)      | `-`      | accord |
-| `＊` (U+FF0A)      | `*`      | uchi-utu (打音) |
-| `＾` (U+FF3E)      | `^`      | kaki-utu (掛音) |
-| `＜` (U+FF1C)      | `<`      | kachi-utu (掻音) |
-| `＝` (U+FF1D)      | `=`      | taachi (二弾) ou tsuiri-bichi (列弾) |
-| `（` (U+FF08)      | `(`      | koedashi ou début de boucle vocale |
-| `）` (U+FF09)      | `)`      | koekiri ou fin de boucle vocale  |
-
-NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
-
 Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart) et `)|` (vocalRepEnd) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
 
 Rendu : les marqueurs `|(` et `)|` vivent dans la colonne marker (comme les flèches de `|:` / `:|`) — les kanjis de notes ne sont JAMAIS décalés, le contenu de la case est rendu centré normalement. `)|` = ┘● : barre horizontale, montant vertical montant, disque creux au-dessus (même géométrie et même taille que l'ancien `@end_circle`, désormais déprécié et ignoré) ; `|(` = image spéculaire par rapport à l'axe HORIZONTAL : barre en haut, montant vertical descendant, disque creux en dessous.
@@ -147,6 +128,27 @@ L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi t
 Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de tokens valides. Dans les blocs `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Le reste de la normalisation ne touche PAS les blocs `::vocal` et `::lyrics` (le ー y reste une voyelle longue).
 
 Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
+
+## Tolérances de saisie
+
+Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur sont normalisés vers leur forme canonique en demie chasse, avec une INFO sur stderr (une fois par variante) :
+
+| Saisie acceptée | Converti en | Usage   |
+|-----------------|-------------|---------|
+| `／` (U+FF0F)   | `/`         | croches |
+| `：` (U+FF1A)   | `:`         | shuffle |
+| `｜` (U+FF5C)   | `\|`        | marques de répétition, séparateur tab-lyrics |
+| `♯`  (U+266F)   | `#`         | altération (尺＃) |
+| `＋` (U+FF0B)   | `+`         | accord (à venir) |
+| `ー` (U+30FC)   | `-`         | accord |
+| `＊` (U+FF0A)   | `*`         | uchi-utu (打音) |
+| `＾` (U+FF3E)   | `^`         | kaki-utu (掛音) |
+| `＜` (U+FF1C)   | `<`         | kachi-utu (掻音) |
+| `＝` (U+FF1D)   | `=`         | taachi (二弾) ou tsuiri-bichi (列弾) |
+| `（` (U+FF08)   | `(`         | koedashi ou début de boucle vocale |
+| `）` (U+FF09)   | `)`         | koekiri ou fin de boucle vocale  |
+
+NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
 ## Pour en savoir plus
 
