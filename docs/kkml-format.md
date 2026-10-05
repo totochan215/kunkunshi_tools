@@ -124,9 +124,9 @@ Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivale
 | `：` (U+FF1A)      | `:`         | shuffle |
 | `｜` (U+FF5C)      | `\|`        | marques de répétition, séparateur tab-lyrics |
 | `♯`  (U+266F)      | `#`        | altération (尺＃) |
-| `＋` (U+FF0B)      | `+`      | accords |
-| `ー` (U+30FC)      | `-`      | accords |
-| `＊` (U+FF0A)      | `*`      | suffixe de technique |
+| `＋` (U+FF0B)      | `+`      | accord (à venir) |
+| `ー` (U+30FC)      | `-`      | accord |
+| `＊` (U+FF0A)      | `*`      | uchi-utu |
 | `＾` (U+FF3E)      | `^`      | suffixe de technique |
 | `＜` (U+FF1C)      | `<`      | suffixe de technique |
 | `＝` (U+FF1D)      | `=`      | suffixe de technique |
