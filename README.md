@@ -18,7 +18,7 @@ Convertit un fichier JSON de [Portama](https://portama.com/) en KKML.
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
 
-Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence), styles rythmiques (standard, hayabichi), repères de répétition `|:` `:|` `|(` `)|`, repères de début et fin du chant (`(` `)`), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), autres métadonnées, paroles, etc.
+Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence), styles rythmiques (standard, hayabichi), repères de répétition (intro, chant), repères de respiration (koedashi, koekiri), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), autres métadonnées, paroles, etc.
 
 ### kkml2svg.py
 
@@ -65,8 +65,8 @@ Exemple :
 - Métadonnées : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
-    - `::tab` — tablature, 1 groupe de tokens par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle (croche pointée + double croche),
-      `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, suffixes de technique `* ^ v < s =`.
+    - `::tab` — tablature, 1 groupe de tokens par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche,
+      `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, `* ^ v < s =` = ornements (scaractères de technique ).
     - `::tab-lyrics` — paroles en phonétique avec alignement approximatif sur la tablature, 1 token par temps,
     - `::lyrics` — paroles complètes avec support éventuel du guide phonétique (ruby), sans alignement sur la tablature.
       Variantes : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
