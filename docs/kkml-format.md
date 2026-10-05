@@ -127,7 +127,7 @@ Tolérance de saisie — dans les blocs `::tab` et `::tab-lyrics`, les équivale
 | `＋` (U+FF0B)      | `+`      | accord (à venir) |
 | `ー` (U+30FC)      | `-`      | accord |
 | `＊` (U+FF0A)      | `*`      | uchi-utu |
-| `＾` (U+FF3E)      | `^`      | suffixe de technique |
+| `＾` (U+FF3E)      | `^`      | kaki-utu (掛音) |
 | `＜` (U+FF1C)      | `<`      | suffixe de technique |
 | `＝` (U+FF1D)      | `=`      | suffixe de technique |
 | `（` (U+FF08)      | `(`      | koedashi, boucle vocale |
