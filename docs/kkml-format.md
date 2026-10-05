@@ -133,7 +133,7 @@ Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur
 
 Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur sont normalisés vers leur forme canonique en demie chasse, avec une INFO sur stderr (une fois par variante) :
 
-| Saisie acceptée | Converti en | Usage   |
+| Saisie acceptée | Converti en | Usage (pour mémoire)  |
 |-----------------|-------------|---------|
 | `／` (U+FF0F)   | `/`         | croches |
 | `：` (U+FF1A)   | `:`         | shuffle, marques de répétition |
