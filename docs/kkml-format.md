@@ -21,7 +21,7 @@ KKML se base sur le format texte brut encodé en UTF-8, sans utilisation d'exten
 @cols 12
 
 ::tab
-<tablature sous forme de cases représentant des temps séparées par des espaces ;
+<tablature sous forme de cases représentant des temps et séparées par des espaces ;
 au sein de chaque case, tokens représentant des notes, leurs altérations et leurs
 techniques de jeu (ornements)>
 ::
@@ -73,13 +73,13 @@ Toutes les métadonnées sont optionnelles.
 
 ## Blocs
 
-- `::tab` — bloc de tablature, organisé en dans (lignes séparées par des sauts de ligne) et temps (tokens séparés par des espaces).
+- `::tab` — bloc de tablature, organisé en temps (groupes de tokens), séparés par des espaces. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
 - `::lyrics` — bloc de paroles, lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
   - `女　` ou `男　` — pour spécifier un couplet chanté par les femmes `女　` ou les hommes `男　` (kanji + espace full-width). 
     Plusieurs types de couplets peuvent être mélangés dans un même morceau.
-- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Souvent limité au premier couplet. Une ligne  plus courte que la ligne de tablature correspondante est complétée par des vides.
+- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Souvent limité au premier couplet. Une ligne plus courte que la ligne de tablature correspondante est complétée par des vides.
 - `::vocal` — bloc de syllabes vocales. Chaque ligne correspond à la ligne de `::tab` de même index (le bloc doit suivre immédiatement un bloc `::tab`). Les syllabes sont séparées par des espaces ; 1 token = 1 syllabe. Un token peut faire plusieurs caractères pour les consonnes complexes de l'uchi-na-guchi (ぐゎ, くゎ, てぃ, でぃ, とぅ, づぅ…) ou les voyelles longues (よー) — les caractères d'une même syllabe sont accolés sans espace. Rendu dans la colonne marker à droite de la grille : caractère principal aligné sur la note, caractères combinants empilés en dessous. Une ligne vocale plus courte que la ligne de tab est complétée par des vides (alignement préservé, ex. intro uta-mochi).
 - `::` ferme le bloc courant.
 
@@ -133,8 +133,9 @@ Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur
 
 Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
-| Double largeur  | Demie-largeur | Usage (pour mémoire)  |
+| Double largeur  | Demie-largeur | Usage (pour mémoire) |
 |-----------------|---------------|---------|
+| `　` (U+3000)   | ` `           | séparateur de temps |
 | `／` (U+FF0F)   | `/`           | croches |
 | `：` (U+FF1A)   | `:`           | shuffle, marques de répétition |
 | `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur tab-lyrics |
