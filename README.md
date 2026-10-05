@@ -51,7 +51,7 @@ Exemple :
     工 尺♯/工 上 尺* 上 老/四 上 尺♯ 上 老 四 老
     ::
 
-    ::vocal
+    ::tab-lyrics
     - - - - - - - - きゆ - ぬ -
     - ふ - - - - く - - - ら -
     しゃ - - - - - - - や - - -
@@ -68,7 +68,7 @@ Exemple :
 - Sections :
     - `::tab` — tablature, une ligne par dan, 1 token par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle (croche pointée + double croche),
       `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, suffixes de technique `* ^ v < s =`.
-    - `::vocal` — paroles en phonétique, alignement approximatif sur la musique, une ligne par dan, 1 token par temps,
+    - `::tab-lyrics` — paroles en phonétique, alignement approximatif sur la musique, une ligne par dan, 1 token par temps,
     - `::lyrics` — paroles complètes avec support du guide phonétique (ruby), sans alignement sur la musique.
       Variantes phonétiques : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana`, `::lyrics-kana-ruby`, `::lyrics-romaji`, .
       `::lyrics` est un alias de `::lyrics-ruby` (kanji + rubys).
