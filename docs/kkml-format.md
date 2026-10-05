@@ -136,7 +136,7 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur sont n
 | Saisie acceptée | Converti en | Usage   |
 |-----------------|-------------|---------|
 | `／` (U+FF0F)   | `/`         | croches |
-| `：` (U+FF1A)   | `:`         | shuffle |
+| `：` (U+FF1A)   | `:`         | shuffle, marques de répétition |
 | `｜` (U+FF5C)   | `\|`        | marques de répétition, séparateur tab-lyrics |
 | `♯`  (U+266F)   | `#`         | altération (尺＃) |
 | `＋` (U+FF0B)   | `+`         | accord (à venir) |
