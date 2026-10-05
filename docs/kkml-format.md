@@ -133,20 +133,20 @@ Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur
 
 Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
-| Saisie acceptée | Converti en | Usage (pour mémoire)  |
-|-----------------|-------------|---------|
-| `／` (U+FF0F)   | `/`         | croches |
-| `：` (U+FF1A)   | `:`         | shuffle, marques de répétition |
-| `｜` (U+FF5C)   | `\|`        | marques de répétition, séparateur tab-lyrics |
-| `♯`  (U+266F)   | `#`         | altération (尺＃) |
-| `＋` (U+FF0B)   | `+`         | accord (à venir) |
-| `ー` (U+30FC)   | `-`         | accord |
-| `＊` (U+FF0A)   | `*`         | uchi-utu (打音) |
-| `＾` (U+FF3E)   | `^`         | kaki-utu (掛音) |
-| `＜` (U+FF1C)   | `<`         | kachi-utu (掻音) |
-| `＝` (U+FF1D)   | `=`         | taachi (二弾), tsuiri-bichi (列弾) |
-| `（` (U+FF08)   | `(`         | koedashi, début de boucle vocale |
-| `）` (U+FF09)   | `)`         | koekiri, fin de boucle vocale  |
+| Double largeur  | Demie-largeur | Usage (pour mémoire)  |
+|-----------------|---------------|---------|
+| `／` (U+FF0F)   | `/`           | croches |
+| `：` (U+FF1A)   | `:`           | shuffle, marques de répétition |
+| `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur tab-lyrics |
+| `♯`  (U+266F)   | `#`           | altération (尺＃) |
+| `＋` (U+FF0B)   | `+`           | accord (à venir) |
+| `ー` (U+30FC)   | `-`           | accord |
+| `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
+| `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
+| `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
+| `＝` (U+FF1D)   | `=`           | taachi (二弾), tsuiri-bichi (列弾) |
+| `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
+| `）` (U+FF09)   | `)`           | koekiri, fin de boucle vocale  |
 
 NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
