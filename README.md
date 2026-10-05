@@ -66,10 +66,10 @@ Exemple :
 - Métadonnées : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
-    - `::tab` — tablature, une ligne par dan, 1 token par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle (croche pointée + double croche),
+    - `::tab` — tablature, 1 groupe de tokens par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = shuffle (croche pointée + double croche),
       `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, suffixes de technique `* ^ v < s =`.
-    - `::tab-lyrics` — paroles en phonétique, alignement approximatif sur la musique, une ligne par dan, 1 token par temps,
-    - `::lyrics` — paroles complètes avec support du guide phonétique (ruby), sans alignement sur la musique.
+    - `::tab-lyrics` — paroles en phonétique avec alignement approximatif sur la tablature, 1 token par temps,
+    - `::lyrics` — paroles complètes avec support éventuel du guide phonétique (ruby), sans alignement sur la tablature.
       Variantes : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
       `::lyrics` est un alias de `::lyrics-kanji-ruby` (kanji + rubys).
 
