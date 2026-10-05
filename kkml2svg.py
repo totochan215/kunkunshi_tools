@@ -176,6 +176,14 @@ FONT_STYLES = {
 # --------------------------------------------------------------------------- #
 # 2. Parseur KKML
 # --------------------------------------------------------------------------- #
+# Variantes phonétiques des blocs de paroles. `::lyrics` est un alias
+# de `::lyrics-ruby` (kanji avec support des rubys). Toutes les variantes
+# partagent la grammaire et le rendu du bloc `::lyrics` ; la variante est
+# conservée sur le bloc (Block.variant) pour distinguer les versions
+# destinées aux japonais (kanji/ruby) des versions destinées aux
+# étrangers (romaji) ou aux kanas seuls.
+LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"}
+
 # Clés de métadonnées reconnues (pour la tolérance @cléValeur collée)
 META_KEYS = {"title", "tuning", "cols", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
@@ -195,6 +203,7 @@ class Block:
         self.kind = kind
         self.label = label
         self.lines = []
+        self.variant = None  # variante phonétique des blocs lyrics-*
 
 
 def parse_kkml(text):
@@ -267,7 +276,12 @@ def parse_kkml(text):
             parts = rest.split(None, 1)
             kind = parts[0] if parts else "tab"
             label = parts[1] if len(parts) > 1 else None
+            variant = None
+            if kind in LYRICS_VARIANTS:
+                variant = kind[len("lyrics-"):]
+                kind = "lyrics"
             current = Block(kind, label)
+            current.variant = variant
             song.blocks.append(current)
             i += 1
             continue

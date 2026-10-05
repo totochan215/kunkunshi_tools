@@ -59,6 +59,10 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - Rendu : glyphes Unicode (▲○●□↑) ou formes SVG dessinées ; rouge/noir via `fill` SVG.
 - 勺 凡 才 acceptés comme hauteurs ; 声だし / 声切り en colonne marker.
 
+### Variantes phonétiques des paroles — ✅
+- Blocs `::lyrics-kanji` / `::lyrics-ruby` / `::lyrics-kana` / `::lyrics-romaji` (alias `::lyrics` = `::lyrics-ruby`). Grammaire et rendu identiques à `::lyrics` ; la variante est conservée sur `Block.variant`. Permet de distinguer plusieurs versions phonétiques d'une même chanson (japonais vs étrangers).
+- ⬜ Sélection de la version rendue (méta `@lyrics_variant` ou option CLI) — actuellement toutes les variantes sont rendues à la suite.
+
 ### P4 — Annotations de marge et de tempo — ⬜
 - 指位記号 (doigtés) : numéraux encerclés ㊀㊁㊂㊃ (野村流), colonne/marge dédiée,
   jamais dans la grille (collision avec la normalisation REST_VARIANTS → ◯).
