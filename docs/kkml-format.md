@@ -42,7 +42,7 @@ ruby supporté>
 
 ```
 
-Le fichier est composé d'un bloc de métadonnées et de sections thématiques. L'ordre n'est pas imposé ;  toutefois, dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées. Les blocs ne peuvent pas être imbriqués.
+Le fichier est composé d'un bloc de métadonnées et de sections thématiques. L'ordre n'est pas imposé ;  toutefois, dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées. Les sections ne peuvent pas être imbriquées.
 
 Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
