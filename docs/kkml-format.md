@@ -2,8 +2,8 @@
 
 Le KKML (Kunkunshi Markup Language) est un format texte destiné à l'encodage des tablatures Kunkunshi. L'objectif est de proposer une alternative au format JSON de Portama, qui réponde aux défis suivants :
 - Facile à saisir à l'aide d'un éditeur de texte,
-- Saisie et rendu non dépendants de polices spécifiques (une police japonaise compatible UTF-8 suffit),
-- Un musicien doit pouvoir exécuter le morceau en ayant le fichier KKML brut sous les yeux.
+- Non dépendant de polices spécifiques (une police japonaise compatible UTF-8 suffit),
+- Un musicien doit pouvoir exécuter le morceau en ayant le fichier KKML brut (non rendu) sous les yeux.
 
 Par ailleurs, KKML tente de combler des certains manques inhérents au format JSON de Portama : support des positions manquantes, de figures rythmiques non prises en charge, etc.
 
@@ -19,6 +19,10 @@ KKML se base sur le format texte brut encodé en UTF-8, sans utilisation d'exten
 # commentaire (ignoré)
 @meta valeur
 @cols 12
+
+::section
+contenu
+::
 
 ::tab
 <tablature sous forme de cases représentant des temps, séparées par des espaces ;
@@ -38,7 +42,7 @@ ruby supporté>
 
 ```
 
-Le fichier est composé d'un bloc de métadonnées, et de sections dont l'ordre n'est pas imposé. Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées.
+Le fichier est composé d'un bloc de métadonnées et de sections thématiques. L'ordre n'est pas imposé ;  toutefois, dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées. Les blocs ne peuvent pas être imbriqués.
 
 Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
@@ -75,7 +79,7 @@ Toutes les métadonnées sont optionnelles.
 ## Blocs
 
 - `::tab` — bloc de tablature, organisé en temps (groupes de tokens), séparés par des espaces. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
-- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Souvent limité au premier couplet. Une ligne plus courte que la ligne de tablature correspondante est complétée par des vides. Il est recommandé d'adopter le même découpage de lignes que pour la tablature, mais ce n'est pas une obligation.
+- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Contenu souvent limité au premier couplet. Il est recommandé d'adopter le même découpage de lignes que pour la tablature, mais ce n'est pas une obligation.
 - `::lyrics` — bloc de paroles, divisé en couplets. lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
