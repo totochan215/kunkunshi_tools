@@ -90,7 +90,7 @@ La roadmap du projet et le contexte technique pour contributeurs/agents IA sont 
 - [samples/kkml/](samples/kkml/) — fichiers KKML de référence
 - [samples/portama-json/](samples/portama-json/) — fichiers Portama bruts en JSON
 - [samples/portama-pdf/](samples/portama-pdf/) — fichiers Portama rendus au format PDF
-- [samples/svg/](samples/svg/) — rendus SVG de référence produits par kkml2svg.py
+- [samples/svg/](samples/svg/) — rendus SVG de référence
 
 ### Homologues et tests
 
