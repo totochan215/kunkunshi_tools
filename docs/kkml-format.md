@@ -151,17 +151,21 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 | `：` (U+FF1A)   | `:`           | shuffle, marques de répétition |
 | `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur tab-lyrics |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
-| `＋` (U+FF0B)   | `+`           | accord (à implémenter) |
-| `ー` (U+30FC)   | `-`           | accord (à déprécier), case vide |
-| `＊` (U+FF0A)   | `*`           | uchi-utu (打音) (à déprécier) |
-| `｀` (U+FF40)   | `'`           | uchi-utu (打音) (à implémenter) |
+| `＋` (U+FF0B)   | `+`           | accord (à venir) |
+| `ー` (U+30FC)   | `-`           | accord |
+| `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
-| `＝` (U+FF1D)   | `=`           | taachi (二弾), tsuiri-bichi (列弾) (accords) |
+| `＝` (U+FF1D)   | `=`           | taachi (二弾), tsuiri-bichi (列弾) |
 | `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
 | `）` (U+FF09)   | `)`           | koekiri, fin de boucle vocale  |
 
 NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
+
+## Bonnes pratiques
+
+- Placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
+- Pour ::tab et ::tab-lyrics, ajuster la longueur de l
 
 ## Pour en savoir plus
 
