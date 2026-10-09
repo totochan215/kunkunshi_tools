@@ -66,7 +66,7 @@ Exemple :
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
     - `::tab` — tablature, 1 groupe de tokens par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche,
-      `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, `* ^ v < s =` = ornements (caractères de technique ).
+      `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, `* ^ v < s =` = ornements (caractères de technique).
     - `::tab-lyrics` — paroles en phonétique avec alignement approximatif sur la tablature, 1 token par temps,
     - `::lyrics` — paroles complètes avec support éventuel du guide phonétique (ruby), sans alignement sur la tablature.
       Variantes : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
