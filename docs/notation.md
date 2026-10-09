@@ -212,7 +212,7 @@ Rendu vertical : le caractère principal est aligné sur la note ; les caractèr
 
 ```kkml
 ::tab
-中 合-工 尺-中* 上 四 合-老* 四 工
+中 合-工 尺-中' 上 四 合-老' 四 工
 ::
 
 ::vocal
@@ -274,11 +274,11 @@ Large mais fonctionnel. Le code traite ce cas dans une branche dédiée (3 carac
 
 ## Suffixes de technique (走法, souhou)
 
-Apposés après le caractère de position dans le token KKML. Peuvent se combiner (ex : `中s*` = jeu faible + hammer-on).
+Apposés après le caractère de position dans le token KKML. Peuvent se combiner (ex : `中s'` = jeu faible + hammer-on).
 
 | Suffixe | Nom                    | Rendu SVG | Description |
 |---------|------------------------|-----------|-------------|
-| `*`     | uchi-utu (打音)         | caractère ｀ (accent grave) en haut-droite, même police et taille que la note | Presser la corde sans gratter (hammer-on) et tenir la note |
+| `'`     | uchi-utu (打音)         | caractère ｀ (accent grave) en haut-droite, même police et taille que la note | Presser la corde sans gratter (hammer-on) et tenir la note. Alias : `｀` (pleine chasse), `*` et `＊` (dépréciés) |
 | ?       | uchi-nuchi-utu (打抜音) | caractère <à préciser> (apostrophe vide) | Hammer-on sans tenir la note |
 | `^`     | kaki-utu (掛音)        | ┗ (U+2517) pivoté de 180° en haut-droite | Upstroke (gratter de bas en haut avec le bachi) |
 | `v`     | aki-utu (開音)         | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
@@ -293,7 +293,7 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 | `(` (préfixe) | koe-dashi (声だし) | petit ○ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur commence à chanter sur cette note — repère de respiration |
 | `)` (suffixe) | koe-kiri (声切り)  | petit □ dans la case, côté droit, centré verticalement (fs × 0.55) | Le chanteur s'arrête de chanter après cette note |
 
-`(` et `)` sont des bornes de chant, pas des techniques de main : elles s'adressent au chanteur pour placer ses respirations. Source : 世禮國男, 増訂琉球音樂樂典, p. 9 ((10) ○ 声だし, 区画中右方) et p. 26 ((ホ)(1) ○□ 声出 声切) — le ○ marque le début du chant, le □ la fin. Elles se placent DANS la case (côté droit), pas dans la colonne marker — le traité précise qu'elles devraient être en colonne vocale mais sont dans la case par manque de place. Syntaxe mnémotechnique : `(` ouvre la bouche — c'est un PRÉFIXE, placé avant le kanji (ex. `(中`) car on ouvre la bouche avant la note ; `)` la ferme — c'est un SUFFIXE, placé après (ex. `尺)`) car on ferme la bouche après la note. Les deux bornes peuvent cohabiter sur une même note : `(中)` = 声だし + 中 + 声切り. Variantes pleine chasse （ ） acceptées (tolérance IME). Se combinent avec les autres suffixes (ex. `(尺)*`).
+`(` et `)` sont des bornes de chant, pas des techniques de main : elles s'adressent au chanteur pour placer ses respirations. Source : 世禮國男, 増訂琉球音樂樂典, p. 9 ((10) ○ 声だし, 区画中右方) et p. 26 ((ホ)(1) ○□ 声出 声切) — le ○ marque le début du chant, le □ la fin. Elles se placent DANS la case (côté droit), pas dans la colonne marker — le traité précise qu'elles devraient être en colonne vocale mais sont dans la case par manque de place. Syntaxe mnémotechnique : `(` ouvre la bouche — c'est un PRÉFIXE, placé avant le kanji (ex. `(中`) car on ouvre la bouche avant la note ; `)` la ferme — c'est un SUFFIXE, placé après (ex. `尺)`) car on ferme la bouche après la note. Les deux bornes peuvent cohabiter sur une même note : `(中)` = 声だし + 中 + 声切り. Variantes pleine chasse （ ） acceptées (tolérance IME). Se combinent avec les autres suffixes (ex. `(尺)'`).
 
 À ne pas confondre : `|(` et `)|` sont des tokens autonomes occupant leur case (comme `|:` et `:|`) — ils représentent la répétition du chant (vocalRepStart/vocalRepEnd de Portama), section reprise au chant ou à la piste suivante. Rendu : ○ et □ à 75% de fs, centrés dans la case. Ils ne sont pas attachés à une note, contrairement aux suffixes `(` `)`.
 
