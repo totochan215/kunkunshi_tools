@@ -18,9 +18,9 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 ## 1. Validations en attente (bloquantes ou quasi)
 
 - ⬜ Valider visuellement かぎやで風節 (KKML `samples/kkml/かぎやで風節.kkml`) contre le PDF :
-  occurrences de `八` (U+E024, dan 5), silences `◯/尺♯` (dan 14), ornements `*` (dans 3, 10, 12, 18).
+  occurrences de `八` (U+E024, dan 5), silences `◯/尺♯` (dan 14), ornements `'` (dans 3, 10, 12, 18).
   Confirme le mapping PUA U+E024 = 八.
-- ⬜ Régénérer et valider le SVG de test des souhou (uchi-utu `*`, kaki-utu `^`, aki-utu `v`,
+- ⬜ Régénérer et valider le SVG de test des souhou (uchi-utu `'` (alias `*`), kaki-utu `^`, aki-utu `v`,
   kachi-utu `<`, kuubanchi `s`, taachi `=`) ; ajuster dx/dy/scale/rotate selon retours visuels.
 - ⬜ Valider le rendu vocal multi-caractères (うちなぐち) : empilement petits kana, ー vertical,
   chevauchement bord inférieur. Support vocal en mode horizontal non implémenté (priorité verticale).
@@ -191,7 +191,7 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 
 #### Constantes notables
 
-- `POSITION_CHARS`, `REST_VARIANTS`, `TECHNIQUE_SUFFIXES` (uchi-utu `*`, kaki-utu `^`, aki-utu `v`, kachi-utu `<`, kuubanchi `s`, taachi `=`)
+- `POSITION_CHARS`, `REST_VARIANTS`, `TECHNIQUE_SUFFIXES` (uchi-utu `'` (alias `*`, `｀`), kaki-utu `^`, aki-utu `v`, kachi-utu `<`, kuubanchi `s`, taachi `=`)
 - `HIGH_PREFIX_I` / `HIGH_PREFIX_RO` (positions hautes イ/ロ + kanji compatibles)
 - `FONT_STYLES` : serif (défaut), mincho, gothic (`@font_style`)
 - `VERSE_*` : regex de numéros de couplet, puces, genre (男/女)
@@ -212,7 +212,7 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 
 - Mapping PUA → kanji (voir [format Portama](docs/portama-format.md))
 - Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B) selon `isSmall`
-- `acc: "sharp"` → 尺♯, `orn: "u"` → suffixe `*`
+- `acc: "sharp"` → 尺♯, `orn: "u"` → suffixe `'`
 - `repeatStart/repeatEnd` → `|:` / `:|`
 - `choshi` → `@tuning`, `cellsPerDan / 2` → `@cols`
 - N'exporte pas encore `allRubyData` (proposition `::ruby` / conversion `::vocal`, voir `docs/kkml-format.md`)
@@ -242,7 +242,7 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 
 ## Offsets des marques diacritiques (TECHNIQUE_SUFFIXES) — déplacés depuis docs/notation.md
 
-Les marques diacritiques (`*`, `^`, `v`, `<`) sont rendues dans la même police et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
+Les marques diacritiques (`'`, `^`, `v`, `<`) sont rendues dans la même police et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
 
 - uchi-utu (｀) : `dx=0.22`, `dy=0.05` (en haut-droite)
 - kaki-utu (┗ roté 180°, échelle 0.75) : `dx=0.28`, `dy=-0.22` (en haut-droite, barre supérieure au-dessus de la note)
