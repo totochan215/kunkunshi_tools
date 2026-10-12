@@ -79,7 +79,7 @@ Toutes les métadonnées sont optionnelles.
 ## Blocs
 
 - `::tab` — bloc de tablature, organisé en temps (groupes de tokens), séparés par des espaces. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
-- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Contenu souvent limité au premier couplet. Il est recommandé d'adopter le même découpage de lignes que pour la tablature, mais ce n'est pas une obligation.
+- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Contenu souvent limité au premier couplet.
 - `::lyrics` — bloc de paroles, divisé en couplets. lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
@@ -165,6 +165,7 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 ## Bonnes pratiques
 
 - Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
+- Adopter le même découpage en lignes dans tabs:: et tabs-lyrics::
 
 ## Pour en savoir plus
 
