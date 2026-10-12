@@ -31,7 +31,7 @@ Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) 
 | 九       | きゅう (kyū)  | +21 | 女絃 | ㊃ | |
 | 十       | じゅう (jyū)  | +22 | 女絃 | ㊃ | |
 
-TODO: remplacer les hauteurs par une distance du Utaguchi en cm. Ajouter la corde jouée. Simplifier la colonne "doigté".
+TODO: remplacer les hauteurs par une distance du Utaguchi en cm.
 
 \* Doigtés des positions au-delà du majeur à confirmer : selon les écoles et la position de la main (上部/中部), 尺 et 七 peuvent se jouer index ou majeur (traité 野村流, position médiane : 老中六 index, 尺七 majeur, 八九 auriculaire). Les cordes à vide (合四工) et les doigtés index/majeur sont établis.
 
