@@ -14,22 +14,22 @@ Les caractères de position (勘所, kandokoro) représentent les positions sur 
 
 Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) et doigtés :
 
-| Position | Lecture   | Hauteur (demi-tons) | Doigt | Variante |
-|----------|-----------|---------------------|-------|----------|
-| 合       | あい (ai)   | 0 | 開弦 (corde à vide) | |
-| 乙       | おつ (otsu) | +2 | ㊀ 人差指 (index) | |
-| 老       | ろう (rō)   | +4 | ㊁ 中指 (majeur) | |
-| 四       | よん (yon)  | +5 | 開弦 (corde à vide) | |
-| 上       | じょう (jō) | +7 | ㊀ 人差指 (index) | |
-| 中       | なか (naka) | +9 | ㊁ 中指 (majeur) | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
-| 尺       | しゃく (shaku) | +10 | ㊃ 小指 (auriculaire)* | |
-| 工       | こう (kō)     | +12 | 開弦 (corde à vide) | |
-| 五       | ご (go)      | +14 | ㊀ 人差指 (index) | |
-| 六       | ろく (roku)   | +16 | ㊁ 中指 (majeur) | |
-| 七       | しち (shichi) | +17 | ㊃ 小指 (auriculaire)* | |
-| 八       | はち (hachi)  | +19 | ㊃ 小指 (auriculaire)* | |
-| 九       | きゅう (kyū)  | +21 | ㊃ 小指 (auriculaire)* | |
-| 十       | じゅう (jyū)  | +22 | ㊃ 小指 (auriculaire)* | |
+| Position | Lecture   | Hauteur (demi-tons) | Corde | Doigt | Variante |
+|----------|-----------|---------------------|--|-----|----------|
+| 合       | あい (ai)   | 0 | 男絃 |開弦 (corde à vide) | |
+| 乙       | おつ (otsu) | +2 | 男絃 |㊀ 人差指 (index) | |
+| 老       | ろう (rō)   | +4 | 男絃 | ㊁ 中指 (majeur) | |
+| 四       | よん (yon)  | +5 | 中絃 | 開弦 (corde à vide) | |
+| 上       | じょう (jō) | +7 | 中絃 | ㊀ 人差指 (index) | |
+| 中       | なか (naka) | +9 | 中絃 | ㊁ 中指 (majeur) | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
+| 尺       | しゃく (shaku) | +10 | 中絃 | ㊃ 小指 (auriculaire)* | |
+| 工       | こう (kō)     | +12 | 女絃 | 開弦 (corde à vide) | |
+| 五       | ご (go)      | +14 | 女絃 | ㊀ 人差指 (index) | |
+| 六       | ろく (roku)   | +16 | 女絃 | ㊁ 中指 (majeur) | |
+| 七       | しち (shichi) | +17 | 女絃 | ㊃ 小指 (auriculaire)* | |
+| 八       | はち (hachi)  | +19 | 女絃 | ㊃ 小指 (auriculaire)* | |
+| 九       | きゅう (kyū)  | +21 | 女絃 | ㊃ 小指 (auriculaire)* | |
+| 十       | じゅう (jyū)  | +22 | 女絃 | ㊃ 小指 (auriculaire)* | |
 
 TODO: remplacer les hauteurs par une distance du Utaguchi en cm. Ajouter la corde jouée. Simplifier la colonne "doigté".
 
