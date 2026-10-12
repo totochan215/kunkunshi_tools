@@ -42,7 +42,7 @@ ruby supporté>
 
 ```
 
-Le fichier est composé d'un bloc de métadonnées et de sections thématiques. L'ordre n'est pas imposé ;  toutefois, dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées. Les sections ne peuvent pas être imbriquées.
+Le fichier est composé d'un bloc de métadonnées et de sections thématiques. L'ordre n'est pas imposé. Les sections ne peuvent pas être imbriquées.
 
 Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
@@ -164,8 +164,7 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 ## Bonnes pratiques
 
-- Placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
-- Pour ::tab et ::tab-lyrics, ajuster la longueur de l
+- Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
 
 ## Pour en savoir plus
 
