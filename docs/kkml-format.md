@@ -46,8 +46,6 @@ Le fichier est composé d'un bloc de métadonnées et de sections thématiques. 
 
 Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
-Tolérance : si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
-
 ## Métadonnées
 
 - `@title` — titre de la chanson
@@ -140,7 +138,13 @@ Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute fa�
 
 Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
 
-## Tolérances de saisie
+## Tolérances
+
+### Sections
+
+Si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
+
+### Réduction de caractères vers leur forme canonique
 
 Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
