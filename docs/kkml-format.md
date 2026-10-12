@@ -168,8 +168,8 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 ## Bonnes pratiques
 
-- Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
-- Adopter le même découpage en lignes dans tabs:: et tabs-lyrics::
+- Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
+- Il est **recommandé** d'adopter le même découpage en lignes dans tabs:: et tabs-lyrics::
 
 ## Pour en savoir plus
 
