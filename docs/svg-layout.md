@@ -133,8 +133,7 @@ La mise en page horizontale (mode songbook) n'est pas encore documentée.
 
 ### Mise en page Nomura-ryu (`@layout nomura`)
 
-Le layout `nomura` émule le format des recueils Nomura-ryu (工工四
-traditionnel) : une page A4 **portrait** encadrée par un filet (seul le
+Le layout `nomura` émule le format des recueils Nomura-ryu Kunkunshi (野村流工工四) : une page A4 **portrait** encadrée par un filet (seul le
 numéro de page est à l'extérieur), jusqu'à **7 colonnes (dans)** par page,
 chacune composée de **12 cases empilées** lues de haut en bas — l'ensemble se lit de
 droite à gauche.
