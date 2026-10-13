@@ -146,6 +146,8 @@ Si aucune section n'est déclarée, les lignes hors métadonnées et commentaire
 
 ### Réduction de caractères vers leur forme canonique
 
+#### Caractères en double largeur vers simple largeur
+
 Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
 | Double largeur  | Demie-largeur | Usage (pour mémoire) |
@@ -166,28 +168,46 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 
 NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
-### TODO: Réduction de kandokoro exprimés en romaji vers leur forme canonique
+#### Kandokoro en romaji vers kandokoro en kanji
 
-Dans les blocs tab:: uniquement
+Dans les blocs tab:: uniquement, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique.
 
 | Romaji | Kanji |
 |--------|-------|
 | ai     | 合    |
 | otsu   | 乙    |
 | ro     | 老    |
+| rou    | 老    |
+| ro     | 老    |
 | yon    | 四    |
 | shi    | 四    |
+| jo     | 上    |
 | jou    | 上    |
 | naka   | 中    |
 | chu    | 中    |
+| chuu   | 中    |
+| chu    | 中    |
 | shaku  | 尺    |
+| ko     | 工    |
+| kou    | 工    |
 | ko     | 工    |
 | go     | 五    |
 | roku   | 六    |
 | shichi | 七    |
 | hachi  | 八    |
 | kyu    | 九    |
+| kyuu   | 九    |
+| kyu    | 九    |
 | ju     | 十    |
+| juu    | 十    |
+| ju     | 十    |
+| jyu    | 十    |
+| jyuu   | 十    |
+| jyu    | 十    |
+
+#### Positions étendues en kanji composite vers positions étendues en katakana + kanji
+
+Dans les blocs tab:: uniquement
 
 ## Bonnes pratiques
 
