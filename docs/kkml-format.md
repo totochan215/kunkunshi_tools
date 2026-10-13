@@ -168,6 +168,19 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 
 NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
+#### Caractères graphiquement équivalents
+
+Dans les blocs `tab::`, les variantes du silence sont tolérées. C'est toutefois le silence qui est canonique.
+
+| Symbole | Forme canonique |
+|---------|-----------------|
+| ◯      | ◯              |
+| ○       | ◯              |
+| 〇      | ◯              |
+| O       | ◯              |
+| o       | ◯              |
+| 0       | ◯              |
+
 #### Kandokoro en romaji vers kandokoro en kanji
 
 Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
