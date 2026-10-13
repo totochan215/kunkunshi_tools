@@ -6,9 +6,9 @@ En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 
 Attribution : projet réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
-- Pipeline 1 : saisie graphique dans l'éditeur Portama → JSON Portama → KKML → finalisation en KKML
-- Pipeline 2 : saisie texte en KKML → SVG (ou PDF) → impression ou utilisation dans un logiciel d'édition
-- Pipeline 3 (à l'étude) : saisie texte en KKML → JSON Portama → Finalisation dans l'éditeur Portama
+- Pipeline 1 : Saisie graphique dans l'éditeur Portama → JSON Portama → KKML → Finalisation en KKML
+- Pipeline 2 : Saisie texte en KKML → SVG (ou PDF) → Impression ou utilisation dans un logiciel d'édition
+- Pipeline 3 (à l'étude) : Saisie texte en KKML → JSON Portama → Finalisation dans l'éditeur Portama
 
 ## Scripts
 
@@ -70,8 +70,7 @@ Exemple :
 - Métadonnées : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
-    - `::tab` — tablature, 1 groupe de tokens par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche,
-      `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, `* ^ v < s =` = ornements (caractères de technique).
+    - `::tab` — tablature, 1 groupe de tokens par case (temps). `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche, `|:` `:|` = répétition de l'intro, `|(` `)|` = répétition du chant, `* ^ v < s =` = ornements.
     - `::tab-lyrics` — paroles en phonétique avec alignement approximatif sur la tablature, 1 token par temps,
     - `::lyrics` — paroles complètes avec support éventuel du guide phonétique (ruby), sans alignement sur la tablature.
       Variantes : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
