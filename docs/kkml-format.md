@@ -180,12 +180,12 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 | chu    | 中    |
 | shaku  | 尺    |
 | ko     | 工    |
-| go     |       |
-| roku   |       |
-| shichi |       |
-| hachi  |       |
-| kyu    |       |
-| ju     |       |
+| go     | 五    |
+| roku   | 六    |
+| shichi | 七    |
+| hachi  | 八    |
+| kyu    | 九    |
+| ju     | 十    |
 
 ## Bonnes pratiques
 
