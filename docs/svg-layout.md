@@ -146,13 +146,13 @@ droite à gauche.
 - La sortie est automatiquement multipage : chaque page est rendue sous forme d'un SVG
   autonome (`fichier-1.svg`, `fichier-2.svg`…).
 
-## Mise en page Chindami-Kunkunshi (`@layout chindami`)
+### Mise en page Chindami-Kunkunshi (`@layout chindami`)
 
 Le layout `chindami` émule le format des deux recueils Chindami Kunkunshi (ちんだみ工工四百選集), ouvrages utilisé par de nombreux musiciens. La mise en page est au format paysage, avec une section de titre vertical à droite, un bloc de tablatures verticales au centre, puis une section de paroles.
 
 Cette mise en page n'est pas encore documentée.
 
-## Mise en page pour tutoriel vidéo (`@layout tuto`)
+### Mise en page pour tutoriel vidéo (`@layout tuto`)
 
 Le layout `tuto` permet de créer des vidéos tutorielles sur l'exemple de https://www.youtube.com/watch?v=GvcZoeCbIPQ
 Il se base sur la mise en page horizontale. Le nombre de dans et de cases par dan sont pilotés par les métadonnées.
