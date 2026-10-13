@@ -190,32 +190,36 @@ Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est 
 | otsu   | 乙    |
 | ro     | 老    |
 | rou    | 老    |
-| ro     | 老    |
+| rō     | 老    |
 | yon    | 四    |
 | shi    | 四    |
 | jo     | 上    |
 | jou    | 上    |
+| jō     | 上    |
+| jyo    | 上    |
+| jyou   | 上    |
+| jyō    | 上    |
 | naka   | 中    |
 | chu    | 中    |
 | chuu   | 中    |
-| chu    | 中    |
+| chū    | 中    |
 | shaku  | 尺    |
 | ko     | 工    |
 | kou    | 工    |
-| ko     | 工    |
+| kō     | 工    |
 | go     | 五    |
 | roku   | 六    |
 | shichi | 七    |
 | hachi  | 八    |
 | kyu    | 九    |
 | kyuu   | 九    |
-| kyu    | 九    |
+| kyū    | 九    |
 | ju     | 十    |
 | juu    | 十    |
-| ju     | 十    |
+| jū     | 十    |
 | jyu    | 十    |
 | jyuu   | 十    |
-| jyu    | 十    |
+| jyū    | 十    |
 
 #### Positions étendues en kanji composite vers positions étendues en katakana + kanji
 
