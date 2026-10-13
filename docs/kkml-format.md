@@ -168,6 +168,25 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 ### TODO: Réduction de kandokoro exprimés en romaji vers leur forme canonique
 
+| Romaji | Kanji |
+|--------|-------|
+| ai     | 合    |
+| otsu   | 乙    |
+| ro     | 老    |
+| yon    | 四    |
+| shi    | 四    |
+| jou    | 上    |
+| naka   | 中    |
+| chu    | 中    |
+| shaku  | 尺    |
+| ko     | 工    |
+| go     |       |
+| roku   |       |
+| shichi |       |
+| hachi  |       |
+| kyu    |       |
+| ju     |       |
+
 ## Bonnes pratiques
 
 - Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
