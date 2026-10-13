@@ -6,8 +6,8 @@ En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 
 Attribution : projet réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
-- Pipeline 1 : saisie graphique dans l'éditeur Portama → JSON Portama → KKML → finalisation en KKML → SVG
-- Pipeline 2 : saisie texte en KKML → SVG → impression ou utilisation dans un logiciel d'édition
+- Pipeline 1 : saisie graphique dans l'éditeur Portama → JSON Portama → KKML → finalisation en KKML
+- Pipeline 2 : saisie texte en KKML → SVG (/PDF) → impression ou utilisation dans un logiciel d'édition
 - Pipeline 3 (à l'étude) : saisie texte en KKML → JSON Portama → Finalisation dans l'éditeur Portama
 
 ## Scripts
