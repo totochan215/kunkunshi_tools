@@ -1,6 +1,6 @@
 # Référence des mises en page SVG
 
-## Mise en page verticale (portrait)
+## Mise en page verticale standard
 
 Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cases se lisent de haut en bas et de droite à gauche. Un dan correspond à une colonne.
 
@@ -114,7 +114,7 @@ Le préfixe イ ou 口 peut aussi s'appliquer à 下老 et 下尺. Le token fait
 
 Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
-## Pagination multipage
+### Pagination multipage
 
 Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sortie imprimable (PDF, impression), la méta `@page_dans N` ou l'option CLI `-p N` / `--page-dans N` limite le nombre de dans par page : le rendu produit alors un SVG complet par page (`chanson-1.svg`, `chanson-2.svg`, …).
 
@@ -123,7 +123,11 @@ Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sorti
 - Les blocs `::lyrics` (paroles verticales) apparaissent sur la première page.
 - Référence : les PDF Portama affichent au maximum 12 piles (dans) par page en A4 paysage.
 
-## Mise en page Nomura-ryu (portrait, `@layout nomura`)
+## Mise en page standard horizontale
+
+La mise en page horizontale (mode songbook) n'est pas encore documentée.
+
+## Mise en page Nomura-ryu (`@layout nomura`)
 
 Le layout `nomura` reproduit les planches des recueils Nomura-ryu (工工四
 traditionnel) : une page A4 **portrait** encadrée par un filet (seul le
@@ -142,6 +146,9 @@ droite à gauche.
 - La sortie est automatiquement multipage : chaque page est un SVG
   autonome (`fichier-1.svg`, `fichier-2.svg`…).
 
-## Mise en page horizontale (landscape)
+## Mise en page Chindami-Kunkunshi (`@layout chindami`)
 
-La mise en page horizontale (mode songbook) n'est pas encore documentée.
+Le layout `chindami` reproduit les planches des deux recueils Chindami Kunkunshi 
+(ちんだみ工工四百選集), ouvrages utilisé par de nombreux musiciens.
+La mise en page est au format paysage, avec une section de titre vertical à droite,
+un bloc de tablatures verticales au centre, puis une section de paroles.
