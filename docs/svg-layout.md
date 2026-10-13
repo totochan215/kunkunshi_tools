@@ -140,7 +140,7 @@ droite à gauche.
 
 - Le **titre** occupe la colonne la plus à droite de la première page du morceau, cette section pouvant également porter des informations complémentaires telles que l'auteur et l'accordage.
 - Chaque dan est constitué d'une **pile de cases** et d'une **colonne marker** (même largeur qu'une case), dans laquelle sont placés les boucles de répétitions, les syllabes vocales, les symboles de technique de chant, et la hauteur de chant.
-- les **paroles** occupent les dernières colonnes de la dernière page.
+- Les **paroles** occupent les dernières colonnes de la dernière page.
 - Les dans sont séparés par une marge,
 - Pour une régularité de la mise en page, le titre et les paroles occupent des espaces correspondant à des **dans virtuels**, de même largeur qu'un dan, mais sans cases ni marker ni bordures,
 - La sortie est automatiquement multipage : chaque page est rendue sous forme d'un SVG
@@ -148,14 +148,14 @@ droite à gauche.
 
 ### Mise en page Chindami-Kunkunshi (`@layout chindami`)
 
-Le layout `chindami` émule le format des deux recueils Chindami Kunkunshi (ちんだみ工工四百選集), ouvrages utilisé par de nombreux musiciens. La mise en page est au format paysage, avec une section de titre vertical à droite, un bloc de tablatures verticales au centre, puis une section de paroles.
+Le layout `chindami` émule le format des deux recueils Chindami Kunkunshi (ちんだみ工工四百選集), ouvrages utilisé par de nombreux musiciens. La mise en page est au format vertical, avec une section de titre vertical à droite, un bloc de tablatures verticales au centre, puis une section de paroles.
 
 Cette mise en page n'est pas encore documentée.
 
 ### Mise en page pour tutoriel vidéo (`@layout tuto`)
 
 Le layout `tuto` permet de créer des vidéos tutorielles sur l'exemple de https://www.youtube.com/watch?v=GvcZoeCbIPQ
-Il se base sur la mise en page horizontale. Le nombre de dans et de cases par dan sont pilotés par les métadonnées. L'ensemble se lit de gauche à droite et de haut en bas.
+La mise en page est au format horizontal. Le nombre de dans et de cases par dan sont pilotés par les métadonnées, de même que la taille du bloc. L'ensemble se lit de gauche à droite et de haut en bas.
 
 Le titre, l'accordage et d'autres informations sont rendus sur une page à part.
 
