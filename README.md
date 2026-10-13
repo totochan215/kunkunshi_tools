@@ -35,6 +35,10 @@ Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`, `-p
 
 Conversion KKML → PDF : script non écrit à ce jour.
 
+### kkml2portama.py
+
+Conversion KKML → JSON Portama : script non écrit à ce jour.
+
 ## Le format KKML
 
 Format texte permettant de saisir et mettre en forme des tablatures 工工四 (kunkunshi) sous une forme simple et intuitive. KKML pour KunKunshi Markup Language. Et si ça marche pas, c'est 💩
