@@ -170,7 +170,7 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 #### Kandokoro en romaji vers kandokoro en kanji
 
-Dans les blocs tab:: uniquement, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
+Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
 
 | Romaji | Kanji |
 |--------|-------|
@@ -207,7 +207,7 @@ Dans les blocs tab:: uniquement, les kandokoro exprimés en romaji sont toléré
 
 #### Positions étendues en kanji composite vers positions étendues en katakana + kanji
 
-Dans les blocs tab:: uniquement, les kandokoro étendus exprimés sous la forme d'un kanji composite sont tolérés. C'est toutefois la forme katakana + kanji qui est canonique.
+Dans les blocs `tab::`, les kandokoro étendus exprimés sous la forme d'un kanji composite sont tolérés. C'est toutefois la forme katakana + kanji qui est canonique.
 
 | Kanji  | Katakana + Kanji |
 |--------|------------------|
@@ -236,8 +236,8 @@ Dans les blocs tab:: uniquement, les kandokoro étendus exprimés sous la forme 
 ## Bonnes pratiques
 
 Ces bonnes pratiques visent à faciliter l'exécution du morceau en ayant le fichier KKML brut sous les yeux.
-- Il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
-- Il est **recommandé** d'adopter le même découpage en lignes dans tabs:: et tabs-lyrics::
+- Il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant `::tab` `::tab-lyrics` `::lyrics`
+- Il est **recommandé** d'adopter le même découpage en lignes dans `tabs::` et `tabs-lyrics::`
 
 ## Pour en savoir plus
 
