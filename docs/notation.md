@@ -14,24 +14,22 @@ Les caractères de position (勘所, kandokoro) représentent les positions sur 
 
 Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) et doigtés :
 
-| Position | Lecture   | Hauteur (demi-tons) | Corde | Doigt | Variante |
+| Position | Lecture   | Distance de l'utaguchi (cm) | Corde | Doigt | Variante |
 |----------|-----------|---------------------|--|-----|----------|
-| 合       | あい (ai)   | 0 | 男絃 |開弦 | |
-| 乙       | おつ (otsu) | +2 | 男絃 |㊀ | |
-| 老       | ろう (rō)   | +4 | 男絃 | ㊁ | |
-| 四       | よん (yon)  | +5 | 中絃 | 開弦 | |
-| 上       | じょう (jō) | +7 | 中絃 | ㊀ | |
-| 中       | なか (naka) | +9 | 中絃 | ㊁ | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
-| 尺       | しゃく (shaku) | +10 | 中絃 | ㊃ | |
-| 工       | こう (kō)     | +12 | 女絃 | 開弦 | |
-| 五       | ご (go)      | +14 | 女絃 | ㊀ | |
-| 六       | ろく (roku)   | +16 | 女絃 | ㊁ | |
-| 七       | しち (shichi) | +17 | 女絃 | ㊃ | |
-| 八       | はち (hachi)  | +19 | 女絃 | ㊃ | |
-| 九       | きゅう (kyū)  | +21 | 女絃 | ㊃ | |
-| 十       | じゅう (jyū)  | +22 | 女絃 | ㊃ | |
-
-TODO: remplacer les hauteurs par une distance du Utaguchi en cm.
+| 合       | あい (ai)   | 0,0 | 男絃 |開弦 | |
+| 乙       | おつ (otsu) | 6,5 | 男絃 |㊀ | |
+| 老       | ろう (rō)   | 12,4 | 男絃 | ㊁ | |
+| 四       | よん (yon)  | 0,0 | 中絃 | 開弦 | |
+| 上       | じょう (jō) | 6,5 | 中絃 | ㊀ | |
+| 中       | なか (naka) | 12,4 | 中絃 | ㊁ | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
+| 尺       | しゃく (shaku) | 15,1 | 中絃 | ㊃ | |
+| 工       | こう (kō)     | 0,0 | 女絃 | 開弦 | |
+| 五       | ご (go)      | 6,5 | 女絃 | ㊀ | |
+| 六       | ろく (roku)   | 12,4 | 女絃 | ㊁ | |
+| 七       | しち (shichi) | 15,1 | 女絃 | ㊃ | |
+| 八       | はち (hachi)  | 20,0 | 女絃 | ㊃ | |
+| 九       | きゅう (kyū)  | 24,3 | 女絃 | ㊃ | |
+| 十       | じゅう (jyū)  | 26,3 | 女絃 | ㊃ | |
 
 \* Doigtés des positions au-delà du majeur à confirmer : selon les écoles et la position de la main (上部/中部), 尺 et 七 peuvent se jouer index ou majeur (traité 野村流, position médiane : 老中六 index, 尺七 majeur, 八九 auriculaire). Les cordes à vide (合四工) et les doigtés index/majeur sont établis.
 
