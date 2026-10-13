@@ -1,17 +1,19 @@
 # Référence des mises en page SVG
 
-## Mise en page verticale standard
+## Mises en pages standard
+
+### Mise en page verticale standard
 
 Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cases se lisent de haut en bas et de droite à gauche. Un dan correspond à une colonne.
 
-### Structure générale
+#### Structure générale
 
 ```
 [paroles verticales]  [grille de tablature]  [titre vertical]
         gauche               centre             droite
 ```
 
-### Constantes de dimensions
+#### Constantes de dimensions
 
 - `cell_w = 52` — largeur de case
 - `cell_h = 58` — hauteur de case
@@ -21,7 +23,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - `header_h = 40` — en-tête réduit en mode vertical avec titre (le titre n'est pas dans l'en-tête mais rendu verticalement à droite). 70 en mode horizontal ou sans titre.
 - `marker_w = cell_w // 2` (= 26) quand `@marker on`, sinon 0
 
-### Titre vertical (à droite de la grille)
+#### Titre vertical (à droite de la grille)
 
 - `TITLE_W = 36` — largeur de la colonne titre
 - `TITLE_GAP = 10` — gap entre grille et titre
@@ -33,7 +35,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Genre : rendu verticalement sous l'accordage, `font-size = 15`, gris plus clair (#777)
 - L'accordage commence après le dernier caractère du titre + 20px, le genre après l'accordage + 15px
 
-### Grille de tablature
+#### Grille de tablature
 
 - Les colonnes sont disposées de droite à gauche (colonne 0 = la plus à droite)
 - Chaque colonne contient `rows_per_col` cases (défaut 12, configurable via `@cols`)
@@ -41,7 +43,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Position x de la colonne ci : `x = total_w - mr - title_offset - (ci + 1) * group_w`
 - Deux passes : d'abord tous les rectangles (grille), puis toutes les notes par-dessus (pour que les notes à cheval ne soient pas masquées par les bordures)
 
-### Paroles verticales (à gauche de la grille)
+#### Paroles verticales (à gauche de la grille)
 
 - `LYRICS_CHAR_SP = 16` — espacement vertical entre caractères
 - `LYRICS_LINE_GAP = 10` — gap supplémentaire entre lignes d'un couplet
@@ -53,14 +55,14 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Numéros de couplet : les lignes commençant par `一、`, `二、`, etc. (numéraux CJK + 、) sont détectées via `VERSE_NUM_RE`. La longueur du numéro (ex : 2 pour `一、`) est utilisée comme indent : chaque ligne suivante du couplet reçoit un décalage vertical supplémentaire de `verse_indent * adjusted_sp` pour s'aligner sous le numéro.
 - Ajustement de hauteur : désactivé. Les paroles utilisent un espacement fixe (`LYRICS_SP = 18`) et un alignement en haut, sans justification.
 
-#### Calcul de l'espace paroles
+##### Calcul de l'espace paroles
 
 1. Compter le nombre total de couplets (lignes vides séparent les couplets)
 2. `lyrics_total_w = n_verses * LYRICS_COL_W + (n_verses - 1) * LYRICS_VERSE_GAP`
 3. `lyrics_offset = lyrics_total_w + 12` (gap de 12 entre paroles et grille)
 4. `total_w` inclut `lyrics_offset`, ce qui décale automatiquement la grille vers la droite
 
-#### Positionnement des couplets
+##### Positionnement des couplets
 
 - Chaque couplet est une colonne verticale, disposée de droite à gauche
 - Couplet 0 (verse 0) = le plus proche de la grille (à droite), couplet n-1 = le plus à gauche
@@ -68,7 +70,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Les caractères sont écrits de haut en bas dans chaque colonne, avec `LYRICS_LINE_GAP` entre les lignes du couplet
 - Les paroles sont rendues après la grille, avant le titre
 
-### Marques de répétition (flèches)
+#### Marques de répétition (flèches)
 
 Les marqueurs `|:` (début) et `:|` (fin) peuvent être attachés aux tokens (`|:工`, `合/尺:|`) ou utilisés comme tokens autonomes. Le convertisseur les détache avant le rendu des notes via `_strip_repeat_marks()`.
 
@@ -83,15 +85,15 @@ Rendu en mode horizontal : les flèches sont placées à l'intérieur de la case
 
 Fonction de rendu : `_render_repeat_arrow(out, x, cy, cell_h, fs, arrow_type)` où `cy` est le top de la case et `arrow_type` est `'start'` (↓) ou `'end'` (↑).
 
-## Largeur totale
+### Largeur totale
 
 `total_w = max_cols * group_w + ml + mr + title_offset + lyrics_offset`
 
-### Rotation des parenthèses en mode vertical
+#### Rotation des parenthèses en mode vertical
 
 En typographie japonaise verticale, les parenthèses （）, (), les crochets 「」 et 『』 doivent être pivotés de 90° dans le sens horaire. Le convertisseur les détecte via `VERTICAL_ROTATE_CHARS = set("（）()「」『』")` et applique `transform="rotate(90 x cy)"` sur l'élément `text` SVG, où `cy` est le centre visuel approximatif du glyphe (`y - fs * 0.35`). Cette rotation s'applique au titre, à l'accordage et aux paroles.
 
-### Syllabes vocales dans la colonne marker
+#### Syllabes vocales dans la colonne marker
 
 Les syllabes vocales sont rendues dans la colonne marker (largeur `marker_w`) à droite de chaque pile de cases. Chaque syllabe est un caractère double-largeur (hiragana/katakana) positionné à la même hauteur verticale que la note correspondante.
 
@@ -103,18 +105,18 @@ Les syllabes vocales sont rendues dans la colonne marker (largeur `marker_w`) à
 
 Les syllabes peuvent chevaucher la bordure inférieure de la case. Jusqu'à 4 syllabes ou plus peuvent être empilées verticalement dans une seule case, espacées de `SYLLABLE_FS * 0.9` pour éviter le chevauchement visuel.
 
-### Hauteur totale
+#### Hauteur totale
 
 `total_h` est calculée en cumulant : en-tête, sections tab (max_col_height * cell_h), et au minimum la hauteur du titre vertical.
 Les paroles verticales n'ajoutent pas de hauteur (elles s'alignent sur la hauteur de la grille).
 
-### Cas des positions hautes + 下老 ou 下尺
+#### Cas des positions hautes + 下老 ou 下尺
 
 Le préfixe イ ou 口 peut aussi s'appliquer à 下老 et 下尺. Le token fait alors 3 caractères (ex. イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Ex. utilisé dans Hiyamikachibushi).
 
 Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺* = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
-### Pagination multipage
+#### Pagination multipage
 
 Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sortie imprimable (PDF, impression), la méta `@page_dans N` ou l'option CLI `-p N` / `--page-dans N` limite le nombre de dans par page : le rendu produit alors un SVG complet par page (`chanson-1.svg`, `chanson-2.svg`, …).
 
@@ -123,13 +125,15 @@ Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sorti
 - Les blocs `::lyrics` (paroles verticales) apparaissent sur la première page.
 - Référence : les PDF Portama affichent au maximum 12 piles (dans) par page en A4 paysage.
 
-## Mise en page standard horizontale
+### Mise en page horizontale standard
 
 La mise en page horizontale (mode songbook) n'est pas encore documentée.
 
-## Mise en page Nomura-ryu (`@layout nomura`)
+## Mises en page complexes (livrées)
 
-Le layout `nomura` reproduit les planches des recueils Nomura-ryu (工工四
+### Mise en page Nomura-ryu (`@layout nomura`)
+
+Le layout `nomura` émule le format des recueils Nomura-ryu (工工四
 traditionnel) : une page A4 **portrait** encadrée par un filet (seul le
 numéro de page est à l'extérieur), jusqu'à **7 colonnes (dans)** par page,
 chacune de **12 cases empilées** lues de haut en bas — l'ensemble se lit de
@@ -148,7 +152,7 @@ droite à gauche.
 
 ## Mise en page Chindami-Kunkunshi (`@layout chindami`)
 
-Le layout `chindami` reproduit les planches des deux recueils Chindami Kunkunshi 
+Le layout `chindami` émule le format des deux recueils Chindami Kunkunshi 
 (ちんだみ工工四百選集), ouvrages utilisé par de nombreux musiciens.
 La mise en page est au format paysage, avec une section de titre vertical à droite,
 un bloc de tablatures verticales au centre, puis une section de paroles.
