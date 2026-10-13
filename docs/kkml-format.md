@@ -170,7 +170,7 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 #### Kandokoro en romaji vers kandokoro en kanji
 
-Dans les blocs tab:: uniquement, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique.
+Dans les blocs tab:: uniquement, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
 
 | Romaji | Kanji |
 |--------|-------|
