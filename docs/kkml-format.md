@@ -209,6 +209,20 @@ Dans les blocs tab:: uniquement, les kandokoro exprimés en romaji sont toléré
 
 Dans les blocs tab:: uniquement
 
+| Romaji | Katakana + Kanji |
+|--------|------------------|
+| 佮     | イ合              |
+| 亿     | イ乙              |
+| 佬     | イ老              |
+| 伵     | イ四              |
+| 仩     | イ上              |
+| 仲     | イ中              |
+| 伬     | イ尺              |
+| 仜     | イ工              |
+| 伍     | イ五              |
+| 仈     | イ八              |
+| 仇     | イ九              |
+
 ## Bonnes pratiques
 
 - Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
