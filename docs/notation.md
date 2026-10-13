@@ -12,7 +12,7 @@ Les caractères de position (勘所, kandokoro) représentent les positions sur 
 
 合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
 
-Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) et doigtés :
+Lecture usuelle, position sur le manche à partir de l'utaguchi (唄口), corde, doigté standard :
 
 | Position | Lecture   | Distance de l'utaguchi (cm) | Corde | Doigt | Variante |
 |----------|-----------|---------------------|--|-----|----------|
@@ -32,6 +32,7 @@ Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) 
 | 十       | じゅう (jyū)  | 26,3 | 女絃 | ㊃ | |
 
 \* Doigtés des positions au-delà du majeur à confirmer : selon les écoles et la position de la main (上部/中部), 尺 et 七 peuvent se jouer index ou majeur (traité 野村流, position médiane : 老中六 index, 尺七 majeur, 八九 auriculaire). Les cordes à vide (合四工) et les doigtés index/majeur sont établis.
+\* Sur la base d'un positionnement du Koma (駒) à 60 cm de l'utaguchi
 
 Notation 野村流 des doigtés (指位記号) : les kanji numéraux encerclés sont utilisés dans la marge gauche des kunkunshi 野村流 pour indiquer le doigté et les changements de position de la main gauche — ㊀ (一) = 人差指 (index), ㊁ (二) = 中指 (majeur), ㊂ (三) = 無名指 (annulaire), ㊃ (四) = 小指 (auriculaire). Bloc Unicode U+3280–U+3283 (Enclosed CJK Letters and Months), la série complète allant jusqu'à ㊉ (十). NB : ces caractères ne doivent pas apparaître comme tokens de position dans la grille — ils y seraient confondus avec le silence ◯.
 
