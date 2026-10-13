@@ -222,6 +222,16 @@ Dans les blocs tab:: uniquement, les kandokoro étendus exprimés sous la forme 
 | 伍     | イ五              |
 | 仈     | イ八              |
 | 仇     | イ九              |
+| 㕶     | ロ五              |
+| 呎     | ロ尺              |
+| 叿     | ロ工              |
+| 呬     | ロ四              |
+| 哈     | ロ合              |
+| 咾     | ロ老              |
+| 𠮟     | ロ七              |
+| 叱     | ロ七              |
+| 叭     | ロ八              |
+| 㕤     | ロ九              |
 
 ## Bonnes pratiques
 
