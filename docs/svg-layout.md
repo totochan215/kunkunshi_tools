@@ -136,14 +136,16 @@ La mise en page horizontale (mode songbook) n'est pas encore documentée.
 Le layout `nomura` émule le format des recueils Nomura-ryu (工工四
 traditionnel) : une page A4 **portrait** encadrée par un filet (seul le
 numéro de page est à l'extérieur), jusqu'à **7 colonnes (dans)** par page,
-chacune de **12 cases empilées** lues de haut en bas — l'ensemble se lit de
+chacune composée de **12 cases empilées** lues de haut en bas — l'ensemble se lit de
 droite à gauche.
 
-- Chaque dan est un groupe cases + sous-colonne **marker** (même largeur
-  qu'une case) : les flèches de répétition et les syllabes vocales s'y
-  placent.
-- Le **titre** (avec accordage) occupe la colonne la plus à droite de la
-  première page ; les **paroles** occupent les dernières colonnes de la
+- Chaque dan est une pile de cases + sous-colonne **marker** (même largeur
+  qu'une case) : les flèches de répétition, les syllabes vocales, et certains
+  marqueurs de technique s'y placent.
+- Le **titre** occupe la colonne la plus à droite de la
+  première page, cette section pouvant également porter des informations
+  complémentaires telles que l'auteur et l'accordage.
+- les **paroles** occupent les dernières colonnes de la
   dernière page.
 - Cases plus hautes que larges (~31,7 pt × 60,6 pt), dans séparés par une
   marge blanche.
