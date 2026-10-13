@@ -151,7 +151,7 @@ Ces caractères ne sont pas rendus tels quels : l'usage prévu est de les normal
 
 Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du kanji 人. ロ est un raccourci du radical 口偏 (口). Les composites précomposés qui existent en Unicode sont listés plus haut à titre d'information ; le KKML utilise les préfixes katakana (2 caractères) comme forme canonique.
 
-### Caractères vocaux (non rendus sur le sanshin)
+### Caractères de hauteur vocale
 
 才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — représentent des hauteurs de note inférieures à 合, n'apparaissent que dans la transcription vocale, notamment dans certaines tablatures Nomura-ryu.
 
