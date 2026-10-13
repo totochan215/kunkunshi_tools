@@ -170,16 +170,15 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 #### Caractères graphiquement équivalents
 
-Dans les blocs `tab::`, les variantes du silence sont tolérées. C'est toutefois le silence qui est canonique.
+Dans les blocs `tab::`, les certains symboles/caractères graphiquement équivalents à leur forme canonique sont tolérés.
 
-| Symbole | Forme canonique |
-|---------|-----------------|
-| ◯      | ◯              |
-| ○       | ◯              |
-| 〇      | ◯              |
-| O       | ◯              |
-| o       | ◯              |
-| 0       | ◯              |
+| Symbole | Forme canonique | Usage (pour mémoire) |
+|---------|-----------------|----------------------|
+| ○       | ◯              | Repos                |
+| 〇      | ◯              | Repos                |
+| O       | ◯              | Repos                |
+| o       | ◯              | Repos                |
+| 0       | ◯              | Repos                |
 
 #### Kandokoro en romaji vers kandokoro en kanji
 
