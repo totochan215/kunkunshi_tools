@@ -170,7 +170,7 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 #### Caractères graphiquement équivalents
 
-Dans les blocs `tab::`, les certains symboles/caractères graphiquement équivalents à leur forme canonique sont tolérés.
+Dans les blocs `tab::`, certains symboles/caractères graphiquement équivalents à leur forme canonique sont tolérés.
 
 | Symbole | Forme canonique | Usage (pour mémoire) |
 |---------|-----------------|----------------------|
