@@ -235,7 +235,8 @@ Dans les blocs tab:: uniquement, les kandokoro étendus exprimés sous la forme 
 
 ## Bonnes pratiques
 
-- Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
+Ces bonnes pratiques visent à faciliter l'exécution du morceau en ayant le fichier KKML brut sous les yeux.
+- Il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
 - Il est **recommandé** d'adopter le même découpage en lignes dans tabs:: et tabs-lyrics::
 
 ## Pour en savoir plus
