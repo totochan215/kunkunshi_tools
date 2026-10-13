@@ -60,7 +60,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 ### Positions hautes (préfixes イ et ロ)
 
-Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe en katakana est accolé directement au kanji de position (token à deux caractères).
+Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe en katakana est accolé au kanji de position (token à deux caractères).
 
 | Préfixe | Lecture  | Signification | Lecture |
 |---------|----------|---------------|---------|
