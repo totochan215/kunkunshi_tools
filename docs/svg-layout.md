@@ -155,7 +155,7 @@ Cette mise en page n'est pas encore documentée.
 ### Mise en page pour tutoriel vidéo (`@layout tuto`)
 
 Le layout `tuto` permet de créer des vidéos tutorielles sur l'exemple de https://www.youtube.com/watch?v=GvcZoeCbIPQ
-La mise en page est au format horizontal. Le nombre de dans et de cases par dan sont pilotés par les métadonnées, de même que la taille du bloc. L'ensemble se lit de gauche à droite et de haut en bas.
+La mise en page est au format horizontal. Le nombre de dans et le nombre de cases par dan sont pilotés par les métadonnées, de même que la largeur et la hauteur du bloc en pixels. L'ensemble se lit de gauche à droite et de haut en bas.
 
 Le titre, l'accordage et d'autres informations sont rendus sur une page à part.
 
