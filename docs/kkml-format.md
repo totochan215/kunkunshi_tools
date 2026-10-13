@@ -168,6 +168,8 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 ### TODO: Réduction de kandokoro exprimés en romaji vers leur forme canonique
 
+Dans les blocs tab:: uniquement
+
 | Romaji | Kanji |
 |--------|-------|
 | ai     | 合    |
