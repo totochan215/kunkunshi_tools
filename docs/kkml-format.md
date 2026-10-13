@@ -207,7 +207,7 @@ Dans les blocs tab:: uniquement, les kandokoro exprimés en romaji sont toléré
 
 #### Positions étendues en kanji composite vers positions étendues en katakana + kanji
 
-Dans les blocs tab:: uniquement
+Dans les blocs tab:: uniquement, les kandokoro étendus exprimés sous la forme d'un kanji unique sont tolérés. C'est toutefois la forme 1 katakana + 1 kanji qui est canonique.
 
 | Romaji | Katakana + Kanji |
 |--------|------------------|
