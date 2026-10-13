@@ -51,7 +51,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 ### Positions étendues
 
-| Token | Lecture | Rendu | Note |
+| Position | Lecture | Rendu | Note |
 |-------|-------|---|------|
 | 下老   | shita-rō | 下 + 老 condensés en demi-largeur | |
 | 尺♯   | shaku-sharp | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
@@ -71,7 +71,7 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 
 ##### 2 caractères (préfixe + kanji)
 
-| Token | Lecture  | Position                 |
+| Position | Lecture  | Position                 |
 |-------|----------|--------------------------|
 | イ合   | i-ai     | 1 octave au-dessus de 合 |
 | イ乙   | i-otsu   | 1 octave au-dessus de 乙 |
@@ -89,7 +89,7 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 
 ##### 3 caractères (préfixe + 下 + kanji)
 
-| Token | Lecture       | Position                  |
+| Position | Lecture       | Position                  |
 |-------|---------------|---------------------------|
 | イ下老 | i-shita-rō    | 1 octave au-dessus de 下老 |
 | イ下尺 | i-shita-shaku | 1 octave au-dessus de 下尺 |
@@ -98,7 +98,7 @@ L'existence de イ下八 n'est pas attestée.
 
 #### Combinaisons valides avec ロ (même hauteur, autre corde)
 
-| Token | Lecture              | Position                                           |
+| Position | Lecture              | Position                                           |
 |-------|----------------------|----------------------------------------------------|
 | ロ上   | ro-jō ou kō-jō       | Même hauteur que 上 mais joué sur la corde grave   |
 | ロ中   | ro-naka ou kō-naka   | Même hauteur que 中 mais joué sur la corde grave   |
@@ -170,7 +170,6 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 | Position | Lecture                | Hauteur (demi-tons) | Doigt | Variante |
 |----------|------------------------|---------------------|------|----------|
 | 下勺      | したしゃく (shita-shaku) | -1                  | —    | 尺♯       |     
-
 
 ## Tokens spéciaux
 
