@@ -138,17 +138,12 @@ numéro de page est à l'extérieur), jusqu'à **7 colonnes (dans)** par page,
 chaque dan étant composé de **12 cases empilées** lues de haut en bas — l'ensemble se lit de
 droite à gauche.
 
-- Chaque dan est une pile de cases + sous-colonne **marker** (même largeur
-  qu'une case) : les flèches de répétition, les syllabes vocales, et certains
-  marqueurs de technique s'y placent.
-- Le **titre** occupe la colonne la plus à droite de la
-  première page, cette section pouvant également porter des informations
-  complémentaires telles que l'auteur et l'accordage.
-- les **paroles** occupent les dernières colonnes de la
-  dernière page.
-- Cases plus hautes que larges (~31,7 pt × 60,6 pt), dans séparés par une
-  marge blanche.
-- La sortie est automatiquement multipage : chaque page est un SVG
+- Le **titre** occupe la colonne la plus à droite de la première page, cette section pouvant également porter des informations complémentaires telles que l'auteur et l'accordage.
+- Chaque dan est constitué d'une pile de cases et d'une colonne **marker** (même largeur qu'une case), dans laquelle sont placés les boucles de répétitions, les syllabes vocales, les symboles de technique de chant, et la hauteur de chant.
+- les **paroles** occupent les dernières colonnes de la dernière page.
+- Les dans sont séparés par une marge,
+- Pour une régularité de la mise en page, le titre et les paroles occupent des espaces correspondant à des **dans virtuels**, de même largeur qu'un dan, mais sans cases ni marker ni bordures,
+- La sortie est automatiquement multipage : chaque page est rendue sous forme d'un SVG
   autonome (`fichier-1.svg`, `fichier-2.svg`…).
 
 ## Mise en page Chindami-Kunkunshi (`@layout chindami`)
