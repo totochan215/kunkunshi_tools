@@ -155,6 +155,8 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 
 才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — représentent des hauteurs de note inférieures à 合, n'apparaissent que dans la transcription vocale, notamment dans certaines tablatures Nomura-ryu.
 
+Elles ne correspondent pas à une position réelle sur le manche du sanshin (une telle position serait à une distance négative de l'utagichi !).
+
 #### Positions de base
 
 | Position | Lecture      | Hauteur (demi-tons)   | Doigt | Variante |
