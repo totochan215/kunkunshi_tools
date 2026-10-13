@@ -139,7 +139,7 @@ chaque dan étant composé de **12 cases empilées** lues de haut en bas — l'e
 droite à gauche.
 
 - Le **titre** occupe la colonne la plus à droite de la première page du morceau, cette section pouvant également porter des informations complémentaires telles que l'auteur et l'accordage.
-- Chaque dan est constitué d'une pile de cases et d'une colonne **marker** (même largeur qu'une case), dans laquelle sont placés les boucles de répétitions, les syllabes vocales, les symboles de technique de chant, et la hauteur de chant.
+- Chaque dan est constitué d'une **pile de cases** et d'une **colonne marker** (même largeur qu'une case), dans laquelle sont placés les boucles de répétitions, les syllabes vocales, les symboles de technique de chant, et la hauteur de chant.
 - les **paroles** occupent les dernières colonnes de la dernière page.
 - Les dans sont séparés par une marge,
 - Pour une régularité de la mise en page, le titre et les paroles occupent des espaces correspondant à des **dans virtuels**, de même largeur qu'un dan, mais sans cases ni marker ni bordures,
