@@ -129,7 +129,7 @@ Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sorti
 
 La mise en page horizontale (mode songbook) n'est pas encore documentée.
 
-## Mises en page complexes (livrées)
+## Mises en page complexes
 
 ### Mise en page Nomura-ryu (`@layout nomura`)
 
