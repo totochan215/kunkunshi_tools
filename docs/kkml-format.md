@@ -166,6 +166,8 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 
 NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
+### TODO: Réduction de kandokoro exprimés en romaji vers leur forme canonique
+
 ## Bonnes pratiques
 
 - Dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant ::tab ::tab-lyrics ::lyrics
