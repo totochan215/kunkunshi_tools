@@ -14,10 +14,10 @@ Les caractères de position, ou kandokoro (勘所), représentent les positions 
 
 Lecture usuelle, position sur le manche à partir de l'utaguchi (唄口), corde, doigté standard :
 
-| Position | Lecture   | Distance de l'utaguchi (cm) | Corde | Doigt | Variante |
+| Position | Lecture   | Distance de l'utaguchi (cm) | Corde | Doigté | Variante |
 |----------|-----------|---------------------|--|-----|----------|
-| 合       | あい (ai)   | 0,0 | 男絃 |開弦 | |
-| 乙       | おつ (otsu) | 6,5 | 男絃 |㊀ | |
+| 合       | あい (ai)   | 0,0 | 男絃 | 開弦 | |
+| 乙       | おつ (otsu) | 6,5 | 男絃 | ㊀ | |
 | 老       | ろう (rō)   | 12,4 | 男絃 | ㊁ | |
 | 四       | よん (yon)  | 0,0 | 中絃 | 開弦 | |
 | 上       | じょう (jō) | 6,5 | 中絃 | ㊀ | |
