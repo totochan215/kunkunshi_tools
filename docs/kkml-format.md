@@ -186,42 +186,42 @@ TODO: utiliser les lettres O et o n'est pas une bonne idée : risque de collisio
 
 Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
 
-| Romaji | Kanji |
-|--------|-------|
-| ai     | 合    |
-| otsu   | 乙    |
-| ro     | 老    |
-| rou    | 老    |
-| rō     | 老    |
-| yon    | 四    |
-| shi    | 四    |
-| jo     | 上    |
-| jou    | 上    |
-| jō     | 上    |
-| jyo    | 上    |
-| jyou   | 上    |
-| jyō    | 上    |
-| naka   | 中    |
-| chu    | 中    |
-| chuu   | 中    |
-| chū    | 中    |
-| shaku  | 尺    |
-| ko     | 工    |
-| kou    | 工    |
-| kō     | 工    |
-| go     | 五    |
-| roku   | 六    |
-| shichi | 七    |
-| hachi  | 八    |
-| kyu    | 九    |
-| kyuu   | 九    |
-| kyū    | 九    |
-| ju     | 十    |
-| juu    | 十    |
-| jū     | 十    |
-| jyu    | 十    |
-| jyuu   | 十    |
-| jyū    | 十    |
+| Romaji   | Kanji |
+|----------|-------|
+| `ai`     | 合    |
+| `otsu`   | 乙    |
+| `ro`     | 老    |
+| `rou`    | 老    |
+| `rō`     | 老    |
+| `yon`    | 四    |
+| `shi`    | 四    |
+| `jo`     | 上    |
+| `jou`    | 上    |
+| `jō`     | 上    |
+| `jyo`    | 上    |
+| `jyou`   | 上    |
+| `jyō`    | 上    |
+| `naka`   | 中    |
+| `chu`    | 中    |
+| `chuu`   | 中    |
+| `chū`    | 中    |
+| `shaku`  | 尺    |
+| `ko`     | 工    |
+| `kou`    | 工    |
+| `kō`     | 工    |
+| `go`     | 五    |
+| `roku`   | 六    |
+| `shichi` | 七    |
+| `hachi`  | 八    |
+| `kyu`    | 九    |
+| `kyuu`   | 九    |
+| `kyū`    | 九    |
+| `ju`     | 十    |
+| `juu`    | 十    |
+| `jū`     | 十    |
+| `jyu`    | 十    |
+| `jyuu`   | 十    |
+| `jyū`    | 十    |
 
 #### Positions étendues en kanji composite vers positions étendues en katakana + kanji
 
@@ -229,27 +229,27 @@ Dans les blocs `tab::`, les kandokoro étendus exprimés sous la forme d'un kanj
 
 | Kanji  | Katakana + Kanji |
 |--------|------------------|
-| 佮     | イ合              |
-| 亿     | イ乙              |
-| 佬     | イ老              |
-| 伵     | イ四              |
-| 仩     | イ上              |
-| 仲     | イ中              |
-| 伬     | イ尺              |
-| 仜     | イ工              |
-| 伍     | イ五              |
-| 仈     | イ八              |
-| 仇     | イ九              |
-| 㕶     | ロ五              |
-| 呎     | ロ尺              |
-| 叿     | ロ工              |
-| 呬     | ロ四              |
-| 哈     | ロ合              |
-| 咾     | ロ老              |
-| 𠮟     | ロ七              |
-| 叱     | ロ七              |
-| 叭     | ロ八              |
-| 㕤     | ロ九              |
+| `佮`     | イ合              |
+| `亿`     | イ乙              |
+| `佬`     | イ老              |
+| `伵`     | イ四              |
+| `仩`     | イ上              |
+| `仲`     | イ中              |
+| `伬`     | イ尺              |
+| `仜`     | イ工              |
+| `伍`     | イ五              |
+| `仈`     | イ八              |
+| `仇`     | イ九              |
+| `㕶`     | ロ五              |
+| `呎`     | ロ尺              |
+| `叿`     | ロ工              |
+| `呬`     | ロ四              |
+| `哈`     | ロ合              |
+| `咾`     | ロ老              |
+| `𠮟`     | ロ七              |
+| `叱`     | ロ七              |
+| `叭`     | ロ八              |
+| `㕤`     | ロ九              |
 
 ## Bonnes pratiques
 
