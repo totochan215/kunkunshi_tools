@@ -229,13 +229,13 @@ TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
 
 Dans les blocs `tab::`, les kandokoro étendus exprimés sous la forme d'un kanji composite sont tolérés. C'est toutefois la forme katakana + kanji qui est canonique.
 
-| Kanji    | Katakana + Kanji |
-|----------|------------------|
-| `佮`     | `イ合`            |
-| `亿`     | `イ乙`            |
-| `佬`     | `イ老`            |
-| `伵`     | `イ四`            |
-| `仩`     | `イ上`            |
+| Kanji         | Katakana + Kanji |
+|---------------|------------------|
+| `佮` (U+4F2E) | `イ合`            |
+| `亿` (U+4EBF) | `イ乙`            |
+| `佬` (U+4F6C) | `イ老`            |
+| `伵` (U+4F75) | `イ四`            |
+| `仩` (U+4EE9) | `イ上`            |
 | `仲`     | `イ中`            |
 | `伬`     | `イ尺`            |
 | `仜`     | `イ工`            |
