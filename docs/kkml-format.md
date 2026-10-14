@@ -223,6 +223,8 @@ Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est 
 | `jyuu`   | `十`    |
 | `jyū`    | `十`    |
 
+TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
+
 #### Positions étendues en kanji composite vers positions étendues en katakana + kanji
 
 Dans les blocs `tab::`, les kandokoro étendus exprimés sous la forme d'un kanji composite sont tolérés. C'est toutefois la forme katakana + kanji qui est canonique.
