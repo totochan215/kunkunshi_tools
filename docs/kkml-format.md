@@ -174,11 +174,13 @@ Dans les blocs `tab::`, certains symboles/caractères graphiquement équivalents
 
 | Symbole | Forme canonique | Usage (pour mémoire) |
 |---------|-----------------|----------------------|
-| ○       | ◯              | Repos                |
-| 〇      | ◯              | Repos                |
-| O       | ◯              | Repos                |
-| o       | ◯              | Repos                |
-| 0       | ◯              | Repos                |
+| ○ (U+25CB) | ◯              | Repos                |
+| 〇 (U+3007) | ◯              | Repos                |
+| O (0x4F) | ◯              | Repos                |
+| o (0x6F) | ◯              | Repos                |
+| 0 (0x30) | ◯              | Repos                |
+
+TODO: utiliser les lettres O et o n'est pas une bonne idée : risque de collision avec les romaji ?
 
 #### Kandokoro en romaji vers kandokoro en kanji
 
