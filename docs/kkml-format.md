@@ -172,13 +172,13 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 Dans les blocs `tab::`, certains symboles/caractères graphiquement équivalents à leur forme canonique sont tolérés.
 
-| Symbole | Forme canonique | Usage (pour mémoire) |
-|---------|-----------------|----------------------|
-| `○` (U+25CB) | `◯`              | Repos                |
-| `〇` (U+3007) | `◯`              | Repos                |
-| `O` (0x4F) | `◯`              | Repos                |
-| `o` (0x6F) | `◯`              | Repos                |
-| `0` (0x30) | `◯`              | Repos                |
+| Symbole       | Forme canonique | Usage (pour mémoire) |
+|---------------|-----------------|----------------------|
+| `○` (U+25CB)  | `◯` (U+25EF)   | Repos                |
+| `〇` (U+3007) | `◯` (U+25EF)   | Repos                |
+| `O` (0x4F)    | `◯` (U+25EF)   | Repos                |
+| `o` (0x6F)    | `◯` (U+25EF)   | Repos                |
+| `0` (0x30)    | `◯` (U+25EF)   | Repos                |
 
 TODO: utiliser les lettres O et o n'est pas une bonne idée : risque de collision avec les romaji ?
 
