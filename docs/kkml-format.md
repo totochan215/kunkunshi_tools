@@ -168,9 +168,9 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 
 NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
 
-#### Caractères graphiquement équivalents
+#### Caractères graphiquement similaires
 
-Dans les blocs `tab::`, certains symboles/caractères graphiquement équivalents à leur forme canonique sont tolérés.
+Dans les blocs `tab::`, certains symboles/caractères graphiquement similaires à leur forme canonique sont tolérés.
 
 | Symbole       | Forme canonique | Usage (pour mémoire) |
 |---------------|-----------------|----------------------|
