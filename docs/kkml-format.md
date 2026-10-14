@@ -162,7 +162,7 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 | `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
-| `＝` (U+FF1D)   | `=`           | taachi (二弾), tsuiri-bichi (列弾) |
+| `＝` (U+FF1D)   | `=`           | taachi (二弾), tsuiri-bichi (列弾) (accords) |
 | `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
 | `）` (U+FF09)   | `)`           | koekiri, fin de boucle vocale  |
 
