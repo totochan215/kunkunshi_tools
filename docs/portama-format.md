@@ -178,11 +178,11 @@ Notes :
 
 Valeurs de `orn` possibles :
 
-| `orn` | PUA     | Suffixe KKML | Description |
-|-------|---------|--------------|-------------|
-| `k`   | U+E031  | `^`          | kaki-utu    |
-| `u`   | U+E032  | `*`          | uchi-utu    |
-| `nu`  | U+E033  | `n`          | nuchi-utu   |
+| orn.  | PUA     | Correspondance en KKML | Description |
+|-------|---------|------------------------|-------------|
+| `k`   | U+E031  | `^`                    | kaki-utu    |
+| `u`   | U+E032  | `*`                    | uchi-utu    |
+| `nu`  | U+E033  | `n`                    | nuchi-utu   |
 
 Note : les ornements "nuchi-utu" et "taachi" de KKML ne sont pas supportés.
 
