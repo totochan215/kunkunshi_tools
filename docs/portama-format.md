@@ -131,43 +131,43 @@ Les cellules sont organisées comme suit :
 
 ## Correspondance PUA → symboles
 
-| PUA    | Symbole   | Position audio  | Corde | Commentaire |
-|--------|-----------|-----------------|-------|--------------
-| U+E000 | 合   | C01 | 男弦 | |
-| U+E001 | 乙   | C03 | 男弦 | |
-| U+E002 | 老   | C05 | 男弦 | |
-| U+E003 | 下老  | C06 | 男弦 | glyphe composite 下+老 |
-| U+E004 | ロ上 | C08 | 男弦 | glyphe composite ロ+上 |
-| U+E005 | ロ中 | C10 | 男弦 | glyphe composite ロ+中 |
-| U+E006 | ロ尺 | C12 | 男弦 | glyphe composite ロ+尺 |
-| U+E007 | イ合 | C13 | 男弦 | glyphe composite イ+合 |
-| U+E008 | イ乙 | C15 | 男弦 | glyphe composite イ+乙 |
-| U+E010 | 四   | B01 | 中弦 | |
-| U+E011 | 上   | B03 | 中弦 | |
-| U+E012 | 中   | B05 | 中弦 | |
-| U+E013 | 尺          | B06 | 中弦 | |
-| U+E014 | 下尺        | B08 | 中弦 | glyphe composite 下+尺 |
-| U+E015 | ロ五 | B10 | 中弦 | glyphe composite ロ+五 |
-| U+E016 | イ老 | B12 | 中弦 | glyphe composite イ+老 |
-| U+E017 | イ四 | B13 | 中弦 | glyphe composite イ+四 |
-| U+E018 | イ上 | B15 | 中弦 | glyphe composite イ+上 |
-| U+E020 | 工          | A03 | 女弦 | |
-| U+E021 | 五          | A05 | 女弦 | |
-| U+E022 | 六          | A07 | 女弦 | |
-| U+E023 | 七          | A08 | 女弦 | |
-| U+E024 | 八          | A10 | 女弦 | |
-| U+E025 | 九          | A12 | 女弦 | |
-| U+E026 | イ尺 | A14 | 女弦 | glyphe composite イ+尺 |
-| U+E027 | イ工 | A15 | 女弦 | glyphe composite イ+工 |
-| U+E028 | イ五 | A17 | 女弦 | glyphe composite イ+五 |
-| U+E030 | ○      | —  | —                 | silence |
-| U+E031 | kaki-utu    | —  | — | glyphe d'ornement |
-| U+E032 | uchi-utu    | —  | — | glyphe d'ornement |
-| U+E033 | nuki-utu    | —  | — | glyphe d'ornement |
-| U+E041 | ㊀     | —  | — | yubii-1 (index) |
-| U+E042 | ㊁     | —  | — | yubii-2 (majeur) |
-| U+E043 | ㊂     | —  | — | yubii-3 (non spécifié) |
-| U+E044 | ㊃     | —  | — | yubii-4 (auriculaire) |
+| PUA    | Symbole  | Commentaire            |
+|--------|----------|------------------------|
+| U+E000 | 合       |                        |
+| U+E001 | 乙       |                        |
+| U+E002 | 老       |                        |
+| U+E003 | 下老      | glyphe composite 下+老 |
+| U+E004 | ロ上.     | glyphe composite ロ+上 |
+| U+E005 | ロ中      | glyphe composite ロ+中 |
+| U+E006 | ロ尺      | glyphe composite ロ+尺 |
+| U+E007 | イ合      | glyphe composite イ+合 |
+| U+E008 | イ乙      | glyphe composite イ+乙 |
+| U+E010 | 四       |                       |
+| U+E011 | 上       |                       |
+| U+E012 | 中       |                       |
+| U+E013 | 尺       |                       |
+| U+E014 | 下尺      | glyphe composite 下+尺 |
+| U+E015 | ロ五.     | glyphe composite ロ+五 |
+| U+E016 | イ老.     | glyphe composite イ+老 |
+| U+E017 | イ四      | glyphe composite イ+四 |
+| U+E018 | イ上      | glyphe composite イ+上 |
+| U+E020 | 工       |                       |
+| U+E021 | 五       |                       |
+| U+E022 | 六       |                       |
+| U+E023 | 七       |                       |
+| U+E024 | 八       |                       |
+| U+E025 | 九       |                       |
+| U+E026 | イ尺      | glyphe composite イ+尺 |
+| U+E027 | イ工      | glyphe composite イ+工 |
+| U+E028 | イ五      | glyphe composite イ+五 |
+| U+E030 | ○        | silence               |
+| U+E031 | kaki-utu | glyphe d'ornement     |
+| U+E032 | uchi-utu | glyphe d'ornement     |
+| U+E033 | nuki-utu | glyphe d'ornement     |
+| U+E041 | ㊀       | yubii-1 (index)        |
+| U+E042 | ㊁       | yubii-2 (majeur)       |
+| U+E043 | ㊂       | yubii-3 (non spécifié) |
+| U+E044 | ㊃       | yubii-4 (auriculaire)  |
 
 Notes :
 
