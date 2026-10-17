@@ -49,24 +49,16 @@ Notation 野村流 des doigtés (指位記号) : les kanji numéraux encerclés 
 
 Wikipédia JA signale des variations de lecture selon la région et l'école. Aucun impact en KKML : les kanji sont identiques quelle que soit la lecture.
 
-Répartition par corde :
-
-| Corde   | Nom de corde            | Positions         | Hauteurs (本調子, base do)    |
-|---------|-------------------------|-------------------|------------------------------|
-| Grave   | 男絃 ou 男ジル (uojiru)   | 合 乙 老           | do, ré, mi                   |
-| Médiane | 中絃 ou 中ジル (nakajiru) | 四 上 中 尺         | fa, sol, la, si♭             |
-| Aiguë   | 女絃 ou 女ジル (miijiru)  | 工 五 六 七 八 九 十 | do, ré, mi, fa, sol, la, si♭ |
-
 Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-ton, quasi-équivalent du dièse ♯, combiné à un caractère de base. 下老 (シタロウ) = demi-ton au-dessus de 老 ; 下尺 = demi-ton au-dessus de 尺. Exception : 下八, qui n'est pas un demi-ton au-dessus de 八 mais un kandokoro propre — sur la 女絃 (corde aiguë), une case sous 八, doigté annulaire (無名指) selon la table 野村流 (source : 世禮國男, 増訂琉球音樂樂典, p. 14 : octave de 中, alias 仲). Les sources traditionnelles (école 野村流) traitent 下老 et 下尺 comme des 勘所 à part entière, avec lectures et doigtés propres ; la pratique moderne écrit aussi 尺♯ pour 下尺 (d'où l'option `@shaku_sharp`). Terminologie retenue dans ce projet : « position de base » pour les 14 caractères ci-dessus, « préfixe » pour 下 (demi-ton), イ (octave supérieure) et ロ (même hauteur, autre corde).
 
 ### Positions étendues
 
-| Position | Lecture | Distance de l'utaguchi (cm) | Rendu | Note |
-|-------|----|---|---|------|
-| 下老   | shita-rō | 15,1 |下 + 老 condensés en demi-largeur | |
-| 尺♯   | shaku-sharp | 17,6 | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
-| 下尺  | shita-shaku | 17,6 | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
-| 下八 | shita-hachi | 24,3 | 下 + 八 condensés en demi-largeur (idem 下老) | Sans cercle. Kandokoro propre (女絃 sous 八, octave de 中), pas un demi-ton |
+| Position | Lecture    | Distance de l'utaguchi (cm) | Commentaire          |
+|----------|------------|-----------------------------|----------------------|
+| 下老     | shita-rō    | 15,1                        | Parfois appelé ge-rō |
+| 尺♯      | shaku-sharp | 17,6                       |                      |
+| 下尺     | shita-shaku | 17,6                        |                      |
+| 下八     | shita-hachi | 24,3                        |                      |
 
 * Même remarque que ci-dessus concernant la distance à l'utaguchi.
 
