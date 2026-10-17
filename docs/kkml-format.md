@@ -187,7 +187,7 @@ TODO: utiliser les lettres O et o n'est pas une bonne idée : risque de collisio
 
 Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
 
-| Romaji   | Kanji<br>canonique  |
+| Romaji   | Kanji<br>(Canonique) |
 |----------|---------|
 | `ai`     | `合`    |
 | `otsu`   | `乙`    |
@@ -230,7 +230,7 @@ TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
 
 Dans les blocs `tab::`, les kandokoro étendus exprimés sous la forme d'un kanji composite sont tolérés. C'est toutefois la forme katakana + kanji qui est canonique.
 
-| Kanji          | Katakana + Kanji |
+| Kanji          | Katakana + Kanji<br>(Canonique) |
 |----------------|------------------|
 | `佮` (U+4F2E)  | `イ合`            |
 | `亿` (U+4EBF)  | `イ乙`            |
