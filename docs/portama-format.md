@@ -10,7 +10,7 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
   "musicno": 5168,
   "numDans": 19,
   "cellsPerDan": 24,
-  "score": [[...], [...], ... ],
+  "score": [[{...}, {...}, ...], [...], ...],
   "title": "かぎやで風節",
   "choshi": "hon",
   "chogen": "5",
