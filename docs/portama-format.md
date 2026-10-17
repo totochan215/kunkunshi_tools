@@ -45,7 +45,7 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `title`             | string  | Titre du morceau. |
 | `findName`          | string  | Inconnu (présumé : alias du titre pour les recherches). |
 | `speed`             | string  | Tempo. Ex : "120". |
-| `chogen`            | string  | Ajustement par rapport à l'accordage nominal, en demi-tons. Défaut : 5 (nominal) |
+| `chogen`            | string  | Ajustement par rapport à l'accordage nominal, en demi-tons. Défaut : 5 (nominal), pour cette valeur en 本調子, 合 = C3. |
 | `choshi`            | string  | Type d'accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
 | `rhythm`            | string  | Rythme. "0" = ?, "100" = ?. |
 | `rhythmMode`        | string  | Mode rythmique. "0" = ?, "100" = ?. |
