@@ -35,7 +35,7 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `userId`            | int     | Identifiant de l'utilisateur sur Portama. Défaut : 0. |
 | `numDans`           | int     | Nombre de dans. |
 | `cellsPerDan`       | int     | Nombre de cellules par dan (`24` ou `36`). Défaut : `24`|
-| `score`             | array   | Tableau 2D : Contenu de la tablature en dans et cellules, cf. ci-dessous |
+| `score`             | array   | Tableau 2D : Contenu de la tablature, cf. ci-dessous |
 | `allRubyData`       | array   | Tableau 2D : Paroles en phonétique avec alignement sur le rythme, cf. ci-dessous |
 | `price`             | int     | Prix en Yen pour les morceaux publiés sur la plateforme. Défaut : 0 |
 | `isPublished`       | int     | Indique si le morceau est publié sur la plateforme. Défaut : 0 |
