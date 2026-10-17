@@ -35,8 +35,8 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `userId`            | int     | Identifiant de l'utilisateur sur Portama. Défaut : 0. |
 | `numDans`           | int     | Nombre de dans (段) déclaré. |
 | `cellsPerDan`       | int     | Nombre de cellules par dan (`24` ou `36`). |
-| `score`             | array   | 2D : `[dan][cell]`. Contenu de la tablature en dans et cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
-| `allRubyData`       | array   | Paroles en phonétique avec alignement sur le rythme. Voir section dédiée ci-dessous. |
+| `score`             | array   | Tableau 2D : Contenu de la tablature en dans et cellules, cf. ci-dessous |
+| `allRubyData`       | array   | Tableau 2D : Paroles en phonétique avec alignement sur le rythme, cf. ci-dessous |
 | `price`             | int     | Prix en Yen pour les morceaux publiés sur la plateforme. Défaut : 0 |
 | `isPublished`       | int     | Indique si le morceau est publié sur la plateforme. Défaut : 0 |
 | `viewSize`          | int     | Inconnu (présumé : niveau de zoom de la visualisation). Défaut : 100 |
@@ -50,15 +50,15 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `rhythm`            | string  | Rythme. "0" = ?, "100" = ?. |
 | `rhythmMode`        | string  | Mode rythmique. "0" = ?, "100" = ?. |
 | `orientation`       | string  | `\"landscape\"` : paysage, `\"portrait\"` : portrait. |
-| `allLyricsData`     | array   | 2D. Paroles organisées par cadres. Voir ci-dessous |
-| `lyricsWritingMode` | string  | inconnu.|
-| `lyricsFontSize`    | string  | Taille de police.|
-| `lyricsFontFamily`  | string  | Famille de police : `mincho` : mincho (serif), `gothic` : gothique (sans-serif), .|
-| `lyricsWritingMode` | string  | inconnu.|
-| `rubyPrintMode `    | string  | inconnu.|
-| `print_duration`    | string  | inconnu.|
+| `allLyricsData`     | array   | Tableau 2D : Paroles organisées par cadres, cf. ci-dessous |
+| `lyricsWritingMode` | string  | inconnu. |
+| `lyricsFontSize`    | string  | Taille de police. |
+| `lyricsFontFamily`  | string  | Famille de police : `mincho` : mincho (serif), `gothic` : gothique (sans-serif). |
+| `lyricsWritingMode` | string  | inconnu. |
+| `rubyPrintMode `    | string  | inconnu. |
+| `print_duration`    | string  | inconnu. |
 
-## Structure du tableau score
+## Structure du tableau `score`
 
 Tableau 2D ([dan][cell]).
 Chaque cellule est un objet avec :
@@ -81,9 +81,12 @@ Chaque cellule est un objet avec :
 | `isChiribichi`    | bool   | `true` : un chiribichi (チリ弾き) est joué sur ce temps, `false` : pas de chiribichi | 
 | `isOsaikudashi`   | bool   | `true` : un osaikudachi (押さい下ち) est joué sur ce temps, `false` : pas de osaikudachi.    |
 
-## Structure du tableau allRubyData
+## Structure du tableau `allRubyData`
 
-1 array par page ; 1 ligne par dan ; 3 unités de double largeur par cellule. Description détaillée à compléter.
+Tableau 2D ([page][dan]).
+1 array par page ; 1 ligne par dan ; 3 unités de double largeur par cellule. 
+
+TODO: Description détaillée à compléter.
 
 | Champ      | Type   | Description |
 |------------|--------|-------------|
@@ -91,9 +94,11 @@ Chaque cellule est un objet avec :
 | `2`        | array  | idem        |
 | etc.       | array  | idem        |
 
-## Structure du tableau allLyricsData
+## Structure du tableau `allLyricsData`
 
-Champs : `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Description détaillée à compléter.
+Champs : `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. 
+
+TODO : Description à compléter.
 
 | Champ      | Type   | Description                              |
 |------------|--------|------------------------------------------|
@@ -135,7 +140,7 @@ La combinaison d'une cellule paire et d'une cellule impaire donne les figures ry
 | U+E001 | 乙       |                        |
 | U+E002 | 老       |                        |
 | U+E003 | 下老      | glyphe composite 下+老 |
-| U+E004 | ロ上.     | glyphe composite ロ+上 |
+| U+E004 | ロ上      | glyphe composite ロ+上 |
 | U+E005 | ロ中      | glyphe composite ロ+中 |
 | U+E006 | ロ尺      | glyphe composite ロ+尺 |
 | U+E007 | イ合      | glyphe composite イ+合 |
@@ -145,8 +150,8 @@ La combinaison d'une cellule paire et d'une cellule impaire donne les figures ry
 | U+E012 | 中       |                       |
 | U+E013 | 尺       |                       |
 | U+E014 | 下尺      | glyphe composite 下+尺 |
-| U+E015 | ロ五.     | glyphe composite ロ+五 |
-| U+E016 | イ老.     | glyphe composite イ+老 |
+| U+E015 | ロ五      | glyphe composite ロ+五 |
+| U+E016 | イ老      | glyphe composite イ+老 |
 | U+E017 | イ四      | glyphe composite イ+四 |
 | U+E018 | イ上      | glyphe composite イ+上 |
 | U+E020 | 工       |                       |
@@ -194,22 +199,11 @@ Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par 
 
 ## Limitations de Portama vs KKML
 
-L'alphabet Portama est plus riche que ce qui était documenté initialement : 下老 (E003), positions ロ (E004–E006, E015) et positions イ une octave au-dessus (E007–E008, E016–E018, E026–E028) existent. Portama ne connaît en revanche ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni les kanji hors de sa carte PUA.
+Portama ne connaît ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni les kanji hors de sa carte PUA.
 
 - Portama → KKML : sans perte (tout ce que Portama encode existe en KKML). Mapping requis : orn `nu` → suffixe `n`, yubii 1–4, acc ♯/♭ sur toute note, vocalPosMarkers, chogen → @tuning (décalage en demi-tons), notes E003–E028.
 - KKML → Portama : impossible pour les pièces utilisant des positions en イ hors carte Portama ou tout kanji hors du sous-ensemble Portama.
 
-## Conversion Portama → KKML
-
-Le convertisseur (`portama2kkml.py`) mappe :
-- PUA → kanji (carte complète E000–E044, cf. ci-dessus)
-- Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B)
-- `acc: "sharp"/"flat"` → ♯/♭
-- `orn: "k"/"u"/"nu"` → `^` / `*` / `n`
-- `repeatStart/repeatEnd` → `|:` / `:|`
-- `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons)
-- Nombre de dans : déduit de `score`, jamais de `numDans`
-- `cellsPerDan / 2` → `@cols`
 
 ## Capacités audio
 
