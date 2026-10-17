@@ -82,13 +82,15 @@ Chaque cellule est un objet avec :
 | `isChiribichi`    | bool   | `true` : un chiribichi (チリ弾き) est joué sur ce temps, `false` : pas de chiribichi | 
 | `isOsaikudashi`   | bool   | `true` : un osaikudachi (押さい下ち) est joué sur ce temps, `false` : pas de osaikudachi.    |
 
-## Structure du tableau `vocalPosMarker`
+## Structure de l'objet `vocalPosMarker`
 
-| Champ      | Type   | Description |
+Indique la présence éventuelle d'un marqueur vocal dans l'une des trois positions possibles d'une cellule. 
+
+| Clé        | Type   | Description |
 |------------|--------|-------------|
 | `top`      | string | Type de marqueur vocal : "vocalStart" = début, "vocalEnd" = fin, vide = pas de marqueur. |
 | `mid`      | string | ''          |
-| `botto;`   | string | ''          |
+| `bottom`   | string | ''          |
 
 ## Structure du tableau `allRubyData`
 
@@ -106,9 +108,7 @@ TODO: Description à compléter.
 
 Tableau 1D: ([couplet])
 
-TODO : Description à compléter.
-
-| Champ      | Type   | Description                              |
+| Clé        | Type   | Description                              |
 |------------|--------|------------------------------------------|
 | `id`       | int    | Identifiant du bloc                      |
 | `content`  | string | Paroles du couplet. Défaut : `歌詞を入力` |
