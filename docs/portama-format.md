@@ -32,28 +32,28 @@ Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/ed
 
 ## Description des champs
 
-| Champ | Type | Description |
-|-------|------|-------------|
-| `version`     | string | Numéro de version du JSON Portama. (2.2 = version courante au 26/09/2026). |
-| `musicno`     | int    | Identifiant du morceau sur Portama. Défaut 0. |
-| `userId`      | int    | Identifiant de l'utilisateur sur Portama. Défaut 0. |
-| `numDans`     | int    | Nombre de dans (段) déclaré. |
-| `cellsPerDan` | int    | Nombre de cellules par dan (`24` ou `36`). |
-| `score`       | array  | 2D : `[dan][cell]`. Contenu de la tablature en dans et cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
-| `allRubyData` | array  | Paroles en phonétique avec alignement sur le rythme. Voir section dédiée ci-dessous. |
-| `price`       | int    | Prix en Yen pour les morceaux publiés sur la plateforme. Défaut : 0 |
-| `isPublished` | int    | Indique si le morceau est publié sur la plateforme. Défaut : 0 |
-| `viewSize`    | int    | Inconnu (présumé : niveau de zoom de la visualisation). Défaut : 100 |
-| `trackCount`  | int    | Inconnu (présumé : nombre de répétitions de boucle vocale à faire). Défaut : 1 |
-| `currentTrack`| int    | Inconnu (présumé : nombre de répétitions actuel). Défaut : 1 |
-| `title`       | string | Titre du morceau. |
-| `findName`    | string | Inconnu (présumé : alias du titre pour les recherches). |
-| `speed`       | string | Tempo. Ex : "180". |
-| `chogen`      | string | Ajustement par rapport à l'accordage nominal, en demi-tons. Défaut : 5 (nominal) |
-| `choshi`      | string | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
-| `rhythm`      | string | Rythme. "0" = ?, "100" = ?. |
-| `rhythmMode`  | string | Mode rythmique. "0" = ?, "100" = ?. |
-| `orientation` | string | `\"landscape\"` : paysage, `\"portrait\"` : portrait. |
+| Champ               | Type.   | Description |
+|---------------------|---------|-------------|
+| `version`           | string  | Numéro de version du JSON Portama. (2.2 = version courante au 26/09/2026). |
+| `musicno`           | int     | Identifiant du morceau sur Portama. Défaut : 0. |
+| `userId`            | int     | Identifiant de l'utilisateur sur Portama. Défaut : 0. |
+| `numDans`           | int     | Nombre de dans (段) déclaré. |
+| `cellsPerDan`       | int     | Nombre de cellules par dan (`24` ou `36`). |
+| `score`             | array   | 2D : `[dan][cell]`. Contenu de la tablature en dans et cellules (12 paires main+straddle) ; le dernier dan peut être plus court. |
+| `allRubyData`       | array   | Paroles en phonétique avec alignement sur le rythme. Voir section dédiée ci-dessous. |
+| `price`             | int     | Prix en Yen pour les morceaux publiés sur la plateforme. Défaut : 0 |
+| `isPublished`       | int     | Indique si le morceau est publié sur la plateforme. Défaut : 0 |
+| `viewSize`          | int     | Inconnu (présumé : niveau de zoom de la visualisation). Défaut : 100 |
+| `trackCount`        | int     | Inconnu (présumé : nombre de répétitions de boucle vocale à faire). Défaut : 1 |
+| `currentTrack`      | int     | Inconnu (présumé : nombre de répétitions actuel). Défaut : 1 |
+| `title`             | string  | Titre du morceau. |
+| `findName`          | string  | Inconnu (présumé : alias du titre pour les recherches). |
+| `speed`             | string  | Tempo. Ex : "180". |
+| `chogen`            | string  | Ajustement par rapport à l'accordage nominal, en demi-tons. Défaut : 5 (nominal) |
+| `choshi`            | string  | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
+| `rhythm`            | string  | Rythme. "0" = ?, "100" = ?. |
+| `rhythmMode`        | string  | Mode rythmique. "0" = ?, "100" = ?. |
+| `orientation`       | string  | `\"landscape\"` : paysage, `\"portrait\"` : portrait. |
 | `allLyricsData`     | array   | 2D. Paroles organisées par cadres. Voir ci-dessous |
 | `lyricsWritingMode` | string  | inconnu.|
 | `lyricsFontSize`    | string  | Taille de police.|
