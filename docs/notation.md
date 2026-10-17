@@ -75,19 +75,19 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 
 ##### 2 caractères (préfixe + kanji)
 
-| Position | Lecture  | Position              |
-|-------|----------|--------------------------|
-| イ合   | i-ai     | 1 octave au-dessus de 合 |
-| イ乙   | i-otsu   | 1 octave au-dessus de 乙 |
-| イ老   | i-rō     | 1 octave au-dessus de 老 |
-| イ四   | i-yon    | 1 octave au-dessus de 四 |
-| イ上   | i-jō     | 1 octave au-dessus de 上 |
-| イ中   | i-naka   | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
-| イ尺   | i-shaku  | 1 octave au-dessus de 尺 |
-| イ工   | i-kō     | 1 octave au-dessus de 工 |
-| イ五   | i-go     | 1 octave au-dessus de 五 |
-| イ六   | i-roku   | 1 octave au-dessus de 六 |
-| イ七   | i-shichi | 1 octave au-dessus de 七 |
+| Position | Lecture  | Corde | Position              |
+|----------|----------|-------|-----------------------|
+| イ合      | i-ai     | 男    | 1 octave au-dessus de 合 |
+| イ乙      | i-otsu   | 男    | 1 octave au-dessus de 乙 |
+| イ老      | i-rō     | 男    | 1 octave au-dessus de 老 |
+| イ四      | i-yon    | 中    | 1 octave au-dessus de 四 |
+| イ上      | i-jō     | 中    | 1 octave au-dessus de 上 |
+| イ中      | i-naka   | 中    | 1 octave au-dessus de 中 ; en pratique souvent remplacé par 九 |
+| イ尺      | i-shaku  | 中    | 1 octave au-dessus de 尺 |
+| イ工      | i-kō     | 女    | 1 octave au-dessus de 工 |
+| イ五      | i-go     | 女    | 1 octave au-dessus de 五 |
+| イ六      | i-roku   | 女    | 1 octave au-dessus de 六 |
+| イ七      | i-shichi | 女    | 1 octave au-dessus de 七 |
 
 イ六 et イ七 sont rares : attestés comme noms de 勘所 (kandokoro) dans la nomenclature 野村流 (nomura-ryū), mais sans occurrence connue dans des kunkunshi réels ; la plupart des ressources ne les mentionnent pas.
 
