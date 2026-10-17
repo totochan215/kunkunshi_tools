@@ -184,6 +184,8 @@ Valeurs de `orn` possibles :
 | `u`   | U+E032  | `*`          | uchi-utu    |
 | `nu`  | U+E033  | `n`          | nuchi-utu   |
 
+Note : les ornements "nuchi-utu" et "taachi" de KKML ne sont pas supportés.
+
 ## Encodage
 
 Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par des caractères PUA à 3 octets.
