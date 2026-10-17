@@ -21,6 +21,16 @@ Convertit un fichier JSON de [Portama](https://portama.com/) en KKML.
 
 Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence), styles rythmiques (standard, hayabichi), repères de répétition (intro, chant), repères de respiration (koedashi, koekiri), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), hauteur de base (1 à 8), tempo, autres métadonnées, paroles, etc.
 
+Le convertisseur (`portama2kkml.py`) mappe :
+- PUA → kanji (carte complète E000–E044)
+- Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B)
+- `acc: "sharp"/"flat"` → ♯/♭
+- `orn: "k"/"u"/"nu"` → `^` / `*` / `n`
+- `repeatStart/repeatEnd` → `|:` / `:|`
+- `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons)
+- Nombre de dans : déduit de `score`, jamais de `numDans`
+- `cellsPerDan / 2` → `@cols`
+
 ### kkml2svg.py
 
 Rend un fichier KKML sous forme de tablature SVG, en appliquant les options de mise en page stockées dans les métadonnées ou forcées en ligne de commande.
