@@ -85,7 +85,7 @@ Chaque cellule est un objet avec :
 Tableau 2D ([page][dan]).
 1 array par page ; 1 ligne par dan ; 3 unités de double largeur par cellule. 
 
-TODO: Description détaillée à compléter.
+TODO: Description à compléter.
 
 | Champ      | Type   | Description |
 |------------|--------|-------------|
@@ -95,14 +95,14 @@ TODO: Description détaillée à compléter.
 
 ## Structure du tableau `allLyricsData`
 
-Champs : `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. 
+Tableau 1D: ([[couplet])
 
 TODO : Description à compléter.
 
 | Champ      | Type   | Description                              |
 |------------|--------|------------------------------------------|
 | `id`       | int    | Identifiant du bloc                      |
-| `content`  | string | Paroles du couplet. Défaut : \"歌詞を入力\" |
+| `content`  | string | Paroles du couplet. Défaut : `歌詞を入力` |
 | `x`        | real   | Position x du bloc dans la mise en page  |
 | `y`        | real   | Position y du bloc dans la mise en page  |
 | `width`    | real   | Largeur du bloc dans la mise en page     |
