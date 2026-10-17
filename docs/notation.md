@@ -16,6 +16,16 @@ Les cordes du sanshin sont nommées comme suit.
 | Médiane | 中絃 ou 中ジル (nakajiru) | 中          |
 | Aiguë   | 女絃 ou 女ジル (miijiru)  | 女          |
 
+## Doigtés de la main gauche (yubii)
+
+| Symbole   | Doigté main gauche                  |
+|-----------|-------------------------------------|
+| 開弦 ou 開 | Corde à vide                        |
+| ㊀        | Index                               |
+| ㊁        | Majeur                              |
+| ㊂        | Non précisé (Majeur ou auriculaire) |
+| ㊃        | Auriculaire                         |
+
 ## Positions de base
 
 Les caractères de position, ou kandokoro (勘所), représentent les positions sur le manche du sanshin. Les 14 positions de base sont, dans l'ordre croissant des hauteurs de notes :
