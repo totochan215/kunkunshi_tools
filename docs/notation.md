@@ -18,7 +18,7 @@ Les cordes du sanshin sont nommées comme suit.
 
 ## Positions de base
 
-Les caractères de position, ou kandokoro (勘所), représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs de notes, sont :
+Les caractères de position, ou kandokoro (勘所), représentent les positions sur le manche du sanshin. Les 14 positions de base sont, dans l'ordre croissant des hauteurs de notes :
 
 合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
 
