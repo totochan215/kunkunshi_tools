@@ -30,7 +30,7 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 
 | Champ               | Type.   | Description |
 |---------------------|---------|-------------|
-| `version`           | string  | Numéro de version du JSON Portama. (2.2 = version courante au 26/09/2026). |
+| `version`           | string  | Numéro de version du JSON Portama. Défaut : 2.2 = version courante au 26/09/2026. |
 | `musicno`           | int     | Identifiant du morceau sur Portama. Défaut : 0. |
 | `userId`            | int     | Identifiant de l'utilisateur sur Portama. Défaut : 0. |
 | `numDans`           | int     | Nombre de dans. |
