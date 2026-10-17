@@ -84,7 +84,8 @@ FULLWIDTH_MAP = {
     '＋': '+',    # accords (variante +)
     'ー': '-',    # accords (variante -)
     '－': '-',    # accords (variante -)    
-    '＊': '*',    # uchi-utu
+    '＊': '*',    # uchi-utu (alias déprécié)
+    '｀': "'",    # uchi-utu (apostrophe pleine chasse)
     '＾': '^',    # kaki-utu
     '＜': '<',    # kachi-utu
     '＝': '=',    # taachi
@@ -105,6 +106,10 @@ def _normalize_tab_token(tok):
 
 # Suffixes de technique (souhou) — apposés après le caractère de position
 TECHNIQUE_SUFFIXES = {
+    # uchi-utu : apostrophe ASCII ' (canonique). Alias : ｀ (normalisé
+    # via FULLWIDTH_MAP) et * / ＊ (dépréciés, gardés pour compat).
+    "'": {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
+          'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
     '*': {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
           'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '┗', 'pos': 'top-right',
@@ -1884,14 +1889,15 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
       |: :|    → marques de répétition (↓ ↑)
 
     Suffixes de technique (souhou), apposés après le kanji :
-      *  → uchi-utu  (｀ en haut-droite, même police et taille que la note)
+      '  → uchi-utu  (｀ en haut-droite, même police et taille que la note)
+               alias : ｀ (pleine chasse), * / ＊ (dépréciés)
       ^  → kaki-utu  (┗ roté 180° en haut-droite)
       v  → aki-utu   (V en bas-gauche, même police et taille que la note)
       <  → kachi-utu (┗ en bas-gauche, même police et taille que la note)
       s  → kuubanchi (rendre le kanji plus petit, jeu faible)
       =  → taachi    (trait vertical à droite, plusieurs cordes)
 
-    Les marques diacritiques (*, ^, v, <) sont rendues dans la même police
+    Les marques diacritiques (', *, ^, v, <) sont rendues dans la même police
     (serif) et la même taille (effective_fs) que la note. Elles ne modifient
     ni le centrage ni la taille de la note (sauf 's' qui réduit la taille).
 

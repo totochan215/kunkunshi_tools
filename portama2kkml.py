@@ -95,7 +95,7 @@ def portama_title_to_kkml(title):
 # Ornements Portama → suffixes souhou KKML
 # "u" et "k" confirmés par le corpus. Les autres restent des hypothèses.
 ORN_TO_SUFFIX = {
-    "u": "*",   # uchi-utu (打音) — confirmé (かぎやで風節, てぃんさぐぬ花)
+    "u": "'",   # uchi-utu (打音) — confirmé (かぎやで風節, てぃんさぐぬ花)
     "k": "^",   # kaki-utu (掛音) — confirmé (十九の春 : 9 occurrences,
                 # validées manuellement par l'utilisateur)
     # Hypothèses (non confirmées) :
