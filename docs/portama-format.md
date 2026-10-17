@@ -53,8 +53,8 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `allLyricsData`       | array   | Paroles organisées par cadres, cf. ci-dessous |
 | `lyricsPageBreak`     | string  | `auto` = pagination automatique. |
 | `lyricsFDisplayNumber`| string  | Indique si le numéro de couplet doit être affiché, `yes` = oui, `no` = non. |
-| `lyricsFontSize`      | string  | Taille de police pour toutes les paroles. Ex. : `10pt` |
-| `lyricsFontFamily`    | string  | Famille de police : `mincho` : mincho (serif), `gothic` : gothique (sans-serif). |
+| `lyricsFontSize`      | string  | Taille de police pour les paroles. Ex. : `10pt` |
+| `lyricsFontFamily`    | string  | Famille de police pour les paroles : `mincho` : mincho (serif), `gothic` : gothique (sans-serif). |
 | `lyricsWritingMode`   | string  | Mode d'écriture des paroles. `vertical` = vertical. |
 | `rubyPrintMode `      | string  | inconnu, `current` = courant. |
 | `print_duration`      | string  | Affiche ou non la durée du morceau, `yes` = oui, `no` = non. |
