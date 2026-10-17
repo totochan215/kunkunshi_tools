@@ -131,8 +131,8 @@ Les cellules sont organisées comme suit :
 
 ## Correspondance PUA → symboles
 
-| PUA    | Kanji           | Position audio  | Corde | Commentaire |
-|--------|-----------------|-----------------|-------|--------------
+| PUA    | Symbole   | Position audio  | Corde | Commentaire |
+|--------|-----------|-----------------|-------|--------------
 | U+E000 | 合   | C01 | 男弦 | |
 | U+E001 | 乙   | C03 | 男弦 | |
 | U+E002 | 老   | C05 | 男弦 | |
