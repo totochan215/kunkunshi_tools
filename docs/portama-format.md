@@ -99,8 +99,8 @@ Chaque cellule est un objet avec :
 
 Champs : `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Description détaillée à compléter.
 
-| Champ      | Type   | Description |
-|------------|--------|-------------|
+| Champ      | Type   | Description                              |
+|------------|--------|------------------------------------------|
 | `id`       | int    | Identifiant du bloc                      |
 | `content`  | string | Paroles du couplet. Défaut : \"歌詞を入力\" |
 | `x`        | real   | Position x du bloc dans la mise en page  |
@@ -119,7 +119,7 @@ Portama autorise deux réglages :
 Les cellules sont organisées comme suit :
 
 - Index pair (0, 2, 4, ...) = note principale
-- Index impair (1, 3, 5, ...) = note à cheval (straddle)
+- Index impair (1, 3, 5, ...) = note à cheval sur deux cases (straddle)
 
 | Main                 | Straddle | Equivalent KKML | Token KKML |
 |----------------------|----------|-----------------|------------|
