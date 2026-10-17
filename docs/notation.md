@@ -8,30 +8,32 @@ Comme le manche est sans frettes, la musique ne se note pas en hauteurs absolues
 
 ## Positions de base
 
-Les caractères de position (勘所, kandokoro) représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs de notes, sont :
+Les caractères de position, ou kandokoro (勘所), représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs de notes, sont :
 
 合 乙 老 四 上 中 尺 工 五 六 七 八 九 十
 
-Lectures usuelles, hauteurs (demi-tons au-dessus de 合 en accordage 本調子) et doigtés :
+Lecture usuelle, position sur le manche à partir de l'utaguchi (唄口), corde, doigté standard :
 
-| Position | Lecture   | Hauteur (demi-tons) | Doigt | Variante |
-|----------|-----------|---------------------|-------|----------|
-| 合       | あい (ai)   | 0 | 開弦 (corde à vide) | |
-| 乙       | おつ (otsu) | +2 | ㊀ 人差指 (index) | |
-| 老       | ろう (rō)   | +4 | ㊁ 中指 (majeur) | |
-| 四       | よん (yon)  | +5 | 開弦 (corde à vide) | |
-| 上       | じょう (jō) | +7 | ㊀ 人差指 (index) | |
-| 中       | なか (naka) | +9 | ㊁ 中指 (majeur) | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
-| 尺       | しゃく (shaku) | +10 | ㊃ 小指 (auriculaire)* | |
-| 工       | こう (kō)     | +12 | 開弦 (corde à vide) | |
-| 五       | ご (go)      | +14 | ㊀ 人差指 (index) | |
-| 六       | ろく (roku)   | +16 | ㊁ 中指 (majeur) | |
-| 七       | しち (shichi) | +17 | ㊃ 小指 (auriculaire)* | |
-| 八       | はち (hachi)  | +19 | ㊃ 小指 (auriculaire)* | |
-| 九       | きゅう (kyū)  | +21 | ㊃ 小指 (auriculaire)* | |
-| 十       | じゅう (jyū)  | +22 | ㊃ 小指 (auriculaire)* | |
+| Position | Lecture   | Distance de l'utaguchi (cm) | Corde | Doigté | Variante |
+|----------|-----------|---------------------|--|-----|----------|
+| 合       | あい (ai)   | 0,0 | 男絃 | 開弦 | |
+| 乙       | おつ (otsu) | 6,5 | 男絃 | ㊀ | |
+| 老       | ろう (rō)   | 12,4 | 男絃 | ㊁ | |
+| 四       | よん (yon)  | 0,0 | 中絃 | 開弦 | |
+| 上       | じょう (jō) | 6,5 | 中絃 | ㊀ | |
+| 中       | なか (naka) | 12,4 | 中絃 | ㊁ | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
+| 尺       | しゃく (shaku) | 15,1 | 中絃 | ㊃ | |
+| 工       | こう (kō)     | 0,0 | 女絃 | 開弦 | |
+| 五       | ご (go)      | 6,5 | 女絃 | ㊀ | |
+| 六       | ろく (roku)   | 12,4 | 女絃 | ㊁ | |
+| 七       | しち (shichi) | 15,1 | 女絃 | ㊃ | |
+| 八       | はち (hachi)  | 20,0 | 女絃 | ㊃ | |
+| 九       | きゅう (kyū)  | 24,3 | 女絃 | ㊃ | |
+| 十       | じゅう (jyū)  | 26,3 | 女絃 | ㊃ | |
 
 \* Doigtés des positions au-delà du majeur à confirmer : selon les écoles et la position de la main (上部/中部), 尺 et 七 peuvent se jouer index ou majeur (traité 野村流, position médiane : 老中六 index, 尺七 majeur, 八九 auriculaire). Les cordes à vide (合四工) et les doigtés index/majeur sont établis.
+
+\** Sur la base d'un positionnement du koma (駒) à 60 cm de l'utaguchi. Dans la variante 2尺, le koma est à 60,6 cm de l'utaguchu, et les distances doivent toutes être multipliées par 1,01.
 
 Notation 野村流 des doigtés (指位記号) : les kanji numéraux encerclés sont utilisés dans la marge gauche des kunkunshi 野村流 pour indiquer le doigté et les changements de position de la main gauche — ㊀ (一) = 人差指 (index), ㊁ (二) = 中指 (majeur), ㊂ (三) = 無名指 (annulaire), ㊃ (四) = 小指 (auriculaire). Bloc Unicode U+3280–U+3283 (Enclosed CJK Letters and Months), la série complète allant jusqu'à ㊉ (十). NB : ces caractères ne doivent pas apparaître comme tokens de position dans la grille — ils y seraient confondus avec le silence ◯.
 
@@ -49,16 +51,16 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 ### Positions étendues
 
-| Token | Lecture | Rendu | Note |
-|-------|-------|---|------|
-| 下老   | shita-rō | 下 + 老 condensés en demi-largeur | |
-| 尺♯   | shaku-sharp | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
-| 下尺  | shita-shaku | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
-| 下八 | shita-hachi |下 + 八 condensés en demi-largeur (idem 下老) | Sans cercle. Kandokoro propre (女絃 sous 八, octave de 中), pas un demi-ton |
+| Position | Lecture | Distance de l'utaguchi (cm) | Rendu | Note |
+|-------|----|---|---|------|
+| 下老   | shita-rō | 15,1 |下 + 老 condensés en demi-largeur | |
+| 尺♯   | shaku-sharp | 17,6 | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
+| 下尺  | shita-shaku | 17,6 | 尺 (défaut) ou 尺♯ si @shaku_sharp on | Jamais entouré d'un cercle, même si @shaku_circled on |
+| 下八 | shita-hachi | 24,3 | 下 + 八 condensés en demi-largeur (idem 下老) | Sans cercle. Kandokoro propre (女絃 sous 八, octave de 中), pas un demi-ton |
 
 ### Positions hautes (préfixes イ et ロ)
 
-Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe en katakana est accolé directement au kanji de position (token à deux caractères).
+Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe en katakana est accolé au kanji de position (token à deux caractères).
 
 | Préfixe | Lecture  | Signification | Lecture |
 |---------|----------|---------------|---------|
@@ -69,7 +71,7 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 
 ##### 2 caractères (préfixe + kanji)
 
-| Token | Lecture  | Position                 |
+| Position | Lecture  | Position                 |
 |-------|----------|--------------------------|
 | イ合   | i-ai     | 1 octave au-dessus de 合 |
 | イ乙   | i-otsu   | 1 octave au-dessus de 乙 |
@@ -87,7 +89,7 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 
 ##### 3 caractères (préfixe + 下 + kanji)
 
-| Token | Lecture       | Position                  |
+| Position | Lecture       | Position                  |
 |-------|---------------|---------------------------|
 | イ下老 | i-shita-rō    | 1 octave au-dessus de 下老 |
 | イ下尺 | i-shita-shaku | 1 octave au-dessus de 下尺 |
@@ -96,7 +98,7 @@ L'existence de イ下八 n'est pas attestée.
 
 #### Combinaisons valides avec ロ (même hauteur, autre corde)
 
-| Token | Lecture              | Position                                           |
+| Position | Lecture              | Position                                           |
 |-------|----------------------|----------------------------------------------------|
 | ロ上   | ro-jō ou kō-jō       | Même hauteur que 上 mais joué sur la corde grave   |
 | ロ中   | ro-naka ou kō-naka   | Même hauteur que 中 mais joué sur la corde grave   |
@@ -145,15 +147,15 @@ Pas de caractère composite en イ trouvé pour イ六, イ七 et イ十.
 | 叭        | ロ八        | Trompette : 喇叭       |
 | 㕤        | ロ九        | Non attesté           |
 
-Ces caractères ne sont pas rendus tels quels : l'usage prévu est de les normaliser vers leur décomposition (唬 → ロ四, 甫 → イ尺, etc.).
-
-
+Ces caractères ne sont pas rendus tels quels : l'usage prévu est de les normaliser vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.).
 
 Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du kanji 人. ロ est un raccourci du radical 口偏 (口). Les composites précomposés qui existent en Unicode sont listés plus haut à titre d'information ; le KKML utilise les préfixes katakana (2 caractères) comme forme canonique.
 
-### Caractères vocaux (non rendus sur le sanshin)
+### Caractères de hauteur vocale
 
-才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — représentent des hauteurs de note inférieures à 合, n'apparaissent que dans la transcription vocale.
+才 (sai) = sol, 凡 (bon) = la, 勺 (shaku) = si — représentent des hauteurs de note inférieures à 合, n'apparaissent que dans la transcription vocale, notamment dans certaines tablatures Nomura-ryu.
+
+Elles ne correspondent pas à une position réelle sur le manche du sanshin (une telle position serait à une distance négative de l'utagichi !).
 
 #### Positions de base
 
@@ -168,7 +170,6 @@ Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du 
 | Position | Lecture                | Hauteur (demi-tons) | Doigt | Variante |
 |----------|------------------------|---------------------|------|----------|
 | 下勺      | したしゃく (shita-shaku) | -1                  | —    | 尺♯       |     
-
 
 ## Tokens spéciaux
 

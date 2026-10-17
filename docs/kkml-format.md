@@ -42,11 +42,9 @@ ruby supporté>
 
 ```
 
-Le fichier est composé d'un bloc de métadonnées et de sections thématiques. L'ordre n'est pas imposé ;  toutefois, dans une logique d'exécution du morceau en ayant le fichier KKML sous les yeux, il est recommandé de faire figurer la section tab:: en haut, juste sous les métadonnées. Les sections ne peuvent pas être imbriquées.
+Le fichier est composé d'un bloc de métadonnées et de sections thématiques. L'ordre n'est pas imposé. Les sections ne peuvent pas être imbriquées.
 
 Les lignes précédées du symbole \# (commentaire) sont ignorées.
-
-Tolérance : si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
 ## Métadonnées
 
@@ -79,7 +77,7 @@ Toutes les métadonnées sont optionnelles.
 ## Blocs
 
 - `::tab` — bloc de tablature, organisé en temps (groupes de tokens), séparés par des espaces. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
-- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Contenu souvent limité au premier couplet. Il est recommandé d'adopter le même découpage de lignes que pour la tablature, mais ce n'est pas une obligation.
+- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Contenu souvent limité au premier couplet.
 - `::lyrics` — bloc de paroles, divisé en couplets. lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
@@ -96,7 +94,7 @@ Toutes les métadonnées sont optionnelles.
 
 ## Ruby
 
-Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture des caractères kanji ou kana, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car leurs lectures divergent fréquemment du japonais standard, y compris les lectures de kanas dans certains cas (ex. の pouvant être lu ぬ). Même en japonais standard, cela reste utile pour les musiciens peu à l'aise avec la lecture des kanjis et/ou dans le cas des kanjis rares.
+Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture des caractères kanji ou kana, ce qui est particulièrement utile dans les langues Ryukyu (okinawaïennes) car leurs lectures divergent fréquemment du japonais standard, y compris les lectures de kanas dans certains cas (ex. の pouvant être lu ぬ). Même en japonais standard, le ruby reste utile pour les musiciens peu à l'aise avec la lecture des kanjis et/ou dans le cas des kanjis rares.
 
 Trois syntaxes sont possibles pour encoder les rubys en KKML :
 
@@ -140,7 +138,15 @@ Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute fa�
 
 Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
 
-## Tolérances de saisie
+## Tolérances
+
+### Sections
+
+Si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
+
+### Réduction de caractères vers leur forme canonique
+
+#### Caractères en double largeur vers caractères en simple largeur
 
 Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
@@ -162,6 +168,97 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 | `）` (U+FF09)   | `)`           | koekiri, fin de boucle vocale  |
 
 NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
+
+#### Caractères graphiquement similaires
+
+Dans les blocs `tab::`, certains symboles/caractères graphiquement similaires à leur forme canonique sont tolérés.
+
+| Symbole       | Forme canonique | Usage (pour mémoire) |
+|---------------|-----------------|----------------------|
+| `○` (U+25CB)  | `◯` (U+25EF)   | Repos                |
+| `〇` (U+3007) | `◯` (U+25EF)   | Repos                |
+| `O` (0x4F)    | `◯` (U+25EF)   | Repos                |
+| `o` (0x6F)    | `◯` (U+25EF)   | Repos                |
+| `0` (0x30)    | `◯` (U+25EF)   | Repos                |
+
+TODO: utiliser les lettres O et o n'est pas une bonne idée : risque de collision avec les romaji ?
+
+#### Kandokoro en romaji vers kandokoro en kanji
+
+Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
+
+| Romaji   | Kanji   |
+|----------|---------|
+| `ai`     | `合`    |
+| `otsu`   | `乙`    |
+| `ro`     | `老`    |
+| `rou`    | `老`    |
+| `rō`     | `老`    |
+| `yon`    | `四`    |
+| `shi`    | `四`    |
+| `jo`     | `上`    |
+| `jou`    | `上`    |
+| `jō`     | `上`    |
+| `jyo`    | `上`    |
+| `jyou`   | `上`    |
+| `jyō`    | `上`    |
+| `naka`   | `中`    |
+| `chu`    | `中`    |
+| `chuu`   | `中`    |
+| `chū`    | `中`    |
+| `shaku`  | `尺`    |
+| `ko`     | `工`    |
+| `kou`    | `工`    |
+| `kō`     | `工`    |
+| `go`     | `五`    |
+| `roku`   | `六`    |
+| `shichi` | `七`    |
+| `hachi`  | `八`    |
+| `kyu`    | `九`    |
+| `kyuu`   | `九`    |
+| `kyū`    | `九`    |
+| `ju`     | `十`    |
+| `juu`    | `十`    |
+| `jū`     | `十`    |
+| `jyu`    | `十`    |
+| `jyuu`   | `十`    |
+| `jyū`    | `十`    |
+
+TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
+
+#### Positions étendues en kanji composite vers positions étendues en katakana + kanji
+
+Dans les blocs `tab::`, les kandokoro étendus exprimés sous la forme d'un kanji composite sont tolérés. C'est toutefois la forme katakana + kanji qui est canonique.
+
+| Kanji         | Katakana + Kanji |
+|---------------|------------------|
+| `佮` (U+4F2E) | `イ合`            |
+| `亿` (U+4EBF) | `イ乙`            |
+| `佬` (U+4F6C) | `イ老`            |
+| `伵` (U+4F75) | `イ四`            |
+| `仩` (U+4EE9) | `イ上`            |
+| `仲`     | `イ中`            |
+| `伬`     | `イ尺`            |
+| `仜`     | `イ工`            |
+| `伍`     | `イ五`            |
+| `仈`     | `イ八`            |
+| `仇`     | `イ九`            |
+| `㕶`     | `ロ五`            |
+| `呎`     | `ロ尺`            |
+| `叿`     | `ロ工`            |
+| `呬`     | `ロ四`            |
+| `哈`     | `ロ合`            |
+| `咾`     | `ロ老`            |
+| `𠮟`     | `ロ七`            |
+| `叱`     | `ロ七`            |
+| `叭`     | `ロ八`            |
+| `㕤`     | `ロ九`            |
+
+## Bonnes pratiques
+
+Ces bonnes pratiques visent à faciliter l'exécution du morceau en ayant le fichier KKML brut sous les yeux.
+- Il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant `::tab` `::tab-lyrics` `::lyrics`
+- Il est **recommandé** d'adopter le même découpage en lignes dans `tabs::` et `tabs-lyrics::`
 
 ## Pour en savoir plus
 
