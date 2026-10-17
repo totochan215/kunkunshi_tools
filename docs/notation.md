@@ -113,13 +113,12 @@ Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que s
 
 #### Kanjis composés (pour information)
 
-Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois et/ou japonais préexistants, souvent rares ou dialectaux, réutilisés graphiquement dans certains recueils de kunkunshi parce que le radical gauche évoque le préfixe. Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五) et 亿 (乙).
+Certains composites préfixe + kanji existent comme caractères Unicode. Ce sont des caractères chinois et/ou japonais préexistants, souvent rares ou dialectaux, réutilisés graphiquement dans certains recueils de kunkunshi parce que le radical gauche évoque le préfixe. 
+Le mécanisme lui-même (radical 亻 accolé = octave supérieure) vient du 工尺譜, où le gongchepu cantonais écrit l'octave haute 仩 (上), 伬 (尺), 仜 (工), 伍 (五) et 亿 (乙).
 
 ##### Composites en イ
 
-Aucun composite dédié attesté en usage sanshin ; les caractères suivants sont les signes d'octave haute du gongchepu cantonais, ou des caractères courants réutilisables graphiquement :
-
-| Caractère | Équivalent | Attestation d'usage |
+| Caractère | Équivalent | Usqge linguistique  |
 |-----------|------------|---------------------|
 | 佮        | イ合        | Caractère courant cantonais (« ensemble »), pas attesté comme signe de position |
 | 亿        | イ乙        | Gongchepu cantonais ; caractère courant (亿 = simplifié de 億, « cent millions ») |
@@ -139,7 +138,7 @@ Pas de caractère composite en イ trouvé pour イ六, イ七 et イ十.
 
 (Source : [inventaire R. López García, email W3C public-music-notation 0005, 2017](https://lists.w3.org/Archives/Public/public-music-notation/2017Feb/0006.html)) :
 
-| Caractère | Équivalent | Usage en japonais     |
+| Caractère | Équivalent | Usqge linguistique    |
 |-----------|------------|-----------------------|
 | 㕶        | ロ五        | Non attesté           |
 | 呎        | ロ尺        | Unité « pied » (feet) |
@@ -150,8 +149,6 @@ Pas de caractère composite en イ trouvé pour イ六, イ七 et イ十.
 | 𠮟        | ロ七        | Variante de 叱 : « réprouver, gronder » |
 | 叭        | ロ八        | Trompette : 喇叭       |
 | 㕤        | ロ九        | Non attesté           |
-
-Ces caractères ne sont pas rendus tels quels : l'usage prévu est de les normaliser vers leur décomposition (呬 → ロ四, 伬 → イ尺, etc.).
 
 Note historique : イ est un raccourci du radical 人偏 (亻), forme gauche du kanji 人. ロ est un raccourci du radical 口偏 (口). Les composites précomposés qui existent en Unicode sont listés plus haut à titre d'information ; le KKML utilise les préfixes katakana (2 caractères) comme forme canonique.
 
@@ -175,7 +172,7 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 |----------|------------------------|---------------------|------|----------|
 | 下勺      | したしゃく (shita-shaku) | -1                  | —    | 尺♯       |     
 
-## Tokens spéciaux
+## Symboles spéciaux
 
 - `◯` — repos. Variantes tolérées en KKML : ◯, ○, 〇, O, o, 0 — toutes normalisées en ◯ à l'analyse
 - `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est le token vide.
@@ -194,24 +191,22 @@ Les syllabes vocales sont placées dans la colonne marker (à droite de chaque p
 
 Certaines syllabes des langues Ryukyu n'ont pas d'équivalent en japonais standard et sont représentées ici pour mémoire :
 
-| Token | Lecture | Structure               |
-|-------|---------|-------------------------|
-| ぐゎ   | gwa     | ぐ + petit ゎ            |
-| くゎ   | kwa     | く + petit ゎ            |
-| てぃ   | ti      | て + petit ぃ            |
-| でぃ   | di      | で + petit ぃ            |
-| とぅ   | tu      | と + petit ぅ            |
-| どぅ   | du      | ど + petit ぅ            |
-| づぅ   | dū      | づ + petit ぅ            |
-| ふぁ   | fa      | ふ + petit ぁ            |
-| ふぃ   | fi      | ふ + petit ぃ            |
-| よー   | yō      | よ + ー (voyelle longue) |
+| Syllabe | Lecture | Structure               |
+|---------|---------|-------------------------|
+| ぐゎ     | gwa     | ぐ + petit ゎ            |
+| くゎ     | kwa     | く + petit ゎ            |
+| てぃ     | ti      | て + petit ぃ            |
+| でぃ     | di      | で + petit ぃ            |
+| とぅ     | tu      | と + petit ぅ            |
+| どぅ     | du      | ど + petit ぅ            |
+| づぅ     | dū      | づ + petit ぅ            |
+| ふぁ     | fa      | ふ + petit ぁ            |
+| ふぃ     | fi      | ふ + petit ぃ            |
+| よー     | yō      | よ + ー (voyelle longue) |
 
 Ex. てぃんさぐぬ花 "Tinsagu nu hana" et non "Teinsagu nu hana" 
 
 Petits kana combinants reconnus : ぁぃぅぇぉゃゅょゎ (hiragana) et ァィゥェォャュョヮ (katakana), plus ー (chōonpu, voyelle longue).
-
-Rendu vertical : le caractère principal est aligné sur la note ; les caractères combinants sont empilés en dessous, espacés de `syllable_fs * 0.85`. Les petits kana sont rendus à la même taille de police (leur glyphe est naturellement plus petit). Le ー (chōonpu) est pivoté de 90° pour devenir un trait vertical, comme en typographie japonaise verticale. Le chevauchement de la bordure inférieure de la case est accepté.
 
 ### Syntaxe KKML
 
