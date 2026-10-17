@@ -6,8 +6,9 @@ En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 
 Attribution : projet réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
 
-- Pipeline 1 : saisie dans l'éditeur Portama → JSON Portama → KKML → retouche manuelle en KKML → SVG
-- Pipeline 2 : saisie manuelle en KKML → SVG
+- Pipeline 1 : Saisie graphique dans l'éditeur Portama → JSON Portama → KKML → Finalisation en KKML
+- Pipeline 2 : Saisie texte en KKML → SVG (ou PDF) → Impression ou utilisation dans un logiciel d'édition
+- Pipeline 3 (à l'étude) : Saisie texte en KKML → JSON Portama → Finalisation dans l'éditeur Portama
 
 ## Scripts
 
@@ -33,6 +34,10 @@ Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`, `-p
 ### kkml2pdf.py
 
 Conversion KKML → PDF : script non écrit à ce jour.
+
+### kkml2portama.py
+
+Conversion KKML → JSON Portama : script non écrit à ce jour.
 
 ## Le format KKML
 
