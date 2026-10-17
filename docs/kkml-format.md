@@ -215,7 +215,7 @@ Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est 
 | `go`     | `五`    |
 | `roku`   | `六`    |
 | `shichi` | `七`    |
-| `nana`.  | `七`    |
+| `nana`   | `七`    |
 | `hachi`  | `八`    |
 | `kyu`    | `九`    |
 | `kyuu`   | `九`    |
