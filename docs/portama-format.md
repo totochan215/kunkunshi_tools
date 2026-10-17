@@ -113,8 +113,8 @@ Champs : `id`, `content`, `x`, `y`, `width`, `height`, `fontSize`. Description d
 
 Portama autorise deux réglages :
 
-- 12 paires de cellules (24 cellules) par dan : utilisation indiquée pour le layout au format paysage
-- 16 paires de cellules (32 cellules) par dan : utilisation indiquée pour le layout au format portrait
+- `cellsPerDan` = `24` : 12 paires de cellules (24 cellules) par dan : utilisation indiquée pour le layout au format paysage
+- `cellsPerDan` = `32` : 16 paires de cellules (32 cellules) par dan : utilisation indiquée pour le layout au format portrait
 
 Les cellules sont organisées comme suit :
 
