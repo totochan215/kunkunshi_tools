@@ -2,10 +2,6 @@
 
 Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunkun4/)) créé et maintenu par Rafael López García, qui permet de générer et stocker des tablatures kunknshi pour le sanshin. Son format de stockage natif est JSON.
 
-## Source du document
-
-Source principale pour la sémantique : `main.js` de l'éditeur ([portama.com/editor/js/main.js?V=2.55](https://www.portama.com/editor/js/main.js?V=2.55)), recoupé avec le corpus de fichiers JSON/PDF et la pièce de test テスト節.json / テスト節.pdf.
-
 ## Structure du JSON
 
 ```json
@@ -218,3 +214,7 @@ Le convertisseur (`portama2kkml.py`) mappe :
 ## Capacités audio
 
 Portama peut jouer l'audio des tablatures en interprétant chaque note PUA comme une hauteur sonore basée sur `choshi` (décalages par corde) et `chogen` (décalage global en demi-tons, `chogen - 5`). `puaAudioMap` de main.js donne les positions exactes par corde.
+
+## Source
+
+Ce document a été construit par analyse du moteur `main.js` de Portama ([portama.com/editor/js/main.js?V=2.55](https://www.portama.com/editor/js/main.js?V=2.55)), recoupée avec celle de quelques paires de fichiers JSON/PDF et du morceau de test créé pour l'analyse : テスト節.json / テスト節.pdf.
