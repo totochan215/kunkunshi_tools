@@ -69,10 +69,10 @@ Chaque cellule est un objet avec :
 | `acc`             | string | Altération : `sharp` = Dièse (♯), `flat` = bémol (♭).|
 | `orn`             | string | Ornement/souhou : `k` (kaki-utu), `u` (uchi-utu), `nu` (nuchi-utu). Seules ces trois valeurs sont supportées. k et u s'excluent mutuellement dans l'éditeur. Portama ignore silencieusement `orn` sur une case vide.|
 | `yubii`           | int    | 指位記号 (doigté de main gauche) : `1` = 人差指, `2` = 中指, `3` = 無名指, `4` = 小指.|
-| `repeatStart`     | bool   | Début de répétition.                           |
-| `repeatEnd`       | bool   | Fin de répétition.                             |
-| `vocalRepStart`   | bool   | Début de boucle vocale.                        |
-| `vocalRepEnd`     | bool   | Fin de boucle vocale.                          |
+| `repeatStart`     | bool   | Indique si la cellule correspond à un début de répétition. |
+| `repeatEnd`       | bool   | Indique si la cellule correspond à une fin de répétition. |
+| `vocalRepStart`   | bool   | Indique si la cellule correspond à un début de boucle vocale. |
+| `vocalRepEnd`     | bool   | Indique si la cellule correspond à une fin de boucle vocale. |
 | `vocalPosMarkers` | array  | 1D : vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : ??; pos = "mid" : milieu de cellule, pos = ?? : ??  |
 | `note2`           | string | Deuxième note par case        |
 | `acc2`            | string | Deuxième altération par case  |
