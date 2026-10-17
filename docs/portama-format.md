@@ -47,9 +47,9 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `speed`             | string  | Tempo. Ex : "120". |
 | `chogen`            | string  | Ajustement par rapport à l'accordage nominal, en demi-tons. Défaut : 5 (nominal), pour cette valeur en 本調子, 合 = C3. |
 | `choshi`            | string  | Type d'accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
-| `rhythm`            | string  | Rythme. "0" = ?, "100" = ?. |
-| `rhythmMode`        | string  | Mode rythmique. "0" = ?, "100" = ?. |
-| `orientation`       | string  | Orientation de la mise en page : `\"landscape\"` = paysage, `\"portrait\"` = portrait. |
+| `rhythm`            | string  | Rythme. `0` = ?, `100` = ?. |
+| `rhythmMode`        | string  | Mode rythmique. `0` = ?, `100` = ?. |
+| `orientation`       | string  | Orientation de la mise en page : `landscape` = paysage, `portrait` = portrait. |
 | `allLyricsData`     | array   | Tableau 2D : Paroles organisées par cadres, cf. ci-dessous |
 | `lyricsFontSize`    | string  | Taille de police. TODO: préciser l'unité |
 | `lyricsFontFamily`  | string  | Famille de police : `mincho` : mincho (serif), `gothic` : gothique (sans-serif). |
