@@ -84,7 +84,11 @@ Chaque cellule est un objet avec :
 
 ## Structure du tableau `vocalPosMarker`
 
-
+| Champ      | Type   | Description |
+|------------|--------|-------------|
+| `top`      | string | Type de marqueur vocal : "vocalStart" = début, "vocalEnd" = fin, vide = pas de marqueur. |
+| `mid`      | string | ''          |
+| `botto;`   | string | ''          |
 
 ## Structure du tableau `allRubyData`
 
