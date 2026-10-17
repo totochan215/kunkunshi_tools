@@ -64,7 +64,7 @@ Chaque cellule est un objet avec :
 
 | Champ             | Type   | Description |
 |-------------------|--------|-------------|
-| `note`            | string | Caractère PUA Unicode (entre U+E000 et U+E044) représentant la position à jouer, ou chaîne vide. |
+| `note`            | string | Caractère PUA Unicode (entre U+E000 et U+E030) représentant la position à jouer, cf. ci-dessous, ou chaîne vide. |
 | `isSmall`         | bool   | Taille de note : `false` = note standard, `true` = petite note. Défaut : `false` |
 | `acc`             | string | Altération : `sharp` = Dièse (♯), `flat` = bémol (♭).|
 | `orn`             | string | Ornement/souhou : `k` (kaki-utu), `u` (uchi-utu), `nu` (nuchi-utu). Seules ces trois valeurs sont supportées. k et u s'excluent mutuellement dans l'éditeur. Portama ignore silencieusement `orn` sur une case vide.|
