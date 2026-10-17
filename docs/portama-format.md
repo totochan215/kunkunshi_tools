@@ -69,7 +69,7 @@ Chaque cellule est un objet avec :
 | `note`            | string | Caractère PUA Unicode (entre U+E000 et U+E030) représentant la position à jouer, cf. ci-dessous, ou chaîne vide. |
 | `isSmall`         | bool   | Taille de note : `true` = petite note, non renseigné = standard. Défaut : non renseigné |
 | `acc`             | string | Altération : `sharp` = Dièse (♯), `flat` = bémol (♭).|
-| `orn`             | string | Ornement/souhou : `k` (kaki-utu), `u` (uchi-utu), `nu` (nuchi-utu). Seules ces trois valeurs sont supportées. k et u s'excluent mutuellement dans l'éditeur. Portama ignore silencieusement `orn` sur une case vide.|
+| `orn`             | string | Ornement/souhou : `k` = kaki-utu, `u` = uchi-utu, `nu` = nuchi-utu. |
 | `yubii`           | int    | 指位記号 (doigté de main gauche) : `1` = 人差指, `2` = 中指, `3` = 無名指, `4` = 小指.|
 | `repeatStart`     | bool   | Indique si la cellule correspond à un début de répétition. `true` = oui, non renseigné = non. Défaut : non renseigné |
 | `repeatEnd`       | bool   | Indique si la cellule correspond à une fin de répétition. `true` = oui, non renseigné = non. Défaut : non renseigné |
