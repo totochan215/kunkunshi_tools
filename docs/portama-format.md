@@ -83,7 +83,6 @@ Chaque cellule est un objet avec :
 ## Structure du tableau `allRubyData`
 
 Tableau 2D ([page][dan]).
-1 array par page ; 1 ligne par dan ; 3 unités de double largeur par cellule. 
 
 TODO: Description à compléter.
 
