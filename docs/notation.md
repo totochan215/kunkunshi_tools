@@ -93,10 +93,10 @@ Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le pr�
 
 ##### 3 caractères (préfixe + 下 + kanji)
 
-| Position | Lecture       | Position                  |
-|-------|---------------|---------------------------|
-| イ下老 | i-shita-rō    | 1 octave au-dessus de 下老 |
-| イ下尺 | i-shita-shaku | 1 octave au-dessus de 下尺 |
+| Position | Lecture       | Corde | Position                  |
+|----------|---------------|-------|---------------------------|
+| イ下老    | i-shita-rō    | 男    | 1 octave au-dessus de 下老 |
+| イ下尺    | i-shita-shaku | 中    | 1 octave au-dessus de 下尺 |
 
 L'existence de イ下八 n'est pas attestée.
 
