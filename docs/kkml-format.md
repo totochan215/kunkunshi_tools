@@ -196,8 +196,8 @@ Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est 
 | `ro`     | `老`    |
 | `rou`    | `老`    |
 | `rō`     | `老`    |
-| `yon`    | `四`    |
 | `shi`    | `四`    |
+| `yon`    | `四`    |
 | `jo`     | `上`    |
 | `jou`    | `上`    |
 | `jō`     | `上`    |
@@ -215,6 +215,7 @@ Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est 
 | `go`     | `五`    |
 | `roku`   | `六`    |
 | `shichi` | `七`    |
+| `nana`.  | `七`    |
 | `hachi`  | `八`    |
 | `kyu`    | `九`    |
 | `kyuu`   | `九`    |
@@ -227,6 +228,19 @@ Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est 
 | `jyū`    | `十`    |
 
 TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
+
+#### Kandokoro en chiffres romains vers kandokoro en kanji
+
+| Chiffre  | Kanji<br>(Canonique) |
+|----------|---------|
+| `4`      | `四`    |
+| `5`      | `五`    |
+| `6`      | `六`    |
+| `7`      | `七`    |
+| `8`      | `八`    |
+| `9`      | `九`    |
+| `10`     | `十`    |
+
 
 #### Positions étendues en kanji composite vers positions étendues en katakana + kanji
 
