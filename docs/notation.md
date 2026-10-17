@@ -18,8 +18,8 @@ Les cordes du sanshin sont nommées comme suit.
 
 ## Doigtés de la main gauche (yubii)
 
-En principe, le sanshin se joue avec l'index, le majeur et l'auriculaire. Toutefois, certains artistes utilisent également l'annulaire (notamment dans le style pop).
-Les tablatures peuvent préciser le doigté lorsque nécessaire.
+En principe, le sanshin se joue avec l'index, le majeur et l'auriculaire. Toutefois, certains artistes utilisent également l'annulaire (notamment dans le style pop). 
+Les tablatures peuvent préciser le doigté (指位 - yubii) lorsque nécessaire.
 
 | Symbole   | Doigté main gauche                  |
 |-----------|-------------------------------------|
