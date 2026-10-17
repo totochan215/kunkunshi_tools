@@ -55,10 +55,10 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 | Position | Lecture    | Distance de l'utaguchi (cm) | Corde | Commentaire          |
 |----------|------------|-----------------------------|-------|----------------------|
-| 下老     | shita-rō    | 15,1                        | 男     | Parfois appelé ge-rō |
-| 尺♯      | shaku-sharp | 17,6                       | 中     |                      |
-| 下尺     | shita-shaku | 17,6                        | 中    |                      |
-| 下八     | shita-hachi | 24,3                        | 女    |                      |
+| 下老     | shita-rō (したろう)         | 15,1                        | 男     | Parfois appelé ge-rō |
+| 尺♯      | shaku-sharp (しゃくシャープ)　| 17,6                       | 中     |                      |
+| 下尺     | shita-shaku （したしゃく）    | 17,6                        | 中    |                      |
+| 下八     | shita-hachi （したはち）     | 24,3                        | 女    |                      |
 
 * Même remarque que ci-dessus concernant la distance à l'utaguchi.
 
@@ -109,7 +109,7 @@ L'existence de イ下八 n'est pas attestée.
 | ロ尺   | ro-shaku ou kō-shaku | 男     | Même hauteur de son que 尺 |
 | ロ五   | ro-go ou kō-go       | 中     | Même hauteur de son que 五 |
 
-Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Bien que d'autres combinaisons soient théoriquement possibles, seules ces quatre formes sont attestées en usage. La lecture du préfixe varie selon l'école : ro- ou kō- (野村流, Nomura-ryu).
+Les positions ロ sont rares en pratique : ロ尺 et ロ五 n'apparaissent que selon les pièces ; ロ上 est utile dans les pièces jouées en position moyenne du manche (中位), où il remplace 上 sans déplacer la main gauche. Bien que d'autres combinaisons soient théoriquement possibles, seules les quatre formes ci-dessus sont attestées en usage. La lecture du préfixe ロ varie selon l'école : ro- ou kō- (kō- pour 野村流, Nomura-ryu).
 
 #### Kanjis composés (pour information)
 
