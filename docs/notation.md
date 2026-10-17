@@ -6,6 +6,16 @@ Le [sanshin (三線)](https://fr.wikipedia.org/wiki/Sanshin) est un luth à troi
 
 Comme le manche est sans frettes, la musique ne se note pas en hauteurs absolues mais en positions de doigts : c'est le [工工四 (kunkunshi)](https://ja.wikipedia.org/wiki/工工四), système de tablatures créé au XVIIIe siècle par [屋嘉比朝寄 (Yakabi Chōki)](https://ja.wikipedia.org/wiki/屋嘉比朝寄), qui a adapté la notation chinoise [工尺譜 (gongchepu)](https://fr.wikipedia.org/wiki/Gongchepu) en caractères représentant des positions sur le manche du sanshin, ou 勘所 (kandokoro). Chaque caractère indique où poser le doigt, et non pas quelle note sonnera — comme une tablature de guitare. Les trois cordes sont accordées différemment selon les 調子 (chōshi, accordages), le système de notation s'appliquant à n'importe quel accordage. La transmission s'est longtemps faite oralement ; le kunkunshi imprimé, normalisé par l'école Nomura-ryū (野村流) au XIXe siècle, reste aujourd'hui le support standard de l'enseignement.
 
+## Cordes
+
+Les cordes du sanshin sont nommées comme suit.
+
+| Corde   | Nom de corde            |
+|---------|-------------------------|
+| Grave   | 男絃 ou 男ジル (uojiru)   |
+| Médiane | 中絃 ou 中ジル (nakajiru) |
+| Aiguë   | 女絃 ou 女ジル (miijiru)  |
+
 ## Positions de base
 
 Les caractères de position, ou kandokoro (勘所), représentent les positions sur le manche du sanshin. Les 14 positions de base, dans l'ordre croissant des hauteurs de notes, sont :
