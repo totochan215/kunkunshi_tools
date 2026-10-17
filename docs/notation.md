@@ -54,7 +54,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 ### Positions étendues
 
 | Position | Lecture    | Distance de l'utaguchi (cm) | Corde | Commentaire          |
-|----------|------------|-----------------------------|------------------------------|
+|----------|------------|-----------------------------|-------|----------------------|
 | 下老     | shita-rō    | 15,1                        | 男     | Parfois appelé ge-rō |
 | 尺♯      | shaku-sharp | 17,6                       | 中     |                      |
 | 下尺     | shita-shaku | 17,6                        | 中    |                      |
