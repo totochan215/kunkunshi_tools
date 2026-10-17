@@ -21,13 +21,13 @@ Les cordes du sanshin sont nommées comme suit.
 En principe, le sanshin se joue avec l'index, le majeur et l'auriculaire. Toutefois, certains artistes utilisent également l'annulaire (notamment dans le style pop). 
 Les tablatures peuvent préciser le doigté (指位 - yubii) lorsque nécessaire.
 
-| Symbole   | Doigté main gauche                  |
-|-----------|-------------------------------------|
-| 開弦 ou 開 | Pas de doigté (Corde à vide)        |   
-| ㊀        | Index                               |
-| ㊁        | Majeur                              |
-| ㊂        | Non précisé (Majeur ou auriculaire) |
-| ㊃        | Auriculaire                         |
+| Symbole   | Variante | Doigté main gauche                 |
+|-----------|----------| -----------------------------------|
+| 開弦 ou 開 |          | Pas de doigté (Corde à vide)       |   
+| ㊀        | (一)     | Index                               |
+| ㊁        | (二)     | Majeur                              |
+| ㊂        | (三)     | Non précisé (Majeur ou auriculaire) |
+| ㊃        | (四)     | Auriculaire                         |
 
 ## Positions de base
 
