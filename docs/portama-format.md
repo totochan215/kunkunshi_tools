@@ -79,9 +79,9 @@ Chaque cellule est un objet avec :
 | `vocalRepStart`   | bool   | Début de boucle vocale.                        |
 | `vocalRepEnd`     | bool   | Fin de boucle vocale.                          |
 | `vocalPosMarkers` | array  | 1D : vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : ??; pos = "mid" : milieu de cellule, pos = ?? : ??  |
-| `note2`           | string | Deuxième note par case (rôle à préciser)       |
-| `acc2`            | string | Deuxième altération par case (rôle à préciser) |
-| `orn2`            | string | Deuxième ornement par case (rôle à préciser)   |
+| `note2`           | string | Deuxième note par case        |
+| `acc2`            | string | Deuxième altération par case  |
+| `orn2`            | string | Deuxième ornement par case    |
 | `isChiribichi`    | bool   | `true` : un chiribichi (チリ弾き) est joué sur ce temps, `false` : pas de chiribichi | 
 | `isOsaikudashi`   | bool   | `true` : un osaikudachi (押さい下ち) est joué sur ce temps, `false` : pas de osaikudachi.    |
 
