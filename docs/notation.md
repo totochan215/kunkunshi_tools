@@ -19,7 +19,7 @@ Lecture usuelle, position sur le manche à partir de l'utaguchi (唄口), corde,
 | 合       | あい (ai)   | 0,0 | 男絃 | 開弦 | |
 | 乙       | おつ (otsu) | 6,5 | 男絃 | ㊀ | |
 | 老       | ろう (rō)   | 12,4 | 男絃 | ㊁ | |
-| 四       | よん (yon)  | 0,0 | 中絃 | 開弦 | |
+| 四       | し (shi)   | 0,0 | 中絃 | 開弦 | Rarement appelé よん (yon) |
 | 上       | じょう (jō) | 6,5 | 中絃 | ㊀ | |
 | 中       | なか (naka) | 12,4 | 中絃 | ㊁ | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
 | 尺       | しゃく (shaku) | 15,1 | 中絃 | ㊃ | |
