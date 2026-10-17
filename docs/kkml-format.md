@@ -157,9 +157,10 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 | `：` (U+FF1A)   | `:`           | shuffle, marques de répétition |
 | `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur tab-lyrics |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
-| `＋` (U+FF0B)   | `+`           | accord (à venir) |
-| `ー` (U+30FC)   | `-`           | accord |
-| `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
+| `＋` (U+FF0B)   | `+`           | accord (à implémenter) |
+| `ー` (U+30FC)   | `-`           | accord (à déprécier), case vide |
+| `＊` (U+FF0A)   | `*`           | uchi-utu (打音) (alias déprécié) |
+| `｀` (U+FF40)   | `'`           | uchi-utu (打音) (alias pleine chasse de `'`) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
 | `＝` (U+FF1D)   | `=`           | taachi (二弾), tsuiri-bichi (列弾) (accords) |
