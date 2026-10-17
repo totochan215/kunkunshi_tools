@@ -53,7 +53,7 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `allLyricsData`     | array   | Tableau 2D : Paroles organisées par cadres, cf. ci-dessous |
 | `lyricsFontSize`    | string  | Taille de police. TODO: préciser l'unité |
 | `lyricsFontFamily`  | string  | Famille de police : `mincho` : mincho (serif), `gothic` : gothique (sans-serif). |
-| `lyricsWritingMode` | string  | Inconnu, présumé écriture verticale ou horizontale. |
+| `lyricsWritingMode` | string  | Inconnu (présumé : écriture verticale ou horizontale). |
 | `rubyPrintMode `    | string  | inconnu. |
 | `print_duration`    | string  | inconnu. |
 
