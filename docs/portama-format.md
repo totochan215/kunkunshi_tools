@@ -106,7 +106,7 @@ TODO : Description à compléter.
 | `y`        | real   | Position y du bloc dans la mise en page  |
 | `width`    | real   | Largeur du bloc dans la mise en page     |
 | `height`   | real   | Hauteur du bloc dans la mise en page     |
-| `fontSize` | int    | Taille de police du bloc.                |
+| `fontSize` | int    | Taille de police du bloc. Ex. : `10pt`   |
 
 ### Organisation des cellules par dan
 
