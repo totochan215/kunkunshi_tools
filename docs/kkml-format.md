@@ -153,8 +153,8 @@ Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des si
 | Double largeur  | Demie-largeur | Usage (pour mémoire) |
 |-----------------|---------------|---------|
 | `　` (U+3000)   | ` `           | séparateur de temps |
-| `／` (U+FF0F)   | `/`           | croches |
-| `：` (U+FF1A)   | `:`           | shuffle, marques de répétition |
+| `／` (U+FF0F)   | `/`           | deux croches |
+| `：` (U+FF1A)   | `:`           | croche pointée + double croche, marques de répétition |
 | `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur tab-lyrics |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
 | `＋` (U+FF0B)   | `+`           | accord (à implémenter) |
@@ -176,7 +176,7 @@ Dans les blocs `tab::`, certains symboles/caractères graphiquement similaires �
 | Symbole       | Forme canonique | Usage (pour mémoire) |
 |---------------|-----------------|----------------------|
 | `○` (U+25CB)  | `◯` (U+25EF)   | Repos                |
-| `〇` (U+3007) | `◯` (U+25EF)   | Repos                |
+| `〇` (U+3007) | `◯` (U+25EF)    | Repos                |
 | `O` (0x4F)    | `◯` (U+25EF)   | Repos                |
 | `o` (0x6F)    | `◯` (U+25EF)   | Repos                |
 | `0` (0x30)    | `◯` (U+25EF)   | Repos                |
