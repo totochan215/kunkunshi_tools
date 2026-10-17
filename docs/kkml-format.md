@@ -177,9 +177,9 @@ Dans les blocs `tab::`, certains symboles/caractères graphiquement similaires �
 |---------------|-----------------|----------------------|
 | `○` (U+25CB)  | `◯` (U+25EF)   | Repos                |
 | `〇` (U+3007) | `◯` (U+25EF)    | Repos                |
-| `O` (0x4F)    | `◯` (U+25EF)   | Repos                |
-| `o` (0x6F)    | `◯` (U+25EF)   | Repos                |
-| `0` (0x30)    | `◯` (U+25EF)   | Repos                |
+| `O` (U+004F)  | `◯` (U+25EF)   | Repos                |
+| `o` (U+006F)  | `◯` (U+25EF)   | Repos                |
+| `0` (U+0030)  | `◯` (U+25EF)   | Repos                |
 
 TODO: utiliser les lettres O et o n'est pas une bonne idée : risque de collision avec les romaji ?
 
