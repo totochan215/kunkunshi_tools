@@ -82,6 +82,10 @@ Chaque cellule est un objet avec :
 | `isChiribichi`    | bool   | `true` : un chiribichi (チリ弾き) est joué sur ce temps, `false` : pas de chiribichi | 
 | `isOsaikudashi`   | bool   | `true` : un osaikudachi (押さい下ち) est joué sur ce temps, `false` : pas de osaikudachi.    |
 
+## Structure du tableau `vocalPosMarker`
+
+
+
 ## Structure du tableau `allRubyData`
 
 Tableau 2D ([page][dan]).
