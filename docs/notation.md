@@ -42,14 +42,14 @@ Lecture usuelle, position sur le manche à partir de l'utaguchi (唄口), corde,
 | 合       | あい (ai)   | 0,0 | 男 | 開弦 | |
 | 乙       | おつ (otsu) | 6,5 | 男 | ㊀ | |
 | 老       | ろう (rō)   | 12,4 | 男 | ㊁ | |
-| 四       | し (shi)   | 0,0 | 中 | 開弦 | Rarement appelé よん (yon) |
+| 四       | し (shi)   | 0,0 | 中 | 開弦 | Rarement lu よん (yon) |
 | 上       | じょう (jō) | 6,5 | 中 | ㊀ | |
-| 中       | なか (naka) | 12,4 | 中 | ㊁ | Appelé ちゅう (chū) par certaines écoles et dans certains manuels récents |
+| 中       | なか (naka) | 12,4 | 中 | ㊁ | Lu ちゅう (chū) par certaines écoles et dans certains manuels récents |
 | 尺       | しゃく (shaku) | 15,1 | 中 | ㊃ | |
 | 工       | こう (kō)     | 0,0 | 女 | 開弦 | |
 | 五       | ご (go)      | 6,5 | 女 | ㊀ | |
 | 六       | ろく (roku)   | 12,4 | 女 | ㊁ | |
-| 七       | しち (shichi) | 15,1 | 女 | ㊃ | |
+| 七       | しち (shichi) | 15,1 | 女 | ㊃ | Occasionnellement lu なな (nana) |
 | 八       | はち (hachi)  | 20,0 | 女 | ㊃ | |
 | 九       | きゅう (kyū)  | 24,3 | 女 | ㊃ | |
 | 十       | じゅう (jyū)  | 26,3 | 女 | ㊃ | |
