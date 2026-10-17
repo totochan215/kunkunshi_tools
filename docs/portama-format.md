@@ -51,11 +51,14 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `rhythmMode`        | string  | Mode rythmique. `0` = ?, `100` = ?. |
 | `orientation`       | string  | Orientation de la mise en page : `landscape` = paysage, `portrait` = portrait. |
 | `allLyricsData`     | array   | Tableau 2D : Paroles organisées par cadres, cf. ci-dessous |
-| `lyricsFontSize`    | string  | Taille de police. TODO: préciser l'unité |
+| `lyricsPageBreak`   | string  | `auto` = pagination automatique. |
+| `lyricsFDisplayNumber`| string  | Indique si le numéro de couplet doit être affiché, `yes` = oui, `no` = non. |
+
+| `lyricsFontSize`    | string  | Taille de police pour toutes les paroles. Ex. : `10pt` |
 | `lyricsFontFamily`  | string  | Famille de police : `mincho` : mincho (serif), `gothic` : gothique (sans-serif). |
 | `lyricsWritingMode` | string  | Inconnu (présumé : écriture verticale ou horizontale). |
-| `rubyPrintMode `    | string  | inconnu. |
-| `print_duration`    | string  | inconnu. |
+| `rubyPrintMode `    | string  | inconnu, `current` = courant. |
+| `print_duration`    | string  | Affiche ou non la durée du morceau, `yes` = oui, `no` = non. |
 
 ## Structure du tableau `score`
 
