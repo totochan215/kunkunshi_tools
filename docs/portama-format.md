@@ -94,7 +94,7 @@ TODO: Description à compléter.
 
 ## Structure du tableau `allLyricsData`
 
-Tableau 1D: ([[couplet])
+Tableau 1D: ([couplet])
 
 TODO : Description à compléter.
 
