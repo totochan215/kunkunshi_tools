@@ -33,8 +33,8 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `version`           | string  | Numéro de version du JSON Portama. (2.2 = version courante au 26/09/2026). |
 | `musicno`           | int     | Identifiant du morceau sur Portama. Défaut : 0. |
 | `userId`            | int     | Identifiant de l'utilisateur sur Portama. Défaut : 0. |
-| `numDans`           | int     | Nombre de dans (段) déclaré. |
-| `cellsPerDan`       | int     | Nombre de cellules par dan (`24` ou `36`). |
+| `numDans`           | int     | Nombre de dans. |
+| `cellsPerDan`       | int     | Nombre de cellules par dan (`24` ou `36`). Défaut : `24 |
 | `score`             | array   | Tableau 2D : Contenu de la tablature en dans et cellules, cf. ci-dessous |
 | `allRubyData`       | array   | Tableau 2D : Paroles en phonétique avec alignement sur le rythme, cf. ci-dessous |
 | `price`             | int     | Prix en Yen pour les morceaux publiés sur la plateforme. Défaut : 0 |
@@ -44,17 +44,16 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 | `currentTrack`      | int     | Inconnu (présumé : nombre de répétitions actuel). Défaut : 1 |
 | `title`             | string  | Titre du morceau. |
 | `findName`          | string  | Inconnu (présumé : alias du titre pour les recherches). |
-| `speed`             | string  | Tempo. Ex : "180". |
+| `speed`             | string  | Tempo. Ex : "120". |
 | `chogen`            | string  | Ajustement par rapport à l'accordage nominal, en demi-tons. Défaut : 5 (nominal) |
-| `choshi`            | string  | Accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
+| `choshi`            | string  | Type d'accordage : `hon` (本調子), `niage` (二揚げ), `sansage` (三下げ), `ichiage` (一揚げ), `ichiniage` (一二揚げ). |
 | `rhythm`            | string  | Rythme. "0" = ?, "100" = ?. |
 | `rhythmMode`        | string  | Mode rythmique. "0" = ?, "100" = ?. |
-| `orientation`       | string  | `\"landscape\"` : paysage, `\"portrait\"` : portrait. |
+| `orientation`       | string  | Orientation de la mise en page : `\"landscape\"` = paysage, `\"portrait\"` = portrait. |
 | `allLyricsData`     | array   | Tableau 2D : Paroles organisées par cadres, cf. ci-dessous |
-| `lyricsWritingMode` | string  | inconnu. |
-| `lyricsFontSize`    | string  | Taille de police. |
+| `lyricsFontSize`    | string  | Taille de police. TODO: préciser l'unité |
 | `lyricsFontFamily`  | string  | Famille de police : `mincho` : mincho (serif), `gothic` : gothique (sans-serif). |
-| `lyricsWritingMode` | string  | inconnu. |
+| `lyricsWritingMode` | string  | Inconnu, présumé écriture verticale ou horizontale. |
 | `rubyPrintMode `    | string  | inconnu. |
 | `print_duration`    | string  | inconnu. |
 
