@@ -91,8 +91,8 @@ Chaque cellule est un objet avec :
 
 | Champ      | Type   | Description |
 |------------|--------|-------------|
-| 1          | array  | 1D: Liste de rubys ; 1 ligne par dan ; 3 double largeur par cellule |
-| 2          | array  | idem        |
+| `1`        | array  | 1D: Liste de rubys ; 1 ligne par dan ; 3 double largeur par cellule |
+| `2`        | array  | idem        |
 | etc.       | array  | idem        |
 
 ## Structure du tableau allLyricsData
@@ -121,13 +121,15 @@ Les cellules sont organisées comme suit :
 - Index pair (0, 2, 4, ...) = note principale
 - Index impair (1, 3, 5, ...) = note à cheval sur deux cases (straddle)
 
-| Main                 | Straddle | Equivalent KKML | Token KKML |
-|----------------------|----------|-----------------|------------|
-| note                 | vide     | Noire           | `A`        |
-| note (isSmall=false) | note     | Croche          | `A/B`      |
-| note (isSmall=true)  | note     | Shuffle 早弾き   | `A:B`      |
-| note (isSmall=true)  | vide     | Kuubanchi       | `As`       |
-| vide                 | vide     | Case vide       | `-`        |
+La combinaison d'une cellule paire et d'une cellule impaire donne les figures rythmiques suivantes.
+
+| Paire                | Impaire  | Equivalent KKML | Ecriture en KKML |
+|----------------------|----------|-----------------|------------------|
+| note                 | vide     | Noire           | `A`              |
+| note (isSmall=false) | note     | Croche          | `A/B`            |
+| note (isSmall=true)  | note     | Shuffle (早弾き) | `A:B`            |
+| note (isSmall=true)  | vide     | Kuubanchi       | `As`             |
+| vide                 | vide     | Case vide       | `-`              |
 
 ## Correspondance PUA → symboles
 
