@@ -62,6 +62,9 @@ Portama est un éditeur en ligne ([portama.com/kunkun4](https://portama.com/kunk
 ## Structure du tableau `score`
 
 Tableau 2D ([dan][cell]).
+
+## Structure de l'objet `cell`
+
 Chaque cellule est un objet avec :
 
 | Champ             | Type   | Description |
