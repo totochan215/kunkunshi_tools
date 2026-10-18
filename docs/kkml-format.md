@@ -126,6 +126,8 @@ Séparateurs de tokens (à l'intérieur d'une case) :
 | `-` ou `=` | Accord (notes simultanées, max 3)       | `四-工` ou `合-四-工`  |
 | (aucun)    | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
 
+TODO: risque de collision entre :: et la fin de section.
+
 En cas de token non reconnu (ni position, ni séparateur, ex. `合工尺`), le convertisseur émet une alerte sur stderr (une seule fois par token unique) et applique un rendu dégradé — les 3 premiers caractères au maximum, condensés en largeur comme `イ中` (2 caractères) ou `イ下尺` (3 caractères). L'ancien comportement « ornement » (empilement vertical de tous les caractères) est déprécié : il n'a pas de sémantique musicale (les kanji empilés réels sont des croches `A/B`, du hayabiki `A:B` ou des accords `A-B`, chacun ayant son séparateur).
 
 Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocalRepStart) et `)|` (vocalRepEnd) — répétition du chant (section reprise au chant/à la piste suivante, mécanique Portama). Contrairement aux suffixes `(` `)` 声だし/声切り, ils ne sont pas attachés à une note et peuvent occuper une case vide.
