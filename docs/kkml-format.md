@@ -48,6 +48,8 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
 ## Métadonnées
 
+- `@format` — mention du format KKML
+- `@version` — numéro de version du format
 - `@title` — titre de la chanson
 - `@genre` — genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu.
 - `@author` — auteur du morceau
