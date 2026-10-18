@@ -118,9 +118,9 @@ Chaque case de tablature correspond à un temps. Les tablatures Kunkunshi ignore
 
 Séparateurs de tokens (à l'intérieur d'une case) :
 
-| Séparateur | Mode                                    | Exemple              |
+| Séparateurs| Figure rythmique                        | Exemple              |
 |------------|-----------------------------------------|----------------------|
-|            | Une noire.                              | `合`                  |
+|            | Une noire                               | `合`                  |
 | `/`        | Deux croches                            | `合/工`               |
 | `//`       | Quatre doubles croches                  | `合//工//中//上`       |
 | `/` `//`   | Une croche et deux double croches       | `合/工//中`           |
