@@ -83,7 +83,7 @@ Toutes les métadonnées sont optionnelles.
 - `::lyrics` — bloc de paroles, divisé en couplets. lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
-  - `女　` ou `男　` — pour spécifier un couplet chanté par les femmes `女　` ou les hommes `男　` (kanji + espace full-width). 
+  - `女　`, `男　` ou `男女　` — pour spécifier un couplet chanté par les femmes `女　`, les hommes `男　` ou les deux genres `男女　` (kanji + espace full-width). 
     Plusieurs types de couplets peuvent être mélangés dans un même morceau.
 - Variantes phonétiques des paroles : `::lyrics-kanji`, `::lyrics-ruby`, `::lyrics-romaji`, `::lyrics-kana` —
   pour les chansons dont on conserve plusieurs versions phonétiques (par ex. une en kanji pour les japonais,
