@@ -50,7 +50,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
 - `@format` — format de fichier. Défaut : KKML.
 - `@version` — numéro de version du format.
-- `@title` — titre de la chanson
+- `@title` — titre du morceau
 - `@genre` — genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu.
 - `@author` — auteur du morceau
 - `@composer` — compositeur
