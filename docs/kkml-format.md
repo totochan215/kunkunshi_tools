@@ -66,7 +66,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 - `@font_style mincho|gothic` — style de police à utiliser pour le rendu (défaut : `mincho`). `mincho` = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), `gothic` = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.
 - `@shaku_circled on|off` — rend les 尺 entourés d'un cercle (défaut : `on` ; `off` les rend sans cercle). 尺♯ n'est jamais rendu entouré. 下尺 est toujours rendu comme 尺 entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est jamais rendu entouré.
 - `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : `on` ; `off` les rend comme 尺)
-- `@lyrics_size small|medium|big` — taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille des kanjis de kunkunshi. Affecte la taille des caractères, l'espacement vertical, la largeur des colonnes de couplets, l'espacement entre colonnes, et la marge entre couplets et grille. Défaut : medium.
+- `@lyrics_size small|medium|big` — taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base. Défaut : medium.
 - `@ruby_size` — taille du ruby en pourcentage de la base (défaut : `50`). Non utilisé à ce jour.
 - `@musicno` — numéro de morceau (pour compatibilité Portama)
 - `@chogen` — accordage absolu (pour compatibilité Portama)
@@ -122,7 +122,7 @@ Séparateurs de tokens (à l'intérieur d'une case) :
 | `/`        | Deux croches                            | `合/工`               |
 | `//`       | Quatre doubles croches                  | `合//工//中//上`       |
 | `:`        | Une croche pointée et une double croche | `合:工`               |
-| `::`       | Une double croche et une croche pointée | `合::工`               |
+| `::`       | Une double croche et une croche pointée | `合::工`              |
 | `-` ou `=` | Accord (notes simultanées, max 3)       | `四-工` ou `合-四-工`  |
 | (aucun)    | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
 
