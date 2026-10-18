@@ -155,7 +155,7 @@ Si aucune section n'est déclarée, les lignes hors métadonnées et commentaire
 
 ### Lignes vides
 
-Au sein des sections `::tab` et `::tab-lyrics`, les lignes vides sont ignorées.
+Au sein des sections `::tab` et `::tab-lyrics`, ainsi que hors des sections, les lignes vides sont ignorées.
 
 ### Réduction de caractères vers leur forme canonique
 
