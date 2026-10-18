@@ -157,7 +157,7 @@ Si aucune section n'est déclarée, les lignes hors métadonnées et commentaire
 
 #### Caractères en double largeur vers caractères en simple largeur
 
-Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
+Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur ci-dessous sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
 | Double largeur  | Demie-largeur | Usage (pour mémoire) |
 |-----------------|---------------|---------|
