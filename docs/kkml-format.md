@@ -120,6 +120,7 @@ Séparateurs de tokens (à l'intérieur d'une case) :
 
 | Séparateur | Mode                                    | Exemple              |
 |------------|-----------------------------------------|----------------------|
+|            | Une noire.                              | `合`.                 |
 | `/`        | Deux croches                            | `合/工`               |
 | `//`       | Quatre doubles croches                  | `合//工//中//上`       |
 | `:`        | Une croche pointée et une double croche | `合:工`               |
