@@ -215,6 +215,7 @@ Certaines syllabes des langues Ryukyu n'ont pas d'équivalent en japonais standa
 | づぅ     | dū      | づ + petit ぅ            |
 | ふぁ     | fa      | ふ + petit ぁ            |
 | ふぃ     | fi      | ふ + petit ぃ            |
+| ふぇ     | fe      | ふ + petit ぇ            |
 | よー     | yō      | よ + ー (voyelle longue) |
 
 Ex. てぃんさぐぬ花 "Tinsagu nu hana" et non "Teinsagu nu hana" 
