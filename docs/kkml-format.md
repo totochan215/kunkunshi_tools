@@ -74,7 +74,8 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 - `@rythm` - rythme (pour compatibilité Portama)
 - `@rythm_mode` - mode_rythmique (pour compatibilité Portama)
 
-Toutes les métadonnées sont optionnelles.
+Toutes les métadonnées sont optionnelles. L'ordre est sans importance. Les métadonnées peuvent être localisées à tout début de ligne, y compris après des sections. Toute métadonnée s'applique à l'ensemble du fichier.
+En cas de doublon, la première occurrence prime.
 
 ## Blocs
 
