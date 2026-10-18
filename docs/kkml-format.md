@@ -124,7 +124,7 @@ Séparateurs de tokens (à l'intérieur d'une case) :
 | `//`       | Quatre doubles croches                  | `合//工//中//上`       |
 | `:`        | Une croche pointée et une double croche | `合:工`               |
 | `::`       | Une double croche et une croche pointée | `合::工`              |
-| `-` ou `=` | Accord (notes simultanées, max 3)       | `四-工` ou `合-四-工`  |
+| `-` ou `=` | Accord (notes simultanées, max 3)       | `四-工` ou `合-四-工` ou `四=工` ou `合=四=工` |
 | (aucun)    | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
 
 TODO: risque de collision entre :: et la fin de section.
