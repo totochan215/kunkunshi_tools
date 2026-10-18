@@ -161,7 +161,7 @@ Au sein des sections `::tab` et `::tab-lyrics`, ainsi que hors des sections, les
 
 #### Caractères en double largeur vers caractères en simple largeur
 
-Dans les blocs `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur ci-dessous sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
+Au sein des sections `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur ci-dessous sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
 | Double largeur  | Demie-largeur | Usage (pour mémoire) |
 |-----------------|---------------|---------|
@@ -184,7 +184,7 @@ NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut
 
 #### Caractères graphiquement similaires
 
-Dans les blocs `tab::`, certains symboles/caractères graphiquement similaires à leur forme canonique sont tolérés.
+Au sein des sections `tab::`, certains symboles/caractères graphiquement similaires à leur forme canonique sont tolérés.
 
 | Symbole       | Forme canonique | Usage (pour mémoire) |
 |---------------|-----------------|----------------------|
@@ -198,7 +198,7 @@ TODO: utiliser les lettres O et o n'est pas une bonne idée : risque de collisio
 
 #### Kandokoro en romaji vers kandokoro en kanji
 
-Dans les blocs `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
+Au sein des sections `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
 
 | Romaji   | Kanji<br>(Canonique) |
 |----------|---------|
@@ -242,6 +242,8 @@ TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
 
 #### Kandokoro en chiffres romains vers kandokoro en kanji
 
+Au sein des sections `tab::`, les kandokoro exprimés en chiffres romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. 
+
 | Chiffre  | Kanji<br>(Canonique) |
 |----------|---------|
 | `4`      | `四`    |
@@ -251,7 +253,6 @@ TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
 | `8`      | `八`    |
 | `9`      | `九`    |
 | `10`     | `十`    |
-
 
 #### Positions étendues en kanji composite vers positions étendues en katakana + kanji
 
