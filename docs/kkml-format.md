@@ -64,8 +64,8 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 - `@marker on|off` — active/désactive le marqueur (défaut : `on`)
 - `@end_circle on|off` — **déprécié**
 - `@font_style mincho|gothic` — style de police à utiliser pour le rendu (défaut : `mincho`). `mincho` = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), `gothic` = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.
-- `@shaku_circled on|off` — rend les 尺 entourés d'un cercle (défaut : `on` ; `off` les rend sans cercle). 尺♯ n'est jamais rendu entouré. 下尺 est toujours rendu comme 尺 entouré. Dans les composés イ下尺 / ロ下尺, le 尺 n'est jamais rendu entouré.
-- `@shaku_sharp on|off` — rend les 尺♯ avec le symbole ♯ (défaut : `on` ; `off` les rend comme 尺)
+- `@shaku_circled on|off` — rend les 尺 entourés d'un cercle. `on` = activé, `off` = désactivé. Défaut : `off`.
+- `@shaku_sharp on|off` — rend les 尺♯ accompagnés du symbole ♯. `on` = activé, `off` = désactivé. Défaut : `on`.
 - `@lyrics_size small|medium|big` — taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base. Défaut : medium.
 - `@ruby_size` — taille du ruby en pourcentage de la base (défaut : `50`). Non utilisé à ce jour.
 - `@musicno` — numéro de morceau (pour compatibilité Portama)
