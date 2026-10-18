@@ -67,7 +67,7 @@ Tableau 2D ([dan][cell]).
 
 Chaque cellule est un objet avec :
 
-| Champ             | Type   | Description |
+| Clé               | Type   | Description |
 |-------------------|--------|-------------|
 | `note`            | string | Caractère PUA Unicode (entre U+E000 et U+E030) représentant la position à jouer, cf. ci-dessous, ou chaîne vide. |
 | `isSmall`         | bool   | Taille de note : `true` = petite note, non renseigné = standard. Défaut : non renseigné |
