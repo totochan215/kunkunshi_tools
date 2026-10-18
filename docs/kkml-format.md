@@ -153,6 +153,10 @@ Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur
 
 Si aucune section n'est déclarée, les lignes hors métadonnées et commentaires sont considérées comme une section `::tab` implicite.
 
+### Lignes vides
+
+Au sein des sections `::tab` et `::tab-lyrics`, les lignes vides sont ignorées.
+
 ### Réduction de caractères vers leur forme canonique
 
 #### Caractères en double largeur vers caractères en simple largeur
