@@ -187,7 +187,7 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 
 ## Symboles spéciaux
 
-- `◯` — repos. Variantes tolérées en KKML : ◯, ○, 〇, O, o, 0 — toutes normalisées en ◯ à l'analyse
+- `◯` — repos.
 - `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est le token vide.
 - `|:` — début de boucle instrumentale. Peut être utilisé comme token autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
 - `:|` — fin de boucle instrumentale. Peut être utilisé comme token autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
@@ -196,9 +196,9 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 
 Les boucles de répétition (`|:` … `:|`) ne sont pas limitées au début d'une chanson (le terme « intro » est trompeur). Elles peuvent apparaître à n'importe quel endroit, et une chanson peut en contenir plusieurs. Les boucles ne peuvent pas être imbriquées.
 
-## Syllabes vocales
+## Alignement du chant
 
-Les syllabes vocales sont placées dans la colonne marker (à droite de chaque pile de cases) pour indiquer le placement des syllabes du chant sur le rythme. Règle : 1 token (séparé par des espaces) = 1 syllabe. Un token peut faire plusieurs caractères (consonnes complexes de l'uchi-na-guchi, voyelles longues). Au moins 4 syllabes par case sont acceptées, et les syllabes peuvent chevaucher la bordure inférieure.
+Des syllabes vocales peuvent être placées dans la colonne marker (à droite de chaque pile de cases) pour indiquer le placement des syllabes du chant sur le rythme. Règle : 1 token (séparé par des espaces) = 1 syllabe. Un token peut faire plusieurs caractères (consonnes complexes de l'uchi-na-guchi, voyelles longues). Au moins 4 syllabes par case sont acceptées, et les syllabes peuvent chevaucher la bordure inférieure.
 
 ### Syllabes spécifiques aux langues Ryukyu
 
@@ -225,21 +225,28 @@ Petits kana combinants reconnus : ぁぃぅぇぉゃゅょゎ (hiragana) et ァ�
 
 ```kkml
 ::tab
-中 合-工 尺-中' 上 四 合-老' 四 工
+|:中 合/工 尺/中' 上 四 合/老' 四 工:|
+(:中 合/工 尺/中' 上 四 合/老' 四 工
+中 合/工 六 合 七 合 六　七
 ::
 
 ::vocal
-てぃ ん さ ぐ ぬ は な や ー
+ー ー ー ー ー ー ー ー
+.(てぃ んさ .ぐ .ぬ .は .な ー .や
+.ち　みさ　ち.　.に　.す　ー .み　.てぃ
 ::
 ```
 
-Chaque ligne dans un bloc `::vocal` correspond à la ligne de `::tab` de même index. Les syllabes sont séparées par des espaces ; les caractères d'une même syllabe sont accolés (sans espace). Le bloc `::vocal` doit suivre immédiatement un bloc `::tab` pour être associé correctement.
+Chaque ligne dans un bloc `::vocal` correspond à la ligne de `::tab` de même index. Les temps (cases) sont séparés par des espaces. L'ajout de points permet de répartir les syllabes au sein d'un temps (le temps est divisé par le nombre de points et de syllabes).
+Des koedashi et koekiri peuvent être ajoutés ; ils n'ont pas d'impact sur la répartition dans la case. La parenthèse ouvrante du koedashi s'associe à l'élément situé juste après elle, qui peut être un point. La parenthèse fermante du koekiri s'associe à l'élément situé juste avant elle, qui peut être un point.
 
 ### Alignement ligne par ligne
 
 - La syllabe i de la ligne vocale j s'aligne sur la note i de la ligne de tablature j
 - Si une ligne vocale a moins de syllabes que la ligne de tab (ex. notes d'intro uta-mochi sans chant), le reste est complété par des vides (`-`) : l'alignement des lignes suivantes est préservé
 - Si une ligne vocale a plus de syllabes que la ligne de tab, l'excédent est ignoré
+
+TODO: risque de collision entre - et les choonpu (ー) de la voyelle longue.
 
 ### Comportement
 
