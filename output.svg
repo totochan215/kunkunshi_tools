@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="156" height="788" viewBox="0 0 156 788">
+<rect width="100%" height="100%" fill="white"/>
+<rect x="16" y="86" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="144" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="202" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="260" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="318" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="376" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="434" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="492" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="550" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="608" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="666" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="16" y="724" width="52" height="58" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<rect x="68" y="86" width="26" height="696" fill="none" stroke="#bbb" stroke-width="0.75"/>
+<text x="28.8" y="121.996" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">中-</text>
+<text x="42.0" y="179.996" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>
+<text x="42.0" y="207.0" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="black">五</text>
+<text x="122.0" y="101" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="#555">本</text>
+<text x="122.0" y="123" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="#555">調</text>
+<text x="122.0" y="145" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="#555">子</text>
+</svg>
