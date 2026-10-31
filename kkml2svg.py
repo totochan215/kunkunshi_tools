@@ -98,10 +98,53 @@ FULLWIDTH_MAP = {
 # est une voyelle longue légitime ailleurs, on ne devine pas l'intention).
 EMPTY_INPUT_VARIANTS = {'ー', 'ｰ', '－'}
 
+# Kandokoro saisis en romaji (Hepburn/Kunrei tolérés) -> kanji canonique.
+# Token entier uniquement : les suffixes de technique restent accolés au kanji.
+ROMAJI_TO_KANJI = {
+    "ai": "合",
+    "otsu": "乙", "ro": "老", "rou": "老", "rō": "老",
+    "shi": "四", "yon": "四",
+    "jo": "上", "jou": "上", "jō": "上", "jyo": "上", "jyou": "上", "jyō": "上",
+    "naka": "中", "chu": "中", "chuu": "中", "chū": "中",
+    "shaku": "尺",
+    "ko": "工", "kou": "工", "kō": "工",
+    "go": "五",
+    "roku": "六",
+    "shichi": "七", "nana": "七",
+    "hachi": "八",
+    "kyu": "九", "kyuu": "九", "kyū": "九",
+    "ju": "十", "juu": "十", "jū": "十", "jyu": "十", "jyuu": "十", "jyū": "十",
+}
+
+# Chiffres romains -> kandokoro kanji (token entier).
+DIGIT_TO_KANJI = {
+    "4": "四", "5": "五", "6": "六", "7": "七",
+    "8": "八", "9": "九", "10": "十",
+}
+
+# Kanjis composites (radical 亻/口 accolé, hérités du gongchepu) ->
+# préfixe katakana + kanji canonique.
+COMPOSITE_TO_TOKEN = {
+    "仮": "イ合", "俵": "イ乙", "伶": "イ老", "伍": "イ四", "仪": "イ上",
+    "仲": "イ中", "伬": "イ尺", "仜": "イ工", "仐": "イ五", "俈": "イ八",
+    "俇": "イ九",
+    "噺": "ロ五", "唸": "ロ尺", "叿": "ロ工", "唌": "ロ四", "哈": "ロ合",
+    "呾": "ロ老", "𠮟": "ロ七", "叱": "ロ七", "咈": "ロ八", "㕤": "ロ九",
+}
+
 def _normalize_tab_token(tok):
-    """Convertit les variantes pleine chasse d'un token de tablature vers
-    la forme canonique. Renvoie (token, a_été_modifié)."""
+    """Convertit les variantes de saisie d'un token de tablature vers la
+    forme canonique : pleine chasse (FULLWIDTH_MAP), kanjis composites,
+    romaji et chiffres (token entier). Renvoie (token, a_été_modifié)."""
     out = ''.join(FULLWIDTH_MAP.get(ch, ch) for ch in tok)
+    for ch, repl in COMPOSITE_TO_TOKEN.items():
+        if ch in out:
+            _info_input_variant(ch, repl)
+            out = out.replace(ch, repl)
+    canon = ROMAJI_TO_KANJI.get(out, DIGIT_TO_KANJI.get(out))
+    if canon is not None and canon != out:
+        _info_input_variant(out, canon)
+        out = canon
     return out, out != tok
 
 # Suffixes de technique (souhou) — apposés après le caractère de position
