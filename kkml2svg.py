@@ -171,7 +171,7 @@ TECHNIQUE_SUFFIXES = {
     # se ferme APRÈS la note. (La borne d'ouverture ○ 声だし est un
     # PRÉFIXE : la bouche s'ouvre AVANT la note, ex. (中.)
     ')': {'name': 'koe-kiri (声切り)',   'type': 'char', 'symbol': '□',
-          'pos': 'inside-right', 'dx': 0.30, 'dy': 0.35, 'scale': 0.55},
+          'pos': 'inside-right', 'dx': 0.36, 'dy': 0.35, 'scale': 0.42},
 }
 # Positions hautes (préfixes イ / ロ)
 #   イ  = 人偏 (亻) — 1 octave au-dessus du kanji de droite
@@ -2119,10 +2119,12 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
 
     # ○ 声だし en préfixe : même position que le □ 声切り suffixe —
     # dans la case, côté droit (区画中右方, traité 野村流 p. 9).
+    # Le kanji du kandokoro garde sa taille pleine : le cercle est petit et
+    # ancré au bord droit de la case, il ne rétrécit pas la note.
     if koe_prefix:
-        out.append(f'<text x="{cx + cell_w * 0.30}" y="{cy + fs * 0.675}" '
+        out.append(f'<text x="{cx + cell_w * 0.36}" y="{cy + fs * 0.42}" '
                    f'text-anchor="middle" font-family="serif" '
-                   f'font-size="{int(fs * 0.55)}" fill="black">○</text>')
+                   f'font-size="{int(fs * 0.42)}" fill="black">○</text>')
 
     is_small = 's' in tech_suffixes
     effective_fs = int(fs * 0.67) if is_small else fs
