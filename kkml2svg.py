@@ -16,11 +16,11 @@ Layout horizontal : de gauche à droite et de haut en bas (style songbook).
 Métadonnée @layout vertical|horizontal dans le .kkml, ou -l/--layout en CLI.
 
 Options supplémentaires en-tête KKML (défauts : @layout vertical,
-@marker on, @font_style mincho, @shaku_circled on, @shaku_sharp on) :
+@marker on, @font_style mincho, @shaku_circled off, @shaku_sharp off) :
     @marker off           → masque la colonne marker (défaut: on)
     @font_style serif|gothic|mincho → style de police (défaut: mincho)
-    @shaku_circled off    → 尺 rendus sans cercle (défaut: on, entourés)
-    @shaku_sharp off      → masque les ♯ des 尺♯ (défaut: on, ♯ visibles)
+    @shaku_circled on     → 尺 entourés d'un cercle (défaut: off, sans cercle)
+    @shaku_sharp on       → 尺♯ rendus avec le symbole ♯ (défaut: off, rendu en 尺 simple)
     @author Nom          → auteur (défaut: vide)
     @end_circle off      → désactive le marqueur de fin de chanson (cercle creux)
                            dans la colonne marker, au bas de la dernière case remplie
@@ -98,10 +98,53 @@ FULLWIDTH_MAP = {
 # est une voyelle longue légitime ailleurs, on ne devine pas l'intention).
 EMPTY_INPUT_VARIANTS = {'ー', 'ｰ', '－'}
 
+# Kandokoro saisis en romaji (Hepburn/Kunrei tolérés) -> kanji canonique.
+# Token entier uniquement : les suffixes de technique restent accolés au kanji.
+ROMAJI_TO_KANJI = {
+    "ai": "合",
+    "otsu": "乙", "ro": "老", "rou": "老", "rō": "老",
+    "shi": "四", "yon": "四",
+    "jo": "上", "jou": "上", "jō": "上", "jyo": "上", "jyou": "上", "jyō": "上",
+    "naka": "中", "chu": "中", "chuu": "中", "chū": "中",
+    "shaku": "尺",
+    "ko": "工", "kou": "工", "kō": "工",
+    "go": "五",
+    "roku": "六",
+    "shichi": "七", "nana": "七",
+    "hachi": "八",
+    "kyu": "九", "kyuu": "九", "kyū": "九",
+    "ju": "十", "juu": "十", "jū": "十", "jyu": "十", "jyuu": "十", "jyū": "十",
+}
+
+# Chiffres romains -> kandokoro kanji (token entier).
+DIGIT_TO_KANJI = {
+    "4": "四", "5": "五", "6": "六", "7": "七",
+    "8": "八", "9": "九", "10": "十",
+}
+
+# Kanjis composites (radical 亻/口 accolé, hérités du gongchepu) ->
+# préfixe katakana + kanji canonique.
+COMPOSITE_TO_TOKEN = {
+    "仮": "イ合", "俵": "イ乙", "伶": "イ老", "伍": "イ四", "仪": "イ上",
+    "仲": "イ中", "伬": "イ尺", "仜": "イ工", "仐": "イ五", "俈": "イ八",
+    "俇": "イ九",
+    "噺": "ロ五", "唸": "ロ尺", "叿": "ロ工", "唌": "ロ四", "哈": "ロ合",
+    "呾": "ロ老", "𠮟": "ロ七", "叱": "ロ七", "咈": "ロ八", "㕤": "ロ九",
+}
+
 def _normalize_tab_token(tok):
-    """Convertit les variantes pleine chasse d'un token de tablature vers
-    la forme canonique. Renvoie (token, a_été_modifié)."""
+    """Convertit les variantes de saisie d'un token de tablature vers la
+    forme canonique : pleine chasse (FULLWIDTH_MAP), kanjis composites,
+    romaji et chiffres (token entier). Renvoie (token, a_été_modifié)."""
     out = ''.join(FULLWIDTH_MAP.get(ch, ch) for ch in tok)
+    for ch, repl in COMPOSITE_TO_TOKEN.items():
+        if ch in out:
+            _info_input_variant(ch, repl)
+            out = out.replace(ch, repl)
+    canon = ROMAJI_TO_KANJI.get(out, DIGIT_TO_KANJI.get(out))
+    if canon is not None and canon != out:
+        _info_input_variant(out, canon)
+        out = canon
     return out, out != tok
 
 # Suffixes de technique (souhou) — apposés après le caractère de position
@@ -434,8 +477,8 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     marker = song.meta.get("marker", "on") == "on"
 
     opts = {
-        'shaku_circled': song.meta.get('shaku_circled', 'on') == 'on',
-        'shaku_sharp': song.meta.get('shaku_sharp', 'on') == 'on',
+        'shaku_circled': song.meta.get('shaku_circled', 'off') == 'on',
+        'shaku_sharp': song.meta.get('shaku_sharp', 'off') == 'on',
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'font_family': FONT_STYLES.get(
@@ -1838,7 +1881,7 @@ def _note_svg(note, font_size, opts=None):
     en tspan plus petit (65%) sans modifier la taille ni la position du 尺.
     Si opts['shaku_sharp'] est False, le ♯ est masqué (rendu en 尺 simple)."""
     if note == "尺♯":
-        if opts is not None and not opts.get('shaku_sharp', True):
+        if opts is not None and not opts.get('shaku_sharp', False):
             return escape("尺")
         return (f'{escape("尺")}'
                 f'<tspan font-size="{int(font_size * 0.65)}" '
