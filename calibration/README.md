@@ -19,3 +19,18 @@ Emplacement privé : Google Drive de thomas.kochert@gmail.com
 Sources amont (Paris Sanshin Club, paris.sanshin.club@gmail.com) :
 - 工工四百選集(茶色).pdf / (緑).pdf : dossier 1EHL1e3a5qsM_-j9eAr9DMZ6SrKGHBVZ3
   https://drive.google.com/drive/folders/1EHL1e3a5qsM_-j9eAr9DMZ6SrKGHBVZ3
+
+## Split des PDF complets en pages
+
+Script : `calibration/split_pdf.py` (dépendance perso `pypdf`, hors pipeline).
+
+    python3 calibration/split_pdf.py /chemin/工工四百選集(茶色).pdf /sortie/chindami/ -p chindami-tea
+
+Produit `<prefix>-pNNN.pdf` (N = page PDF, 1-based) + `<prefix>-manifest.json`
+avec deux champs clés : `page_pdf` (automatique) et `page_imprimee` (à
+corriger à la main — la page imprimée peut différer de la page PDF).
+
+Workflow index : déposer le PDF complet dans le dossier Drive idoine, splitter
+en local, uploader les pages dans le même dossier, puis indiquer ici les
+`page_pdf` portant l'index de chaque recueil ; seules ces pages seront OCRisées
+pour construire l'index (champ `titre_ocr` à ajouter au manifeste).
