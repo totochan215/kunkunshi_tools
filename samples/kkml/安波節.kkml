@@ -2,7 +2,7 @@
 @version 0.1
 @title ｛安波｝《あは》節《ぶし》
 @tuning 本調子
-@cols 12
+@cells_per_dan 12
 @marker on
 @speed 100
 

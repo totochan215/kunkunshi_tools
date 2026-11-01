@@ -47,15 +47,15 @@ out, err, rc = run_clean(t6)
 assert "::tab\n::" in out
 print("OK tab manquante créée vide")
 
-# 7. @cols présent -> repli ; absent -> conservé
-t7 = "@cols 2\n::tab\n合 工 尺 五\n::\n"
+# 7. @cells_per_dan présent -> repli ; absent -> conservé
+t7 = "@cells_per_dan 2\n::tab\n合 工 尺 五\n::\n"
 out, err, rc = run_clean(t7)
 assert "合 工\n尺 五" in out, out
-print("OK @cols replie ::tab")
+print("OK @cells_per_dan replie ::tab")
 t8 = "::tab\n合 工 尺 五\n::\n"
 out, err, rc = run_clean(t8)
 assert "合 工 尺 五\n" in out
-print("OK sans @cols, sauts de ligne conservés")
+print("OK sans @cells_per_dan, sauts de ligne conservés")
 
 # 8. alias tab-lyrics -> vocal
 t9 = "::tab\n合\n::\n::tab-lyrics\nあ\n::\n"

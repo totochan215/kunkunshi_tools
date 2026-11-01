@@ -209,7 +209,7 @@ def convert_portama_to_kkml(data):
     cells_per_dan = data.get("cellsPerDan", 24)
     notes_per_dan = cells_per_dan // 2
     if notes_per_dan:
-        lines.append(f"@cols {notes_per_dan}")
+        lines.append(f"@cells_per_dan {notes_per_dan}")
 
     # Marqueur activé par défaut dans Portama
     lines.append("@marker on")
