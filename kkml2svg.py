@@ -873,7 +873,7 @@ CHINDAMI_MAX_DANS = 15             # max mesuré : 15 piles sur p10 (morceau n°
 
 def _render_chindami(song, sections, fs, marker=False, opts=None):
     """Rendu multipage façon recueils Chindami Kunkunshi : page 23 x 15 cm
-    paysage, cadre filet, piles de 12 cases lues haut->bas de droite->gauche,
+    paysage (sans liseré de page, cf. scans), piles de 12 cases lues haut->bas de droite->gauche,
     colonne marker = demi-case à droite de chaque pile, titre vertical à
     droite de la page 1 surmonté du numéro de morceau (@musicno), paroles
     (::lyrics) en colonnes verticales à gauche de la dernière page.
@@ -949,9 +949,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
         out = ['<?xml version="1.0" encoding="UTF-8"?>',
                f'<svg xmlns="http://www.w3.org/2000/svg" width="{total_w}" height="{total_h}" '
                f'viewBox="0 0 {total_w} {total_h}">',
-               '<rect width="100%" height="100%" fill="white"/>',
-               f'<rect x="{frame_x0}" y="{frame_y0}" width="{frame_x1-frame_x0}" '
-               f'height="{frame_y1-frame_y0}" fill="none" stroke="black" stroke-width="1"/>']
+               '<rect width="100%" height="100%" fill="white"/>']
 
         # Titre vertical à droite de la page 1, surmonté du n° de morceau
         if is_first and (title or musicno):
