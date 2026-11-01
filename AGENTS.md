@@ -106,7 +106,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   - `::vocal` manquante → la créer, remplie de cases vides (`-`) alignées sur `::tab` (même nombre de cases par ligne) ;
   - `::vocal` désalignée de `::tab` (cases/ligne différentes) mais total de cases identique → réaligner ligne à ligne sur `::tab` ; si le total ne boucle pas → avertissement stderr, PAS de réalignement ;
   - `::lyrics` manquante → la créer, vide ;
-  - `::tab` implicite (lignes hors section) → rendre la section explicite.
+  - `::tab` implicite (lignes hors section) → rendre la section explicite (info) ;
   - `::tab` manquante → la créer, vide (peu de risques).
 Diagnostics : le cleaner émet info / avertissement / erreur sur stderr selon la gravité (ex. normalisation appliquée = info, réalignement refusé = avertissement, KKML malformé et inutilisable par le parser = erreur fatale, exit non nul).
 
