@@ -167,9 +167,9 @@ Au sein des sections `::tab` et `::vocal`, ainsi que hors des sections, les lign
 Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des signes en demie-largeur ci-dessous sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
 | Double largeur  | Demie-largeur | Usage (pour mémoire) |
-|-----------------|---------------|---------|
-| `　` (U+3000)   | ` `           | séparateur de temps |
-| `／` (U+FF0F)   | `/`           | deux croches |
+|-----------------|---------------|----------------------|
+| `　` (U+3000)   | ` `           | séparateur de temps   |
+| `／` (U+FF0F)   | `/`           | deux croches          |
 | `：` (U+FF1A)   | `:`           | croche pointée + double croche, marques de répétition |
 | `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur de couplets dans `::lyrics` |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
@@ -179,7 +179,7 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 | `｀` (U+FF40)   | `'`           | uchi-utu (打音) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
-| `＝` (U+FF1D)   | `=`           | accord (variante de +) |
+| `＝` (U+FF1D)   | `=`           | accord (accord (taachi / tsuiri-bichi)), variante de + |
 | `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
 | `）` (U+FF09)   | `)`           | koekiri, fin de boucle vocale  |
 
