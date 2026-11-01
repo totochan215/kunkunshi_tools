@@ -1499,7 +1499,7 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
     group_w = cell_w + marker_w
     step = int(syllable_fs * 1.15)  # espacement des caractères combinants (bien > fs : pas de chevauchement)
 
-    KOE_CHARS = {'(', ')'}
+    KOE_CHARS = {'(', ')', ':'}  # ( ) = position koedashi/koekiri ; : = boucle vocale (: / :) — jamais rendus dans le marker
 
     def _emit(sx, yy, ch):
         if ch in KOE_CHARS:
@@ -1527,6 +1527,16 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
             sx = x + cell_w + marker_w / 2
             if not token or token == "-":
                 continue
+            # Boucles vocales dans ::vocal : `(:` = début, `:)` = fin (pas des
+            # koedashi/koekiri). On rend le marqueur de boucle (comme |( / )|
+            # dans ::tab) dans le marker ; les `:` et parenthèses du token ne
+            # sont pas rendus (voir KOE_CHARS dans _emit).
+            while token.startswith("(:"):
+                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
+                token = token[2:]
+            while token.endswith(":)"):
+                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
+                token = token[:-2]
             # Système de points : un token contenant des `.` subdivise le temps.
             if "." in token:
                 # Système de points : le temps de la case est divisé en n parts
