@@ -170,7 +170,7 @@ Au sein des sections `::tab` et `::tab-lyrics`, les équivalents pleine largeur 
 | `：` (U+FF1A)   | `:`           | croche pointée + double croche, marques de répétition |
 | `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur tab-lyrics |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
-| `＋` (U+FF0B)   | `+`           | accord (forme canonique) |
+| `＋` (U+FF0B)   | `+`           | accord (taachi / tsuiri-bichi), forme canonique |
 | `ー` (U+30FC)   | `-` (symbole isolé) | case vide uniquement — plus de normalisation vers `-` collé |
 | `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
 | `｀` (U+FF40)   | `'`           | uchi-utu (打音) |
