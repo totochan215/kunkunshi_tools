@@ -368,6 +368,18 @@ def parse_kkml(text):
                         _info_input_variant(tk, EMPTY_TOKEN)
                         norm.append(EMPTY_TOKEN)
                         continue
+                    # Désambiguation : koedashi/koekiri ( et ) seuls appartiennent
+                    # à ::vocal exclusivement. `(:` / `:)` sont des boucles
+                    # vocales (liées à ::vocal) et restent tolérés ici pour
+                    # rétrocompatibilité, avec une info.
+                    if '(' in tk or ')' in tk:
+                        if tk.lstrip('|:').startswith('(:') or tk.endswith(')') and ':' in tk:
+                            _info_input_variant(tk, tk.replace('(', '').replace(')', ''))
+                        else:
+                            _warn_once(f"'{tk}' : ( ) koedashi/koekiri ignoré dans ::tab (réservé à ::vocal)")
+                        tk = tk.replace('(', '').replace(')', '')
+                        if not tk:
+                            continue
                     tk2, changed = _normalize_tab_token(tk)
                     if changed:
                         _info_input_variant(tk, tk2)
@@ -393,7 +405,17 @@ def parse_kkml(text):
                     if tk in EMPTY_INPUT_VARIANTS:
                         _info_input_variant(tk, EMPTY_TOKEN)
                         norm.append(EMPTY_TOKEN)
-                    else:
+                        continue
+                    # Désambiguation : boucles |: :| |( )| appartiennent à
+                    # ::tab exclusivement — jamais reprises dans ::vocal.
+                    # `(:` / `:)` restent des boucles vocales (admises ici).
+                    for loop in (REPEAT_START, REPEAT_END, VREPEAT_START, VREPEAT_END):
+                        if loop in tk and not tk.startswith("(:") and not tk.endswith(":)"):
+                            _warn_once(f"'{tk}' : marqueur de boucle {loop!r} ignoré dans ::vocal (réservé à ::tab)")
+                            tk = tk.replace(loop, '')
+                            if not tk:
+                                break
+                    if tk:
                         norm.append(tk)
                 current.lines.append(norm)
             i += 1
@@ -2046,6 +2068,15 @@ def _info_input_variant(orig, canon):
 
 
 _INFO_INPUT_SEEN = set()
+
+
+_WARNED_MISC = set()
+
+
+def _warn_once(msg):
+    if msg not in _WARNED_MISC:
+        _WARNED_MISC.add(msg)
+        print(f"AVERTISSEMENT : {msg}", file=sys.stderr)
 
 
 def _warn_unknown_token(tok):
