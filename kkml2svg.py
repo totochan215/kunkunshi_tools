@@ -308,7 +308,7 @@ def parse_kkml(text):
                 except ValueError:
                     pass
             elif key == "layout":
-                song.layout = val if val in ("vertical", "horizontal", "nomura") else "vertical"
+                song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami") else "vertical"
             else:
                 song.meta[key] = val
             i += 1
@@ -477,7 +477,9 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     }
 
     font_family = opts.get('font_family', 'serif')
-    if layout == "nomura":
+    if layout == "chindami":
+        svgs = _render_chindami(song, sections, font_size, marker, opts)
+    elif layout == "nomura":
         svgs = _render_nomura(song, sections, font_size, marker, opts)
     elif layout == "vertical":
         svgs = _render_vertical(song, sections, cols, cell_w, cell_h,
@@ -844,6 +846,182 @@ NOMURA_FRAME_MARGIN_X = (NOMURA_PAGE_W - NOMURA_FRAME_W) / 2.0
 NOMURA_FRAME_MARGIN = (NOMURA_PAGE_H - NOMURA_FRAME_H) / 2.0
 NOMURA_CELL_W = (NOMURA_FRAME_W - 8 * NOMURA_DAN_GAP) / 14.0
 NOMURA_CELL_H = (NOMURA_FRAME_H - 2 * NOMURA_DAN_GAP) / NOMURA_ROWS
+
+# --------------------------------------------------------------------------- #
+# Layout Chindami-Kunkunshi (recueils ちんだみ工工四百選集, 23 x 15 cm paysage)
+# Constantes v1 d'après docs/svg-layout.md ; à recalibrer sur samples PDF.
+# --------------------------------------------------------------------------- #
+CM = 28.3465  # 1 cm en points
+CHINDAMI_PAGE_W = 23 * CM          # 652,36 pt (paysage)
+CHINDAMI_PAGE_H = 15 * CM          # 425,20 pt
+CHINDAMI_ROWS = 12                 # cases par pile
+CHINDAMI_FRAME_MARGIN = 12         # marge intérieure du cadre filet
+CHINDAMI_DAN_GAP = 10              # marge entre piles
+CHINDAMI_CELL_H = (CHINDAMI_PAGE_H - 2 * CHINDAMI_FRAME_MARGIN) / CHINDAMI_ROWS
+CHINDAMI_CELL_W = CHINDAMI_CELL_H * 0.62   # case plus haute que large
+CHINDAMI_TITLE_W = 34              # colonne titre vertical (droite)
+CHINDAMI_TITLE_GAP = 8
+CHINDAMI_FS = 20                   # taille des notes
+CHINDAMI_MAX_DANS = 9              # piles par page (à calibrer)
+
+
+def _render_chindami(song, sections, fs, marker=False, opts=None):
+    """Rendu multipage façon recueils Chindami Kunkunshi : page 23 x 15 cm
+    paysage, cadre filet, piles de 12 cases lues haut->bas de droite->gauche,
+    colonne marker = demi-case à droite de chaque pile, titre vertical à
+    droite de la page 1 surmonté du numéro de morceau (@musicno), paroles
+    (::lyrics) en colonnes verticales à gauche de la dernière page.
+    Retourne une liste de SVG (un par page)."""
+    title = song.meta.get("title", "")
+    tuning = song.meta.get("tuning", "本調子")
+    musicno = song.meta.get("musicno", "")
+    font_family = (opts or {}).get('font_family', 'serif')
+
+    cell_w = CHINDAMI_CELL_W
+    cell_h = CHINDAMI_CELL_H
+    marker_w = cell_w / 2 if marker else 0.0
+    group_w = cell_w + marker_w
+    rows = CHINDAMI_ROWS
+    fs = CHINDAMI_FS
+    ml = mr = mt = CHINDAMI_FRAME_MARGIN
+    frame_x0, frame_y0 = ml, mt
+    frame_x1 = CHINDAMI_PAGE_W - mr
+    frame_y1 = CHINDAMI_PAGE_H - mt
+    title_offset = CHINDAMI_TITLE_W + CHINDAMI_TITLE_GAP if (title or musicno) else 0
+    syllable_fs = min(int(cell_h * 0.35), int(marker_w * 0.8)) if marker_w > 0 else 0
+
+    # Flux : aplatir les sections tab en colonnes de 12, avec vocal sync.
+    tab_columns = []
+    vocal_columns = []
+    for sec in sections:
+        kind = sec[2]
+        content = sec[1]
+        vocal_lines = sec[3] if len(sec) > 3 else None
+        if kind == "tab":
+            cols = _wrap_vertical(list(content), rows)
+            tab_columns.extend(cols)
+            if vocal_lines:
+                vocal_columns.extend(_wrap_vertical(list(vocal_lines), rows))
+            else:
+                vocal_columns.extend([None] * len(cols))
+        elif kind == "vocal":
+            vflat = []
+            for toks in content:
+                vflat.extend(toks)
+            vocal_columns.extend(_wrap_vertical(vflat, rows))
+    if vocal_columns and len(vocal_columns) < len(tab_columns):
+        vocal_columns.extend([None] * (len(tab_columns) - len(vocal_columns)))
+
+    # Pagination : dans par page, titre sur la page 1 (1 colonne réservée)
+    max_dans = CHINDAMI_MAX_DANS
+    pages = []
+    i = 0
+    first = True
+    while i < len(tab_columns):
+        budget = max_dans - (1 if first and (title or musicno) else 0)
+        take = max(1, min(budget, len(tab_columns) - i))
+        pages.append((i, i + take, first))
+        i += take
+        first = False
+    if not pages:
+        pages = [(0, 0, True)]
+
+    lyrics_sections = [(s[0], s[1]) for s in sections if s[2] == "lyrics"]
+
+    svgs = []
+    for pno, (c0, c1, is_first) in enumerate(pages, 1):
+        n_cols = c1 - c0
+        lyrics_here = lyrics_sections if pno == len(pages) else []
+        lyrics_w = 0
+        if lyrics_here:
+            n_verses = sum(len(_lyrics_columns(v)) for _, d in lyrics_here
+                           for v in _split_verses(d))
+            lyr_fs = int(fs * 0.75)
+            lyr_col_w = int(lyr_fs * 1.33)
+            lyrics_w = n_verses * lyr_col_w + max(n_verses - 1, 0) * int(lyr_col_w * 0.8) + 12
+        total_w = CHINDAMI_PAGE_W
+        total_h = CHINDAMI_PAGE_H
+        out = ['<?xml version="1.0" encoding="UTF-8"?>',
+               f'<svg xmlns="http://www.w3.org/2000/svg" width="{total_w}" height="{total_h}" '
+               f'viewBox="0 0 {total_w} {total_h}">',
+               '<rect width="100%" height="100%" fill="white"/>',
+               f'<rect x="{frame_x0}" y="{frame_y0}" width="{frame_x1-frame_x0}" '
+               f'height="{frame_y1-frame_y0}" fill="none" stroke="black" stroke-width="1"/>']
+
+        # Titre vertical à droite de la page 1, surmonté du n° de morceau
+        if is_first and (title or musicno):
+            tx = frame_x1 - CHINDAMI_TITLE_W / 2
+            ty = frame_y0 + 6
+            if musicno:
+                out.append(f'<text x="{tx}" y="{ty + 10}" text-anchor="middle" '
+                           f'font-family="serif" font-size="11" fill="#333">{escape(musicno)}</text>')
+                ty += 22
+            if title:
+                _render_vertical_text(out, title, tx, ty, 18, "#000", 22, font_family)
+            if tuning:
+                _render_vertical_text(out, tuning, tx, frame_y1 - 4 - len(tuning) * 16,
+                                      11, "#555", 16, font_family)
+
+        # Piles de droite à gauche
+        x_right = frame_x1 - title_offset if is_first else frame_x1
+        if lyrics_here:
+            x_right -= lyrics_w
+        for ci in range(n_cols):
+            x = x_right - (ci + 1) * group_w - CHINDAMI_DAN_GAP / 2
+            y0 = frame_y0
+            # rectangles
+            for ri in range(rows):
+                cy = y0 + ri * cell_h
+                out.append(f'<rect x="{x}" y="{cy}" width="{cell_w}" height="{cell_h}" '
+                           f'fill="none" stroke="#bbb" stroke-width="0.6"/>')
+            if marker_w > 0:
+                out.append(f'<rect x="{x+cell_w}" y="{y0}" width="{marker_w}" '
+                           f'height="{rows*cell_h}" fill="none" stroke="#bbb" stroke-width="0.6"/>')
+            # notes + marqueurs
+            col = tab_columns[c0 + ci]
+            vcol = vocal_columns[c0 + ci] if c0 + ci < len(vocal_columns) else None
+            for ri in range(rows):
+                cy = y0 + ri * cell_h
+                tok = col[ri] if ri < len(col) else ""
+                rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
+                render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
+                            cell_w, cell_h, opts)
+                if marker_w > 0:
+                    if rs:
+                        _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start')
+                    if re_:
+                        _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end')
+                    if vs:
+                        _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
+                    if ve:
+                        _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
+            if vcol and marker_w > 0 and syllable_fs > 0:
+                # _draw_vertical_vocal positionne via total_w/mr ; on lui passe
+                # un mr fictif pour que la colonne tombe sur le x de la pile.
+                fake_mr = total_w - (x + group_w)
+                _draw_vertical_vocal(out, [vcol], rows, ml, y0, cell_w, cell_h, fs,
+                                     total_w, fake_mr, marker_w, 0, opts, syllable_fs)
+        # Paroles verticales à gauche de la dernière page
+        if lyrics_here:
+            lyr_fs = int(fs * 0.75)
+            lyr_sp = int(lyr_fs * 1.2)
+            lyr_col_w = int(lyr_fs * 1.33)
+            vx = frame_x0 + lyrics_w - lyr_col_w / 2
+            vi = 0
+            for _, data in lyrics_here:
+                for verse in _split_verses(data):
+                    for col_lines, indent in _lyrics_columns_layout(verse):
+                        cy = frame_y0 + 6
+                        cy += indent * lyr_sp
+                        for ln in col_lines:
+                            _render_vertical_text(out, ln, vx, cy, lyr_fs, "#333",
+                                                  lyr_sp, font_family)
+                            cy += len(ln) * lyr_sp + lyr_sp
+                        vx -= lyr_col_w + int(lyr_col_w * 0.8)
+                        vi += 1
+        out.append('</svg>')
+        svgs.append("\n".join(out))
+    return svgs
 
 
 def _render_nomura(song, sections, fs, marker=False, opts=None):
@@ -2421,7 +2599,7 @@ def main():
     ap.add_argument("-o", "--output", help="fichier SVG de sortie")
     ap.add_argument("-c", "--cols", type=int,
                     help="lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
-    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura"],
+    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami"],
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
                     help="nombre max de dans par page (pagination multipage, surcharge @page_dans)")
