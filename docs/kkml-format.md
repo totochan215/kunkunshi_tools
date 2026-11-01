@@ -30,9 +30,10 @@ au sein de chaque case, figures représentant des notes, leurs altérations et l
 techniques de jeu (ornements)>
 ::
 
-::tab-lyrics
-<paroles en phonétique positionnées approximativement sur les temps,
-un seul couplet ; en général le premier>
+::vocal
+<chant syllabique : un mot (séparé par des espaces) = une syllabe,
+les points `.` subdivisent le temps en parts égales ; chaque ligne de
+::vocal correspond à la ligne de ::tab de même index>
 ::
 
 ::lyrics
@@ -80,7 +81,7 @@ En cas de doublon, la première occurrence prime.
 ## Blocs
 
 - `::tab` — bloc de tablature, organisé en temps (figures), séparés par des espaces. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
-- `::tab-lyrics` — paroles en phonétique alignées de manière approximative sur les temps de la tablature ; les temps sont séparés par des espaces. Contenu limité par construction à un seul couplet ; en général c'est le premier qui est choisi.
+- `::vocal` — chant syllabique aligné sur les temps de la tablature : un mot (séparé par des espaces) = une syllabe, les points `.` subdivisent le temps en parts égales. Chaque ligne de `::vocal` correspond à la ligne de `::tab` de même index (la syllabe i reste alignée sur la note i ; une ligne de chant plus courte est complétée par des cases vides). Un token `ー`/`ｰ`/`－` ISOLÉ vaut case vide ; collé à une syllabe (ex. `よー`) il reste la voyelle longue. Les anciens blocs `::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal` (acceptés avec une info stderr).
 - `::lyrics` — bloc de paroles, divisé en couplets. lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
@@ -110,7 +111,7 @@ Détails :
 - `《》` (U+300A / U+300B) = chevrons japonais pleine largeur, délimitent l'annotation
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
-- En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les blocs `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et blocs. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::tab-lyrics` est par construction déjà écrit en phonétique.
+- En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les blocs `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et blocs. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::vocal` est par construction déjà écrit en phonétique.
 
 ## Cases de tablature
 
@@ -139,11 +140,11 @@ Marqueurs autonomes occupant leur case, à l'instar de `|:` / `:|` : `|(` (vocal
 Rendu : les marqueurs `|(` et `)|` vivent dans la colonne marker (comme les flèches de `|:` / `:|`) — les kanjis de notes ne sont JAMAIS décalés, le contenu de la case est rendu centré normalement. `)|` = ┘● : barre horizontale, montant vertical montant, disque creux au-dessus (même géométrie et même taille que l'ancien `@end_circle`, désormais déprécié et ignoré) ; `|(` = image spéculaire par rapport à l'axe HORIZONTAL : barre en haut, montant vertical descendant, disque creux en dessous.
 
 Composition : le marqueur partage librement sa case avec du contenu, rendu centré sans décalage. Exemples : `|((◯` = début de boucle vocale + 声だし + repos (cas 安波節 : le chant commence pendant un silence du sanshin) ; `|(尺)` = ┘○ miroir + 尺 + 声切り ; `◯)|` = fin de boucle posée sur un repos ; `合)|` = fin de boucle sur une note.
-| `ー` `ｰ` `－` (symbole isolé) | `-` | case vide. Un ー collé à un kanji (ex. `中ー`) reste une figure non reconnue : le chōonpu est une voyelle longue légitime dans `::vocal`/`::lyrics`, on ne devine pas l'intention |
+| `ー` `ｰ` `－` (symbole isolé) | `-` | case vide (dans `::tab` comme dans `::vocal`). Un ー collé à un kanji (ex. `中ー`) reste une figure non reconnue dans `::tab` ; dans `::vocal`/`::lyrics` collé à une syllabe il reste la voyelle longue, on ne devine pas l'intention |
 
 L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.
 
-Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de figures valides. Dans les blocs `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Le reste de la normalisation ne touche PAS les blocs `::vocal` et `::lyrics` (le ー y reste une voyelle longue).
+Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de figures valides. Dans les blocs `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Dans `::vocal`, un token `ー`/`ｰ`/`－` ISOLÉ est normalisé en `-` (case vide) ; collé à une syllabe, le ー reste une voyelle longue. Dans `::lyrics`, aucune normalisation (le ー y reste une voyelle longue).
 
 Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
 
@@ -155,20 +156,20 @@ Si aucune section n'est déclarée, les lignes hors métadonnées et commentaire
 
 ### Lignes vides
 
-Au sein des sections `::tab` et `::tab-lyrics`, ainsi que hors des sections, les lignes vides sont ignorées.
+Au sein des sections `::tab` et `::vocal`, ainsi que hors des sections, les lignes vides sont ignorées.
 
 ### Réduction de caractères vers leur forme canonique
 
 #### Caractères en double largeur vers caractères en simple largeur
 
-Au sein des sections `::tab` et `::tab-lyrics`, les équivalents pleine largeur des signes en demie-largeur ci-dessous sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
+Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des signes en demie-largeur ci-dessous sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
 | Double largeur  | Demie-largeur | Usage (pour mémoire) |
 |-----------------|---------------|---------|
 | `　` (U+3000)   | ` `           | séparateur de temps |
 | `／` (U+FF0F)   | `/`           | deux croches |
 | `：` (U+FF1A)   | `:`           | croche pointée + double croche, marques de répétition |
-| `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur tab-lyrics |
+| `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur de couplets dans `::lyrics` |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
 | `＋` (U+FF0B)   | `+`           | accord (taachi / tsuiri-bichi), forme canonique |
 | `ー` (U+30FC)   | `-` (symbole isolé) | case vide uniquement — plus de normalisation vers `-` collé |
@@ -285,7 +286,7 @@ Au sein des sections `tab::`, les kandokoro étendus exprimés sous la forme d'u
 ## Bonnes pratiques
 
 Ces bonnes pratiques visent à faciliter l'exécution du morceau en ayant le fichier KKML brut sous les yeux.
-- Il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant `::tab` `::tab-lyrics` `::lyrics`
+- Il est **recommandé** de faire figurer la section tab:: en haut, juste sous les métadonnées, et plus généralement, de placer les sections dans l'ordre suivant `::tab` `::vocal` `::lyrics`
 - Il est **recommandé** d'adopter le même découpage en lignes dans `tabs::` et `tabs-lyrics::`
 
 ## Pour en savoir plus
