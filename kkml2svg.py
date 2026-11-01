@@ -531,7 +531,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
 
     # --- Syllabes vocales --- #
     # Taille de police pour les syllabes : min(35% de cell_h, 80% de marker_w)
-    SYLLABLE_FS = min(int(cell_h * 0.30), int(marker_w * 0.8)) if marker_w > 0 else int(fs * 0.6)
+    SYLLABLE_FS = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else int(fs * 0.6)
     SYLLABLE_SP = int(SYLLABLE_FS * 0.9)  # espacement vertical entre syllabes
 
     # --- Colonne titre vertical (à droite de la grille) --- #
@@ -907,7 +907,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
     frame_x1 = CHINDAMI_PAGE_W - CHINDAMI_FRAME_MARGIN_X
     frame_y1 = CHINDAMI_GRID_BOTTOM
     title_offset = CHINDAMI_TITLE_W + CHINDAMI_TITLE_GAP if (title or musicno) else 0
-    syllable_fs = min(int(cell_h * 0.30), int(marker_w * 0.8)) if marker_w > 0 else 0
+    syllable_fs = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else 0
 
     # Flux : aplatir les sections tab en colonnes de 12, avec vocal sync.
     tab_columns = []
@@ -2126,14 +2126,11 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # puis les suffixes de technique depuis la fin du token.
     # (中) = 声だし + 中 + 声切り : les deux bornes peuvent cohabiter.
     koe_prefix = tok.startswith('(')
+    koe_suffix = tok.endswith(')')
     base_tok = tok[1:] if koe_prefix else tok
     # Le shuffle ':' peut précéder/suivre la borne (ex. "(:合", "上:)") :
-    # extraire ':' comme séparateur rythmique AVANT les suffixes de technique,
-    # pour que la note principale garde sa taille pleine.
-    shuffle = False
-    if ':' in base_tok:
-        shuffle = True
-        base_tok = base_tok.replace(':', '', 1)
+    # on ne touche PAS à base_tok ici — la branche shuffle gère ':' quelle que
+    # soit sa position, et la note garde sa taille pleine (effective_fs = fs).
     tech_suffixes = []
     while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
         tech_suffixes.insert(0, base_tok[-1])
@@ -2302,10 +2299,13 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         return
 
     # --- shuffle 早弾き : A:B (deux notes égales, empilées) --- #
-    if shuffle or ":" in base_tok:
-        parts = base_tok.split(":", 1) if ":" in base_tok else (base_tok, "")
+    if ":" in base_tok:
+        parts = base_tok.split(":", 1)
+        # En présence d'une borne de chant ( / ), les deux notes du shuffle
+        # gardent la taille pleine (fs) : la borne est un petit glyphe à part.
+        koe = koe_prefix or koe_suffix
         sh_pos = int(fs * 0.72)
-        sh = int(effective_fs * 0.72)
+        sh = fs if koe and '/' not in base_tok else int(effective_fs * 0.72)
         out.append(f'<text x="{cx}" y="{cy - fs * 0.18 + sh_pos/3}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="{sh}" fill="black">{_note_svg(parts[0], sh, opts)}</text>')
