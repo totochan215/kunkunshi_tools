@@ -87,7 +87,7 @@ FULLWIDTH_MAP = {
     '｀': "'",    # uchi-utu (apostrophe pleine chasse)
     '＾': '^',    # kaki-utu
     '＜': '<',    # kachi-utu
-    '＝': '=',    # taachi
+    '＝': '+',    # accord (variante graphique =, normalisée en +)
     '（': '(',    # koe-dashi 声だし
     '）': ')',    # koe-kiri 声切り
 }
@@ -144,11 +144,12 @@ def _normalize_tab_token(tok):
     if canon is not None and canon != out:
         _info_input_variant(out, canon)
         out = canon
-    # `-` déprécié comme séparateur d'accord (confusion avec ー, case vide) :
-    # normalisé en `+` (sauf token `-` seul = case vide).
-    if out != "-" and "-" in out:
-        _info_input_variant(out, out.replace("-", "+"))
-        out = out.replace("-", "+")
+    # `-` et `=` dépréciés comme séparateurs d'accord (confusion avec ー /
+    # représentation graphique en barre) : normalisés en `+`
+    # (sauf token `-` seul = case vide).
+    if out != "-" and ("-" in out or "=" in out):
+        _info_input_variant(out, out.replace("-", "+").replace("=", "+"))
+        out = out.replace("-", "+").replace("=", "+")
     return out, out != tok
 
 # Suffixes de technique (souhou) — apposés après le caractère de position
@@ -166,7 +167,6 @@ TECHNIQUE_SUFFIXES = {
     '<': {'name': 'kachi-utu', 'type': 'char',   'symbol': '┗', 'pos': 'bottom-left',
           'dx': 0.45, 'dy': 0.15},
     's': {'name': 'kuubanchi', 'type': 'small'},
-    '=': {'name': 'taachi',    'type': 'line',   'pos': 'right'},
 
     # 声切り (koe-kiri) : borne de fin de chant □ pour le chanteur.
     # D'après 世禮 (増訂琉球音樂樂典 p. 9 et 26) : à l'intérieur de la
@@ -1601,14 +1601,7 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
                 out.append(f'<text x="{tx}" y="{ty}" text-anchor="{anchor}" '
                            f'font-family="serif" font-size="{tech_fs}" '
                            f'fill="black">{escape(sym)}</text>')
-        elif ttype == 'line':
-            if text_w is not None:
-                lx = cx + text_w / 2 + gap
-            else:
-                lx = cx + fs * 0.42
-            out.append(f'<line x1="{lx}" y1="{cy - fs * 0.40}" '
-                       f'x2="{lx}" y2="{cy + fs * 0.40}" '
-                       f'stroke="black" stroke-width="1.2"/>')
+
 
 
 def _strip_repeat_marks(tok):
@@ -1814,7 +1807,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
       v  → aki-utu   (V en bas-gauche, même police et taille que la note)
       <  → kachi-utu (┗ en bas-gauche, même police et taille que la note)
       s  → kuubanchi (rendre le kanji plus petit, jeu faible)
-      =  → taachi    (trait vertical à droite, plusieurs cordes)
+
 
     Les marques diacritiques (', *, ^, v, <) sont rendues dans la même police
     (serif) et la même taille (effective_fs) que la note. Elles ne modifient
