@@ -172,12 +172,12 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 | `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur de couplets dans `::lyrics` |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
 | `＋` (U+FF0B)   | `+`           | accord (taachi / tsuiri-bichi), forme canonique |
-| `ー` (U+30FC)   | `-` (symbole isolé) | case vide uniquement — plus de normalisation vers `-` collé |
+| `ー` (U+30FC)   | `-`           | case vide uniquement - ne pas normaliser sinon |
 | `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
 | `｀` (U+FF40)   | `'`           | uchi-utu (打音) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
-| `＝` (U+FF1D)   | `+`           | accord (variante graphique =, normalisée en +) |
+| `＝` (U+FF1D)   | `=`           | accord (variante de +) |
 | `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
 | `）` (U+FF09)   | `)`           | koekiri, fin de boucle vocale  |
 
@@ -191,11 +191,6 @@ Au sein des sections `tab::`, certains symboles/caractères graphiquement simila
 |---------------|-----------------|----------------------|
 | `○` (U+25CB)  | `◯` (U+25EF)   | Repos                |
 | `〇` (U+3007) | `◯` (U+25EF)    | Repos                |
-| `O` (U+004F)  | `◯` (U+25EF)   | Repos                |
-| `o` (U+006F)  | `◯` (U+25EF)   | Repos                |
-| `0` (U+0030)  | `◯` (U+25EF)   | Repos                |
-
-TODO: utiliser les lettres O et o n'est pas une bonne idée : risque de collision avec les romaji ?
 
 #### Kandokoro en romaji vers kandokoro en kanji
 
