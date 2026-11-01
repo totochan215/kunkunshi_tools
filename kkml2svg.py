@@ -16,10 +16,10 @@ Layout horizontal : de gauche à droite et de haut en bas (style songbook).
 Métadonnée @layout vertical|horizontal dans le .kkml, ou -l/--layout en CLI.
 
 Options supplémentaires en-tête KKML (défauts : @layout vertical,
-@marker on, @font_style mincho, @shaku_circled on, @shaku_sharp on) :
+@marker on, @font_style mincho, @shaku_circled off, @shaku_sharp on) :
     @marker off           → masque la colonne marker (défaut: on)
     @font_style serif|gothic|mincho → style de police (défaut: mincho)
-    @shaku_circled off    → 尺 rendus sans cercle (défaut: on, entourés)
+    @shaku_circled on     → 尺 entourés d'un cercle (défaut: off, sans cercle)
     @shaku_sharp off      → masque les ♯ des 尺♯ (défaut: on, ♯ visibles)
     @author Nom          → auteur (défaut: vide)
     @end_circle off      → désactive le marqueur de fin de chanson (cercle creux)
@@ -477,7 +477,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     marker = song.meta.get("marker", "on") == "on"
 
     opts = {
-        'shaku_circled': song.meta.get('shaku_circled', 'on') == 'on',
+        'shaku_circled': song.meta.get('shaku_circled', 'off') == 'on',
         'shaku_sharp': song.meta.get('shaku_sharp', 'on') == 'on',
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
