@@ -1039,7 +1039,9 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
             for ri in range(rows):
                 cy = y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
-                rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
+                rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
+                if koe and not base_tok.startswith('('):
+                    base_tok = '(' + base_tok  # garder la borne de chant visible dans la case
                 render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                             cell_w, cell_h, opts)
                 if marker_w > 0:
@@ -1290,7 +1292,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
             for ri in range(rows):
                 cy = grid_y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
-                rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
+                rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
+                if koe and not base_tok.startswith('('):
+                    base_tok = '(' + base_tok  # garder la borne de chant visible dans la case
                 render_cell(out, base_tok, nx + cell_w / 2, cy + cell_h / 2,
                             fs, cell_w, cell_h, opts)
                 if rs and marker_w > 0:
@@ -1576,7 +1580,9 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
         for ri in range(rows_per_col):
             cy = y0 + ri * cell_h
             tok = col[ri] if ri < len(col) else ""
-            rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
+            rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
+            if koe and not base_tok.startswith('('):
+                base_tok = '(' + base_tok  # garder la borne de chant visible dans la case
             render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                         cell_w, cell_h, opts)
             if rs and marker_w > 0:
@@ -1723,7 +1729,9 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     out.append(f'<rect x="{x}" y="{y}" width="{cell_w}" '
                                f'height="{cell_h}" fill="none" '
                                f'stroke="#999" stroke-width="0.75"/>')
-                    rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
+                    rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
+                    if koe and not base_tok.startswith('('):
+                        base_tok = '(' + base_tok  # garder la borne de chant visible dans la case
                     render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
                                 cell_w, cell_h, opts)
                     if rs:
@@ -1852,19 +1860,32 @@ def _strip_repeat_marks(tok):
     re_ = False
     vs = False
     ve = False
-    if tok.startswith(REPEAT_START):
-        rs = True
-        tok = tok[len(REPEAT_START):]
-    if tok.startswith(VREPEAT_START):
-        vs = True
-        tok = tok[len(VREPEAT_START):]
-    if tok.endswith(REPEAT_END):
-        re_ = True
-        tok = tok[:-len(REPEAT_END)]
-    if tok.endswith(VREPEAT_END):
-        ve = True
-        tok = tok[:-len(VREPEAT_END)]
-    return rs, tok, re_, vs, ve
+    koe = False
+    # Bornes de chant ( et ) : peuvent précéder/suivre les marqueurs de
+    # répétition (ex. "(|:合", "上:)|") — on les dépile dans n'importe quel
+    # ordre pour ne garder que le contenu de la case.
+    while True:
+        if tok.startswith('('):
+            koe = True
+            tok = tok[1:]
+        elif tok.startswith(REPEAT_START):
+            rs = True
+            tok = tok[len(REPEAT_START):]
+        elif tok.startswith(VREPEAT_START):
+            vs = True
+            tok = tok[len(VREPEAT_START):]
+        elif tok.endswith(')'):
+            koe = True
+            tok = tok[:-1]
+        elif tok.endswith(REPEAT_END):
+            re_ = True
+            tok = tok[:-len(REPEAT_END)]
+        elif tok.endswith(VREPEAT_END):
+            ve = True
+            tok = tok[:-len(VREPEAT_END)]
+        else:
+            break
+    return rs, tok, re_, vs, ve, koe
 
 
 def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type):
@@ -2106,6 +2127,13 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # (中) = 声だし + 中 + 声切り : les deux bornes peuvent cohabiter.
     koe_prefix = tok.startswith('(')
     base_tok = tok[1:] if koe_prefix else tok
+    # Le shuffle ':' peut précéder/suivre la borne (ex. "(:合", "上:)") :
+    # extraire ':' comme séparateur rythmique AVANT les suffixes de technique,
+    # pour que la note principale garde sa taille pleine.
+    shuffle = False
+    if ':' in base_tok:
+        shuffle = True
+        base_tok = base_tok.replace(':', '', 1)
     tech_suffixes = []
     while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
         tech_suffixes.insert(0, base_tok[-1])
@@ -2274,8 +2302,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         return
 
     # --- shuffle 早弾き : A:B (deux notes égales, empilées) --- #
-    if ":" in base_tok:
-        parts = base_tok.split(":", 1)
+    if shuffle or ":" in base_tok:
+        parts = base_tok.split(":", 1) if ":" in base_tok else (base_tok, "")
         sh_pos = int(fs * 0.72)
         sh = int(effective_fs * 0.72)
         out.append(f'<text x="{cx}" y="{cy - fs * 0.18 + sh_pos/3}" '
