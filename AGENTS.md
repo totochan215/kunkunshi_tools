@@ -108,6 +108,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   - `::lyrics` manquante → la créer, vide ;
   - `::tab` implicite (lignes hors section) → rendre la section explicite (info) ;
   - `::tab` manquante → la créer, vide (peu de risques).
+Mode test (`--dry-run` / `-n`) : affiche le KKML nettoyé sur stdout (ou écrit dans un fichier distinct) sans écraser le KKML d'origine, pour voir le résultat avant application.
 Diagnostics : le cleaner émet info / avertissement / erreur sur stderr selon la gravité (ex. normalisation appliquée = info, réalignement refusé = avertissement, KKML malformé et inutilisable par le parser = erreur fatale, exit non nul).
 
 ## 5. Positionnement
