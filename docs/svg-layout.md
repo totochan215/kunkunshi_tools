@@ -72,7 +72,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 
 #### Marques de répétition (flèches)
 
-Les marqueurs `|:` (début) et `:|` (fin) peuvent être attachés aux tokens (`|:工`, `合/尺:|`) ou utilisés comme tokens autonomes. Le convertisseur les détache avant le rendu des notes via `_strip_repeat_marks()`.
+Les marqueurs `|:` (début) et `:|` (fin) peuvent être attachés aux figures (`|:工`, `合/尺:|`) ou utilisés comme symboles autonomes. Le convertisseur les détache avant le rendu des notes via `_strip_repeat_marks()`.
 
 Rendu en mode vertical : les flèches sont placées dans la colonne marker (à droite de chaque pile de cellules, largeur `marker_w`), pas dans les cases de notation ni dans l'espace titre.
 - Position x : `x + cell_w + marker_w / 2` (centre de la colonne marker de la pile correspondante)
@@ -112,7 +112,7 @@ Les paroles verticales n'ajoutent pas de hauteur (elles s'alignent sur la hauteu
 
 #### Cas des positions hautes + 下老 ou 下尺
 
-Le préfixe イ ou 口 peut aussi s'appliquer à 下老 et 下尺. Le token fait alors 3 caractères (ex. イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Ex. utilisé dans Hiyamikachibushi).
+Le préfixe イ ou 口 peut aussi s'appliquer à 下老 et 下尺. La figure fait alors 3 caractères (ex. イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Ex. utilisé dans Hiyamikachibushi).
 
 Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺' = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
 
