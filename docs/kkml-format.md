@@ -128,7 +128,7 @@ Séparateurs à l'intérieur d'une figure (dans une case) :
 | `//` `/`   | Deux double croches et une croche       | `合//工/中`           |
 | `:`        | Une croche pointée et une double croche | `合:工`               |
 | `::`       | Une double croche et une croche pointée | `合::工`              |
-| `+`        | Accord (notes simultanées, max 3)       | `四+工` ou `合+四+工` |
+| `+` `=` `-` | Accord (notes simultanées, max 3) — `+` canonique, `=` et `-` variantes acceptées (`-` seul = case vide) | `四+工`, `四=工` ou `合+四+工` |
 | (aucun)    | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
 
 TODO: risque de collision entre :: et la fin de section.

@@ -57,7 +57,7 @@ RUBY_SCALE = 0.5
 EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
 REST_TOKEN = "◯"
-REST_VARIANTS = {"◯", "○", "〇", "O", "o", "0"}
+REST_VARIANTS = {"◯", "○", "〇"}  # O/o/0 retirés : collision romaji
 REPEAT_START = "|:"
 REPEAT_END = ":|"
 
@@ -87,7 +87,7 @@ FULLWIDTH_MAP = {
     '｀': "'",    # uchi-utu (apostrophe pleine chasse)
     '＾': '^',    # kaki-utu
     '＜': '<',    # kachi-utu
-    '＝': '+',    # accord (variante graphique =, normalisée en +)
+    '＝': '=',    # accord (variante pleine chasse de = ; + reste canonique)
     '（': '(',    # koe-dashi 声だし
     '）': ')',    # koe-kiri 声切り
 }
@@ -144,12 +144,9 @@ def _normalize_tab_token(tok):
     if canon is not None and canon != out:
         _info_input_variant(out, canon)
         out = canon
-    # `-` et `=` dépréciés comme séparateurs d'accord (confusion avec ー /
-    # représentation graphique en barre) : normalisés en `+`
-    # (sauf token `-` seul = case vide).
-    if out != "-" and ("-" in out or "=" in out):
-        _info_input_variant(out, out.replace("-", "+").replace("=", "+"))
-        out = out.replace("-", "+").replace("=", "+")
+    # `-` et `=` restent des séparateurs d'accord valides (non canoniques ;
+    # `+` est canonique) : on ne les normalise PAS en `+`, le rendu des accords
+    # les accepte tous. Seul le token `-` isolé = case vide.
     return out, out != tok
 
 # Suffixes de technique (souhou) — apposés après le caractère de position
@@ -2203,8 +2200,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
 
     # Accords (jusqu'à 3 notes simultanées) : note+note[+note]
     # Rendu : caractères empilés verticalement, taille 72%.
-    if "+" in base_tok and len(base_tok) > 1:
-        chord_notes = [n for n in base_tok.split("+") if n]
+    if any(sep in base_tok for sep in ("+", "=", "-")) and len(base_tok) > 1:
+        chord_notes = [n for n in re.split(r"[+=\-]", base_tok) if n]
         if len(chord_notes) >= 2:
             n = len(chord_notes)
             step = effective_fs * 0.82
