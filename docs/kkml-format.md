@@ -32,7 +32,7 @@ techniques de jeu (ornements)>
 
 ::vocal
 <chant syllabique : un mot (séparé par des espaces) = une syllabe,
-les points `.` subdivisent le temps en parts égales ; chaque ligne de
+les points `.` subdivisent le temps en parts égales (les points eux-mêmes ne sont pas rendus mais marquent la subdivision) ; chaque ligne de
 ::vocal correspond à la ligne de ::tab de même index>
 ::
 
