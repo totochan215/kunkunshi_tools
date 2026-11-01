@@ -102,6 +102,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ⬜ Pipeline de publication LaTeX : collaboration avec éditeurs et communauté large.
   Pas de LilyPond / portée standard.
 - ⬜ GUI : combler l'écart avec Portama (avantage GUI).
+- ⬜ `kkml_cleaner.py` : normaliser un KKML sur sa forme canonique (formes pleine chasse → demi-largeur, romaji/chiffres → kanji kandokoro, kanji composites → katakana+kanji, `::tab-lyrics`/`::tab-vocals` → `::vocal`, ordre des sections `::tab` `::vocal` `::lyrics`). Réutilise les tables de normalisation de `kkml2svg.py` ; sortie : KKML canonique, idempotent (cleaner(cleaner(x)) == cleaner(x)).
 
 ## 5. Positionnement
 
