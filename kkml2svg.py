@@ -1440,8 +1440,14 @@ def _lyrics_columns_layout(verse):
 
 
 def _split_verses(lines):
-    """Découpe une liste de lignes de paroles en couplets
-    (séparés par des lignes vides). Renvoie une liste de listes de lignes."""
+    """Découpe une liste de lignes de paroles en couplets.
+
+    Séparateurs de couplet :
+    - ligne vide (comportement historique) ;
+    - marqueur de couplet en début de ligne (一、二、…, 女　, 男　,
+      ⚫︎, ・, ○) : la ligne courante OUVRE un nouveau couplet,
+      même sans ligne vide précédente (design flaw jukunoharu : couplets
+      sans retour à la ligne)."""
     verses = []
     current = []
     for ln in lines:
@@ -1449,8 +1455,11 @@ def _split_verses(lines):
             if current:
                 verses.append(current)
                 current = []
-        else:
-            current.append(ln)
+            continue
+        if current and _verse_indent_len(ln) > 0:
+            verses.append(current)
+            current = []
+        current.append(ln)
     if current:
         verses.append(current)
     return verses
