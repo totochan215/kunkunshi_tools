@@ -17,7 +17,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 ## 0. Syntaxe KKML — points à trancher (personne n'utilise encore KKML, il y a le temps)
 
-- ❓ Marqueurs de boucle dans `::tab` : `|: :| |( )|` actuels entrent en conflit avec
+- ❓ Marqueurs de boucle dans `::tab` : `|: :|` actuels (boucle vocale `(: :)` dans `::tab`) entrent en conflit avec
   le shuffle `A:B` (double point) et `|` est aussi saut de ligne de couplet / séparateur
   de case ailleurs. Pistes : `[ ]` et `( )` dans `::tab` ; ou retirer `|` carrément.
 - ❓ `::vocal` : meilleurs symboles pour koedashi/koekiri (idéalement ronds/carrés
