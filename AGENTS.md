@@ -108,6 +108,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   - `::lyrics` manquante → la créer, vide ;
   - `::tab` implicite (lignes hors section) → rendre la section explicite.
   - `::tab` manquante → la créer, vide (peu de risques).
+Diagnostics : le cleaner émet info / avertissement / erreur sur stderr selon la gravité (ex. normalisation appliquée = info, réalignement refusé = avertissement, KKML malformé et inutilisable par le parser = erreur fatale, exit non nul).
 
 ## 5. Positionnement
 
