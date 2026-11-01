@@ -531,7 +531,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
 
     # --- Syllabes vocales --- #
     # Taille de police pour les syllabes : min(35% de cell_h, 80% de marker_w)
-    SYLLABLE_FS = min(int(cell_h * 0.35), int(marker_w * 0.8)) if marker_w > 0 else int(fs * 0.6)
+    SYLLABLE_FS = min(int(cell_h * 0.30), int(marker_w * 0.8)) if marker_w > 0 else int(fs * 0.6)
     SYLLABLE_SP = int(SYLLABLE_FS * 0.9)  # espacement vertical entre syllabes
 
     # --- Colonne titre vertical (à droite de la grille) --- #
@@ -907,7 +907,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
     frame_x1 = CHINDAMI_PAGE_W - CHINDAMI_FRAME_MARGIN_X
     frame_y1 = CHINDAMI_GRID_BOTTOM
     title_offset = CHINDAMI_TITLE_W + CHINDAMI_TITLE_GAP if (title or musicno) else 0
-    syllable_fs = min(int(cell_h * 0.35), int(marker_w * 0.8)) if marker_w > 0 else 0
+    syllable_fs = min(int(cell_h * 0.30), int(marker_w * 0.8)) if marker_w > 0 else 0
 
     # Flux : aplatir les sections tab en colonnes de 12, avec vocal sync.
     tab_columns = []
