@@ -109,6 +109,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   - `::tab` implicite (lignes hors section) → rendre la section explicite (info) ;
   - `::tab` manquante → la créer, vide (peu de risques).
 Mode test (`--dry-run` / `-n`) : affiche le KKML nettoyé sur stdout (ou écrit dans un fichier distinct) sans écraser le KKML d'origine, pour voir le résultat avant application.
+`@cols` comme indice de repli (jamais de valeur par défaut) : si `@cols n` est présent, le cleaner replie `::tab` à n cases/ligne (dernier dan partiel conservé tel quel, info) puis aligne `::vocal` dessus ; si `@cols` est absent, les sauts de ligne de l'utilisateur sont conservés tels quels. Nommage à trancher : `cols` (hérité de Portama `cellsPerDan/2`) vs un terme lié au dan (段) — le dan est horizontal dans le fichier KKML mais vertical en layout ; la bibliographie anglaise parle de « column » (Kunkunshi Editor : « 12 columns per page, 12 cells per column »), Portama de `cellsPerDan`.
 Diagnostics : le cleaner émet info / avertissement / erreur sur stderr selon la gravité (ex. normalisation appliquée = info, réalignement refusé = avertissement, KKML malformé et inutilisable par le parser = erreur fatale, exit non nul).
 
 ## 5. Positionnement
