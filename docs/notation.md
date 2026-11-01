@@ -252,7 +252,7 @@ TODO: risque de collision entre - et les choonpu (ー) de la voyelle longue.
 ### Comportement
 
 - Si `@marker` est désactivé mais qu'un bloc `::vocal` existe, la colonne marker est automatiquement activée
-- Les syllabes vides (`-`) ne sont pas rendues
+- Les syllabes vides (`-`, ou `ー`/`ｰ`/`－` isolés) ne sont pas rendues ; `ー` collé à une syllabe (ex. `よー`) reste la voyelle longue
 - Jusqu'à 4 syllabes ou plus peuvent être empilées verticalement dans une seule case
 
 ## Modes rythmiques
