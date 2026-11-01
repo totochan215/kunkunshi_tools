@@ -171,7 +171,7 @@ TECHNIQUE_SUFFIXES = {
     # se ferme APRÈS la note. (La borne d'ouverture ○ 声だし est un
     # PRÉFIXE : la bouche s'ouvre AVANT la note, ex. (中.)
     ')': {'name': 'koe-kiri (声切り)',   'type': 'char', 'symbol': '□',
-          'pos': 'inside-right', 'dx': 0.36, 'dy': 0.35, 'scale': 0.42},
+          'pos': 'inside-right', 'dx': 0.36, 'dy': 0.318, 'scale': 0.42},
 }
 # Positions hautes (préfixes イ / ロ)
 #   イ  = 人偏 (亻) — 1 octave au-dessus du kanji de droite
@@ -1040,8 +1040,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
                 cy = y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
                 rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                if koe and not base_tok.startswith('('):
-                    base_tok = '(' + base_tok  # garder la borne de chant visible dans la case
+                if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                    base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                 render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                             cell_w, cell_h, opts)
                 if marker_w > 0:
@@ -1293,8 +1293,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                 cy = grid_y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
                 rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                if koe and not base_tok.startswith('('):
-                    base_tok = '(' + base_tok  # garder la borne de chant visible dans la case
+                if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                    base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                 render_cell(out, base_tok, nx + cell_w / 2, cy + cell_h / 2,
                             fs, cell_w, cell_h, opts)
                 if rs and marker_w > 0:
@@ -1596,8 +1596,8 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
             cy = y0 + ri * cell_h
             tok = col[ri] if ri < len(col) else ""
             rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-            if koe and not base_tok.startswith('('):
-                base_tok = '(' + base_tok  # garder la borne de chant visible dans la case
+            if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
             render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                         cell_w, cell_h, opts)
             if rs and marker_w > 0:
@@ -1745,8 +1745,8 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                                f'height="{cell_h}" fill="none" '
                                f'stroke="#999" stroke-width="0.75"/>')
                     rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                    if koe and not base_tok.startswith('('):
-                        base_tok = '(' + base_tok  # garder la borne de chant visible dans la case
+                    if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                        base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                     render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
                                 cell_w, cell_h, opts)
                     if rs:
@@ -2162,7 +2162,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # Le kanji du kandokoro garde sa taille pleine : le cercle est petit et
     # ancré au bord droit de la case, il ne rétrécit pas la note.
     if koe_prefix:
-        out.append(f'<text x="{cx + cell_w * 0.36}" y="{cy + fs * 0.42}" '
+        out.append(f'<text x="{cx + cell_w * 0.36}" y="{cy + fs * 0.318}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="{int(fs * 0.42)}" fill="black">○</text>')
 
@@ -2321,7 +2321,13 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         koe = koe_prefix or koe_suffix
         sh_pos = int(fs * 0.72)
         sh = fs if koe and '/' not in base_tok else int(effective_fs * 0.72)
-        out.append(f'<text x="{cx}" y="{cy - fs * 0.18 + sh_pos/3}" '
+        # En présence d'une borne de chant, la note reste centrée comme une
+        # noire (pas de décalage vers le haut). Si le ':' est en tête (ex.
+        # "(:合"), la note est parts[1] et parts[0] est vide.
+        if koe and not parts[0] and parts[1]:
+            parts = (parts[1], "")
+        y_main = cy + fs * 0.318 if koe else cy - fs * 0.18 + sh_pos/3
+        out.append(f'<text x="{cx}" y="{y_main}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="{sh}" fill="black">{_note_svg(parts[0], sh, opts)}</text>')
         lower = parts[1] if len(parts) > 1 else ""
