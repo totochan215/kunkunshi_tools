@@ -852,17 +852,21 @@ NOMURA_CELL_H = (NOMURA_FRAME_H - 2 * NOMURA_DAN_GAP) / NOMURA_ROWS
 # Constantes v1 d'après docs/svg-layout.md ; à recalibrer sur samples PDF.
 # --------------------------------------------------------------------------- #
 CM = 28.3465  # 1 cm en points
-CHINDAMI_PAGE_W = 23 * CM          # 652,36 pt (paysage)
-CHINDAMI_PAGE_H = 15 * CM          # 425,20 pt
-CHINDAMI_ROWS = 12                 # cases par pile
-CHINDAMI_FRAME_MARGIN = 12         # marge intérieure du cadre filet
-CHINDAMI_DAN_GAP = 10              # marge entre piles
-CHINDAMI_CELL_H = (CHINDAMI_PAGE_H - 2 * CHINDAMI_FRAME_MARGIN) / CHINDAMI_ROWS
-CHINDAMI_CELL_W = CHINDAMI_CELL_H * 0.62   # case plus haute que large
-CHINDAMI_TITLE_W = 34              # colonne titre vertical (droite)
-CHINDAMI_TITLE_GAP = 8
-CHINDAMI_FS = 20                   # taille des notes
-CHINDAMI_MAX_DANS = 9              # piles par page (à calibrer)
+CHINDAMI_PAGE_W = 23 * CM          # 651,96 pt mesurée (MediaBox), paysage
+CHINDAMI_PAGE_H = 15 * CM          # 425,16 pt mesurée
+CHINDAMI_ROWS = 12                 # cases par pile (spec utilisateur, confirmé visuellement ~10-12)
+# Mesures sur samples/chindami-pdf p8/p9 (1816x1181 px, 2,785 px/pt) :
+CHINDAMI_FRAME_MARGIN_X = 45 / 2.785   # ~16,2 pt : bord gauche cadre -> 1re pile
+CHINDAMI_FRAME_MARGIN_Y = 56 / 2.785   # ~20,1 pt : haut grille
+CHINDAMI_GRID_BOTTOM = 1117 / 2.785    # ~401 pt : bas grille
+CHINDAMI_CELL_H = (1117 - 56) / 2.785 / 12   # ~31,3 pt par case (12 cases)
+CHINDAMI_CELL_W = 93 / 2.785           # ~33,4 pt (sous-colonne notes)
+CHINDAMI_MARKER_W = CHINDAMI_CELL_W / 2  # ~16,7 pt (demi-case, spec utilisateur)
+CHINDAMI_DAN_GAP = 97 / 2.785          # ~34,8 pt entre filets de piles (pas centre-à-centre ~130 px)
+CHINDAMI_TITLE_W = (1816 - 1750) / 2.785  # ~23,7 pt : colonne titre (droite)
+CHINDAMI_TITLE_GAP = 30 / 2.785        # ~10,8 pt entre grille et titre
+CHINDAMI_FS = 20                   # taille des notes (à valider visuellement)
+CHINDAMI_MAX_DANS = 7              # 7 piles mesurées sur p9 (p8: 5 piles + paroles)
 
 
 def _render_chindami(song, sections, fs, marker=False, opts=None):
@@ -879,14 +883,13 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
 
     cell_w = CHINDAMI_CELL_W
     cell_h = CHINDAMI_CELL_H
-    marker_w = cell_w / 2 if marker else 0.0
-    group_w = cell_w + marker_w
+    marker_w = CHINDAMI_MARKER_W if marker else 0.0
+    group_w = cell_w + marker_w + CHINDAMI_DAN_GAP
     rows = CHINDAMI_ROWS
     fs = CHINDAMI_FS
-    ml = mr = mt = CHINDAMI_FRAME_MARGIN
-    frame_x0, frame_y0 = ml, mt
-    frame_x1 = CHINDAMI_PAGE_W - mr
-    frame_y1 = CHINDAMI_PAGE_H - mt
+    frame_x0, frame_y0 = CHINDAMI_FRAME_MARGIN_X, CHINDAMI_FRAME_MARGIN_Y
+    frame_x1 = CHINDAMI_PAGE_W - CHINDAMI_FRAME_MARGIN_X
+    frame_y1 = CHINDAMI_GRID_BOTTOM
     title_offset = CHINDAMI_TITLE_W + CHINDAMI_TITLE_GAP if (title or musicno) else 0
     syllable_fs = min(int(cell_h * 0.35), int(marker_w * 0.8)) if marker_w > 0 else 0
 
@@ -967,7 +970,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
         if lyrics_here:
             x_right -= lyrics_w
         for ci in range(n_cols):
-            x = x_right - (ci + 1) * group_w - CHINDAMI_DAN_GAP / 2
+            x = x_right - (ci + 1) * group_w + CHINDAMI_DAN_GAP
             y0 = frame_y0
             # rectangles
             for ri in range(rows):
