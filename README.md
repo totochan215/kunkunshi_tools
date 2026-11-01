@@ -29,7 +29,7 @@ Le convertisseur (`portama2kkml.py`) mappe :
 - `repeatStart/repeatEnd` → `|:` / `:|`
 - `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons)
 - Nombre de dans : déduit de `score`, jamais de `numDans`
-- `cellsPerDan / 2` → `@cols`
+- `cellsPerDan / 2` → `@cells_per_dan`
 
 ### kkml2svg.py
 
@@ -39,7 +39,7 @@ Rend un fichier KKML sous forme de tablature SVG, en appliquant les options de m
     python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
     cat chanson.kkml | python3 kkml2svg.py -          # stdin -> stdout
 
-Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`, `-p/--page-dans N` (pagination multipage : un SVG par page de N dans max).
+Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal`, `-p/--page-dans N` (pagination multipage : un SVG par page de N dans max).
 
 ### kkml_cleaner.py — normaliser un KKML
 
@@ -68,7 +68,7 @@ Exemple :
 
     @title かぎやで風節
     @tuning 本調子
-    @cols 12
+    @cells_per_dan 12
 
     ::tab
     |:工 五 四 工 四 乙 四 合/尺:| 工 ◯ 工 五
@@ -88,7 +88,7 @@ Exemple :
 
 (Extrait de かぎやで風節 (Kajadifu bushi))
 
-- Métadonnées : `@title`, `@tuning`, `@cols`, `@layout`, `@marker`, `@author`,
+- Métadonnées : `@title`, `@tuning`, `@cells_per_dan`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
     - `::tab` — tablature, 1 figure par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche,

@@ -234,7 +234,7 @@ FONT_STYLES = {
 LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"}
 
 # Clés de métadonnées reconnues (pour la tolérance @cléValeur collée)
-META_KEYS = {"title", "tuning", "cols", "layout", "marker", "end_circle",
+META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "shaku_circled", "shaku_sharp", "speed", "font_style",
              "page_dans"}
@@ -242,7 +242,7 @@ class Song:
     def __init__(self):
         self.meta = {}
         self.blocks = []
-        self.cols = 12         # DEPRECATED : @cols n'est plus une propriété de la chanson ; défaut de mise en page = 12 (vertical/horizontal)
+        self.cols = 12         # DEPRECATED : @cells_per_dan n'est plus une propriété de la chanson ; défaut de mise en page = 12 (vertical/horizontal)
         self.layout = "vertical"
         self.page_dans = None  # dans max par page (pagination), None = illimité
 
@@ -294,10 +294,11 @@ def parse_kkml(text):
                     key = mk
                     break
         if m and not stripped.startswith("::"):
-            if key == "cols":
-                # @cols est une indication de mise en page (cases/dan), pas une
-                # caractéristique de la chanson : ignoré au parsing, le layout
-                # applique son propre défaut (ou -c en CLI pour vertical/horizontal).
+            if key in ("cols", "cells_per_dan"):
+                # @cells_per_dan (ex-@cols) est une indication de mise en page
+                # (cellules par dan), pas une caractéristique de la chanson :
+                # ignoré au parsing, le layout applique son propre défaut
+                # (ou -c en CLI pour vertical/horizontal).
                 pass
             elif key == "page_dans":
                 try:
@@ -411,10 +412,10 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         layout = song.layout
     if page_dans is None:
         page_dans = song.page_dans
-    # @cols n'est PAS une caractéristique de la chanson : c'est une propriété de
-    # mise en page. Chaque layout a son propre défaut (vertical/horizontal :
-    # 12, chindami/nomura : imposé par la page), et -c/--cols ne s'applique
-    # qu'aux layouts libres (vertical/horizontal).
+    # @cells_per_dan n'est PAS une caractéristique de la chanson : c'est une
+    # propriété de mise en page. Chaque layout a son propre défaut
+    # (vertical/horizontal : 12, chindami/nomura : imposé par la page), et
+    # -c ne s'applique qu'aux layouts libres (vertical/horizontal).
     if cols is None:
         cols = 12
     if layout in ("chindami", "nomura"):
@@ -2645,8 +2646,8 @@ def main():
     ap = argparse.ArgumentParser(description="KKML -> 工工四 SVG converter")
     ap.add_argument("input", help="fichier .kkml ou '-' pour stdin")
     ap.add_argument("-o", "--output", help="fichier SVG de sortie")
-    ap.add_argument("-c", "--cols", type=int,
-                    help="lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
+    ap.add_argument("-c", "--cells-per-dan", dest="cols", type=int,
+                    help="cellules par dan : lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
     ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami"],
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
