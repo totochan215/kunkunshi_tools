@@ -166,7 +166,7 @@ Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal`
 
 - Regroupe les sections en 4-uplets `(section_title, content, kind, vocal_data)`
 - `has_vocal = any(s[3] or s[2] == "vocal")` → active automatiquement la colonne marker
-- Constantes de rendu vocal : `SYLLABLE_FS = min(int(cell_h * 0.35), int(marker_w * 0.8))`
+- Constantes de rendu vocal : `SYLLABLE_FS = min(int(cell_h * 0.30), int(marker_w * 0.8))`
 - Route vers `_render_vertical` ou `_render_horizontal`
 
 #### 3a. Rendu vertical (`_render_vertical`, ~309-580)
@@ -288,7 +288,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 
 ## Positionnement des syllabes vocales — déplacé depuis docs/notation.md
 
-- Taille de police : SYLLABLE_FS = min(int(cell_h * 0.35), int(marker_w * 0.8)) ≈ 20px avec les valeurs par défaut (cell_w=52, cell_h=58, marker_w=26)
+- Taille de police : SYLLABLE_FS = min(int(cell_h * 0.30), int(marker_w * 0.8)) ≈ 17px avec les valeurs par défaut (cell_w=52, cell_h=58, marker_w=26)
 - Position x : centre de la colonne marker = `x + cell_w + marker_w / 2`
 - Position y : `cy + cell_h / 2 + syllable_fs / 3` (centré verticalement sur la note)
 - Couleur : gris foncé (#333)

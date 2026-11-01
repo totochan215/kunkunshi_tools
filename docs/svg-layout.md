@@ -97,7 +97,7 @@ En typographie japonaise verticale, les parenthèses （）, (), les crochets �
 
 Les syllabes vocales sont rendues dans la colonne marker (largeur `marker_w`) à droite de chaque pile de cases. Chaque syllabe est un caractère double-largeur (hiragana/katakana) positionné à la même hauteur verticale que la note correspondante.
 
-- Taille de police : SYLLABLE_FS = min(int(cell_h * 0.35), int(marker_w * 0.8)) ≈ 20px avec les valeurs par défaut
+- Taille de police : SYLLABLE_FS = min(int(cell_h * 0.30), int(marker_w * 0.8)) ≈ 17px avec les valeurs par défaut
 - Position x : centre de la colonne marker = `x + cell_w + marker_w / 2`
 - Position y : même que la position verticale de la note correspondante dans la case
 - Couleur : noire (#000) ou gris foncé (#333)
