@@ -15,6 +15,16 @@ Dernière mise à jour : 25 septembre 2026
 Pipeline : Portama JSON → KKML → SVG. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
 
+## 0. Syntaxe KKML — points à trancher (personne n'utilise encore KKML, il y a le temps)
+
+- ❓ Marqueurs de boucle dans `::tab` : `|: :| |( )|` actuels entrent en conflit avec
+  le shuffle `A:B` (double point) et `|` est aussi saut de ligne de couplet / séparateur
+  de case ailleurs. Pistes : `[ ]` et `( )` dans `::tab` ; ou retirer `|` carrément.
+- ❓ `::vocal` : meilleurs symboles pour koedashi/koekiri (idéalement ronds/carrés
+  côté WYSIWYG, mais saisie texte difficile même pour des Japonais) vs `( )` ASCII.
+- ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
+  jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
+
 ## 1. Validations en attente (bloquantes ou quasi)
 
 - ✅ (2026-11-01, PR #12) marqueur de couplet en début de ligne dans `::lyrics` force le changement de couplet (même sans ligne vide) → saut de colonne en layout vertical. Cas jukunoharu. `_split_verses` modifié.
