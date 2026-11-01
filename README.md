@@ -90,7 +90,7 @@ Exemple :
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
     - `::tab` — tablature, 1 figure par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche,
-      `|:` `:|` = répétition de l'intro (`|(` `)|` déprécié, boucle vocale = `(: ... :)` dans `::vocal`), ' ^ v < s =` = ornements (`'` = uchi-utu, alias `*` (caractères de technique).
+      `|:` `:|` = répétition de l'intro, `(:` `:)` = boucle vocale, `' ^ v < s` = ornements (caractères de technique).
     - `::vocal` — paroles en phonétique alignées sur la tablature,
     - `::lyrics` — paroles complètes avec support éventuel du guide phonétique (ruby), sans alignement sur la tablature.
       Variantes : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
