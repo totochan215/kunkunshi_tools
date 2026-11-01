@@ -23,6 +23,10 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   de case ailleurs. Pistes : `[ ]` et `( )` dans `::tab` ; ou retirer `|` carrément.
 - ❓ `::vocal` : meilleurs symboles pour koedashi/koekiri (idéalement ronds/carrés
   côté WYSIWYG, mais saisie texte difficile même pour des Japonais) vs `( )` ASCII.
+- ❓ Kuubanchi (Portama isSmall sans straddle) : suffixe `s` actuel — aucun romaji de
+  ROMAJI_TO_KANJI ne finit par `s`, donc pas de collision avérée aujourd'hui, mais à
+  surveiller si la table romaji s'enrichit. La position rythmique (2e note d'un temps
+  petite) est déjà couverte par croche/shuffle.
 - ❓ Nuchi-utu (Portama orn `nu`) : `n` en suffixe KKML est EXCLU (collision romaji :
   yon, naka, shin…). Candidats libres : `~`, `°`, `゜` (U+309C), `N`.
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
