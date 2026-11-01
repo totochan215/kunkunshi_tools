@@ -81,9 +81,8 @@ FULLWIDTH_MAP = {
     '｜': '|',    # marques de répétition, séparateur de couplets
     '＃': '♯',    # dièse
     '#':  '♯',    # dièse
-    '＋': '+',    # accords (variante +)
-    'ー': '-',    # accords (variante -)
-    '－': '-',    # accords (variante -)    
+    '＋': '+',    # accords (canonique + ; ー/－ retirés : confondus avec la
+                  # case vide, voir EMPTY_INPUT_VARIANTS pour le token isolé)
     '＊': '*',    # uchi-utu (alias déprécié)
     '｀': "'",    # uchi-utu (apostrophe pleine chasse)
     '＾': '^',    # kaki-utu
@@ -145,6 +144,11 @@ def _normalize_tab_token(tok):
     if canon is not None and canon != out:
         _info_input_variant(out, canon)
         out = canon
+    # `-` déprécié comme séparateur d'accord (confusion avec ー, case vide) :
+    # normalisé en `+` (sauf token `-` seul = case vide).
+    if out != "-" and "-" in out:
+        _info_input_variant(out, out.replace("-", "+"))
+        out = out.replace("-", "+")
     return out, out != tok
 
 # Suffixes de technique (souhou) — apposés après le caractère de position
@@ -1975,10 +1979,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                            effective_fs, text_w=target_w)
         return
 
-    # Accords (jusqu'à 3 notes simultanées) : note-note[-note]
+    # Accords (jusqu'à 3 notes simultanées) : note+note[+note]
     # Rendu : caractères empilés verticalement, taille 72%.
-    if "-" in base_tok and len(base_tok) > 1:
-        chord_notes = [n for n in base_tok.split("-") if n]
+    if "+" in base_tok and len(base_tok) > 1:
+        chord_notes = [n for n in base_tok.split("+") if n]
         if len(chord_notes) >= 2:
             n = len(chord_notes)
             step = effective_fs * 0.82

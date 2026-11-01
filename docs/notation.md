@@ -188,7 +188,7 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 ## Symboles spéciaux
 
 - `◯` — repos.
-- `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est la case vide.
+- `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四+五` (avec `+` entre deux notes) est un accord, pas une case vide — le `-` seul est la case vide.
 - `|:` — début de boucle instrumentale. Peut être utilisé comme symbole autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
 - `:|` — fin de boucle instrumentale. Peut être utilisé comme symbole autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
 - `|(` — début de boucle vocale.
@@ -273,17 +273,17 @@ Le format d'une figure encode son rythme :
 - Rendu : deux notes égales empilées verticalement, taille 72% de la noire
 - La note supérieure est au-dessus du centre, la note inférieure en dessous
 
-### Accord (notes simultanées) (A-B)
-- Format : `四-工` ou `合-四-工` (séparateur `-`)
+### Accord (notes simultanées) (A+B)
+- Format : `四+工` ou `合+四+工` (séparateur `+`)
 - Rendu : caractères empilés verticalement, taille 72%, centrés sur l'axe vertical de la case
 - Maximum 3 notes (le sanshin n'a que 3 cordes)
-- Cas d'usage : par exemple dans ヒヤミカチ節 (Hiyamikachibushi) : 四-工 et 合-四-工
+- Cas d'usage : par exemple dans ヒヤミカチ節 (Hiyamikachibushi) : 四+工 et 合+四+工
 
 ### Figure non reconnue
 - Toute figure sans séparateur qui n'est pas une position (simple ou étendue) est non reconnue
 - Rendu dégradé : 3 premiers caractères au maximum, condensés en largeur (patron `イ中` pour 2 caractères, `イ下尺` pour 3)
 - Alerte sur stderr à la première occurrence de chaque figure unique
-- Historique : l'ancien « ornement » (empilement vertical de tous les caractères) est déprécié le 19 sept. 2026 — sans sémantique musicale ; les kanji empilés réels sont des croches (`A/B`), du hayabiki (`A:B`) ou des accords (`A-B`)
+- Historique : l'ancien « ornement » (empilement vertical de tous les caractères) est déprécié le 19 sept. 2026 — sans sémantique musicale ; les kanji empilés réels sont des croches (`A/B`), du hayabiki (`A:B`) ou des accords (`A+B`)
 
 ### Positions hautes 3-caractères
 
