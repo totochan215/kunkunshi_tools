@@ -58,7 +58,7 @@ Lecture usuelle, position sur le manche à partir de l'utaguchi (唄口), corde,
 
 \** Sur la base d'un positionnement du koma (駒) à 60 cm de l'utaguchi. Dans la variante 2尺, le koma est à 60,6 cm de l'utaguchu, et les distances doivent toutes être multipliées par 1,01.
 
-Notation 野村流 des doigtés (指位記号) : les kanji numéraux encerclés sont utilisés dans la marge gauche des kunkunshi 野村流 pour indiquer le doigté et les changements de position de la main gauche — ㊀ (一) = 人差指 (index), ㊁ (二) = 中指 (majeur), ㊂ (三) = 無名指 (annulaire), ㊃ (四) = 小指 (auriculaire). Bloc Unicode U+3280–U+3283 (Enclosed CJK Letters and Months), la série complète allant jusqu'à ㊉ (十). NB : ces caractères ne doivent pas apparaître comme tokens de position dans la grille — ils y seraient confondus avec le silence ◯.
+Notation 野村流 des doigtés (指位記号) : les kanji numéraux encerclés sont utilisés dans la marge gauche des kunkunshi 野村流 pour indiquer le doigté et les changements de position de la main gauche — ㊀ (一) = 人差指 (index), ㊁ (二) = 中指 (majeur), ㊂ (三) = 無名指 (annulaire), ㊃ (四) = 小指 (auriculaire). Bloc Unicode U+3280–U+3283 (Enclosed CJK Letters and Months), la série complète allant jusqu'à ㊉ (十). NB : ces caractères ne doivent pas apparaître comme positions dans la grille — ils y seraient confondus avec le silence ◯.
 
 Wikipédia JA signale des variations de lecture selon la région et l'école. Aucun impact en KKML : les kanji sont identiques quelle que soit la lecture.
 
@@ -77,7 +77,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 
 ### Positions hautes (préfixes イ et ロ)
 
-Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe en katakana est accolé au kanji de position (token à deux caractères).
+Deux systèmes de préfixes indiquent des positions hautes sur le manche. Le préfixe en katakana est accolé au kanji de position (figure à deux caractères).
 
 | Préfixe | Lecture                | Signification |
 |---------|------------------------|---------------|
@@ -188,9 +188,9 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 ## Symboles spéciaux
 
 - `◯` — repos.
-- `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四-五` (avec `-` entre deux notes) est un accord, pas une case vide — le `-` seul est le token vide.
-- `|:` — début de boucle instrumentale. Peut être utilisé comme token autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
-- `:|` — fin de boucle instrumentale. Peut être utilisé comme token autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
+- `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四+五` (avec `+` entre deux notes) est un accord, pas une case vide — le `-` seul est la case vide.
+- `|:` — début de boucle instrumentale. Peut être utilisé comme symbole autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
+- `:|` — fin de boucle instrumentale. Peut être utilisé comme symbole autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
 - `|(` — début de boucle vocale.
 - `|)` — fin de boucle vocale.
 
@@ -198,7 +198,7 @@ Les boucles de répétition (`|:` … `:|`) ne sont pas limitées au début d'un
 
 ## Alignement du chant
 
-Des syllabes vocales peuvent être placées dans la colonne marker (à droite de chaque pile de cases) pour indiquer le placement des syllabes du chant sur le rythme. Règle : 1 token (séparé par des espaces) = 1 syllabe. Un token peut faire plusieurs caractères (consonnes complexes de l'uchi-na-guchi, voyelles longues). Au moins 4 syllabes par case sont acceptées, et les syllabes peuvent chevaucher la bordure inférieure.
+Des syllabes vocales peuvent être placées dans la colonne marker (à droite de chaque pile de cases) pour indiquer le placement des syllabes du chant sur le rythme. Règle : 1 mot (séparé par des espaces) = 1 syllabe. Un mot peut faire plusieurs caractères (consonnes complexes de l'uchi-na-guchi, voyelles longues). Au moins 4 syllabes par case sont acceptées, et les syllabes peuvent chevaucher la bordure inférieure.
 
 ### Syllabes spécifiques aux langues Ryukyu
 
@@ -257,7 +257,7 @@ TODO: risque de collision entre - et les choonpu (ー) de la voyelle longue.
 
 ## Modes rythmiques
 
-Le format d'un token encode son rythme :
+Le format d'une figure encode son rythme :
 
 ### Une noire (A)
 - Format : un seul caractère (ex : `中`)
@@ -273,21 +273,23 @@ Le format d'un token encode son rythme :
 - Rendu : deux notes égales empilées verticalement, taille 72% de la noire
 - La note supérieure est au-dessus du centre, la note inférieure en dessous
 
-### Accord (notes simultanées) (A-B)
-- Format : `四-工` ou `合-四-工` (séparateur `-`)
+### Accord (notes simultanées) (A+B)
+- Format : `四+工` ou `合+四+工` (séparateur `+`)
 - Rendu : caractères empilés verticalement, taille 72%, centrés sur l'axe vertical de la case
 - Maximum 3 notes (le sanshin n'a que 3 cordes)
-- Cas d'usage : par exemple dans ヒヤミカチ節 (Hiyamikachibushi) : 四-工 et 合-四-工
+- Variantes acceptées : `=` et `－` (forme graphique en barre), `＝` pleine chasse — toutes normalisées en `+`
+- Terminologie : en okinawaïen, l'accord se dit **taachi** (二弾, « deux cordes ») ou **tsuiri-bichi** (列弾, plusieurs cordes jouées ensemble).
+- Cas d'usage : par exemple dans ヒヤミカチ節 (Hiyamikachibushi) : 四+工 et 合+四+工
 
-### Token non reconnu
-- Tout token sans séparateur qui n'est pas une position (simple ou étendue) est non reconnu
+### Figure non reconnue
+- Toute figure sans séparateur qui n'est pas une position (simple ou étendue) est non reconnue
 - Rendu dégradé : 3 premiers caractères au maximum, condensés en largeur (patron `イ中` pour 2 caractères, `イ下尺` pour 3)
-- Alerte sur stderr à la première occurrence de chaque token unique
-- Historique : l'ancien « ornement » (empilement vertical de tous les caractères) est déprécié le 19 sept. 2026 — sans sémantique musicale ; les kanji empilés réels sont des croches (`A/B`), du hayabiki (`A:B`) ou des accords (`A-B`)
+- Alerte sur stderr à la première occurrence de chaque figure unique
+- Historique : l'ancien « ornement » (empilement vertical de tous les caractères) est déprécié le 19 sept. 2026 — sans sémantique musicale ; les kanji empilés réels sont des croches (`A/B`), du hayabiki (`A:B`) ou des accords (`A+B`)
 
 ### Positions hautes 3-caractères
 
-| Token | Lecture       | Rendu |
+| Figure | Lecture      | Rendu |
 |-------|---------------|-------|
 | イ下尺 | i-shita-shaku | イ下尺 condensés (3 caractères), textLength 180% de fs, sans cercle |
 
@@ -295,7 +297,7 @@ Large mais fonctionnel. Le code traite ce cas dans une branche dédiée (3 carac
 
 ## Suffixes de technique (走法, souhou)
 
-Apposés après le caractère de position dans le token KKML. Peuvent se combiner (ex : `中s'` = jeu faible + hammer-on).
+Apposés après le caractère de position dans la figure KKML. Peuvent se combiner (ex : `中s'` = jeu faible + hammer-on).
 
 | Suffixe | Nom                    | Rendu SVG | Description |
 |---------|------------------------|-----------|-------------|
@@ -305,7 +307,6 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 | `v`     | aki-utu (開音)         | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
 | `<`     | kachi-utu (掻音)       | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s`     | kuubanchi (小弾)       | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
-| `=`     | taachi (二弾) ou tsuiri-bichi (列弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
 
 ## Contrôle du chant
 
@@ -316,7 +317,7 @@ Apposés après le caractère de position dans le token KKML. Peuvent se combine
 
 `(` et `)` sont des bornes de chant, pas des techniques de main : elles s'adressent au chanteur pour placer ses respirations. Source : 世禮國男, 増訂琉球音樂樂典, p. 9 ((10) ○ 声だし, 区画中右方) et p. 26 ((ホ)(1) ○□ 声出 声切) — le ○ marque le début du chant, le □ la fin. Elles se placent DANS la case (côté droit), pas dans la colonne marker — le traité précise qu'elles devraient être en colonne vocale mais sont dans la case par manque de place. Syntaxe mnémotechnique : `(` ouvre la bouche — c'est un PRÉFIXE, placé avant le kanji (ex. `(中`) car on ouvre la bouche avant la note ; `)` la ferme — c'est un SUFFIXE, placé après (ex. `尺)`) car on ferme la bouche après la note. Les deux bornes peuvent cohabiter sur une même note : `(中)` = 声だし + 中 + 声切り. Variantes pleine chasse （ ） acceptées (tolérance IME). Se combinent avec les autres suffixes (ex. `(尺)'`).
 
-À ne pas confondre : `|(` et `)|` sont des tokens autonomes occupant leur case (comme `|:` et `:|`) — ils représentent la répétition du chant (vocalRepStart/vocalRepEnd de Portama), section reprise au chant ou à la piste suivante. Rendu : ○ et □ à 75% de fs, centrés dans la case. Ils ne sont pas attachés à une note, contrairement aux suffixes `(` `)`.
+À ne pas confondre : `|(` et `)|` sont des symboles autonomes occupant leur case (comme `|:` et `:|`) — ils représentent la répétition du chant (vocalRepStart/vocalRepEnd de Portama), section reprise au chant ou à la piste suivante. Rendu : ○ et □ à 75% de fs, centrés dans la case. Ils ne sont pas attachés à une note, contrairement aux suffixes `(` `)`.
 
 ## Options d'en-tête KKML
 
