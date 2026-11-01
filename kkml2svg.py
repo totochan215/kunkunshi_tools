@@ -16,11 +16,11 @@ Layout horizontal : de gauche à droite et de haut en bas (style songbook).
 Métadonnée @layout vertical|horizontal dans le .kkml, ou -l/--layout en CLI.
 
 Options supplémentaires en-tête KKML (défauts : @layout vertical,
-@marker on, @font_style mincho, @shaku_circled off, @shaku_sharp on) :
+@marker on, @font_style mincho, @shaku_circled off, @shaku_sharp off) :
     @marker off           → masque la colonne marker (défaut: on)
     @font_style serif|gothic|mincho → style de police (défaut: mincho)
     @shaku_circled on     → 尺 entourés d'un cercle (défaut: off, sans cercle)
-    @shaku_sharp off      → masque les ♯ des 尺♯ (défaut: on, ♯ visibles)
+    @shaku_sharp on       → 尺♯ rendus avec le symbole ♯ (défaut: off, rendu en 尺 simple)
     @author Nom          → auteur (défaut: vide)
     @end_circle off      → désactive le marqueur de fin de chanson (cercle creux)
                            dans la colonne marker, au bas de la dernière case remplie
@@ -478,7 +478,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
 
     opts = {
         'shaku_circled': song.meta.get('shaku_circled', 'off') == 'on',
-        'shaku_sharp': song.meta.get('shaku_sharp', 'on') == 'on',
+        'shaku_sharp': song.meta.get('shaku_sharp', 'off') == 'on',
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'font_family': FONT_STYLES.get(
@@ -1881,7 +1881,7 @@ def _note_svg(note, font_size, opts=None):
     en tspan plus petit (65%) sans modifier la taille ni la position du 尺.
     Si opts['shaku_sharp'] est False, le ♯ est masqué (rendu en 尺 simple)."""
     if note == "尺♯":
-        if opts is not None and not opts.get('shaku_sharp', True):
+        if opts is not None and not opts.get('shaku_sharp', False):
             return escape("尺")
         return (f'{escape("尺")}'
                 f'<tspan font-size="{int(font_size * 0.65)}" '
