@@ -115,7 +115,7 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 
 - `render_svg(...)` retourne désormais une **liste de SVG** (un par page).
 - Pagination : `@page_dans N` (méta) ou `-p/--page-dans N` (CLI). Défaut : None = une seule page (comportement historique).
-- `_render_vertical` découpe les sections tab/tab-lyrics en pages de N dans ; les colonnes vocales (`vocal_data`) sont tranchées en synchronisation avec les colonnes de tab (même slice).
+- `_render_vertical` découpe les sections tab en pages de N dans ; les colonnes vocales (`vocal_data`) sont tranchées en synchronisation avec les colonnes de tab (même slice).
 - Sections lyrics et titre vertical : répétés sur chaque page.
 - `main()` : 1 page → sortie simple ; n pages → `stem-1.svg` … `stem-n.svg`.
 
@@ -123,7 +123,7 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 
 - Classes `Song` (meta, blocks, cols, layout) et `Block` (kind, label, lines)
 - Lit ligne par ligne : commentaires `#`, métadonnées `@`, blocs `::kind`, fermeture `::`
-- Blocs supportés : `tab`, `lyrics`, `tab-lyrics`, `vocal`, `section`
+- Blocs supportés : `tab`, `lyrics`, `vocal`, `section` (`::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal`)
 - `::vocal` se paire au bloc `::tab` précédent : chaque ligne vocale est aplatie avec padding par ligne (`-`) sur la structure de la ligne de tab de même index ; l'excédent est tronqué. La syllabe i reste alignée sur la note i.
 
 #### 2. Rendu SVG (`render_svg`, ~212-308)
@@ -157,10 +157,10 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 - **Colonne marker = 3 sous-colonnes virtuelles** (spec Nomura-ryu, non encore implémentées) :
   1. **droite** : hauteur de chant — petits kanjis dérivés des kandokoro du sanshin (avec variantes vocales) ;
   2. **milieu** : instructions de chant — points de positionnement exact des notes, lignes de glissando, etc. ;
-  3. **gauche** : texte du chant en syllabique (`::tab-lyrics` / `::vocal`).
+  3. **gauche** : texte du chant en syllabique (`::vocal`).
   Implémentation actuelle : syllabes centrées dans la bande marker (à déplacer vers la sous-colonne gauche) ; sous-colonnes hauteur/milieu à créer avec P3 声楽譜.
 - **尺♯ en nomura-ryu** : `@shaku_sharp off` **et** `@shaku_circled off` systématiques — les 尺♯ sont rendus en 尺 simples, jamais encerclés ; c'est au lecteur de deviner la hauteur exacte des shaku à jouer. Le layout nomura doit forcer ces deux options (comme `@marker on`), indépendamment des méta KKML.
-- Aplatit les sections tab en flux de colonnes de 12 ; `tab-lyrics` → notes + syllabes dans le marker. Sélecteurs de variante (U+FE00–FE0F) non rendus (éviter l'« espace doublée » en tête de couplet).
+- Aplatit les sections tab en flux de colonnes de 12 ; les syllabes `::vocal` vont dans le marker. Sélecteurs de variante (U+FE00–FE0F) non rendus (éviter l'« espace doublée » en tête de couplet).
 
 #### 3c. Rendu horizontal (`_render_horizontal`, ~794)
 
@@ -169,7 +169,6 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 #### Fonctions de dessin
 
 - `_draw_vertical_tab` — grille verticale, deux passes (rectangles puis notes) ; rend aussi les données vocales pairées
-- `_draw_vertical_tab_lyrics` — grille + positions (haut) + syllabes (bas)
 - `render_cell` (~1147) — rend un token (voir ci-dessous)
 - `_note_svg` — rendu d'une note unique
 - `_render_techniques` — souhou autour de la cellule ; suffixes avec `dx/dy/scale/rotate` individuels, paramètre `text_w` pour multi-caractères
