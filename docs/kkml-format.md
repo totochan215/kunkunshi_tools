@@ -43,7 +43,7 @@ ruby supporté>
 
 ```
 
-Le fichier est composé d'un bloc de métadonnées et de sections thématiques. L'ordre n'est pas imposé. Les sections ne peuvent pas être imbriquées.
+Le fichier est composé d'un en-tête de métadonnées et de sections thématiques. L'ordre n'est pas imposé. Les sections ne peuvent pas être imbriquées.
 
 Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
@@ -82,9 +82,9 @@ En cas de doublon, la première occurrence prime.
 
 ## Section
 
-- `::tab` — bloc de tablature, organisé en temps (figures), séparés par des espaces. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
-- `::vocal` — chant syllabique aligné sur les temps de la tablature : un mot (séparé par des espaces) = une syllabe, les points `.` subdivisent le temps en parts égales. Chaque ligne de `::vocal` correspond à la ligne de `::tab` de même index (la syllabe i reste alignée sur la note i ; une ligne de chant plus courte est complétée par des cases vides). Un token `ー`/`ｰ`/`－` ISOLÉ vaut case vide ; collé à une syllabe (ex. `よー`) il reste la voyelle longue. Les anciens blocs `::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal` (acceptés avec une info stderr).
-- `::lyrics` — bloc de paroles, divisé en couplets. lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
+- `::tab` — section de tablature, organisé en temps (figures), séparés par des espaces. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
+- `::vocal` — chant syllabique aligné sur les temps de la tablature : un mot (séparé par des espaces) = une syllabe, les points `.` subdivisent le temps en parts égales. Chaque ligne de `::vocal` correspond à la ligne de `::tab` de même index (la syllabe i reste alignée sur la note i ; une ligne de chant plus courte est complétée par des cases vides). Un token `ー`/`ｰ`/`－` ISOLÉ vaut case vide ; collé à une syllabe (ex. `よー`) il reste la voyelle longue. Les anciennes sections `::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal` (acceptés avec une info stderr).
+- `::lyrics` — section de paroles, divisé en couplets. lignes vides = séparateurs de couplets. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
   - `女`, `男` ou `男女` — pour spécifier un couplet chanté par les femmes `女`, les hommes `男` ou les deux genres `男女`. 
@@ -95,7 +95,7 @@ En cas de doublon, la première occurrence prime.
   (couplets, colonnes `|`/`||`, rubys). `::lyrics` est un alias de `::lyrics-ruby` : kanji avec support des rubys.
   `::lyrics-kanji` désigne une version en kanjis seuls (sans rubys), `::lyrics-kana` une transcription en kanas,
   `::lyrics-romaji` une romanisation.
-- `::` ferme le bloc courant.
+- `::` ferme la section courante.
 
 ## Ruby
 
@@ -113,7 +113,7 @@ Détails :
 - `《》` (U+300A / U+300B) = chevrons japonais pleine largeur, délimitent l'annotation
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
-- En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les blocs `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et blocs. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::vocal` est par construction déjà écrit en phonétique.
+- En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les sections `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et sections. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::vocal` est par construction déjà écrit en phonétique.
 
 ## Cases de tablature
 
@@ -146,7 +146,7 @@ Composition : le marqueur partage librement sa case avec du contenu, rendu centr
 
 L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.
 
-Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de figures valides. Dans les blocs `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Dans `::vocal`, un token `ー`/`ｰ`/`－` ISOLÉ est normalisé en `-` (case vide) ; collé à une syllabe, le ー reste une voyelle longue. Dans `::lyrics`, aucune normalisation (le ー y reste une voyelle longue).
+Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de figures valides. Dans les sections `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Dans `::vocal`, un token `ー`/`ｰ`/`－` ISOLÉ est normalisé en `-` (case vide) ; collé à une syllabe, le ー reste une voyelle longue. Dans `::lyrics`, aucune normalisation (le ー y reste une voyelle longue).
 
 Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
 

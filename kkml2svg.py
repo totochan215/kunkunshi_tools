@@ -69,11 +69,11 @@ REPEAT_END = ":|"
 VREPEAT_START = "|("
 VREPEAT_END = ")|"
 
-# Normalisation d'entrée pleine chasse (IME japonais) — blocs tab/vocal.
+# Normalisation d'entrée pleine chasse (IME japonais) — sections tab/vocal.
 # Objectif : un fichier tapé avec une méthode de saisie japonaise (pleine
 # chasse) reste valide. Les équivalents pleine chasse des séparateurs et
 # suffixes ASCII sont convertis vers la forme canonique au parsing.
-# NB : ー (chōonpu) n'est converti en - (case vide) QUE dans les blocs de
+# NB : ー (chōonpu) n'est converti en - (case vide) QUE dans les sections de
 # tablature — dans ::vocal / ::lyrics il reste une voyelle longue légitime.
 FULLWIDTH_MAP = {
     '／': '/',    # deux croches
@@ -225,10 +225,10 @@ FONT_STYLES = {
 # --------------------------------------------------------------------------- #
 # 2. Parseur KKML
 # --------------------------------------------------------------------------- #
-# Variantes phonétiques des blocs de paroles. `::lyrics` est un alias
+# Variantes phonétiques des sections de paroles. `::lyrics` est un alias
 # de `::lyrics-ruby` (kanji avec support des rubys). Toutes les variantes
-# partagent la grammaire et le rendu du bloc `::lyrics` ; la variante est
-# conservée sur le bloc (Block.variant) pour distinguer les versions
+# partagent la grammaire et le rendu de la section `::lyrics` ; la variante est
+# conservée sur la section (Block.variant) pour distinguer les versions
 # destinées aux japonais (kanji/ruby) des versions destinées aux
 # étrangers (romaji) ou aux kanas seuls.
 LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"}
@@ -252,7 +252,7 @@ class Block:
         self.kind = kind
         self.label = label
         self.lines = []
-        self.variant = None  # variante phonétique des blocs lyrics-*
+        self.variant = None  # variante phonétique des sections lyrics-*
 
 
 def parse_kkml(text):
@@ -271,7 +271,7 @@ def parse_kkml(text):
             i += 1
             continue
 
-        # ligne vide : préserver comme séparateur de couplet dans un bloc lyrics
+        # ligne vide : préserver comme séparateur de couplet dans une section lyrics
         if stripped == "":
             if current is not None and current.kind == "lyrics":
                 current.lines.append("")
@@ -352,7 +352,7 @@ def parse_kkml(text):
                       file=sys.stderr)
             current = Block("tab", None)
             song.blocks.append(current)
-            continue   # retraiter la ligne dans le bloc implicite
+            continue   # retraiter la ligne dans la section implicite
 
         if current is not None:
             if current.kind == "tab":
@@ -423,7 +423,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     title = song.meta.get("title", "")
     tuning = song.meta.get("tuning", "本調子")
 
-    # Regrouper les blocs en sections
+    # Regrouper les sections en 4-uplets
     sections = []   # (section_title, content, kind, vocal_flat=None)
     cur_title = None
     last_tab_index = -1
@@ -460,7 +460,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
                 sec_title, tab_content, tab_kind, _ = sections[last_tab_index]
                 sections[last_tab_index] = (sec_title, tab_content, tab_kind, vocal_flat)
             else:
-                # Pas de bloc ::tab précédent : aplatir tel quel (non rendu)
+                # Pas de section ::tab précédente : aplatir tel quel (non rendu)
                 vocal_flat = []
                 for syls in blk.lines:
                     vocal_flat.extend(syls)

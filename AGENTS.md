@@ -41,13 +41,13 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   小字 (~70 %). Patron rodé, effort faible.
 - Non couvert volontairement : イ下八 / ロ下八 (non attestés, repli dégradé).
 
-### P2 — Bloc positionné (ruby vocal) : nombre de positions variable, règles de layouting — ✅ décidé le 2026-11-01
+### P2 — Section positionnée (ruby vocal) : nombre de positions variable, règles de layouting — ✅ décidé le 2026-11-01
 - DÉCISION TRANCHÉE : **pas de nombre de positions fixe dans KKML**. Le nombre de
   positions par case est libre (constaté à la saisie, peut dépasser 4). La question
   grille 3 (Portama) vs 4 (Nomura-ryu) est caduque : l'import Portama produit
   naturellement 3 positions/case, le layout nomura impose ses propres seuils.
 - `::vocal` (mot = syllabe, points `.` = subdivision du temps en parts égales) reste
-  la syntaxe de saisie ; incompatible avec 声楽譜 ; le bloc positionné (futur
+  la syntaxe de saisie ; incompatible avec 声楽譜 ; la section positionnée (futur
   `::ruby`) sera le substrat commun à P3.
 - **Règles de layouting** (seuils appliqués au rendu, pas au format). Chaque règle a
   un défaut par layout et une méta KKML d'override (CLI prioritaire sur méta, comme
@@ -71,8 +71,8 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   avance ligne = cell_h/3, tuck petit kana +1,18 × fs, offset x +0,1 × fs.
 - ⬜ Mesurer le rendu du chōonpu ー si un PDF ruby avec voyelles longues est disponible.
 
-### P3 — Bloc 聲楽譜 (notation vocale) — ⬜ (dépend de P0 et P2)
-- Bloc pairé à `::tab`, grammaire type `発声法:hauteur[:上|平|下]`.
+### P3 — Section 聲楽譜 (notation vocale) — ⬜ (dépend de P0 et P2)
+- Section paire à `::tab`, grammaire type `発声法:hauteur[:上|平|下]`.
 - Table de rendu des ~20 発声法記号 (上吟/下吟/次第上/次第下/押切/直吟/呑み/掛/大掛/当/
   ネーキ/クダミ/ユルシ/振い/廻い/振上げ/内グヰ/突吟/スクヰ…).
 - Rendu : glyphes Unicode (▲○●□↑) ou formes SVG dessinées ; rouge/noir via `fill` SVG.
@@ -156,13 +156,13 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 ### 1. Parseur KKML (`parse_kkml`, lignes ~129-210)
 
 - Classes `Song` (meta, blocks, cols, layout) et `Block` (kind, label, lines)
-- Lit ligne par ligne : commentaires `#`, métadonnées `@`, blocs `::kind`, fermeture `::`
-- Blocs supportés : `tab`, `lyrics`, `vocal`, `section` (`::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal`)
-- `::vocal` se paire au bloc `::tab` précédent : chaque ligne vocale est aplatie avec padding par ligne (`-`) sur la structure de la ligne de tab de même index ; l'excédent est tronqué. La syllabe i reste alignée sur la note i.
+- Lit ligne par ligne : commentaires `#`, métadonnées `@`, sections `::kind`, fermeture `::`
+- Sections supportées : `tab`, `lyrics`, `vocal`, `section` (`::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal`)
+- `::vocal` se paire à la section `::tab` précédente : chaque ligne vocale est aplatie avec padding par ligne (`-`) sur la structure de la ligne de tab de même index ; l'excédent est tronqué. La syllabe i reste alignée sur la note i.
 
 #### 2. Rendu SVG (`render_svg`, ~212-308)
 
-- Regroupe les blocs en sections 4-uplets `(section_title, content, kind, vocal_data)`
+- Regroupe les sections en 4-uplets `(section_title, content, kind, vocal_data)`
 - `has_vocal = any(s[3] or s[2] == "vocal")` → active automatiquement la colonne marker
 - Constantes de rendu vocal : `SYLLABLE_FS = min(int(cell_h * 0.35), int(marker_w * 0.8))`
 - Route vers `_render_vertical` ou `_render_horizontal`
@@ -332,7 +332,7 @@ Ces mesures (かぎやで風節.pdf, テスト節.pdf) servent au calibrage du r
 - Géométrie du PDF (A4 paysage, TCPDF) : cadre 28,3–819,2 × 28,3–575,4 pt ; piles au pas de 60,9 pt, cadre 52,4 pt (notes 28,3 + marker 24,1) ; 12 piles/page, 12 cases/pile, hauteur 43,94 pt ; notes fs=17, straddle fs=13 ; ratios marker/notes 0,85 (nous 0,5), cell_h/notes 1,55 (nous 1,12), fs/cell_h 0,39 (nous 0,38).
 - Géométrie fine des marques (テスト節.pdf) : orn fs 14 (dx +6,16, dy +4,03 ; isSmall 10, dx +8,07) ; acc fs 14 (dx −2,84, dy +4,02 ; isSmall 10, dx −4,84) ; yubii fs 12,5 (dx −15,46, dy +0,93, colonne dédiée à gauche) ; ○/□ fs 9 (marker +14,8 pt, dy +3,3).
 - Polices embarquées : Untitled1 (Type0, Identity-H, upem 1024 ; CID = codepoint PUA) pour les notes, IPAexMincho pour le texte. Contours des glyphes de テスト節.pdf extraits (chemins SVG upem 1024) — disponibles pour la rénovation du rendu des ornements.
-- Constantes pour un éventuel bloc `::ruby` : ruby_fs/note_fs = 0,65 ; avance ligne = cell_h/3 ; tuck petit kana = 1,18 × fs (notre espacement actuel : syllable_fs × 0,85).
+- Constantes pour une éventuelle section `::ruby` : ruby_fs/note_fs = 0,65 ; avance ligne = cell_h/3 ; tuck petit kana = 1,18 × fs (notre espacement actuel : syllable_fs × 0,85).
 
 ## Constantes de calibrage mesurées sur les scans Nomura-ryu (recherche)
 
