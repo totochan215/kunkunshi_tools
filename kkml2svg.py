@@ -1004,7 +1004,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
                 # _draw_vertical_vocal positionne via total_w/mr ; on lui passe
                 # un mr fictif pour que la colonne tombe sur le x de la pile.
                 fake_mr = total_w - (x + group_w)
-                _draw_vertical_vocal(out, [vcol], rows, ml, y0, cell_w, cell_h, fs,
+                _draw_vertical_vocal(out, [vcol], rows, frame_x0, y0, cell_w, cell_h, fs,
                                      total_w, fake_mr, marker_w, 0, opts, syllable_fs)
         # Paroles verticales à gauche de la dernière page
         if lyrics_here:
