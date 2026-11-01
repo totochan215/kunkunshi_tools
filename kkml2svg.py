@@ -932,33 +932,72 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
     if vocal_columns and len(vocal_columns) < len(tab_columns):
         vocal_columns.extend([None] * (len(tab_columns) - len(vocal_columns)))
 
-    # Pagination : dans par page, titre sur la page 1 (1 colonne réservée)
+    lyrics_sections = [(s[0], s[1]) for s in sections if s[2] == "lyrics"]
+
+    # Pagination façon nomura : les paroles (::lyrics) occupent la place LIBRE
+    # à gauche de la dernière page de musique ; si la largeur restante ne suffit
+    # pas, les colonnes de paroles passent sur des pages dédiées (per_page
+    # colonnes par page). Jamais de débordement hors page, jamais de pile perdue.
     max_dans = CHINDAMI_MAX_DANS
-    pages = []
+    lyr_fs0 = int(CHINDAMI_FS * 0.75)
+    lyr_col_w0 = int(lyr_fs0 * 1.33)
+    lyr_gap0 = int(lyr_col_w0 * 0.8)
+    lyr_cols = []
+    for _, d in lyrics_sections:
+        for verse in _split_verses(d):
+            for col_lines, indent in _lyrics_columns_layout(verse):
+                lyr_cols.append((col_lines, indent))
+    usable_w = (CHINDAMI_PAGE_W - 2 * CHINDAMI_FRAME_MARGIN_X
+                - CHINDAMI_TITLE_W - CHINDAMI_TITLE_GAP)
+    per_lyr_page = max(1, int(usable_w // (lyr_col_w0 + lyr_gap0)))
+    # colonnes de paroles qui tiennent à gauche de la dernière page de musique
+    if lyr_cols:
+        fit = 0
+        while fit < len(lyr_cols) and (fit + 1) * lyr_col_w0 + fit * lyr_gap0 + 12 <= usable_w - CHINDAMI_PILE_W:
+            fit += 1
+    else:
+        fit = 0
+
+    # capacité de piles sur la dernière page de musique avec les paroles à gauche
+    lyr_w_fit = fit * lyr_col_w0 + max(fit - 1, 0) * lyr_gap0 + 12 if fit else 0
+    room = max(1, int((usable_w - lyr_w_fit) // CHINDAMI_PILE_W))
+
+    pages = []  # (c0, c1, is_first, lyr_slice)
     i = 0
     first = True
     while i < len(tab_columns):
+        remaining = len(tab_columns) - i
         budget = max_dans - (1 if first and (title or musicno) else 0)
-        take = max(1, min(budget, len(tab_columns) - i))
-        pages.append((i, i + take, first))
+        # dernière page de musique = celle qui contient la dernière pile
+        is_last = (i + budget >= len(tab_columns))
+        lyr_slice = None
+        if lyr_cols and is_last and i + room >= len(tab_columns):
+            # la dernière page de musique accueille les piles restantes à droite
+            # des 'fit' colonnes de paroles (à gauche) : assez de piles pour
+            # que la grille + les paroles tiennent dans usable_w.
+            take = min(remaining, room)
+            lyr_slice = (0, fit)
+        else:
+            take = min(budget, remaining)
+        pages.append((i, i + take, first, lyr_slice))
         i += take
         first = False
     if not pages:
-        pages = [(0, 0, True)]
-
-    lyrics_sections = [(s[0], s[1]) for s in sections if s[2] == "lyrics"]
+        pages = [(0, 0, True, (0, fit) if lyr_cols else None)]
+    # pages dédiées paroles pour l'excédent
+    k = fit
+    while k < len(lyr_cols):
+        pages.append((0, 0, False, (k, min(k + per_lyr_page, len(lyr_cols)))))
+        k += per_lyr_page
 
     svgs = []
-    for pno, (c0, c1, is_first) in enumerate(pages, 1):
+    for pno, (c0, c1, is_first, lyr_slice) in enumerate(pages, 1):
         n_cols = c1 - c0
-        lyrics_here = lyrics_sections if pno == len(pages) else []
-        lyrics_w = 0
-        if lyrics_here:
-            n_verses = sum(len(_lyrics_columns(v)) for _, d in lyrics_here
-                           for v in _split_verses(d))
-            lyr_fs = int(fs * 0.75)
-            lyr_col_w = int(lyr_fs * 1.33)
-            lyrics_w = n_verses * lyr_col_w + max(n_verses - 1, 0) * int(lyr_col_w * 0.8) + 12
+        lyr_fs = int(fs * 0.75)
+        lyr_col_w = int(lyr_fs * 1.33)
+        lyrics_here = lyr_cols[lyr_slice[0]:lyr_slice[1]] if lyr_slice else []
+        lyrics_w = (len(lyrics_here) * lyr_col_w + max(len(lyrics_here) - 1, 0) * int(lyr_col_w * 0.8) + 12
+                    if lyrics_here else 0)
         total_w = CHINDAMI_PAGE_W
         total_h = CHINDAMI_PAGE_H
         out = ['<?xml version="1.0" encoding="UTF-8"?>',
@@ -1021,22 +1060,16 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
                                      total_w, fake_mr, marker_w, 0, opts, syllable_fs)
         # Paroles verticales à gauche de la dernière page
         if lyrics_here:
-            lyr_fs = int(fs * 0.75)
             lyr_sp = int(lyr_fs * 1.2)
-            lyr_col_w = int(lyr_fs * 1.33)
             vx = frame_x0 + lyrics_w - lyr_col_w / 2
-            vi = 0
-            for _, data in lyrics_here:
-                for verse in _split_verses(data):
-                    for col_lines, indent in _lyrics_columns_layout(verse):
-                        cy = frame_y0 + 6
-                        cy += indent * lyr_sp
-                        for ln in col_lines:
-                            _render_vertical_text(out, ln, vx, cy, lyr_fs, "#333",
-                                                  lyr_sp, font_family)
-                            cy += len(ln) * lyr_sp + lyr_sp
-                        vx -= lyr_col_w + int(lyr_col_w * 0.8)
-                        vi += 1
+            for col_lines, indent in lyrics_here:
+                cy = frame_y0 + 6
+                cy += indent * lyr_sp
+                for ln in col_lines:
+                    _render_vertical_text(out, ln, vx, cy, lyr_fs, "#333",
+                                          lyr_sp, font_family)
+                    cy += len(ln) * lyr_sp + lyr_sp
+                vx -= lyr_col_w + int(lyr_col_w * 0.8)
         out.append('</svg>')
         svgs.append("\n".join(out))
     return svgs
