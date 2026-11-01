@@ -23,6 +23,8 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   de case ailleurs. Pistes : `[ ]` et `( )` dans `::tab` ; ou retirer `|` carrément.
 - ❓ `::vocal` : meilleurs symboles pour koedashi/koekiri (idéalement ronds/carrés
   côté WYSIWYG, mais saisie texte difficile même pour des Japonais) vs `( )` ASCII.
+- ❓ Nuchi-utu (Portama orn `nu`) : `n` en suffixe KKML est EXCLU (collision romaji :
+  yon, naka, shin…). Candidats libres : `~`, `°`, `゜` (U+309C), `N`.
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
   jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
 
