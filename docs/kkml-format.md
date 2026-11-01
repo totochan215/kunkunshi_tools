@@ -49,31 +49,33 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
 ## Métadonnées
 
-- `@format` — format de fichier. Défaut : KKML.
-- `@version` — numéro de version du format.
-- `@title` — titre du morceau
-- `@genre` — genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu.
-- `@author` — auteur du morceau
-- `@composer` — compositeur
-- `@lyricist` — parolier
-- `@origin` — origine
-- `@comment` — commentaire
-- `@tuning` — accordage relatif. Défaut : `本調子`. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`.
-- `@base_note` — note de base, correspondant à la hauteur de la position 合 (cas des accordages 本調子, 二揚げ et 三下げ) ou 合 moins 2 demi-tons (cas des accordages 一二揚げ et 一揚げ). Défaut : `C3`.
-- `@layout vertical|horizontal` — indication de mise en forme lors du rendu (défaut : vertical)
-- `@cols n` — **déprécié** : nombre de cellules par dan n'est pas une propriété de la chanson mais de la mise en page. Ignoré au parsing ; utiliser `-c/--cols` en CLI (layouts vertical/horizontal uniquement — chindami et nomura imposent 12 cases/dan).
-- `@marker on|off` — active/désactive le marqueur (défaut : `on`)
-- `@end_circle on|off` — **déprécié**
-- `@font_style mincho|gothic` — style de police à utiliser pour le rendu (défaut : `mincho`). `mincho` = font-stack serif japonais (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP), `gothic` = font-stack sans-serif japonais (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.
-- `@shaku_circled on|off` — rend les 尺 entourés d'un cercle. `on` = activé, `off` = désactivé. Défaut : `off`.
-- `@shaku_sharp on|off` — rend les 尺♯ accompagnés du symbole ♯. `on` = activé, `off` = désactivé. Défaut : `off`.
-- `@lyrics_size small|medium|big` — taille de police des couplets, en proportion de la taille de base. `small` = 50%, `medium` = 75%, `big` = 100%. Défaut : `medium`.
-- `@ruby_size` — taille du ruby en pourcentage de la taille de base (défaut : `50`). Non utilisé à ce jour.
-- `@musicno` — numéro de morceau (pour compatibilité Portama)
-- `@chogen` — accordage absolu (pour compatibilité Portama)
-- `@speed` — tempo (pour compatibilité Portama)
-- `@rythm` - rythme (pour compatibilité Portama)
-- `@rythm_mode` - mode_rythmique (pour compatibilité Portama)
+| Clé | Défaut | Description |
+|-----|--------|-------------|
+| `@format` | `KKML` | Format de fichier |
+| `@version` | — | Numéro de version du format |
+| `@title` | — | Titre du morceau (ruby supporté) |
+| `@genre` | — | Genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu |
+| `@author` | — | Auteur du morceau (ruby supporté) |
+| `@composer` | — | Compositeur (ruby supporté) |
+| `@lyricist` | — | Parolier (ruby supporté) |
+| `@origin` | — | Origine (ruby supporté) |
+| `@comment` | — | Commentaire |
+| `@tuning` | `本調子` | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
+| `@base_note` | `C3` | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ) |
+| `@layout` | `vertical` | Mise en forme au rendu : `vertical` ou `horizontal` |
+| `@cols` | — | **Déprécié** (sera renommé `@cells_per_dan`) : nombre de cellules par dan = propriété de mise en page, pas de la chanson. Ignoré au parsing ; utiliser `-c/--cols` en CLI (layouts vertical/horizontal uniquement — chindami et nomura imposent 12 cases/dan). Sans valeur par défaut : ne pas écraser les sauts de ligne choisis par l'utilisateur |
+| `@marker` | `on` | Active/désactive le marker (concept sémantique ; rendu en colonne/ligne marker selon le layout) : `on`/`off` |
+| `@end_circle` | — | **Déprécié**, ignoré |
+| `@font_style` | `mincho` | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG |
+| `@shaku_circled` | `off` | Rend les 尺 entourés d'un cercle : `on`/`off` |
+| `@shaku_sharp` | `off` | Rend les 尺♯ accompagnés du symbole ♯ : `on`/`off` |
+| `@lyrics_size` | `medium` | Taille des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
+| `@ruby_size` | `50` | Taille du ruby en % de la taille de base. Non utilisé à ce jour |
+| `@musicno` | — | Numéro de morceau (compatibilité Portama) |
+| `@chogen` | — | Accordage absolu (compatibilité Portama) |
+| `@speed` | — | Tempo (compatibilité Portama) |
+| `@rythm` | — | Rythme (compatibilité Portama) |
+| `@rythm_mode` | — | Mode rythmique (compatibilité Portama) |
 
 Toutes les métadonnées sont optionnelles. L'ordre est sans importance. Les métadonnées peuvent être localisées à tout début de ligne, y compris après des sections. Toute métadonnée s'applique à l'ensemble du fichier.
 En cas de doublon, la première occurrence prime.
