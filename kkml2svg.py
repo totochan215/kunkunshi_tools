@@ -245,7 +245,7 @@ class Song:
     def __init__(self):
         self.meta = {}
         self.blocks = []
-        self.cols = 12         # lignes par colonne (mode vertical) — défaut
+        self.cols = 12         # DEPRECATED : @cols n'est plus une propriété de la chanson ; défaut de mise en page = 12 (vertical/horizontal)
         self.layout = "vertical"
         self.page_dans = None  # dans max par page (pagination), None = illimité
 
@@ -298,10 +298,10 @@ def parse_kkml(text):
                     break
         if m and not stripped.startswith("::"):
             if key == "cols":
-                try:
-                    song.cols = int(val)
-                except ValueError:
-                    pass
+                # @cols est une indication de mise en page (cases/dan), pas une
+                # caractéristique de la chanson : ignoré au parsing, le layout
+                # applique son propre défaut (ou -c en CLI pour vertical/horizontal).
+                pass
             elif key == "page_dans":
                 try:
                     song.page_dans = int(val)
@@ -386,8 +386,17 @@ def parse_kkml(text):
                 current.lines.append(stripped)
             elif current.kind == "vocal":
                 # Syllabes vocales : une ligne par ligne de tablature
-                # Chaque ligne contient des syllabes séparées par des espaces
-                current.lines.append(stripped.split())
+                # Chaque ligne contient des syllabes séparées par des espaces.
+                # Un ー/ｰ/－ ISOLÉ = case vide (comme dans ::tab) ; collé à une
+                # syllabe (よー) il reste la voyelle longue.
+                norm = []
+                for tk in stripped.split():
+                    if tk in EMPTY_INPUT_VARIANTS:
+                        _info_input_variant(tk, EMPTY_TOKEN)
+                        norm.append(EMPTY_TOKEN)
+                    else:
+                        norm.append(tk)
+                current.lines.append(norm)
             i += 1
             continue
 
@@ -401,12 +410,18 @@ def parse_kkml(text):
 # --------------------------------------------------------------------------- #
 def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
                page_dans=None):
-    if cols is None:
-        cols = song.cols
     if layout is None:
         layout = song.layout
     if page_dans is None:
         page_dans = song.page_dans
+    # @cols n'est PAS une caractéristique de la chanson : c'est une propriété de
+    # mise en page. Chaque layout a son propre défaut (vertical/horizontal :
+    # 12, chindami/nomura : imposé par la page), et -c/--cols ne s'applique
+    # qu'aux layouts libres (vertical/horizontal).
+    if cols is None:
+        cols = 12
+    if layout in ("chindami", "nomura"):
+        cols = None  # ignoré : le layout fixe ses propres cases/dan
 
     title = song.meta.get("title", "")
     tuning = song.meta.get("tuning", "本調子")
