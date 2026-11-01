@@ -239,7 +239,7 @@ Petits kana combinants reconnus : ぁぃぅぇぉゃゅょゎ (hiragana) et ァ�
 ```
 
 Chaque ligne dans une section `::vocal` correspond à la ligne de `::tab` de même index. Les temps (cases) sont séparés par des espaces. L'ajout de points permet de répartir les syllabes au sein d'un temps (le temps est divisé par le nombre de points et de syllabes).
-Des koedashi et koekiri peuvent être ajoutés ; ils n'ont pas d'impact sur la répartition dans la case. La parenthèse ouvrante du koedashi s'associe à l'élément situé juste après elle, qui peut être un point. La parenthèse fermante du koekiri s'associe à l'élément situé juste avant elle, qui peut être un point.
+Des koedashi et koekiri peuvent être ajoutés ; ils n'ont pas d'impact sur la répartition dans la case et ne sont PAS rendus dans la colonne marker (la parenthèse sert uniquement à positionner le ○/□ dans la case de `::tab`). La parenthèse ouvrante du koedashi s'associe à l'élément situé juste après elle, qui peut être un point. La parenthèse fermante du koekiri s'associe à l'élément situé juste avant elle, qui peut être un point.
 
 ### Alignement ligne par ligne
 

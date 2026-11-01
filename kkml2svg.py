@@ -1322,6 +1322,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                     sx = gx + cell_w + marker_w / 2
                     sy = cy + cell_h / 2 + syl_fs / 3
                     for k, ch in enumerate(syllable):
+                        if ch in ('(', ')'):
+                            continue  # position du koedashi/koekiri, déjà rendue dans la case
                         yy = sy + k * step
                         if ch == "ー":
                             ry = yy - syl_fs * 0.35
@@ -1497,7 +1499,11 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
     group_w = cell_w + marker_w
     step = int(syllable_fs * 1.15)  # espacement des caractères combinants (bien > fs : pas de chevauchement)
 
+    KOE_CHARS = {'(', ')'}
+
     def _emit(sx, yy, ch):
+        if ch in KOE_CHARS:
+            return  # parenthèses de ::vocal = position du koedashi/koekiri, déjà rendu dans la case
         if ch == "ー":
             # voyelle longue : trait vertical en écriture verticale
             ry = yy - syllable_fs * 0.35
