@@ -41,14 +41,33 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   小字 (~70 %). Patron rodé, effort faible.
 - Non couvert volontairement : イ下八 / ロ下八 (non attestés, repli dégradé).
 
-### P2 — Spécification du bloc positionné `::ruby` — ❓ décision structurante
-- DÉCISION À TRANCHER : grille `::ruby` sur 4 positions/case
-  (拍子 / 二分五厘 / 五分 / 七分五厘) plutôt que les 3 unités Portama.
-- Import Portama : mapping 3 → 4 le plus proche.
-- `::vocal` (alignement strict syllabe ↔ note) reste le modèle d'écriture simple ;
-  incompatible avec 聲楽譜 ; le bloc positionné est le substrat commun.
-- Goulot d'étranglement : à trancher avant P3.
-- Constantes mesurées disponibles (かぎやで風節, PDF vectoriel) : ruby fs = 0,65 × note fs,
+### P2 — Bloc positionné (ruby vocal) : nombre de positions variable, règles de layouting — ✅ décidé le 2026-11-01
+- DÉCISION TRANCHÉE : **pas de nombre de positions fixe dans KKML**. Le nombre de
+  positions par case est libre (constaté à la saisie, peut dépasser 4). La question
+  grille 3 (Portama) vs 4 (Nomura-ryu) est caduque : l'import Portama produit
+  naturellement 3 positions/case, le layout nomura impose ses propres seuils.
+- `::vocal` (mot = syllabe, points `.` = subdivision du temps en parts égales) reste
+  la syntaxe de saisie ; incompatible avec 声楽譜 ; le bloc positionné (futur
+  `::ruby`) sera le substrat commun à P3.
+- **Règles de layouting** (seuils appliqués au rendu, pas au format). Chaque règle a
+  un défaut par layout et une méta KKML d'override (CLI prioritaire sur méta, comme
+  `@cols`/`-c`, `@layout`/`-l`, `@page_dans`/`-p`) :
+  - `@overflow allow|shrink|truncate|error` — syllabes/caractères qui dépassent la
+    case. Défaut vertical : `allow` (chevauchement bord inférieur accepté, comportement
+    historique). Défaut nomura : `error` (fidélité stricte à la grille traditionnelle).
+  - `@text_shrink on|off` — réduction de la taille de police jusqu'à un plancher quand
+    la colonne marker est trop chargée. Défaut : `on` en vertical, `off` en nomura.
+  - `@truncate on|off` — troncature avec `…` au-delà d'un seuil de positions/case.
+    Défaut : `off` partout.
+  - `@strict on|off` — toute situation anormale (figure non reconnue, positions
+    au-delà du seuil du layout) devient une erreur (exit non-zéro) au lieu d'un
+    avertissement. Défaut : `off`. Utile en CI : `tests/run_tests.py` échoue déjà sur
+    tout `AVERTISSEMENT` ; `@strict on` renforce.
+- Seuils par layout paramétrés, pas en dur : la colonne marker nomura est plus étroite
+  que celle du vertical, les planchers de taille et seuils de troncature diffèrent.
+- Round-trip Portama : export KKML → Portama arrondit à la grille 3 unités/case de
+  `allRubyData` (perte admise) ou refuse si une case dépasse 3 positions.
+- Constantes mesurées disponibles (かぐやで風節, PDF vectoriel) : ruby fs = 0,65 × note fs,
   avance ligne = cell_h/3, tuck petit kana +1,18 × fs, offset x +0,1 × fs.
 - ⬜ Mesurer le rendu du chōonpu ー si un PDF ruby avec voyelles longues est disponible.
 
