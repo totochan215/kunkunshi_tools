@@ -104,7 +104,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ⬜ GUI : combler l'écart avec Portama (avantage GUI).
 - ⬜ `kkml_cleaner.py` : normaliser un KKML sur sa forme canonique (formes pleine chasse → demi-largeur, romaji/chiffres → kanji kandokoro, kanji composites → katakana+kanji, `::tab-lyrics`/`::tab-vocals` → `::vocal`, ordre des sections `::tab` `::vocal` `::lyrics`). Réutilise les tables de normalisation de `kkml2svg.py` ; sortie : KKML canonique, idempotent (cleaner(cleaner(x)) == cleaner(x)). Règles de complétion structurelle :
   - `::vocal` manquante → la créer, remplie de cases vides (`-`) alignées sur `::tab` (même nombre de cases par ligne) ;
-  - `::vocal` désalignée de `::tab` (cases/ligne différentes) mais total de cases identique → réaligner ligne à ligne sur `::tab` ;
+  - `::vocal` désalignée de `::tab` (cases/ligne différentes) mais total de cases identique → réaligner ligne à ligne sur `::tab` ; si le total ne boucle pas → avertissement stderr, PAS de réalignement ;
   - `::lyrics` manquante → la créer, vide ;
   - `::tab` implicite (lignes hors section) → rendre la section explicite.
   - `::tab` manquante → la créer, vide (peu de risques).
