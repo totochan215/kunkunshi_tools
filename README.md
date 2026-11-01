@@ -41,6 +41,10 @@ Rend un fichier KKML sous forme de tablature SVG, en appliquant les options de m
 
 Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`, `-p/--page-dans N` (pagination multipage : un SVG par page de N dans max).
 
+### kkml_cleaner.py
+
+Normalise un fichier KKML.
+
 ### kkml2pdf.py
 
 Conversion KKML → PDF : script non écrit à ce jour.
