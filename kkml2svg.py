@@ -192,7 +192,8 @@ TECHNIQUE_CHARS = set(TECHNIQUE_SUFFIXES.keys())
 VERSE_NUM_RE = re.compile(r'^([一二三四五六七八九十]+)、')
 # ⚫ ・ ● : indent sous le caractère suivant (offset 1)
 VERSE_MARK_RE = re.compile(r'^[⚫○・●]')
-VERSE_GENDER_RE = re.compile(r'^([男女][　\s])')  # 女/男 + espace full-width
+# 女/男 (+女) suivis d'une virgule pleine chasse 、 OU d'un espace (full-width ou non)
+VERSE_GENDER_RE = re.compile(r'^([男女]+[、　\s])')
 
 
 def _verse_indent_len(first_line):
