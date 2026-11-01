@@ -107,6 +107,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   - `::vocal` désalignée de `::tab` (cases/ligne différentes) mais total de cases identique → réaligner ligne à ligne sur `::tab` ;
   - `::lyrics` manquante → la créer, vide ;
   - `::tab` implicite (lignes hors section) → rendre la section explicite.
+  - `::tab` manquante → la créer, vide (peu de risques).
 
 ## 5. Positionnement
 
