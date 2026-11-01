@@ -295,7 +295,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 ## Modèles de page — état (2026-10-03)
 
 - ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf.
-- ✅ Layout Nomura-ryu (2026-10-03) : portrait A4, cadre filet, 12 cases/dan, 7 dans/page — mesuré sur `samples/nomura-ryu-pdf/`, validé sur かぎやで風節 (3 pages : titre+6 / 7 / 6+couplets).
+- ✅ Layout Nomura-ryu (2026-10-03) : portrait A4, cadre filet, 12 cases/dan, 7 dans/page — mesuré sur les scans Nomura-ryu (retirés du dépôt, droits d'auteur — voir `samples/nomura-ryu-pdf/README.md`), validé sur かぎやで風節 (3 pages : titre+6 / 7 / 6+couplets).
 - ✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (e288f91…).
 - ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées (7 dans virtuels max/page), jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
 - ✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx inchangée, ruby collé à droite, centrage du dan virtuel préservé (42d6699).
@@ -305,7 +305,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - ⚪︎ Raffinements nomura en réserve : marqueur ⚪︎ de couplet, taille/espacement des paroles, calligraphie du titre.
 - ⚪︎ Raffinements supplémentaires de la mise en page nomura à définir plus tard (retours visuels utilisateur sur かぎやで風節 et 安波節 ; typiquement : ajustement fin du placement des couplets sur page dédiée, sous-colonnes marker, etc.).
 - ⚪︎ Tester le rendu d'安波節 (6 couplets = 2 dans virtuels) pour valider la pagination multi-dans virtuels.
-- ⚪︎ `samples/nomura-ryu-pdf/野村流工工四上巻 (glissés).pdf` : fichier temporaire de vérification, à retirer éventuellement.
+- ✅ Scans Nomura-ryu retirés du dépôt (droits d’auteur) : les 4 PDF de `samples/nomura-ryu-pdf/` supprimés ; les constantes mesurées restent consignées ci-dessous.
 
 ## Constantes de calibrage mesurées sur les PDF Portama (recherche)
 
@@ -327,7 +327,7 @@ Ces mesures (かぎやで風節.pdf, テスト節.pdf) servent au calibrage du r
 
 ## Constantes de calibrage mesurées sur les scans Nomura-ryu (recherche)
 
-Sources : `samples/nomura-ryu-pdf/かぎやで風節.pdf` (3 pages), `後に屋節.pdf` (2 pages), `恩納節.pdf` (2 pages) — rééditions scannées de planches calligraphiées (~1930). Chaque page PDF A4 **paysage** (841,89 × 595,28 pt) est composée de 5 images JPEG empilées (~841,8 × ~121 pt, opérateurs `cm`/`Do`). Le recueil physique est **portrait**, scanné tourné de 90° : chaque bande JPEG est un **dan (colonne) complet** de la page physique. Échelle : 3396 px ↔ 841,8 pt → **4,04 px/pt** (~290 dpi). Les 3 morceaux choisis commencent en haut de page ; dans les recueils originaux les chansons s'enchaînent en flux continu (nouveau titre en cours de page, « rouleau découpé en feuilles ») — variante non implémentée pour l'instant.
+Sources : scans du recueil « 琉球流工工四上巡り » — かぎゃでゅ風節 (3 pages), 後にゆく (2 pages), 恩納節 (2 pages) — rééditions scannées de planches calligraphiées (~1930), conservés hors du dépôt (droits d’auteur).
 
 - Page physique : A4 portrait, **5 dan/page** (largeur de bande ~119,5–121,8 pt, la dernière parfois réduite).
 - Grille de cases **dans chaque dan** : cases empilées le long de la direction de lecture (haut→bas), séparateurs au pas très stable de **245 px ≈ 60,6 pt** (mesuré sur 50+ intervalles, dispersion 244–247 px). Cases pleines : ~12 par dan courant (max observé 12, souvent moins en fin de morceau), séparées de filets pleine largeur de dan.
