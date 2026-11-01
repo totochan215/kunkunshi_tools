@@ -1312,7 +1312,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
             # syllabes vocales dans le marker
             if vocal_col and marker_w > 0:
                 syl_fs = min(9.0, marker_w * 0.55)
-                step = syl_fs * 0.85
+                step = syl_fs * 1.15  # bien > fs : pas de chevauchement entre petits kana
                 for ri, syllable in enumerate(vocal_col):
                     if ri >= rows:
                         break
@@ -1495,7 +1495,7 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
         return
 
     group_w = cell_w + marker_w
-    step = int(syllable_fs * 0.85)  # espacement des caractères combinants
+    step = int(syllable_fs * 1.15)  # espacement des caractères combinants (bien > fs : pas de chevauchement)
 
     def _emit(sx, yy, ch):
         if ch == "ー":
@@ -1523,19 +1523,28 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
                 continue
             # Système de points : un token contenant des `.` subdivise le temps.
             if "." in token:
-                # Extraire syllabes et points dans l'ordre ; les parenthèses
-                # restent accolées à l'élément voisin.
-                elems = []
-                for part in token.replace(".", " . ").split():
-                    elems.append(part)
-                n = len(elems)
-                sub_h = cell_h / n
-                for j, el in enumerate(elems):
+                # Système de points : le temps de la case est divisé en n parts
+                # égales, n = syllabes + points (les points ne sont pas rendus
+                # mais occupent leur part). Un token sans point occupe toute la
+                # case (centré). On borne l'écart entre sous-temps à au moins
+                # syllable_fs * 1.1 pour éviter que les caractères se mordent,
+                # quitte à déborder légèrement de la case (déjà accepté).
+                # n = nombre de SYLLABES (les points ne comptent pas comme
+                # sous-temps occupés : ils marquent juste une subdivision).
+                elems = token.replace(".", " . ").split()
+                n = sum(1 for e in elems if e != ".")
+                n = max(n, 1)
+                sub_h = max(cell_h / n, syllable_fs * 1.15)
+                total = sub_h * n
+                y_start = cy + (cell_h - total) / 2  # centrer le bloc dans la case
+                j = 0  # index parmi les syllabes (les points ne consomment pas de part)
+                for el in elems:
                     if el == ".":
                         continue
-                    sy = cy + sub_h * j + sub_h / 2 + syllable_fs / 3
+                    sy = y_start + sub_h * j + sub_h / 2 + syllable_fs / 3
                     for k, ch in enumerate(el):
                         _emit(sx, sy + k * step, ch)
+                    j += 1
                 continue
             sy = cy + cell_h / 2 + syllable_fs / 3  # centré sur la note
             for k, ch in enumerate(token):
