@@ -18,7 +18,7 @@ KKML se base sur le format texte brut encodé en UTF-8, sans utilisation d'exten
 ```
 # commentaire (ignoré)
 @meta valeur
-@cols 12
+@cells_per_dan 12
 
 ::section
 contenu
@@ -63,7 +63,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@tuning` | `本調子` | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
 | `@base_note` | `C3` | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ) |
 | `@layout` | `vertical` | Mise en forme au rendu : `vertical` ou `horizontal` |
-| `@cols` | — | **Déprécié** (sera renommé `@cells_per_dan`) : nombre de cellules par dan = propriété de mise en page, pas de la chanson. Ignoré au parsing ; utiliser `-c/--cols` en CLI (layouts vertical/horizontal uniquement — chindami et nomura imposent 12 cases/dan). Sans valeur par défaut : ne pas écraser les sauts de ligne choisis par l'utilisateur |
+| `@cells_per_dan` | — | Nombre de cellules par dan = propriété de mise en page, pas de la chanson. Ignoré au rendu ; utilisé par `kkml_cleaner.py` comme indice de repli (jamais de valeur par défaut : ne pas écraser les sauts de ligne choisis par l'utilisateur) ; `-c` en CLI pour vertical/horizontal (chindami et nomura imposent 12 cellules/dan). Ancien nom `@cols` accepté (renommé par le cleaner) |
 | `@marker` | `on` | Active/désactive le marker (concept sémantique ; rendu en colonne/ligne marker selon le layout) : `on`/`off` |
 | `@end_circle` | — | **Déprécié**, ignoré |
 | `@font_style` | `mincho` | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG |

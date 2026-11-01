@@ -15,8 +15,9 @@ Règles (voir AGENTS.md, section « Long terme ») :
   `::vocal` désalignée réalignée si le total boucle (sinon avertissement),
   `::lyrics` manquante créée vide, `::tab` implicite rendue explicite,
   `::tab` manquante créée vide ;
-- `@cols n` présent → repli de `::tab` à n cellules/ligne puis alignement de
-  `::vocal` ; absent → sauts de ligne de l'utilisateur conservés ;
+- `@cells_per_dan n` présent → repli de `::tab` à n cellules/ligne puis
+  alignement de `::vocal` dessus ; absent → sauts de ligne conservés
+  (`@cols` = ancien nom, renommé avec une info) ;
 - idempotent : cleaner(cleaner(x)) == cleaner(x).
 
 Diagnostics sur stderr : info (normalisation appliquée), avertissement
@@ -86,18 +87,22 @@ def clean(text):
     # --- métadonnées : ordre canonique, dédup (première occurrence prime) ---
     meta_order = ["format", "version", "title", "genre", "author", "composer",
                   "lyricist", "origin", "comment", "tuning", "base_note",
-                  "layout", "cols", "marker", "end_circle", "font_style",
+                  "layout", "cells_per_dan", "cols", "marker", "end_circle", "font_style",
                   "shaku_circled", "shaku_sharp", "lyrics_size", "ruby_size",
                   "musicno", "chogen", "speed", "rythm", "rythm_mode"]
     meta = {}
     for key, val in song.meta.items():
         if key not in meta:
             meta[key] = val
-    # @cols est ignoré par le parser de kkml2svg (indication de mise en page) :
-    # le relire directement dans le texte source.
-    mcols = re.search(r"^\s*@cols\s+(\S+)", text, re.M)
+    # @cells_per_dan est ignoré par le parser de kkml2svg (indication de mise
+    # en page) : le relire dans le texte source (@cols = ancien nom, renommé).
+    mcols = re.search(r"^\s*@(cells_per_dan|cols)\s+(\S+)", text, re.M)
     if mcols:
-        meta.setdefault("cols", mcols.group(1))
+        key, val = mcols.group(1), mcols.group(2)
+        if key == "cols":
+            info("@cols renommé en @cells_per_dan")
+            key = "cells_per_dan"
+        meta.setdefault(key, val)
     # @layout / @page_dans lus hors song.meta
     if getattr(song, "page_dans", None) is not None:
         meta.setdefault("page_dans", str(song.page_dans))
@@ -122,20 +127,20 @@ def clean(text):
     for b in tab_blks:
         b.lines = [normalize_tab_line(ln) for ln in b.lines]
 
-    # 3. repli selon @cols si présent
+    # 3. repli selon @cells_per_dan si présent
     cols = None
-    if "cols" in meta:
+    if "cells_per_dan" in meta:
         try:
-            cols = int(meta["cols"])
+            cols = int(meta["cells_per_dan"])
         except ValueError:
-            warn(f"@cols non entier ({meta['cols']!r}), ignoré")
+            warn(f"@cells_per_dan non entier ({meta['cells_per_dan']!r}), ignoré")
     if cols and cols > 0:
         for b in tab_blks:
             flat = [tk for ln in b.lines for tk in ln]
             new_lines = reflow_lines(flat, cols)
             if len(new_lines) != len(b.lines) or any(
                     new_lines[i] != b.lines[i] for i in range(min(len(new_lines), len(b.lines)))):
-                info(f"::tab replié à {cols} cellules/ligne (@cols)")
+                info(f"::tab replié à {cols} cellules/ligne (@cells_per_dan)")
             b.lines = new_lines
 
     # 4. ::vocal : manquante -> créée alignée ; désalignée -> réalignée si boucle.

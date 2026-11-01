@@ -51,7 +51,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   `::ruby`) sera le substrat commun à P3.
 - **Règles de layouting** (seuils appliqués au rendu, pas au format). Chaque règle a
   un défaut par layout et une méta KKML d'override (CLI prioritaire sur méta, comme
-  `@cols`/`-c`, `@layout`/`-l`, `@page_dans`/`-p`) :
+  `@cells_per_dan`/`-c`, `@layout`/`-l`, `@page_dans`/`-p`) :
   - `@overflow allow|shrink|truncate|error` — syllabes/caractères qui dépassent la
     case. Défaut vertical : `allow` (chevauchement bord inférieur accepté, comportement
     historique). Défaut nomura : `error` (fidélité stricte à la grille traditionnelle).
@@ -109,7 +109,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   - `::tab` implicite (lignes hors section) → rendre la section explicite (info) ;
   - `::tab` manquante → la créer, vide (peu de risques).
 Mode test (`--dry-run` / `-n`) : affiche le KKML nettoyé sur stdout (ou écrit dans un fichier distinct) sans écraser le KKML d'origine, pour voir le résultat avant application.
-`@cols` comme indice de repli (jamais de valeur par défaut) : si `@cols n` est présent, le cleaner replie `::tab` à n cases/ligne (dernier dan partiel conservé tel quel, info) puis aligne `::vocal` dessus ; si `@cols` est absent, les sauts de ligne de l'utilisateur sont conservés tels quels. DÉCISION NOMMAGE : `@cols` devient `@cells_per_dan` (Portama : `cellsPerDan`). Terminologie retenue : **cellule** = unité sémantique de temps dans `::tab`/`::vocal` ; **case** = cellule rendue graphiquement (tableau du layout SVG) ; **dan** (段) = groupe de cellules, ligne horizontale dans le fichier KKML, colonne dans le layout vertical. La bibliographie anglaise parle de « column » (Kunkunshi Editor : « 12 columns per page, 12 cells per column ») ; dans le gojūon japonais 段 [dan] = colonne, 行 [gyō] = ligne. Même rigueur pour le marker : **marker** = concept sémantique (marques de répétition `|:`/`:|`, bornes de chant `(`/`)`, syllabes vocales, hauteur de chant), rendu dans le layout comme **colonne marker** (vertical) ou **ligne marker** (horizontal), largeur `marker_w`. `@marker on|off` pilote le concept ; `marker_w` la représentation. Terminologie officielle : **section** = bloc `::...` du KKML (`::tab`, `::vocal`, `::lyrics`…) ; le mot **bloc** est réservé aux éventuels blocs de texte du layout. Terminologie : **syllabe** réservé aux syllabes japonaises / langues ryukyu ; dans le contexte général de `::tab`/`::vocal` (token vocal quelconque, y compris romaji ou kana non japonais), parler de **token vocal** (code : `vocal_data`, `syllable_fs` renommables en `vocal_fs` à l'occasion).
+`@cells_per_dan` comme indice de repli (jamais de valeur par défaut) : si `@cells_per_dan n` est présent, le cleaner replie `::tab` à n cellules/ligne (dernier dan partiel conservé tel quel, info) puis aligne `::vocal` dessus ; si absent, les sauts de ligne de l'utilisateur sont conservés tels quels. Ancien nom `@cols` renommé par le cleaner (info). (Portama : `cellsPerDan`). Terminologie retenue : **cellule** = unité sémantique de temps dans `::tab`/`::vocal` ; **case** = cellule rendue graphiquement (tableau du layout SVG) ; **dan** (段) = groupe de cellules, ligne horizontale dans le fichier KKML, colonne dans le layout vertical. La bibliographie anglaise parle de « column » (Kunkunshi Editor : « 12 columns per page, 12 cells per column ») ; dans le gojūon japonais 段 [dan] = colonne, 行 [gyō] = ligne. Même rigueur pour le marker : **marker** = concept sémantique (marques de répétition `|:`/`:|`, bornes de chant `(`/`)`, syllabes vocales, hauteur de chant), rendu dans le layout comme **colonne marker** (vertical) ou **ligne marker** (horizontal), largeur `marker_w`. `@marker on|off` pilote le concept ; `marker_w` la représentation. Terminologie officielle : **section** = bloc `::...` du KKML (`::tab`, `::vocal`, `::lyrics`…) ; le mot **bloc** est réservé aux éventuels blocs de texte du layout. Terminologie : **syllabe** réservé aux syllabes japonaises / langues ryukyu ; dans le contexte général de `::tab`/`::vocal` (token vocal quelconque, y compris romaji ou kana non japonais), parler de **token vocal** (code : `vocal_data`, `syllable_fs` renommables en `vocal_fs` à l'occasion).
 Diagnostics : le cleaner émet info / avertissement / erreur sur stderr selon la gravité (ex. normalisation appliquée = info, réalignement refusé = avertissement, KKML malformé et inutilisable par le parser = erreur fatale, exit non nul).
 
 ## 5. Positionnement
@@ -141,7 +141,7 @@ python3 kkml2svg.py chanson.kkml            # -> chanson.svg
 cat chanson.kkml | python3 kkml2svg.py -     # stdin -> stdout
 ```
 
-Options : `-o output`, `-c cols`, `-l vertical|horizontal`
+Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal`
 
 ### Structure du code
 
@@ -236,7 +236,7 @@ Options : `-o output`, `-c cols`, `-l vertical|horizontal`
 | cell_w | 52 | largeur de case |
 | cell_h | 58 | hauteur de case |
 | font_size | 22 | taille police notes |
-| cols | 12 | lignes par colonne (vertical) — défaut depuis le 14 sept. 2026 (avant : 9) |
+| cells_per_dan | 12 | cellules par dan, lignes par colonne (vertical) — défaut depuis le 14 sept. 2026 (avant : 9) |
 | marker_w | cell_w // 2 | colonne marker (auto si ::vocal) |
 
 ## `portama2kkml.py`
@@ -247,7 +247,7 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 - Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B) selon `isSmall`
 - `acc: "sharp"` → 尺♯, `orn: "u"` → suffixe `'`
 - `repeatStart/repeatEnd` → `|:` / `:|`
-- `choshi` → `@tuning`, `cellsPerDan / 2` → `@cols`
+- `choshi` → `@tuning`, `cellsPerDan / 2` → `@cells_per_dan`
 - N'exporte pas encore `allRubyData` (proposition `::ruby` / conversion `::vocal`, voir `docs/kkml-format.md`)
 
 ## Séparation documentation humaine / agent
