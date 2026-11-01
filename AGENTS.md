@@ -17,6 +17,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 ## 0. Syntaxe KKML — points à trancher (personne n'utilise encore KKML, il y a le temps)
 
+- ✅ (2026-11-01) `|( )|` DÉPRÉCIÉ dans `::tab` (AVERTISSEMENT, encore accepté) ; boucle vocale = `(: ... :)` dans `::tab` (jamais dans `::vocal`).
 - ❓ Marqueurs de boucle dans `::tab` : `|: :|` actuels (boucle vocale `(: :)` dans `::tab`) entrent en conflit avec
   le shuffle `A:B` (double point) et `|` est aussi saut de ligne de couplet / séparateur
   de case ailleurs. Pistes : `[ ]` et `( )` dans `::tab` ; ou retirer `|` carrément.

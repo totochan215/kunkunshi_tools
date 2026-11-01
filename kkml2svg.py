@@ -61,11 +61,10 @@ REST_VARIANTS = {"◯", "○", "〇"}  # O/o/0 retirés : collision romaji
 REPEAT_START = "|:"
 REPEAT_END = ":|"
 
-# Marqueurs de répétition du chant (Portama vocalRepStart/vocalRepEnd) :
-# tokens autonomes occupant leur case, à l'instar de |: et :|. Contrairement
-# aux suffixes ( ) 声だし/声切り, ils ne sont pas attachés à une note —
-# ils marquent une section du chant que le playback rejoue (une fois par
-# piste, mécanique Portama trackCount).
+# Marqueurs de répétition du chant (Portama vocalRepStart/vocalRepEnd).
+# DÉPRÉCIÉ (2026-11-01) : |( et )| entrent en conflit avec le shuffle A:B et la
+# barre | (saut de ligne de couplet). Encore acceptés avec un AVERTISSEMENT ;
+# la boucle vocale se note désormais dans ::vocal avec (: ... :).
 VREPEAT_START = "|("
 VREPEAT_END = ")|"
 
@@ -1910,6 +1909,7 @@ def _strip_repeat_marks(tok):
             tok = tok[len(REPEAT_START):]
         elif tok.startswith(VREPEAT_START):
             vs = True
+            _warn_once("'|(' DÉPRÉCIÉ : boucle vocale à écrire (: ... :) dans ::vocal")
             tok = tok[len(VREPEAT_START):]
         elif tok.endswith(')'):
             koe = True
@@ -1919,6 +1919,7 @@ def _strip_repeat_marks(tok):
             tok = tok[:-len(REPEAT_END)]
         elif tok.endswith(VREPEAT_END):
             ve = True
+            _warn_once("')|' DÉPRÉCIÉ : boucle vocale à écrire (: ... :) dans ::vocal")
             tok = tok[:-len(VREPEAT_END)]
         else:
             break
@@ -2054,6 +2055,13 @@ def _note_svg(note, font_size, opts=None):
 
 
 _WARNED_TOKENS = set()
+_WARNED_MISC = set()
+
+
+def _warn_once(msg):
+    if msg not in _WARNED_MISC:
+        _WARNED_MISC.add(msg)
+        print(f"AVERTISSEMENT : {msg}", file=sys.stderr)
 
 
 def _info_input_variant(orig, canon):
