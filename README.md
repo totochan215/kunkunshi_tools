@@ -43,7 +43,13 @@ Options CLI : `-o/--output`, `-c/--cols`, `-l/--layout vertical|horizontal`, `-p
 
 ### kkml_cleaner.py
 
-Normalise un fichier KKML.
+`kkml_cleaner.py` réécrit un fichier KKML sous sa forme canonique
+(idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
+
+```sh
+python3 kkml_cleaner.py morceau.kkml        # réécrit le fichier en place
+python3 kkml_cleaner.py -n morceau.kkml     # mode test : affiche sur stdout, original intact
+python3 kkml_cleaner.py -n -o clean.kkml morceau.kkml
 
 ### kkml2pdf.py
 
