@@ -110,6 +110,12 @@ Le convertisseur est plus avancé que threedaymonk/kunkunshi et Kunkunshi Editor
 sur l'interface. La priorité est la fidélité notationnelle (P0 → P3) avant la
 publication (LaTeX) et l'ergonomie (GUI).
 
+# Références de calibrage externes (hors dépôt)
+
+Les scans chindami/nomura-ryu/songbook sont dans le Drive privé (voir
+`calibration/README.md` pour les liens). Les constantes mesurées (NOMURA_*,
+CHINDAMI_*) figurent dans le code et dans ce fichier.
+
 # Architecture des convertisseurs Python
 
 > Contenu déplacé depuis `docs/converter-architecture.md`. Documentation agent : structure interne du code, pour la navigation lors des modifications. La documentation utilisateur reste dans `docs/`.
