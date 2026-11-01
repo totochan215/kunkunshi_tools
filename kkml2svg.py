@@ -69,7 +69,7 @@ REPEAT_END = ":|"
 VREPEAT_START = "|("
 VREPEAT_END = ")|"
 
-# Normalisation d'entrée pleine chasse (IME japonais) — blocs tab/tab-lyrics.
+# Normalisation d'entrée pleine chasse (IME japonais) — blocs tab/vocal.
 # Objectif : un fichier tapé avec une méthode de saisie japonaise (pleine
 # chasse) reste valide. Les équivalents pleine chasse des séparateurs et
 # suffixes ASCII sont convertis vers la forme canonique au parsing.
@@ -325,6 +325,11 @@ def parse_kkml(text):
             kind = parts[0] if parts else "tab"
             label = parts[1] if len(parts) > 1 else None
             variant = None
+            if kind in ("tab-lyrics", "tab-vocals"):
+                # Alias dépréciés de ::vocal (section unique pour le chant
+                # syllabique aligné sur les temps).
+                _info_input_variant("::" + kind, "::vocal")
+                kind = "vocal"
             if kind in LYRICS_VARIANTS:
                 variant = kind[len("lyrics-"):]
                 kind = "lyrics"
@@ -375,19 +380,6 @@ def parse_kkml(text):
                     _info_input_variant("｜", "|")
                     stripped = stripped.replace("｜", "|")
                 current.lines.append(stripped)
-            elif current.kind == "tab-lyrics":
-                # Le séparateur | accepte sa variante pleine chasse ｜ ;
-                # le côté positions est normalisé comme un bloc tab.
-                if "|" in stripped or "｜" in stripped:
-                    sep = "|" if "|" in stripped else "｜"
-                    left, right = stripped.rsplit(sep, 1)
-                    left = ''.join(FULLWIDTH_MAP.get(c, c) for c in left)
-                    if sep == "｜":
-                        _info_input_variant("｜", "|")
-                    current.lines.append((left.split(), right.split()))
-                else:
-                    left = ''.join(FULLWIDTH_MAP.get(c, c) for c in stripped)
-                    current.lines.append((left.split(), []))
             elif current.kind == "vocal":
                 # Syllabes vocales : une ligne par ligne de tablature
                 # Chaque ligne contient des syllabes séparées par des espaces
@@ -431,11 +423,6 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
             sections.append((cur_title, flat, "tab", None))
             last_tab_index = len(sections) - 1
             last_tab_blk = blk
-            cur_title = None
-        elif blk.kind == "tab-lyrics":
-            sections.append((cur_title, blk.lines, "tab-lyrics", None))
-            last_tab_index = len(sections) - 1
-            last_tab_blk = None   # ::vocal ne se paire qu'avec ::tab
             cur_title = None
         elif blk.kind == "lyrics":
             sections.append((cur_title, blk.lines, "lyrics", None))
@@ -562,17 +549,6 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             columns = _wrap_vertical(content, rows_per_col)
             vocal_data = _wrap_vertical(vocal_lines, rows_per_col) if vocal_lines else None
             prepared.append((sec_title, columns, kind, vocal_data))
-        elif kind == "tab-lyrics":
-            # aplatir en liste de (pos, syl) puis wrapper verticalement
-            flat = []
-            for pos_list, syl_list in content:
-                n = max(len(pos_list), len(syl_list))
-                for j in range(n):
-                    p = pos_list[j] if j < len(pos_list) else ""
-                    s = syl_list[j] if j < len(syl_list) else ""
-                    flat.append((p, s))
-            columns = _wrap_vertical(flat, rows_per_col)
-            prepared.append((sec_title, columns, kind, None))
         elif kind == "vocal":
             # Standalone vocal without tab - wrap and store
             vocal_data = _wrap_vertical(vocal_lines, rows_per_col) if vocal_lines else None
@@ -581,7 +557,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             prepared.append((sec_title, content, kind, None))
 
     # --- Pagination (SVG multipage) --- #
-    # Découpe des sections tab/tab-lyrics en pages de page_dans dans max,
+    # Découpe des sections tab en pages de page_dans dans max,
     # sur le modèle des PDF Portama (12 piles/page max). Les sections
     # lyrics et le titre vertical sont répétés sur chaque page.
     def _page_slice(sec, start, end):
@@ -598,12 +574,12 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
     pages = [prepared]
     if page_dans:
         n_tab_cols = sum(len(s[1]) for s in prepared
-                         if s[2] in ("tab", "tab-lyrics"))
+                         if s[2] == "tab")
         if n_tab_cols > page_dans:
             pages = []
             remaining = list(prepared)
             while any(len(s[1]) > 0 for s in remaining
-                     if s[2] in ("tab", "tab-lyrics")):
+                     if s[2] == "tab"):
                 budget = page_dans
                 first = not pages
                 page_secs = []
@@ -611,7 +587,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                 for sec in remaining:
                     kind = sec[2]
                     data = sec[1]
-                    if kind in ("tab", "tab-lyrics"):
+                    if kind == "tab":
                         take = min(budget, len(data))
                         if take > 0:
                             page_secs.append(_page_slice(sec, 0, take))
@@ -630,7 +606,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                             page_secs.append(sec)
                         new_remaining.append(sec)
                 if not any(s[1] for s in page_secs
-                           if s[2] in ("tab", "tab-lyrics")):
+                           if s[2] == "tab"):
                     break  # sécurité contre boucle infinie
                 pages.append(page_secs)
                 remaining = new_remaining
@@ -645,7 +621,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
         for items in page_secs:
             kind = items[2]
             data = items[1]
-            if kind in ("tab", "tab-lyrics"):
+            if kind == "tab":
                 max_cols = max(max_cols, len(data))
 
     # Calculer l'espace pour les paroles verticales
@@ -689,7 +665,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             kind = items[2]
             if sec_title:
                 total_h += 22
-            if kind in ("tab", "tab-lyrics") and prev_kind in ("tab", "tab-lyrics", None):
+            if kind == "tab" and prev_kind in ("tab", None):
                 total_h += max_col_height * cell_h + 6
             elif kind == "lyrics":
                 pass  # paroles rendues verticalement à gauche, pas de hauteur supplémentaire
@@ -738,11 +714,11 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
 
         y = header_h + mt + GAP_HEADER
 
-        # Trouver l'index de la dernière section tab/tab-lyrics pour end_circle
+        # Trouver l'index de la dernière section tab pour end_circle
         last_tab_idx = -1
         for si, items in enumerate(page_secs):
             kind = items[2]
-            if kind in ("tab", "tab-lyrics"):
+            if kind == "tab":
                 last_tab_idx = si
         # @end_circle déprécié/ignoré : le ┘● est désormais rendu par le token
         # explicite )| (vocalRepEnd), cohérent avec Portama où le marqueur est
@@ -768,12 +744,6 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                                        cell_w, cell_h, fs, total_w, mr, marker_w,
                                        title_offset, opts, end_circle=ec,
                                        vocal_data=vocal_data, syllable_fs=SYLLABLE_FS)
-                y += 6
-            elif kind == "tab-lyrics":
-                y = _draw_vertical_tab_lyrics(out, data, rows_per_col, ml, y,
-                                              cell_w, cell_h, fs, total_w, mr,
-                                              marker_w, title_offset, opts,
-                                              end_circle=ec)
                 y += 6
             else:  # lyrics — rendu vertical après la grille, ignoré ici
                 pass
@@ -915,18 +885,6 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                 vocal_columns.extend(_wrap_vertical(list(vocal_lines), rows))
             else:
                 vocal_columns.extend([None] * len(cols))
-        elif kind == "tab-lyrics":
-            # lignes de (positions, syllabes) : positions -> notes,
-            # syllabes -> colonne marker
-            pflat, sflat = [], []
-            for pos_list, syl_list in content:
-                n = max(len(pos_list), len(syl_list))
-                for j in range(n):
-                    pflat.append(pos_list[j] if j < len(pos_list) else "")
-                    sflat.append(syl_list[j] if j < len(syl_list) else "")
-            cols = _wrap_vertical(pflat, rows)
-            tab_columns.extend(cols)
-            vocal_columns.extend(_wrap_vertical(sflat, rows))
         elif kind == "vocal":
             vflat = []
             for toks in content:
@@ -1278,10 +1236,15 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
                            cell_w, cell_h, fs, total_w, mr, marker_w=0,
                            title_offset=0, opts=None, syllable_fs=None):
     """Rend des syllabes vocales dans la colonne marker.
-    Un token = une syllabe. Les tokens multi-caractères (ぐゎ, てぃ, よー…)
-    sont empilés verticalement : caractère principal aligné sur la note,
-    caractères combinants (petits kana, ー) en dessous. Le chevauchement
-    de la bordure inférieure de la case est accepté.
+    Un token = une syllabe, sauf si le token contient des points `.` :
+    le temps est alors divisé en (points + syllabes) parties égales et les
+    syllabes sont réparties dans la case (ex. `.きゅ` = 2 sous-temps, きゅ
+    sur le 2e). Les parenthèses de koedashi/koekiri s'associent à l'élément
+    voisin (syllabe ou point) sans changer la répartition. Les tokens
+    multi-caractères (ぐゎ, てぃ, よー…) sont empilés verticalement : caractère
+    principal aligné sur sa position, caractères combinants (petits kana, ー)
+    en dessous. Le chevauchement de la bordure inférieure de la case est
+    accepté.
     """
     if marker_w == 0 or syllable_fs is None or syllable_fs <= 0:
         return
@@ -1289,31 +1252,49 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
     group_w = cell_w + marker_w
     step = int(syllable_fs * 0.85)  # espacement des caractères combinants
 
+    def _emit(sx, yy, ch):
+        if ch == "ー":
+            # voyelle longue : trait vertical en écriture verticale
+            ry = yy - syllable_fs * 0.35
+            out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
+                       f'font-family="serif" font-size="{syllable_fs}" '
+                       f'fill="#333" '
+                       f'transform="rotate(90 {sx} {ry})">'
+                       f'{escape(ch)}</text>')
+        else:
+            out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
+                       f'font-family="serif" font-size="{syllable_fs}" '
+                       f'fill="#333">{escape(ch)}</text>')
+
     for ci, vocal_col in enumerate(vocal_lines):
         x = total_w - mr - title_offset - (ci + 1) * group_w
-        for ri, syllable in enumerate(vocal_col):
+        for ri, token in enumerate(vocal_col):
             if ri >= rows_per_col:
                 break
             cy = y0 + ri * cell_h
             # Position dans la colonne marker (à droite de la case)
             sx = x + cell_w + marker_w / 2
-            sy = cy + cell_h / 2 + syllable_fs / 3  # centré sur la note
-            if not syllable or syllable == "-":
+            if not token or token == "-":
                 continue
-            for k, ch in enumerate(syllable):
-                yy = sy + k * step
-                if ch == "ー":
-                    # voyelle longue : trait vertical en écriture verticale
-                    ry = yy - syllable_fs * 0.35
-                    out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
-                               f'font-family="serif" font-size="{syllable_fs}" '
-                               f'fill="#333" '
-                               f'transform="rotate(90 {sx} {ry})">'
-                               f'{escape(ch)}</text>')
-                else:
-                    out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
-                               f'font-family="serif" font-size="{syllable_fs}" '
-                               f'fill="#333">{escape(ch)}</text>')
+            # Système de points : un token contenant des `.` subdivise le temps.
+            if "." in token:
+                # Extraire syllabes et points dans l'ordre ; les parenthèses
+                # restent accolées à l'élément voisin.
+                elems = []
+                for part in token.replace(".", " . ").split():
+                    elems.append(part)
+                n = len(elems)
+                sub_h = cell_h / n
+                for j, el in enumerate(elems):
+                    if el == ".":
+                        continue
+                    sy = cy + sub_h * j + sub_h / 2 + syllable_fs / 3
+                    for k, ch in enumerate(el):
+                        _emit(sx, sy + k * step, ch)
+                continue
+            sy = cy + cell_h / 2 + syllable_fs / 3  # centré sur la note
+            for k, ch in enumerate(token):
+                _emit(sx, sy + k * step, ch)
 
 
 def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
@@ -1390,76 +1371,6 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
     return y0 + col_h
 
 
-def _draw_vertical_tab_lyrics(out, columns, rows_per_col, ml, y0,
-                              cell_w, cell_h, fs, total_w, mr, marker_w=0,
-                              title_offset=0, opts=None, end_circle=False):
-    """Colonnes verticales droite→gauche, cellule = position (haut) + syllabe (bas).
-    Deux passes : rectangles d'abord, puis notes/syllabes par-dessus."""
-    group_w = cell_w + marker_w
-    col_h = rows_per_col * cell_h
-
-    # Passe 1 : tous les rectangles
-    col_positions = []
-    for ci, col in enumerate(columns):
-        x = total_w - mr - title_offset - (ci + 1) * group_w
-        col_positions.append((x, col))
-        for ri in range(rows_per_col):
-            cy = y0 + ri * cell_h
-            out.append(f'<rect x="{x}" y="{cy}" width="{cell_w}" '
-                       f'height="{cell_h}" fill="none" stroke="#bbb" '
-                       f'stroke-width="0.75"/>')
-        if marker_w > 0:
-            mx = x + cell_w
-            out.append(f'<rect x="{mx}" y="{y0}" width="{marker_w}" '
-                       f'height="{col_h}" fill="none" stroke="#bbb" '
-                       f'stroke-width="0.75"/>')
-
-    # Passe 2 : notes et syllabes par-dessus
-    # Les flèches de répétition vont dans la colonne marker (à droite de chaque pile)
-    for x, col in col_positions:
-        for ri in range(rows_per_col):
-            cy = y0 + ri * cell_h
-            if ri < len(col):
-                pair = col[ri]
-                pos_tok, syl = pair if isinstance(pair, tuple) else (pair, "")
-            else:
-                pos_tok, syl = "", ""
-            rs, base_tok, re_, vs, ve = _strip_repeat_marks(pos_tok)
-            render_cell(out, base_tok, x + cell_w / 2, cy + cell_h * 0.38,
-                        fs - 2, cell_w, cell_h, opts)
-            if syl:
-                out.append(f'<text x="{x + cell_w/2}" y="{cy + cell_h*0.82}" '
-                           f'text-anchor="middle" font-family="sans-serif" '
-                           f'font-size="10" fill="#666">{escape(syl)}</text>')
-            if rs and marker_w > 0:
-                _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start')
-            if re_ and marker_w > 0:
-                _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end')
-            if vs and marker_w > 0:
-                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
-            if ve and marker_w > 0:
-                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
-
-    # Marqueur de fin de chanson
-    if end_circle and marker_w > 0 and len(col_positions) > 0:
-        last_x, last_col = col_positions[-1]
-        last_filled_cy = None
-        for ri in range(rows_per_col - 1, -1, -1):
-            if ri < len(last_col):
-                pair = last_col[ri]
-                pos_tok = pair if isinstance(pair, str) else pair[0]
-            else:
-                pos_tok = ""
-            if pos_tok and pos_tok != "-":
-                last_filled_cy = y0 + ri * cell_h
-                break
-        if last_filled_cy is not None:
-            _render_end_circle(out, last_x + cell_w, last_filled_cy,
-                               cell_h, marker_w)
-
-    return y0 + col_h
-
-
 # --------------------------------------------------------------------------- #
 # 3b. Rendu horizontal (gauche→droite, haut→bas) — mode songbook
 # --------------------------------------------------------------------------- #
@@ -1474,8 +1385,6 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
         if kind == "tab":
             rows = _wrap_horizontal(content, cols)
             prepared.append((sec_title, rows, kind))
-        elif kind == "tab-lyrics":
-            prepared.append((sec_title, content, kind))
         else:
             prepared.append((sec_title, content, kind))
 
@@ -1491,12 +1400,10 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     for sec_title, data, kind in prepared:
         if sec_title:
             total_h += 22
-        if kind == "lyrics" and prev_kind in ("tab", "tab-lyrics"):
+        if kind == "lyrics" and prev_kind == "tab":
             total_h += GAP_TAB_LYRICS
         if kind == "tab":
             total_h += len(data) * cell_h + 6
-        elif kind == "tab-lyrics":
-            total_h += len(data) * (cell_h + 8) + 6
         else:
             total_h += len(data) * h_lyrics_sp + 6
             if kind == "lyrics":
@@ -1551,7 +1458,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     # Trouver la dernière section tab/tab-lyrics pour end_circle
     last_tab_idx = -1
     for si, (_, _, kind) in enumerate(prepared):
-        if kind in ("tab", "tab-lyrics"):
+        if kind == "tab":
             last_tab_idx = si
     # @end_circle déprécié/ignoré : le ┘● est désormais rendu par le token
     # explicite )| (vocalRepEnd), cohérent avec Portama où le marqueur est
@@ -1562,7 +1469,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
 
     prev_kind = None
     for si, (sec_title, data, kind) in enumerate(prepared):
-        if kind == "lyrics" and prev_kind in ("tab", "tab-lyrics"):
+        if kind == "lyrics" and prev_kind == "tab":
             y += GAP_TAB_LYRICS
         if sec_title:
             out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
@@ -1593,41 +1500,6 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     if tok and tok != "-":
                         h_last_filled = (x + cell_w * 0.85, y)
                 y += cell_h
-            y += 6
-            if do_end_circle and si == last_tab_idx and h_last_filled:
-                _render_end_circle(out, h_last_filled[0], h_last_filled[1],
-                                   cell_h, h_marker_w)
-        elif kind == "tab-lyrics":
-            for pos_list, syl_list in data:
-                n = max(len(pos_list), len(syl_list))
-                for j in range(n):
-                    x = ml + j * cell_w
-                    out.append(f'<rect x="{x}" y="{y}" width="{cell_w}" '
-                               f'height="{cell_h}" fill="none" '
-                               f'stroke="#bbb" stroke-width="0.75"/>')
-                    pt = pos_list[j] if j < len(pos_list) else ""
-                    st = syl_list[j] if j < len(syl_list) else ""
-                    rs, base_pt, re_, vs, ve = _strip_repeat_marks(pt)
-                    render_cell(out, base_pt, x + cell_w / 2, y + cell_h * 0.38,
-                                fs - 2, cell_w, cell_h, opts)
-                    out.append(f'<text x="{x + cell_w/2}" y="{y + cell_h*0.82}" '
-                               f'text-anchor="middle" font-family="sans-serif" '
-                               f'font-size="10" fill="#666">{escape(st)}</text>')
-                    if rs:
-                        _render_repeat_arrow(out, x + cell_w * 0.85,
-                                             y, cell_h, cell_w * 0.15, 'start')
-                    if re_:
-                        _render_repeat_arrow(out, x + cell_w * 0.85,
-                                             y, cell_h, cell_w * 0.15, 'end')
-                    if vs:
-                        _render_vrep_marker(out, x + cell_w * 0.85,
-                                            y, cell_h, cell_w * 0.15, 'start')
-                    if ve:
-                        _render_vrep_marker(out, x + cell_w * 0.85,
-                                            y, cell_h, cell_w * 0.15, 'end')
-                    if pt and pt != "-":
-                        h_last_filled = (x + cell_w * 0.85, y)
-                y += cell_h + 8
             y += 6
             if do_end_circle and si == last_tab_idx and h_last_filled:
                 _render_end_circle(out, h_last_filled[0], h_last_filled[1],
