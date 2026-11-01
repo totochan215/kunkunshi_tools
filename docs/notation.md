@@ -277,6 +277,7 @@ Le format d'une figure encode son rythme :
 - Format : `四+工` ou `合+四+工` (séparateur `+`)
 - Rendu : caractères empilés verticalement, taille 72%, centrés sur l'axe vertical de la case
 - Maximum 3 notes (le sanshin n'a que 3 cordes)
+- Variantes acceptées : `=` et `－` (forme graphique en barre), `＝` pleine chasse — toutes normalisées en `+`
 - Cas d'usage : par exemple dans ヒヤミカチ節 (Hiyamikachibushi) : 四+工 et 合+四+工
 
 ### Figure non reconnue
@@ -305,7 +306,6 @@ Apposés après le caractère de position dans la figure KKML. Peuvent se combin
 | `v`     | aki-utu (開音)         | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
 | `<`     | kachi-utu (掻音)       | ┗ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s`     | kuubanchi (小弾)       | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
-| `=`     | taachi (二弾) ou tsuiri-bichi (列弾) | trait vertical à droite du kanji | Jouer 2 ou 3 cordes simultanément |
 
 ## Contrôle du chant
 
