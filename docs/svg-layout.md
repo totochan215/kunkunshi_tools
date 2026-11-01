@@ -38,7 +38,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 #### Grille de tablature
 
 - Les colonnes sont disposées de droite à gauche (colonne 0 = la plus à droite)
-- Chaque colonne contient `rows_per_col` cases (défaut 12, configurable via `@cols`)
+- Chaque colonne contient `rows_per_col` cases (défaut 12, configurable via `-c` en CLI)
 - `group_w = cell_w + marker_w` (78 avec marker, 52 sans)
 - Position x de la colonne ci : `x = total_w - mr - title_offset - (ci + 1) * group_w`
 - Deux passes : d'abord tous les rectangles (grille), puis toutes les notes par-dessus (pour que les notes à cheval ne soient pas masquées par les bordures)
