@@ -277,7 +277,7 @@ Le format d'une figure encode son rythme :
 - Format : `四+工` ou `合+四+工` (séparateur `+`)
 - Rendu : caractères empilés verticalement, taille 72%, centrés sur l'axe vertical de la case
 - Maximum 3 notes (le sanshin n'a que 3 cordes)
-- Variantes acceptées : `=` et `－` (forme graphique en barre), `＝` pleine chasse — toutes normalisées en `+`
+- Forme canonique : `+` (`＋` pleine chasse normalisé en `+`). Variantes acceptées au même titre : `=` (`＝` pleine chasse normalisé en `=`) et `-` (forme graphique en barre, sauf `-` seul = case vide). Aucune n'est normalisée en `+` au parsing ; le rendu les traite toutes comme des accords.
 - Terminologie : en okinawaïen, l'accord se dit **taachi** (二弾, « deux cordes ») ou **tsuiri-bichi** (列弾, plusieurs cordes jouées ensemble).
 - Cas d'usage : par exemple dans ヒヤミカチ節 (Hiyamikachibushi) : 四+工 et 合+四+工
 
