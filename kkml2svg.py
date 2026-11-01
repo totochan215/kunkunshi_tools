@@ -245,7 +245,7 @@ class Song:
     def __init__(self):
         self.meta = {}
         self.blocks = []
-        self.cols = 12         # lignes par colonne (mode vertical) — défaut
+        self.cols = 12         # DEPRECATED : @cols n'est plus une propriété de la chanson ; défaut de mise en page = 12 (vertical/horizontal)
         self.layout = "vertical"
         self.page_dans = None  # dans max par page (pagination), None = illimité
 
@@ -298,17 +298,17 @@ def parse_kkml(text):
                     break
         if m and not stripped.startswith("::"):
             if key == "cols":
-                try:
-                    song.cols = int(val)
-                except ValueError:
-                    pass
+                # @cols est une indication de mise en page (cases/dan), pas une
+                # caractéristique de la chanson : ignoré au parsing, le layout
+                # applique son propre défaut (ou -c en CLI pour vertical/horizontal).
+                pass
             elif key == "page_dans":
                 try:
                     song.page_dans = int(val)
                 except ValueError:
                     pass
             elif key == "layout":
-                song.layout = val if val in ("vertical", "horizontal", "nomura") else "vertical"
+                song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami") else "vertical"
             else:
                 song.meta[key] = val
             i += 1
@@ -386,8 +386,17 @@ def parse_kkml(text):
                 current.lines.append(stripped)
             elif current.kind == "vocal":
                 # Syllabes vocales : une ligne par ligne de tablature
-                # Chaque ligne contient des syllabes séparées par des espaces
-                current.lines.append(stripped.split())
+                # Chaque ligne contient des syllabes séparées par des espaces.
+                # Un ー/ｰ/－ ISOLÉ = case vide (comme dans ::tab) ; collé à une
+                # syllabe (よー) il reste la voyelle longue.
+                norm = []
+                for tk in stripped.split():
+                    if tk in EMPTY_INPUT_VARIANTS:
+                        _info_input_variant(tk, EMPTY_TOKEN)
+                        norm.append(EMPTY_TOKEN)
+                    else:
+                        norm.append(tk)
+                current.lines.append(norm)
             i += 1
             continue
 
@@ -401,12 +410,18 @@ def parse_kkml(text):
 # --------------------------------------------------------------------------- #
 def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
                page_dans=None):
-    if cols is None:
-        cols = song.cols
     if layout is None:
         layout = song.layout
     if page_dans is None:
         page_dans = song.page_dans
+    # @cols n'est PAS une caractéristique de la chanson : c'est une propriété de
+    # mise en page. Chaque layout a son propre défaut (vertical/horizontal :
+    # 12, chindami/nomura : imposé par la page), et -c/--cols ne s'applique
+    # qu'aux layouts libres (vertical/horizontal).
+    if cols is None:
+        cols = 12
+    if layout in ("chindami", "nomura"):
+        cols = None  # ignoré : le layout fixe ses propres cases/dan
 
     title = song.meta.get("title", "")
     tuning = song.meta.get("tuning", "本調子")
@@ -477,7 +492,9 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     }
 
     font_family = opts.get('font_family', 'serif')
-    if layout == "nomura":
+    if layout == "chindami":
+        svgs = _render_chindami(song, sections, font_size, marker, opts)
+    elif layout == "nomura":
         svgs = _render_nomura(song, sections, font_size, marker, opts)
     elif layout == "vertical":
         svgs = _render_vertical(song, sections, cols, cell_w, cell_h,
@@ -844,6 +861,218 @@ NOMURA_FRAME_MARGIN_X = (NOMURA_PAGE_W - NOMURA_FRAME_W) / 2.0
 NOMURA_FRAME_MARGIN = (NOMURA_PAGE_H - NOMURA_FRAME_H) / 2.0
 NOMURA_CELL_W = (NOMURA_FRAME_W - 8 * NOMURA_DAN_GAP) / 14.0
 NOMURA_CELL_H = (NOMURA_FRAME_H - 2 * NOMURA_DAN_GAP) / NOMURA_ROWS
+
+# --------------------------------------------------------------------------- #
+# Layout Chindami-Kunkunshi (recueils ちんだみ工工四百選集, 23 x 15 cm paysage)
+# Constantes v1 d'après docs/svg-layout.md ; à recalibrer sur samples PDF.
+# --------------------------------------------------------------------------- #
+CM = 28.3465  # 1 cm en points
+CHINDAMI_PAGE_W = 23 * CM          # 651,96 pt mesurée (MediaBox), paysage
+CHINDAMI_PAGE_H = 15 * CM          # 425,16 pt mesurée
+CHINDAMI_ROWS = 12                 # cases par pile (spec utilisateur, confirmé visuellement ~10-12)
+# Mesures sur samples/chindami-pdf p8/p9/p10-11 (1816x1181 px, 2,785 px/pt) :
+CHINDAMI_GRID_TOP = 85 / 2.785       # ~30,5 pt : haut de grille (p10)
+CHINDAMI_GRID_BOTTOM = 1079 / 2.785  # ~387,4 pt : bas de grille (p10)
+CHINDAMI_CELL_H = 83 / 2.785         # ~29,8 pt par case, 12 cases/pile confirmé (p10)
+CHINDAMI_ROWS = 12
+CHINDAMI_PILE_W = 97 / 2.785         # ~34,8 pt : pas entre bords de piles (p10, constant)
+CHINDAMI_CELL_W = 65 / 2.785         # ~23,3 pt : sous-colonne notes (p10 : bord pile -> filet interne)
+CHINDAMI_MARKER_W = 32 / 2.785       # ~11,5 pt : sous-colonne marker (~1/3 de la pile)
+CHINDAMI_DAN_GAP = 0                 # le pas de 97 px inclut déjà case+marker
+CHINDAMI_TITLE_W = (1816 - 1750) / 2.785  # ~23,7 pt : colonne titre (droite)
+CHINDAMI_TITLE_GAP = 30 / 2.785      # ~10,8 pt entre grille et titre
+CHINDAMI_FRAME_MARGIN_X = 138 / 2.785  # ~49,6 pt : bord gauche 1re pile
+CHINDAMI_FS = 20                   # taille des notes (à valider visuellement)
+CHINDAMI_MAX_DANS = 15             # max mesuré : 15 piles sur p10 (morceau n°3, page pleine)
+
+
+def _render_chindami(song, sections, fs, marker=False, opts=None):
+    """Rendu multipage façon recueils Chindami Kunkunshi : page 23 x 15 cm
+    paysage (sans liseré de page, cf. scans), piles de 12 cases lues haut->bas de droite->gauche,
+    colonne marker = demi-case à droite de chaque pile, titre vertical à
+    droite de la page 1 surmonté du numéro de morceau (@musicno), paroles
+    (::lyrics) en colonnes verticales à gauche de la dernière page.
+    Retourne une liste de SVG (un par page)."""
+    title = song.meta.get("title", "")
+    tuning = song.meta.get("tuning", "本調子")
+    musicno = song.meta.get("musicno", "")
+    font_family = (opts or {}).get('font_family', 'serif')
+
+    cell_w = CHINDAMI_CELL_W
+    cell_h = CHINDAMI_CELL_H
+    marker_w = CHINDAMI_MARKER_W if marker else 0.0
+    group_w = CHINDAMI_PILE_W
+    rows = CHINDAMI_ROWS
+    fs = CHINDAMI_FS
+    frame_x0, frame_y0 = CHINDAMI_FRAME_MARGIN_X, CHINDAMI_GRID_TOP
+    frame_x1 = CHINDAMI_PAGE_W - CHINDAMI_FRAME_MARGIN_X
+    frame_y1 = CHINDAMI_GRID_BOTTOM
+    title_offset = CHINDAMI_TITLE_W + CHINDAMI_TITLE_GAP if (title or musicno) else 0
+    syllable_fs = min(int(cell_h * 0.35), int(marker_w * 0.8)) if marker_w > 0 else 0
+
+    # Flux : aplatir les sections tab en colonnes de 12, avec vocal sync.
+    tab_columns = []
+    vocal_columns = []
+    for sec in sections:
+        kind = sec[2]
+        content = sec[1]
+        vocal_lines = sec[3] if len(sec) > 3 else None
+        if kind == "tab":
+            cols = _wrap_vertical(list(content), rows)
+            tab_columns.extend(cols)
+            if vocal_lines:
+                vocal_columns.extend(_wrap_vertical(list(vocal_lines), rows))
+            else:
+                vocal_columns.extend([None] * len(cols))
+        elif kind == "vocal":
+            vflat = []
+            for toks in content:
+                vflat.extend(toks)
+            vocal_columns.extend(_wrap_vertical(vflat, rows))
+    if vocal_columns and len(vocal_columns) < len(tab_columns):
+        vocal_columns.extend([None] * (len(tab_columns) - len(vocal_columns)))
+
+    lyrics_sections = [(s[0], s[1]) for s in sections if s[2] == "lyrics"]
+
+    # Pagination façon nomura : les paroles (::lyrics) occupent la place LIBRE
+    # à gauche de la dernière page de musique ; si la largeur restante ne suffit
+    # pas, les colonnes de paroles passent sur des pages dédiées (per_page
+    # colonnes par page). Jamais de débordement hors page, jamais de pile perdue.
+    max_dans = CHINDAMI_MAX_DANS
+    lyr_fs0 = int(CHINDAMI_FS * 0.75)
+    lyr_col_w0 = int(lyr_fs0 * 1.33)
+    lyr_gap0 = int(lyr_col_w0 * 0.8)
+    lyr_cols = []
+    for _, d in lyrics_sections:
+        for verse in _split_verses(d):
+            for col_lines, indent in _lyrics_columns_layout(verse):
+                lyr_cols.append((col_lines, indent))
+    usable_w = (CHINDAMI_PAGE_W - 2 * CHINDAMI_FRAME_MARGIN_X
+                - CHINDAMI_TITLE_W - CHINDAMI_TITLE_GAP)
+    per_lyr_page = max(1, int(usable_w // (lyr_col_w0 + lyr_gap0)))
+    # colonnes de paroles qui tiennent à gauche de la dernière page de musique
+    if lyr_cols:
+        fit = 0
+        while fit < len(lyr_cols) and (fit + 1) * lyr_col_w0 + fit * lyr_gap0 + 12 <= usable_w - CHINDAMI_PILE_W:
+            fit += 1
+    else:
+        fit = 0
+
+    # capacité de piles sur la dernière page de musique avec les paroles à gauche
+    lyr_w_fit = fit * lyr_col_w0 + max(fit - 1, 0) * lyr_gap0 + 12 if fit else 0
+    room = max(1, int((usable_w - lyr_w_fit) // CHINDAMI_PILE_W))
+
+    pages = []  # (c0, c1, is_first, lyr_slice)
+    i = 0
+    first = True
+    while i < len(tab_columns):
+        remaining = len(tab_columns) - i
+        budget = max_dans - (1 if first and (title or musicno) else 0)
+        # dernière page de musique = celle qui contient la dernière pile
+        is_last = (i + budget >= len(tab_columns))
+        lyr_slice = None
+        if lyr_cols and is_last and i + room >= len(tab_columns):
+            # la dernière page de musique accueille les piles restantes à droite
+            # des 'fit' colonnes de paroles (à gauche) : assez de piles pour
+            # que la grille + les paroles tiennent dans usable_w.
+            take = min(remaining, room)
+            lyr_slice = (0, fit)
+        else:
+            take = min(budget, remaining)
+        pages.append((i, i + take, first, lyr_slice))
+        i += take
+        first = False
+    if not pages:
+        pages = [(0, 0, True, (0, fit) if lyr_cols else None)]
+    # pages dédiées paroles pour l'excédent
+    k = fit
+    while k < len(lyr_cols):
+        pages.append((0, 0, False, (k, min(k + per_lyr_page, len(lyr_cols)))))
+        k += per_lyr_page
+
+    svgs = []
+    for pno, (c0, c1, is_first, lyr_slice) in enumerate(pages, 1):
+        n_cols = c1 - c0
+        lyr_fs = int(fs * 0.75)
+        lyr_col_w = int(lyr_fs * 1.33)
+        lyrics_here = lyr_cols[lyr_slice[0]:lyr_slice[1]] if lyr_slice else []
+        lyrics_w = (len(lyrics_here) * lyr_col_w + max(len(lyrics_here) - 1, 0) * int(lyr_col_w * 0.8) + 12
+                    if lyrics_here else 0)
+        total_w = CHINDAMI_PAGE_W
+        total_h = CHINDAMI_PAGE_H
+        out = ['<?xml version="1.0" encoding="UTF-8"?>',
+               f'<svg xmlns="http://www.w3.org/2000/svg" width="{total_w}" height="{total_h}" '
+               f'viewBox="0 0 {total_w} {total_h}">',
+               '<rect width="100%" height="100%" fill="white"/>']
+
+        # Titre vertical à droite de la page 1, surmonté du n° de morceau
+        if is_first and (title or musicno):
+            tx = frame_x1 - CHINDAMI_TITLE_W / 2
+            ty = frame_y0 + 6
+            if musicno:
+                out.append(f'<text x="{tx}" y="{ty + 10}" text-anchor="middle" '
+                           f'font-family="serif" font-size="11" fill="#333">{escape(musicno)}</text>')
+                ty += 22
+            if title:
+                _render_vertical_text(out, title, tx, ty, 18, "#000", 22, font_family)
+            if tuning:
+                _render_vertical_text(out, tuning, tx, frame_y1 - 4 - len(tuning) * 16,
+                                      11, "#555", 16, font_family)
+
+        # Piles de droite à gauche
+        x_right = frame_x1 - title_offset if is_first else frame_x1
+        if lyrics_here:
+            x_right -= lyrics_w
+        for ci in range(n_cols):
+            x = x_right - (ci + 1) * group_w
+            y0 = frame_y0
+            # rectangles
+            for ri in range(rows):
+                cy = y0 + ri * cell_h
+                out.append(f'<rect x="{x}" y="{cy}" width="{cell_w}" height="{cell_h}" '
+                           f'fill="none" stroke="#bbb" stroke-width="0.6"/>')
+            if marker_w > 0:
+                out.append(f'<rect x="{x+cell_w}" y="{y0}" width="{marker_w}" '
+                           f'height="{rows*cell_h}" fill="none" stroke="#bbb" stroke-width="0.6"/>')
+            # notes + marqueurs
+            col = tab_columns[c0 + ci]
+            vcol = vocal_columns[c0 + ci] if c0 + ci < len(vocal_columns) else None
+            for ri in range(rows):
+                cy = y0 + ri * cell_h
+                tok = col[ri] if ri < len(col) else ""
+                rs, base_tok, re_, vs, ve = _strip_repeat_marks(tok)
+                render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
+                            cell_w, cell_h, opts)
+                if marker_w > 0:
+                    if rs:
+                        _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start')
+                    if re_:
+                        _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end')
+                    if vs:
+                        _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
+                    if ve:
+                        _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
+            if vcol and marker_w > 0 and syllable_fs > 0:
+                # _draw_vertical_vocal positionne via total_w/mr ; on lui passe
+                # un mr fictif pour que la colonne tombe sur le x de la pile.
+                fake_mr = total_w - (x + group_w)
+                _draw_vertical_vocal(out, [vcol], rows, frame_x0, y0, cell_w, cell_h, fs,
+                                     total_w, fake_mr, marker_w, 0, opts, syllable_fs)
+        # Paroles verticales à gauche de la dernière page
+        if lyrics_here:
+            lyr_sp = int(lyr_fs * 1.2)
+            vx = frame_x0 + lyrics_w - lyr_col_w / 2
+            for col_lines, indent in lyrics_here:
+                cy = frame_y0 + 6
+                cy += indent * lyr_sp
+                for ln in col_lines:
+                    _render_vertical_text(out, ln, vx, cy, lyr_fs, "#333",
+                                          lyr_sp, font_family)
+                    cy += len(ln) * lyr_sp + lyr_sp
+                vx -= lyr_col_w + int(lyr_col_w * 0.8)
+        out.append('</svg>')
+        svgs.append("\n".join(out))
+    return svgs
 
 
 def _render_nomura(song, sections, fs, marker=False, opts=None):
@@ -2421,7 +2650,7 @@ def main():
     ap.add_argument("-o", "--output", help="fichier SVG de sortie")
     ap.add_argument("-c", "--cols", type=int,
                     help="lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
-    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura"],
+    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami"],
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
                     help="nombre max de dans par page (pagination multipage, surcharge @page_dans)")
