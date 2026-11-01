@@ -235,8 +235,11 @@ Au sein des sections `tab::`, les kandokoro exprimés en romaji sont tolérés. 
 | `jyu`    | `十`    |
 | `jyuu`   | `十`    |
 | `jyū`    | `十`    |
+| `sai`    | `才`    |
+| `bon`    | `凡`    |
 
 TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
+TODO: décider du mode de représentation de 勺 en romaji (shaku, donc ambigu)
 
 #### Kandokoro en chiffres romains vers kandokoro en kanji
 
