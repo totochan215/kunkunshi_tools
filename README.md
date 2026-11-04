@@ -4,7 +4,7 @@ Outils d'édition de tablatures 工工四 (kunkunshi) pour le sanshin d'Okinawa.
 Python 3 autonome, aucune dépendance hors stdlib.
 En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 
-Attribution : projet réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
+Attribution : projet réalisé en partie par intelligence artificielle (https://chat.mistral.ai/code/)
 
 - Pipeline 1 : Saisie graphique dans l'éditeur Portama → JSON Portama → KKML → Finalisation en KKML
 - Pipeline 2 : Saisie texte en KKML → SVG (ou PDF) → Impression ou utilisation dans un logiciel d'édition
