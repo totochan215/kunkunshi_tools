@@ -47,7 +47,7 @@ Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizon
 (idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
 
     python3 kkml_cleaner.py morceau.kkml        # réécrit le fichier en place
-    python3 kkml_cleaner.py -n morceau.kkml     # mode test : affiche sur stdout, original intact
+    python3 kkml_cleaner.py -n morceau.kkml     # mode test
     python3 kkml_cleaner.py -n -o clean.kkml morceau.kkml
 
 ### kkml2pdf.py
