@@ -101,9 +101,9 @@ Détail complet : [docs/notation.md](docs/notation.md) et [docs/kkml-format.md](
 ## Documentation
 
 - [docs/kkml-format.md](docs/kkml-format.md) — syntaxe et règles du format KKML
-- [docs/notation.md](docs/notation.md) — notation musicale (positions, modes rythmiques, souhou, vocal etc.)
-- [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama sur la base de sa rétro-ingénierie
-- [docs/svg-layout.md](docs/svg-layout.md) — layout SVG (dimensions, constantes, colonne marker)
+- [docs/notation.md](docs/notation.md) — notation musicale kunkunshi (positions, modes rythmiques, technique, vocal etc.)
+- [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama
+- [docs/svg-layout.md](docs/svg-layout.md) — description des mises en page SVG (dimensions, constantes, etc.)
 
 La roadmap du projet et le contexte technique pour contributeurs/agents IA sont dans [AGENTS.md](AGENTS.md).
 
