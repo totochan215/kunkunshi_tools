@@ -1921,6 +1921,7 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, marker_w, fs
         y0 += 10
     strip_x = ml + cols * cell_w
     syl_fs = int(fs * 0.6)
+    syl_pad = max(2, int(syl_fs * 0.28))  # marge sous la baseline (ne touche pas la bordure)
     for r, row in enumerate(rows):
         y = y0 + r * cell_h
         for idx in range(len(row)):
@@ -1947,7 +1948,10 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, marker_w, fs
                 if vrows and r < len(vrows) and idx < len(vrows[r]):
                     syl = vrows[r][idx]
                     if syl and syl != "-":
-                        out.append(f'<text x="{mx:g}" y="{y + cell_h * 0.72 + syl_fs / 3:g}" '
+                        # ligne marker virtuelle : syllabe en BAS de sa case,
+                        # centrée horizontalement, sans chevaucher la bordure
+                        # inférieure (baseline relevée de syl_pad) ni la note
+                        out.append(f'<text x="{x + cell_w / 2:g}" y="{y + cell_h - syl_pad:g}" '
                                    f'text-anchor="middle" font-family="serif" '
                                    f'font-size="{syl_fs}" fill="#333">{escape(syl)}</text>')
     out.append("</svg>")
