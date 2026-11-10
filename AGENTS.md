@@ -10,7 +10,7 @@ Règles :
 ---
 # Feuille de route — kunkunshi_tools
 
-Dernière mise à jour : 25 septembre 2026
+Dernière mise à jour : 4 novembre 2026
 
 Pipeline : Portama JSON → KKML → SVG. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
@@ -27,8 +27,10 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   ROMAJI_TO_KANJI ne finit par `s`, donc pas de collision avérée aujourd'hui, mais à
   surveiller si la table romaji s'enrichit. La position rythmique (2e note d'un temps
   petite) est déjà couverte par croche/shuffle.
-- ❓ Nuchi-utu (Portama orn `nu`) : `n` en suffixe KKML est EXCLU (collision romaji :
-  yon, naka, shin…). Candidats libres : `~`, `°`, `゜` (U+309C), `N`.
+- ✅ (2026-11-04) Nuchi-utu (Portama orn `nu`, PUA U+E033) : suffixe `"` (U+0022),
+  jumeau de `'` (uchi-utu tenu) ; glyphe rendu ゜ (U+309C, « apostrophe vide ») ;
+  ＂ (U+FF02) normalisé en `"` via FULLWIDTH_MAP ; mapping Portama `nu` → `"`.
+  `n` reste EXCLU (collision romaji : yon, bon…).
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
   jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
 
@@ -40,7 +42,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   occurrences de `八` (U+E024, dan 5), silences `◯/尺♯` (dan 14), ornements `'` (dans 3, 10, 12, 18).
   Confirme le mapping PUA U+E024 = 八.
 - ⬜ Régénérer et valider le SVG de test des souhou (uchi-utu `'` (alias `*`), kaki-utu `^`, aki-utu `v`,
-  kachi-utu `<`, kuubanchi `s`, taachi `=`) ; ajuster dx/dy/scale/rotate selon retours visuels.
+  kachi-utu `<`, kuubanchi `s`, taachi `=`, nuchi-utu `"`) ; ajuster dx/dy/scale/rotate selon retours visuels.
 - ⬜ Valider le rendu vocal multi-caractères (うちなぐち) : empilement petits kana, ー vertical,
   chevauchement bord inférieur. Support vocal en mode horizontal non implémenté (priorité verticale).
 - ⬜ Valider visuellement les accords (`四-五`, `+`) et le rendu condensé イ下尺 / ロ下尺 sans cercle.
