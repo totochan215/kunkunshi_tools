@@ -1850,6 +1850,24 @@ def _tuto_svg_open(W, H):
             '<rect width="100%" height="100%" fill="white"/>']
 
 
+def _tuto_text_width(segs, fs):
+    # Largeur estimée d'un texte parsé en segments ruby, calquée sur
+    # _render_horizontal_ruby : char_w = fs * 0.55 par caractère de base.
+    char_w = fs * 0.55
+    w = 0.0
+    for seg in segs:
+        t = seg["type"]
+        if t == "plain":
+            w += len(seg["text"]) * char_w
+        elif t == "mono":
+            w += char_w
+        elif t == "group":
+            w += len(seg["base"]) * char_w
+        elif t == "jukugo":
+            w += sum(len(base) for base, _ in seg["items"]) * char_w
+    return w
+
+
 def _tuto_title_page(song, W, H):
     # Page a part : titre, accordage et autres infos, centres.
     out = _tuto_svg_open(W, H)
@@ -1860,7 +1878,7 @@ def _tuto_title_page(song, W, H):
     if title:
         segs = _parse_ruby(title)
         if _has_ruby(segs):
-            est = sum(len(s["text"]) * fs_t * 0.55 for s in segs)
+            est = _tuto_text_width(segs, fs_t)
             _render_horizontal_text(out, title, cx - est / 2, y, fs_t, "black")
         else:
             out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
