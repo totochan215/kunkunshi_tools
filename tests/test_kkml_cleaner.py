@@ -108,3 +108,10 @@ assert len(svgs) == 3, len(svgs)  # 1 titre + 1 tab (20/8 = 3 dans <= 7) + 1 lyr
 svgs2 = _k.render_svg(_k.parse_kkml(t14.replace('合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合', '合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合')))
 assert len(svgs2) == 4, len(svgs2)  # 60/8 = 8 dans -> 2 pages tab
 print("OK layout tuto : pages 1280x720, 8 cases/dan, 7 dans/page")
+
+# 15. layout tuto + titre avec ruby (mono/group/jukugo) : pas de KeyError
+t15 = "@title 安《あ》｛安里屋｝《あさとや》｛安《あ》里《さ》｝\n@layout tuto\n::tab\n合\n::\n"
+svgs15 = _k.render_svg(_k.parse_kkml(t15))
+assert all('width="1280"' in s and 'height="720"' in s for s in svgs15)
+assert len(svgs15) == 2
+print("OK tuto + titre ruby (mono/group/jukugo), pages 1280x720")
