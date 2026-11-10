@@ -126,5 +126,5 @@ import re as _re
 mx = max(float(m.group(1)) for m in _re.finditer(r'<text x="([\d.]+)" y="[\d.]+"[^>]*fill="#333">', tab16))
 assert mx > 1186, mx  # syllabe dans la bande marker (x > 1186)
 st = [m for m in _re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + GO5 + r'</text>', tab16)]
-assert st and float(st[0].group(1)) > 162, st  # straddle au-delà de la bordure droite (162.25)
+assert st and abs(float(st[0].group(1)) - 162.25) < 0.5, st  # straddle CENTRÉ sur la bordure droite (162.25)
 print("OK tuto : bande marker à droite + straddle sur bordure droite")
