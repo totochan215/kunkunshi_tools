@@ -2538,7 +2538,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                 # le kanji à cheval est CENTRÉ sur la bordure droite (verticale) ;
                 # l’ornement suit (positionné depuis straddle_x)
                 straddle_x = cx + cell_w * 0.50
-                straddle_y = cy + fs * 0.318
+                # centré VERTICALEMENT avec la note principale : chaque glyphe
+                # est centré sur cy avec sa propre taille (baseline = cy + taille*0.318)
+                straddle_y = cy + ss * 0.318
             else:
                 # vertical : chevauche la bordure INFÉRIEURE (horizontale)
                 straddle_x = cx

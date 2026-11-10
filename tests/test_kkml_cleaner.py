@@ -138,3 +138,17 @@ centres = {89.125, 235.375}  # centres des cases 0 et 1 (cell_w=146.25)
 for m in _re17.finditer(r'<text x="([\d.]+)" y="[\d.]+"[^>]*fill="black">' + GO + r'</text>', t17):
     assert any(abs(float(m.group(1)) - c) < 0.5 for c in centres), m.group(1)  # centré sur sa case
 print("OK ':X' / 'X:' -> note centrée taille pleine")
+
+# 18. tuto : croche A/B -> note et straddle centrés entre eux verticalement
+GO, GO5 = chr(0x5408), chr(0x5DE5)
+s18 = _k.render_svg(_k.parse_kkml("@layout tuto\n::tab\n" + GO + "/" + GO5 + "\n::\n"))[1]
+import re as _re18
+ms = list(_re18.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)" fill="black">([^<]+)</text>', s18))
+pair = [(float(m.group(2)), int(m.group(3)), m.group(4)) for m in ms if m.group(4) in (GO, GO5)]
+assert len(pair) == 2, pair
+(y_main, fs_main, _), (y_str, fs_str, _) = pair
+# centre optique = baseline - 0.318 * taille (convention du code) -> doit être égal
+c_main = y_main - 0.318 * fs_main
+c_str = y_str - 0.318 * fs_str
+assert abs(c_main - c_str) < 0.6, (c_main, c_str)
+print("OK tuto : note et straddle centrés entre eux verticalement")
