@@ -84,6 +84,7 @@ FULLWIDTH_MAP = {
                   # case vide, voir EMPTY_INPUT_VARIANTS pour le token isolé)
     '＊': '*',    # uchi-utu (alias déprécié)
     '｀': "'",    # uchi-utu (apostrophe pleine chasse)
+    '＂': '"',    # nuchi-utu (guillemet pleine chasse)
     '＾': '^',    # kaki-utu
     '＜': '<',    # kachi-utu
     '＝': '=',    # accord (variante pleine chasse de = ; + reste canonique)
@@ -156,6 +157,12 @@ TECHNIQUE_SUFFIXES = {
           'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
     '*': {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
           'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
+    # nuchi-utu = uchi-nuchi-utu (打ち抜き音) : hammer-on SANS tenir la note.
+    # Suffixe `"` (U+0022), jumeau de `'` (uchi-utu tenu) ; `n` reste EXCLU
+    # (collision romaji : yon, bon...). Glyphe rendu : ゜ (U+309C, apostrophe
+    # vide), pendant creux du ｀ plein de uchi-utu. ＂ (U+FF02) normalisé en `"`.
+    '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
+          'pos': 'top-right', 'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '┗', 'pos': 'top-right',
           'rotate': 180, 'scale': 0.75, 'dx': 0.85, 'dy': -1.20},
     'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
