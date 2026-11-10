@@ -123,8 +123,9 @@ svgs16 = _k.render_svg(_k.parse_kkml(t16))
 tab16 = svgs16[1]
 assert tab16.count('<line') >= 1, 'pas de séparateur marker'
 import re as _re
-mx = max(float(m.group(1)) for m in _re.finditer(r'<text x="([\d.]+)" y="[\d.]+"[^>]*fill="#333">', tab16))
-assert mx > 1186, mx  # syllabe dans la bande marker (x > 1186)
+mv = [(float(m.group(1)), float(m.group(2))) for m in _re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">', tab16)]
+assert mv and abs(mv[0][0] - 89.125) < 0.5, mv  # syllabe centrée sur sa case
+assert 65 < mv[0][1] < 114.29, mv  # en bas de la case, au-dessus de la bordure inférieure (16+98.29)
 st = [m for m in _re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + GO5 + r'</text>', tab16)]
 assert st and abs(float(st[0].group(1)) - 162.25) < 0.5, st  # straddle CENTRÉ sur la bordure droite (162.25)
 print("OK tuto : bande marker à droite + straddle sur bordure droite")
