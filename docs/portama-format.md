@@ -195,8 +195,8 @@ Valeurs de `orn` possibles :
 | orn   | PUA     | Correspondance en KKML | Description |
 |-------|---------|------------------------|-------------|
 | `k`   | U+E031  | `^`                    | kaki-utu    |
-| `u`   | U+E032  | `*`                    | uchi-utu    |
-| `nu`  | U+E033  | `n`                    | nuchi-utu   |
+| `u`   | U+E032  | `'                    | uchi-utu    |
+| `nu`  | U+E033  | `"`                    | nuchi-utu   |
 
 Note : les ornements "nuchi-utu" et "uchi-nuuchi-utu" de KKML ne sont pas supportés par Portama.
 
