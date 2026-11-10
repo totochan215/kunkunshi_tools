@@ -128,3 +128,13 @@ assert mx > 1186, mx  # syllabe dans la bande marker (x > 1186)
 st = [m for m in _re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + GO5 + r'</text>', tab16)]
 assert st and abs(float(st[0].group(1)) - 162.25) < 0.5, st  # straddle CENTRÉ sur la bordure droite (162.25)
 print("OK tuto : bande marker à droite + straddle sur bordure droite")
+
+# 17. token ":X" (ex. "(:X" après strip des parenthèses) : note centrée, pas décalée
+GO = chr(0x5408)
+svgs17 = _k.render_svg(_k.parse_kkml("@layout tuto\n::tab\n:" + GO + " " + GO + ":\n::\n"))
+t17 = svgs17[1]
+import re as _re17
+centres = {89.125, 235.375}  # centres des cases 0 et 1 (cell_w=146.25)
+for m in _re17.finditer(r'<text x="([\d.]+)" y="[\d.]+"[^>]*fill="black">' + GO + r'</text>', t17):
+    assert any(abs(float(m.group(1)) - c) < 0.5 for c in centres), m.group(1)  # centré sur sa case
+print("OK ':X' / 'X:' -> note centrée taille pleine")
