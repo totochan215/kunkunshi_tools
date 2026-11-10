@@ -25,7 +25,7 @@ Le convertisseur (`portama2kkml.py`) mappe :
 - PUA → kanji (carte complète E000–E044)
 - Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B)
 - `acc: "sharp"/"flat"` → ♯/♭
-- `orn: "k"/"u"/"nu"` → `^` / `*` / `n`
+- `orn: "k"/"u"/"nu"` → `^` / `'` / `"`
 - `repeatStart/repeatEnd` → `|:` / `:|`
 - `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons)
 - Nombre de dans : déduit de `score`, jamais de `numDans`
@@ -90,7 +90,7 @@ Exemple :
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
     - `::tab` — tablature, 1 figure par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche,
-      `|:` `:|` = boucle instrumentale, `(:` `:)` = boucle vocale, `' ^ v < s` = ornements (caractères de technique).
+      `|:` `:|` = boucle instrumentale, `(:` `:)` = boucle vocale, `' " ^ v < s` = ornements (caractères de technique).
     - `::vocal` — paroles en phonétique alignées sur la tablature,
     - `::lyrics` — paroles complètes avec support éventuel du guide phonétique (ruby), sans alignement sur la tablature.
       Variantes : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
