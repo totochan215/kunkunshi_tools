@@ -163,8 +163,8 @@ TECHNIQUE_SUFFIXES = {
     # vide), pendant creux du ｀ plein de uchi-utu. ＂ (U+FF02) normalisé en `"`.
     '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
           'pos': 'top-right', 'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
-    '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '┗', 'pos': 'top-right',
-          'rotate': 180, 'scale': 0.75, 'dx': 0.85, 'dy': -1.20},
+    '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
+          'scale': 0.9, 'dx': 0.85, 'dy': -1.20},
     'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
           'dx': 0.45, 'dy': 0.15},
     '<': {'name': 'kachi-utu', 'type': 'char',   'symbol': '┗', 'pos': 'bottom-left',
