@@ -82,3 +82,18 @@ r = subprocess.run([sys.executable, 'kkml_cleaner.py', '-n', '/dev/null'],
                    capture_output=True, text=True)
 assert r.returncode == 1 and "ERREUR" in r.stderr
 print("OK erreur fatale fichier vide")
+
+# 12. normalisation ＂ (U+FF02) -> " (nuchi-utu)
+t12 = "::tab\n合＂\n::\n"
+out, err, rc = run_clean(t12)
+assert '合"' in out, out
+o2, _, _ = run_clean(out)
+assert out == o2, 'non idempotent'
+print("OK normalisation ＂ -> \" (nuchi-utu), idempotent")
+
+# 13. rendu kkml2svg : 合" produit le glyphe ゜ (U+309C)
+sys.path.insert(0, os.getcwd())
+import kkml2svg as _k
+_svg = _k.render_svg(_k.parse_kkml('::tab\n合\"\n::\n'))[0]
+assert '゜' in _svg and '合' in _svg
+print("OK rendu nuchi-utu : glyphe ゜ dans le SVG")

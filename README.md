@@ -4,7 +4,7 @@ Outils d'édition de tablatures 工工四 (kunkunshi) pour le sanshin d'Okinawa.
 Python 3 autonome, aucune dépendance hors stdlib.
 En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 
-Attribution : projet réalisé en partie par intelligence artificielle (https://chat.mistral.ai/)
+Attribution : projet réalisé en partie par intelligence artificielle (https://chat.mistral.ai/code/)
 
 - Pipeline 1 : Saisie graphique dans l'éditeur Portama → JSON Portama → KKML → Finalisation en KKML
 - Pipeline 2 : Saisie texte en KKML → SVG (ou PDF) → Impression ou utilisation dans un logiciel d'édition
@@ -25,7 +25,7 @@ Le convertisseur (`portama2kkml.py`) mappe :
 - PUA → kanji (carte complète E000–E044)
 - Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B)
 - `acc: "sharp"/"flat"` → ♯/♭
-- `orn: "k"/"u"/"nu"` → `^` / `*` / `n`
+- `orn: "k"/"u"/"nu"` → `^` / `'` / `"`
 - `repeatStart/repeatEnd` → `|:` / `:|`
 - `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons)
 - Nombre de dans : déduit de `score`, jamais de `numDans`
@@ -47,7 +47,7 @@ Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizon
 (idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
 
     python3 kkml_cleaner.py morceau.kkml        # réécrit le fichier en place
-    python3 kkml_cleaner.py -n morceau.kkml     # mode test : affiche sur stdout, original intact
+    python3 kkml_cleaner.py -n morceau.kkml     # mode test
     python3 kkml_cleaner.py -n -o clean.kkml morceau.kkml
 
 ### kkml2pdf.py
@@ -90,7 +90,7 @@ Exemple :
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
 - Sections :
     - `::tab` — tablature, 1 figure par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche,
-      `|:` `:|` = répétition de l'intro, `(:` `:)` = boucle vocale, `' ^ v < s` = ornements (caractères de technique).
+      `|:` `:|` = boucle instrumentale, `(:` `:)` = boucle vocale, `' " ^ v < s` = ornements (caractères de technique).
     - `::vocal` — paroles en phonétique alignées sur la tablature,
     - `::lyrics` — paroles complètes avec support éventuel du guide phonétique (ruby), sans alignement sur la tablature.
       Variantes : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
@@ -101,9 +101,9 @@ Détail complet : [docs/notation.md](docs/notation.md) et [docs/kkml-format.md](
 ## Documentation
 
 - [docs/kkml-format.md](docs/kkml-format.md) — syntaxe et règles du format KKML
-- [docs/notation.md](docs/notation.md) — notation musicale (positions, modes rythmiques, souhou, vocal etc.)
-- [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama sur la base de sa rétro-ingénierie
-- [docs/svg-layout.md](docs/svg-layout.md) — layout SVG (dimensions, constantes, colonne marker)
+- [docs/notation.md](docs/notation.md) — notation musicale kunkunshi (positions, modes rythmiques, technique, vocal etc.)
+- [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama
+- [docs/svg-layout.md](docs/svg-layout.md) — description des mises en page SVG (dimensions, constantes, etc.)
 
 La roadmap du projet et le contexte technique pour contributeurs/agents IA sont dans [AGENTS.md](AGENTS.md).
 
