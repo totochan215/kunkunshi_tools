@@ -1908,39 +1908,48 @@ def _tuto_title_page(song, W, H):
     return "\n".join(out)
 
 
-def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, marker_h, fs, opts, sec_title):
+def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, marker_w, fs, opts, sec_title):
+    # Une page = jusqu'à page_dans rows (dans) de cols cases. Si marker_w > 0,
+    # bande marker verticale à DROITE de chaque dan (style Portama paysage) :
+    # séparateur vertical, syllabes ::vocal alignées sur les cases, flèches
+    # de répétition et marqueurs de boucle dans la bande.
     out = _tuto_svg_open(W, H)
     y0 = mt
     if sec_title:
         out.append(f'<text x="{W - 16:g}" y="14" text-anchor="end" font-family="serif" '
                    f'font-size="12" fill="#999">{escape(sec_title)}</text>')
         y0 += 10
+    strip_x = ml + cols * cell_w
+    syl_fs = int(fs * 0.6)
     for r, row in enumerate(rows):
-        y = y0 + r * (marker_h + cell_h)
-        if marker_h and vrows:
-            vrow = vrows[r] if r < len(vrows) else []
-            for idx, syl in enumerate(vrow):
-                if syl and syl != "-":
-                    out.append(f'<text x="{ml + idx * cell_w + cell_w / 2:g}" y="{y + marker_h - 3:g}" '
-                               f'text-anchor="middle" font-family="serif" '
-                               f'font-size="{int(fs * 0.6)}" fill="#333">{escape(syl)}</text>')
+        y = y0 + r * cell_h
         for idx in range(len(row)):
             x = ml + idx * cell_w
-            out.append(f'<rect x="{x:g}" y="{y + marker_h:g}" width="{cell_w:g}" '
+            out.append(f'<rect x="{x:g}" y="{y:g}" width="{cell_w:g}" '
                        f'height="{cell_h:g}" fill="none" stroke="#999" stroke-width="0.75"/>')
+        if marker_w:
+            out.append(f'<line x1="{strip_x:g}" y1="{y:g}" x2="{strip_x:g}" y2="{y + cell_h:g}" '
+                       f'stroke="#999" stroke-width="0.75"/>')
         for idx, tok in enumerate(row):
             x = ml + idx * cell_w
             rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-            render_cell(out, base_tok, x + cell_w / 2, y + marker_h + cell_h / 2, fs,
-                        cell_w, cell_h, opts)
-            if rs:
-                _render_repeat_arrow(out, x + cell_w * 0.85, y + marker_h, cell_h, cell_w * 0.15, 'start')
-            if re_:
-                _render_repeat_arrow(out, x + cell_w * 0.85, y + marker_h, cell_h, cell_w * 0.15, 'end')
-            if vs:
-                _render_vrep_marker(out, x + cell_w * 0.85, y + marker_h, cell_h, cell_w * 0.15, 'start')
-            if ve:
-                _render_vrep_marker(out, x + cell_w * 0.85, y + marker_h, cell_h, cell_w * 0.15, 'end')
+            render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
+                        cell_w, cell_h, opts, orient="h")
+            if marker_w:
+                mx = strip_x + marker_w / 2
+                if rs or re_ or vs or ve:
+                    ay = y + cell_h * (0.30 if (rs or vs) else 0.70)
+                    glyph = (chr(0x2193) if rs else chr(0x2191) if re_
+                             else chr(0x25CB) if vs else chr(0x25A1))
+                    out.append(f'<text x="{mx:g}" y="{ay + fs * 0.3:g}" text-anchor="middle" '
+                               f'font-family="serif" font-size="{int(fs * 0.8)}" '
+                               f'fill="black">{glyph}</text>')
+                if vrows and r < len(vrows) and idx < len(vrows[r]):
+                    syl = vrows[r][idx]
+                    if syl and syl != "-":
+                        out.append(f'<text x="{mx:g}" y="{y + cell_h * 0.72 + syl_fs / 3:g}" '
+                                   f'text-anchor="middle" font-family="serif" '
+                                   f'font-size="{syl_fs}" fill="#333">{escape(syl)}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -1975,12 +1984,11 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts):
     if page_dans is None:
         page_dans = TUTO_DEFAULT_DANS
     ml = mr = mt = mb = 16
-    has_vocal = any(kind == "tab" and vocal for (_, _, kind, vocal) in sections)
-    fs = max(8, int(((H - mt - mb) / page_dans) * 0.38))  # ratio fs/case ~0,38 (Portama)
-    marker_h = int(fs * 1.2) if (marker and has_vocal) else 0  # ligne marker au-dessus de chaque dan
-    cell_h = (H - mt - mb - page_dans * marker_h) / page_dans
-    fs = max(8, int(cell_h * 0.38))
-    cell_w = (W - ml - mr) / cols
+    # Bande marker verticale à droite de chaque dan (si @marker on)
+    marker_w = int((W - ml - mr) / cols * 0.5) if marker else 0
+    cell_w = (W - ml - mr - marker_w) / cols
+    cell_h = (H - mt - mb) / page_dans
+    fs = max(8, int(cell_h * 0.38))  # ratio fs/case ~0,38 (calibrage Portama)
 
     pages = [_tuto_title_page(song, W, H)]
     for sec_title, content, kind, vocal in sections:
@@ -1992,7 +2000,7 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts):
             pages.append(_tuto_tab_page(rows[start:start + page_dans],
                                         vrows[start:start + page_dans],
                                         W, H, ml, mt, cols, cell_w, cell_h,
-                                        marker_h, fs, opts, sec_title))
+                                        marker_w, fs, opts, sec_title))
     for sec_title, content, kind, vocal in sections:
         if kind == "lyrics" and any(ln for ln in content):
             pages.extend(_tuto_lyrics_pages(content, W, H, opts))
@@ -2288,7 +2296,7 @@ def _warn_unknown_token(tok):
               file=sys.stderr)
 
 
-def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
+def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v"):
     """Affiche un token dans une cellule.
 
     Modes rythmiques :
@@ -2510,8 +2518,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
             main_tech.insert(0, main_note[-1])
             main_note = main_note[:-1]
 
-        # Cercle autour du 尺 principal si @shaku_circled on
-        if main_note == "尺" and opts.get('shaku_circled'):
+        # Cercle autour du SHARP principal si @shaku_circled on
+        if main_note == "尖" and opts.get('shaku_circled'):
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
@@ -2524,21 +2532,33 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
 
         if straddle_note:
             ss_pos = int(fs * 0.713)
-            straddle_y = cy + cell_h * 0.50 + ss_pos/3
             ss = int(effective_fs * 0.713)
-            # Cercle autour du 尺 à cheval si @shaku_circled on
-            if straddle_note == "尺" and opts.get('shaku_circled'):
+            if orient == "h":
+                # horizontal : la note à cheval chevauche la bordure DROITE (verticale)
+                straddle_x = cx + cell_w * 0.50 + ss_pos / 3
+                straddle_y = cy + fs * 0.318
+            else:
+                # vertical : chevauche la bordure INFÉRIEURE (horizontale)
+                straddle_x = cx
+                straddle_y = cy + cell_h * 0.50 + ss_pos / 3
+            # Cercle autour du SHARP à cheval si @shaku_circled on
+            if straddle_note == "尖" and opts.get('shaku_circled'):
                 r = ss * 0.713
-                out.append(f'<circle cx="{cx}" cy="{straddle_y - ss * 0.35}" r="{r}" '
+                ccx, ccy = (straddle_x, cy + 2) if orient == "h" else (cx, straddle_y - ss * 0.35)
+                out.append(f'<circle cx="{ccx}" cy="{ccy}" r="{r}" '
                            f'fill="none" stroke="black" stroke-width="0.8"/>')
-            out.append(f'<text x="{cx}" y="{straddle_y}" '
+            out.append(f'<text x="{straddle_x}" y="{straddle_y}" '
                        f'text-anchor="middle" font-family="serif" '
                        f'font-size="{ss}" fill="black">'
                        f'{_note_svg(straddle_note, ss, opts)}</text>')
             # Les techniques de fin de token s'appliquent à la note à cheval :
             if tech_suffixes:
-                _render_techniques(out, tech_suffixes, cx, straddle_y - fs * 0.318,
-                                   cell_w, cell_h, effective_fs)
+                if orient == "h":
+                    _render_techniques(out, tech_suffixes, straddle_x, cy,
+                                       cell_w, cell_h, effective_fs)
+                else:
+                    _render_techniques(out, tech_suffixes, cx, straddle_y - fs * 0.318,
+                                       cell_w, cell_h, effective_fs)
         else:
             # Pas de note à cheval : les techniques s'appliquent à la note principale
             _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
@@ -2557,13 +2577,21 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         # "(:合"), la note est parts[1] et parts[0] est vide.
         if koe and not parts[0] and parts[1]:
             parts = (parts[1], "")
-        y_main = cy + fs * 0.318 if koe else cy - fs * 0.18 + sh_pos/3
-        out.append(f'<text x="{cx}" y="{y_main}" '
+        if orient == "h":
+            # horizontal : deux notes côte à côte (gauche/droite)
+            y_main = y_lower = cy + fs * 0.318
+            x_main = cx if koe else cx - fs * 0.18 + sh_pos / 3
+            x_lower = cx + fs * 0.42 + sh_pos / 3
+        else:
+            x_main = x_lower = cx
+            y_main = cy + fs * 0.318 if koe else cy - fs * 0.18 + sh_pos / 3
+            y_lower = cy + fs * 0.42 + sh_pos / 3
+        out.append(f'<text x="{x_main}" y="{y_main}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="{sh}" fill="black">{_note_svg(parts[0], sh, opts)}</text>')
         lower = parts[1] if len(parts) > 1 else ""
         if lower:
-            out.append(f'<text x="{cx}" y="{cy + fs * 0.42 + sh_pos/3}" '
+            out.append(f'<text x="{x_lower}" y="{y_lower}" '
                        f'text-anchor="middle" font-family="serif" '
                        f'font-size="{sh}" fill="black">'
                        f'{_note_svg(lower, sh, opts)}</text>')

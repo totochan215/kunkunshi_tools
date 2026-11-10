@@ -163,6 +163,7 @@ https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases 
 - Canvas de taille fixe en pixels, pilotée par `@tuto_block LxH` (défaut `1280x720`) : chaque page SVG fait exactement `LxH`.
 - `@cells_per_dan` / `-c` = cases par dan (défaut 8 en tuto, 12 sinon) ; `@page_dans` / `-p` = dans par page (défaut 7 en tuto).
 - **Page 1 à part** : titre, accordage, auteur/compositeur/etc. centrés seuls sur la page.
-- Pages suivantes : la tablature, découpée en pages de `page_dans` dans max ; si `::vocal` est présent et `@marker on`, une ligne marker (syllabes) surmonte chaque dan.
+- Pages suivantes : la tablature, découpée en pages de `page_dans` dans max ; si `@marker on`, une **bande marker verticale à droite de chaque dan** (séparateur vertical, syllabes `::vocal` alignées sur les cases, flèches de répétition ↓/↑ et marqueurs de boucle dans la bande).
+- En layout horizontal (`horizontal`, `tuto`), la note à cheval d'une croche `A/B` chevauche la bordure **droite** (verticale) de la case, et les deux notes d'un shuffle `A:B` sont côte à côte ; en vertical, le straddle chevauche la bordure inférieure (`render_cell(..., orient="h")` vs `"v"`).
 - Les sections `::lyrics` sont rendues sur des pages dédiées après la tablature.
 - Sortie multipage : `fichier-1.svg` (titre), `fichier-2.svg`… (tablature), puis les paroles.
