@@ -98,6 +98,8 @@ ORN_TO_SUFFIX = {
     "u": "'",   # uchi-utu (打音) — confirmé (かぎやで風節, てぃんさぐぬ花)
     "k": "^",   # kaki-utu (掛音) — confirmé (十九の春 : 9 occurrences,
                 # validées manuellement par l'utilisateur)
+    "nu": '"',  # nuchi-utu = uchi-nuchi-utu (打ち抜き音, PUA U+E033)
+                # suffixe `"` (U+0022), jumeau de `'` (uchi-utu) ; `n` exclu (collision romaji)
     # Hypothèses (non confirmées) :
     # "a": "v",  # aki-utu ?
     # "c": "<",  # kachi-utu ?
