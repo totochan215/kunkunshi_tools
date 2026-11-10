@@ -2569,6 +2569,17 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     # --- shuffle 早弾き : A:B (deux notes égales, empilées) --- #
     if ":" in base_tok:
         parts = base_tok.split(":", 1)
+        # Token ":X" ou "X:" (une seule note, ex. "(:X" / "X:)" après strip des
+        # parenthèses au parsing) : la note est rendue CENTRÉE, taille pleine
+        # (comme une noire) — pas décalée dans le slot "lower" du shuffle.
+        if len(parts) == 2 and (not parts[0] or not parts[1]):
+            lone = parts[0] or parts[1]
+            if lone:
+                out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
+                           f'font-family="serif" font-size="{fs}" fill="black">'
+                           f'{_note_svg(lone, fs, opts)}</text>')
+                _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+                return
         # En présence d'une borne de chant ( / ), les deux notes du shuffle
         # gardent la taille pleine (fs) : la borne est un petit glyphe à part.
         koe = koe_prefix or koe_suffix
