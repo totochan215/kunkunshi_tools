@@ -97,3 +97,14 @@ import kkml2svg as _k
 _svg = _k.render_svg(_k.parse_kkml('::tab\n合\"\n::\n'))[0]
 assert '゜' in _svg and '合' in _svg
 print("OK rendu nuchi-utu : glyphe ゜ dans le SVG")
+
+# 14. layout tuto : bloc 1280x720, page titre + pages tab (8 cases/dan, 7 dans/page)
+t14 = "@title t\n@layout tuto\n::tab\n合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合\n::\n::lyrics\ntest\n::\n"
+song = _k.parse_kkml(t14)
+assert song.layout == "tuto"
+svgs = _k.render_svg(song)
+assert all('width="1280"' in s and 'height="720"' in s for s in svgs), 'canvas non WxH'
+assert len(svgs) == 3, len(svgs)  # 1 titre + 1 tab (20/8 = 3 dans <= 7) + 1 lyrics
+svgs2 = _k.render_svg(_k.parse_kkml(t14.replace('合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合', '合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合')))
+assert len(svgs2) == 4, len(svgs2)  # 60/8 = 8 dans -> 2 pages tab
+print("OK layout tuto : pages 1280x720, 8 cases/dan, 7 dans/page")

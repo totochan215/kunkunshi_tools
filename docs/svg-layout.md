@@ -156,9 +156,13 @@ Cette mise en page n'est pas encore documentée.
 
 ### Mise en page pour tutoriel vidéo (`@layout tuto`)
 
-Le layout `tuto` permet de créer des vidéos tutorielles sur l'exemple de https://www.youtube.com/watch?v=GvcZoeCbIPQ
-La mise en page est au format horizontal. Le nombre de dans et le nombre de cases par dan sont pilotés par les métadonnées, de même que la largeur et la hauteur du bloc en pixels. L'ensemble se lit de gauche à droite et de haut en bas.
+Le layout `tuto` produit des tablatures destinées aux vidéos tutorielles, sur l'exemple de
+https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases par dan**, **7 dans par page**).
 
-Le titre, l'accordage et d'autres informations sont rendus sur une page à part.
-
-Cette mise en page n'est pas encore documentée.
+- Format horizontal : lecture de gauche à droite et de haut en bas (comme `@layout horizontal`).
+- Canvas de taille fixe en pixels, pilotée par `@tuto_block LxH` (défaut `1280x720`) : chaque page SVG fait exactement `LxH`.
+- `@cells_per_dan` / `-c` = cases par dan (défaut 8 en tuto, 12 sinon) ; `@page_dans` / `-p` = dans par page (défaut 7 en tuto).
+- **Page 1 à part** : titre, accordage, auteur/compositeur/etc. centrés seuls sur la page.
+- Pages suivantes : la tablature, découpée en pages de `page_dans` dans max ; si `::vocal` est présent et `@marker on`, une ligne marker (syllabes) surmonte chaque dan.
+- Les sections `::lyrics` sont rendues sur des pages dédiées après la tablature.
+- Sortie multipage : `fichier-1.svg` (titre), `fichier-2.svg`… (tablature), puis les paroles.

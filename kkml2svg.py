@@ -13,7 +13,7 @@ Layout vertical (défaut) : les cases se lisent de haut en bas et de
 droite à gauche, comme dans les kunkunshi traditionnels.
 Layout horizontal : de gauche à droite et de haut en bas (style songbook).
 
-Métadonnée @layout vertical|horizontal dans le .kkml, ou -l/--layout en CLI.
+Métadonnée @layout vertical|horizontal|nomura|chindami|tuto dans le .kkml, ou -l/--layout en CLI.
 
 Options supplémentaires en-tête KKML (défauts : @layout vertical,
 @marker on, @font_style mincho, @shaku_circled off, @shaku_sharp off) :
@@ -244,7 +244,7 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "shaku_circled", "shaku_sharp", "speed", "font_style",
-             "page_dans"}
+             "page_dans", "tuto_block"}
 class Song:
     def __init__(self):
         self.meta = {}
@@ -313,7 +313,7 @@ def parse_kkml(text):
                 except ValueError:
                     pass
             elif key == "layout":
-                song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami") else "vertical"
+                song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami", "tuto") else "vertical"
             else:
                 song.meta[key] = val
             i += 1
@@ -446,7 +446,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     # (vertical/horizontal : 12, chindami/nomura : imposé par la page), et
     # -c ne s'applique qu'aux layouts libres (vertical/horizontal).
     if cols is None:
-        cols = 12
+        cols = TUTO_DEFAULT_COLS if layout == "tuto" else 12
     if layout in ("chindami", "nomura"):
         cols = None  # ignoré : le layout fixe ses propres cases/dan
 
@@ -523,6 +523,8 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         svgs = _render_chindami(song, sections, font_size, marker, opts)
     elif layout == "nomura":
         svgs = _render_nomura(song, sections, font_size, marker, opts)
+    elif layout == "tuto":
+        svgs = _render_tuto(song, sections, cols, page_dans, marker, opts)
     elif layout == "vertical":
         svgs = _render_vertical(song, sections, cols, cell_w, cell_h,
                                 font_size, MARGIN_L, MARGIN_R, MARGIN_T, header_h,
@@ -1813,6 +1815,171 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     out.append("</svg>")
     return "\n".join(out)
 
+# --------------------------------------------------------------------------- #
+# 3c. Rendu tuto (tutoriels video) - horizontal, bloc de taille fixe en pixels
+# --------------------------------------------------------------------------- #
+# Spec : docs/svg-layout.md ("Mise en page pour tutoriel video"). Exemple :
+# https://www.youtube.com/watch?v=GvcZoeCbIPQ, calibre sur la video :
+# 8 cases/dan, 7 dans/page. Page 1 = titre/accordage/infos seuls ; pages
+# suivantes = tablature horizontale (gauche->droite, haut->bas), canvas
+# exactement WxH (@tuto_block, defaut 1280x720).
+TUTO_DEFAULT_BLOCK = (1280, 720)
+TUTO_DEFAULT_COLS = 8    # cases par dan (video exemple)
+TUTO_DEFAULT_DANS = 7    # dans par page (video exemple)
+
+
+def _tuto_block_size(song):
+    raw = (song.meta.get("tuto_block") or "").strip().lower()
+    if raw:
+        parts = raw.split("x")
+        if len(parts) == 2:
+            try:
+                w, h = int(parts[0]), int(parts[1])
+                if w > 0 and h > 0:
+                    return w, h
+            except ValueError:
+                pass
+        _warn_once("@tuto_block '%s' illisible, defaut %dx%d" % (raw, *TUTO_DEFAULT_BLOCK))
+    return TUTO_DEFAULT_BLOCK
+
+
+def _tuto_svg_open(W, H):
+    return ['<?xml version="1.0" encoding="UTF-8"?>',
+            f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
+            f'viewBox="0 0 {W} {H}">',
+            '<rect width="100%" height="100%" fill="white"/>']
+
+
+def _tuto_title_page(song, W, H):
+    # Page a part : titre, accordage et autres infos, centres.
+    out = _tuto_svg_open(W, H)
+    cx = W / 2
+    y = H * 0.40
+    title = song.meta.get("title", "")
+    fs_t = max(12, int(H * 0.07))
+    if title:
+        segs = _parse_ruby(title)
+        if _has_ruby(segs):
+            est = sum(len(s["text"]) * fs_t * 0.55 for s in segs)
+            _render_horizontal_text(out, title, cx - est / 2, y, fs_t, "black")
+        else:
+            out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
+                       f'font-size="{fs_t}" fill="black">{escape(title)}</text>')
+        y += fs_t * 1.6
+    tuning = song.meta.get("tuning", "")
+    if tuning:
+        out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
+                   f'font-size="{max(10, int(H * 0.035))}" fill="#555">{escape(tuning)}</text>')
+        y += H * 0.06
+    lines = []
+    genre = song.meta.get("genre", "")
+    author = song.meta.get("author", "")
+    if genre and genre != author:
+        lines.append(genre)
+    if author:
+        lines.append(author)
+    for k in ("composer", "lyricist", "origin"):
+        v = song.meta.get(k, "")
+        if v:
+            lines.append(v)
+    for ln in lines:
+        out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
+                   f'font-size="{max(9, int(H * 0.028))}" fill="#777">{escape(ln)}</text>')
+        y += H * 0.05
+    out.append("</svg>")
+    return "\n".join(out)
+
+
+def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, marker_h, fs, opts, sec_title):
+    out = _tuto_svg_open(W, H)
+    y0 = mt
+    if sec_title:
+        out.append(f'<text x="{W - 16:g}" y="14" text-anchor="end" font-family="serif" '
+                   f'font-size="12" fill="#999">{escape(sec_title)}</text>')
+        y0 += 10
+    for r, row in enumerate(rows):
+        y = y0 + r * (marker_h + cell_h)
+        if marker_h and vrows:
+            vrow = vrows[r] if r < len(vrows) else []
+            for idx, syl in enumerate(vrow):
+                if syl and syl != "-":
+                    out.append(f'<text x="{ml + idx * cell_w + cell_w / 2:g}" y="{y + marker_h - 3:g}" '
+                               f'text-anchor="middle" font-family="serif" '
+                               f'font-size="{int(fs * 0.6)}" fill="#333">{escape(syl)}</text>')
+        for idx in range(len(row)):
+            x = ml + idx * cell_w
+            out.append(f'<rect x="{x:g}" y="{y + marker_h:g}" width="{cell_w:g}" '
+                       f'height="{cell_h:g}" fill="none" stroke="#999" stroke-width="0.75"/>')
+        for idx, tok in enumerate(row):
+            x = ml + idx * cell_w
+            rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
+            render_cell(out, base_tok, x + cell_w / 2, y + marker_h + cell_h / 2, fs,
+                        cell_w, cell_h, opts)
+            if rs:
+                _render_repeat_arrow(out, x + cell_w * 0.85, y + marker_h, cell_h, cell_w * 0.15, 'start')
+            if re_:
+                _render_repeat_arrow(out, x + cell_w * 0.85, y + marker_h, cell_h, cell_w * 0.15, 'end')
+            if vs:
+                _render_vrep_marker(out, x + cell_w * 0.85, y + marker_h, cell_h, cell_w * 0.15, 'start')
+            if ve:
+                _render_vrep_marker(out, x + cell_w * 0.85, y + marker_h, cell_h, cell_w * 0.15, 'end')
+    out.append("</svg>")
+    return "\n".join(out)
+
+
+def _tuto_lyrics_pages(lines, W, H, opts):
+    fs = max(9, int(H * 0.035))
+    sp = int(fs * 1.6)
+    per_page = max(1, int((H - 32) // sp))
+    pages = []
+    for start in range(0, len(lines), per_page):
+        out = _tuto_svg_open(W, H)
+        y = 32
+        for ln in lines[start:start + per_page]:
+            if ln == "":
+                y += sp
+                continue
+            if _has_ruby(_parse_ruby(ln)):
+                _render_horizontal_text(out, ln, 16, y, fs, "#444")
+            else:
+                out.append(f'<text x="16" y="{y}" font-family="serif" '
+                           f'font-size="{fs}" fill="#444">{escape(ln)}</text>')
+            y += sp
+        out.append("</svg>")
+        pages.append("\n".join(out))
+    return pages
+
+
+def _render_tuto(song, sections, cols, page_dans, marker, opts):
+    W, H = _tuto_block_size(song)
+    if cols is None:
+        cols = TUTO_DEFAULT_COLS
+    if page_dans is None:
+        page_dans = TUTO_DEFAULT_DANS
+    ml = mr = mt = mb = 16
+    has_vocal = any(kind == "tab" and vocal for (_, _, kind, vocal) in sections)
+    fs = max(8, int(((H - mt - mb) / page_dans) * 0.38))  # ratio fs/case ~0,38 (Portama)
+    marker_h = int(fs * 1.2) if (marker and has_vocal) else 0  # ligne marker au-dessus de chaque dan
+    cell_h = (H - mt - mb - page_dans * marker_h) / page_dans
+    fs = max(8, int(cell_h * 0.38))
+    cell_w = (W - ml - mr) / cols
+
+    pages = [_tuto_title_page(song, W, H)]
+    for sec_title, content, kind, vocal in sections:
+        if kind != "tab":
+            continue
+        rows = _wrap_horizontal(content, cols)
+        vrows = _wrap_horizontal(vocal, cols) if vocal else []
+        for start in range(0, len(rows), page_dans):
+            pages.append(_tuto_tab_page(rows[start:start + page_dans],
+                                        vrows[start:start + page_dans],
+                                        W, H, ml, mt, cols, cell_w, cell_h,
+                                        marker_h, fs, opts, sec_title))
+    for sec_title, content, kind, vocal in sections:
+        if kind == "lyrics" and any(ln for ln in content):
+            pages.extend(_tuto_lyrics_pages(content, W, H, opts))
+    return pages
+
 
 def _wrap_horizontal(tokens, cols):
     return [tokens[i : i + cols] for i in range(0, len(tokens), cols)]
@@ -2755,7 +2922,7 @@ def main():
     ap.add_argument("-o", "--output", help="fichier SVG de sortie")
     ap.add_argument("-c", "--cells-per-dan", dest="cols", type=int,
                     help="cellules par dan : lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
-    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami"],
+    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami", "tuto"],
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
                     help="nombre max de dans par page (pagination multipage, surcharge @page_dans)")

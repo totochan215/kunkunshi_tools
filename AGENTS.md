@@ -329,6 +329,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - ✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (e288f91…).
 - ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées (7 dans virtuels max/page), jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
 - ✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx inchangée, ruby collé à droite, centrage du dan virtuel préservé (42d6699).
+- 🚧 (2026-11-10) Layout `tuto` (POC) : horizontal, canvas WxH fixe (`@tuto_block`, défaut 1280x720), 8 cases/dan et 7 dans/page (calibré sur la vidéo exemple https://www.youtube.com/watch?v=GvcZoeCbIPQ), page 1 = titre/accordage/infos seuls, ligne marker au-dessus de chaque dan si `::vocal` + `@marker on`. Reste : calage visuel fin (fs, marges) et SVG de référence d'un échantillon.
 - ⚪︎ Modèle chindami (paysage < A4) — en attente d'exemples.
 - ⚪︎ Modèle Paris Sanshin Club (paysage A4 + n° de recueil) — en attente d'exemples.
 - ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.
