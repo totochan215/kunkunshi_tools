@@ -2535,7 +2535,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             ss = int(effective_fs * 0.713)
             if orient == "h":
                 # horizontal : la note à cheval chevauche la bordure DROITE (verticale)
-                straddle_x = cx + cell_w * 0.50 + ss_pos / 3
+                # le kanji à cheval est CENTRÉ sur la bordure droite (verticale) ;
+                # l’ornement suit (positionné depuis straddle_x)
+                straddle_x = cx + cell_w * 0.50
                 straddle_y = cy + fs * 0.318
             else:
                 # vertical : chevauche la bordure INFÉRIEURE (horizontale)
