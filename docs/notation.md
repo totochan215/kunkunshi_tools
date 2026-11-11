@@ -318,6 +318,7 @@ Apposés après le caractère de position dans la figure KKML. Peuvent se combin
 `(` et `)` sont des bornes de chant, pas des techniques de main : elles s'adressent au chanteur pour placer ses respirations. Source : 世禮國男, 増訂琉球音樂樂典, p. 9 ((10) ○ 声だし, 区画中右方) et p. 26 ((ホ)(1) ○□ 声出 声切) — le ○ marque le début du chant, le □ la fin. Elles se placent DANS la case (côté droit), pas dans la colonne marker — le traité précise qu'elles devraient être en colonne vocale mais sont dans la case par manque de place. Syntaxe mnémotechnique : `(` ouvre la bouche — c'est un PRÉFIXE, placé avant le kanji (ex. `(中`) car on ouvre la bouche avant la note ; `)` la ferme — c'est un SUFFIXE, placé après (ex. `尺)`) car on ferme la bouche après la note. Les deux bornes peuvent cohabiter sur une même note : `(中)` = 声だし + 中 + 声切り. Variantes pleine chasse （ ） acceptées (tolérance IME). Se combinent avec les autres suffixes (ex. `(尺)'`).
 
 DÉPRÉCIÉ : `|(`, `)|` — anciennement symboles autonomes occupant leur case (comme `|:` et `:|`) — ils représentent la répétition du chant (vocalRepStart/vocalRepEnd de Portama), section reprise au chant ou à la piste suivante. Rendu : ○ et □ à 75% de fs, centrés dans la case. Ils ne sont pas attachés à une note, contrairement aux suffixes `(` `)`.
+Rendu : les parenthèses `(`/`)` sont du *inline formatting* — interprétées au parse, **jamais rendues** comme caractères dans le layout (horizontal et vertical). En layout `tuto`, les symboles ○/□ eux-mêmes ne sont pas rendus pour le moment.
 
 ## Options d'en-tête KKML
 

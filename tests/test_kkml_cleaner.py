@@ -175,3 +175,11 @@ ruby20 = next(m for m in ms20 if m.group(3) == chr(0x306f)+chr(0x306a))  # は�
 fs20 = int(base20.group(2))
 assert float(base20.group(1)) - float(ruby20.group(1)) >= 0.85 * fs20, (base20.group(1), ruby20.group(1), fs20)
 print("OK tuto titre : ruby au-dessus du haut de la base, sans chevauchement")
+
+# 21. tuto + vertical : parenthèses de koedashi/koekiri jamais rendues (inline formatting)
+t21 = "@layout tuto\n::tab\n" + chr(0x4E2D) + "\n::\n::vocal\n(" + chr(0x3042) + " " + chr(0x3044) + ")\n::\n"
+for lay in ("tuto", "vertical"):
+    s21 = _k.render_svg(_k.parse_kkml(t21), layout=lay)[1 if lay == "tuto" else 0]
+    texts21 = _re.findall(r'<text[^>]*>([^<]*)</text>', s21)
+    assert all('(' not in x and ')' not in x for x in texts21), (lay, texts21)
+print("OK parenthèses non rendues (tuto + vertical)")
