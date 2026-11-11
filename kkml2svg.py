@@ -1037,10 +1037,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
                     if lyrics_here else 0)
         total_w = CHINDAMI_PAGE_W
         total_h = CHINDAMI_PAGE_H
-        out = ['<?xml version="1.0" encoding="UTF-8"?>',
-               f'<svg xmlns="http://www.w3.org/2000/svg" width="{total_w}" height="{total_h}" '
-               f'viewBox="0 0 {total_w} {total_h}">',
-               '<rect width="100%" height="100%" fill="white"/>']
+        out = _svg_open_print(total_w, total_h, 23, 15)  # page 23 x 15 cm, 600 dpi
 
         # Titre vertical à droite de la page 1, surmonté du n° de morceau
         if is_first and (title or musicno):
@@ -1259,11 +1256,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
 
         out = []
         out.append('<?xml version="1.0" encoding="UTF-8"?>')
-        out.append(
-            f'<svg xmlns="http://www.w3.org/2000/svg" '
-            f'width="{NOMURA_PAGE_W}" height="{NOMURA_PAGE_H}" '
-            f'viewBox="0 0 {NOMURA_PAGE_W} {NOMURA_PAGE_H}">')
-        out.append(f'<rect width="100%" height="100%" fill="white"/>')
+        out.extend(_svg_open_print(NOMURA_PAGE_W, NOMURA_PAGE_H, 21, 29.7)[1:])  # A4, 600 dpi
 
         # filet de cadre (origine du placement relatif)
         out.append(f'<rect x="{frame_x0}" y="{frame_y0}" '
@@ -1913,6 +1906,21 @@ def _tuto_block_size(song):
                 pass
         _warn_once("@tuto_block '%s' illisible, defaut %dx%d" % (raw, *TUTO_DEFAULT_BLOCK))
     return TUTO_DEFAULT_BLOCK
+
+
+TARGET_DPI = 600  # résolution cible d'impression, déclarée dans le SVG (Inkscape la détecte)
+
+
+def _svg_open_print(w_pt, h_pt, w_cm, h_cm, dpi=TARGET_DPI):
+    # Racine SVG : format physique en cm (width/height), viewBox en pt (1 unité = 1 pt
+    # à l'impression), et dpi d'export Inkscape -> détection auto du format + résolution.
+    return ['<?xml version="1.0" encoding="UTF-8"?>',
+            f'<svg xmlns="http://www.w3.org/2000/svg" '
+            f'xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
+            f'width="{w_cm:g}cm" height="{h_cm:g}cm" '
+            f'viewBox="0 0 {w_pt:g} {h_pt:g}" '
+            f'inkscape:export-xdpi="{dpi}" inkscape:export-ydpi="{dpi}">',
+            '<rect width="100%" height="100%" fill="white"/>']
 
 
 def _tuto_svg_open(W, H):
