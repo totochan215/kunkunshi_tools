@@ -127,7 +127,7 @@ Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sorti
 
 ### Mise en page horizontale standard
 
-Cette mise en page n'est pas encore documentée.
+Lecture gauche→droite, haut→bas. Depuis la PR tuto, le layout `horizontal` partage avec `tuto` : le straddle des croches chevauche la **bordure droite** des cases (`render_cell(..., orient="h")`), et les syllabes `::vocal` sont rendues en bas de leur case avec la même répartition (`_draw_vocal_cell`, positions `x_i = cx + cell_w*i/n`).
 
 ## Mises en page complexes
 
@@ -156,9 +156,20 @@ Cette mise en page n'est pas encore documentée.
 
 ### Mise en page pour tutoriel vidéo (`@layout tuto`)
 
-Le layout `tuto` permet de créer des vidéos tutorielles sur l'exemple de https://www.youtube.com/watch?v=GvcZoeCbIPQ
-La mise en page est au format horizontal. Le nombre de dans et le nombre de cases par dan sont pilotés par les métadonnées, de même que la largeur et la hauteur du bloc en pixels. L'ensemble se lit de gauche à droite et de haut en bas.
+Le layout `tuto` produit des tablatures destinées aux vidéos tutorielles, sur l'exemple de
+https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases par dan**, **7 dans par page**).
 
-Le titre, l'accordage et d'autres informations sont rendus sur une page à part.
+- Format horizontal : lecture de gauche à droite et de haut en bas (comme `@layout horizontal`).
+- Canvas de taille fixe en pixels, pilotée par `@tuto_block LxH` (défaut `1280x720`) : chaque page SVG fait exactement `LxH`.
+- Marges : 16 px en haut/gauche/bas, **16 + 1/4 de case à droite** (les vocals sous le straddle de la dernière colonne ne touchent pas la bordure du SVG).
+- `@cells_per_dan` / `-c` = cases par dan (défaut 8 en tuto, 12 sinon) ; `@page_dans` / `-p` = dans par page (défaut 7 en tuto).
+- **Page 1 à part** : titre, accordage, auteur/compositeur/etc. centrés seuls sur la page.
+- Pages suivantes : la tablature, découpée en pages de `page_dans` dans max, **pleine largeur** (pas de bande marker en tuto : les flèches de répétition ↓/↑ ne sont pas rendues). Placement des syllabes `::vocal` dans leur case :
+- une seule syllabe, pas de point `.` : **sous la note principale** (centre de la case, x = cx), en bas de case ;
+- deux syllabes, pas de point (ex. `ぐさ`) : la 1re sous la note principale (x = cx), la 2e sous le straddle (bordure droite). Le découpage en syllabes rattache les petits kana et `ー` à la syllabe précédente (`ちゅ` = 1 syllabe, `やっく` = やっ+く, `まーし` = まー+し) — valable aussi en uchinaguchi/langues ryukyu ;
+- token avec point(s) (subdivision) : les éléments (points `・` gris #888 + syllabes) sont répartis **en bas de case**, toujours alignés sur la ligne des vocals ;
+  pour n éléments, position i = `cx + cell_w * i/n` : i=0 sous la note principale ; n=2 -> cx + bordure (straddle) ; n=3 (grille 3 unités/case des imports Portama) -> cx, cx+cw/3, cx+2cw/3 ; n=4 -> cx, cx+cw/4, cx+cw/2 (straddle), cx+3cw/4 (mi-chemin vers la case suivante) ;
 
-Cette mise en page n'est pas encore documentée.
+- En layout horizontal (`horizontal`, `tuto`), la note à cheval d'une croche `A/B` est **centrée sur la bordure droite** (verticale) de la case (l'ornement suit), et les deux notes d'un shuffle `A:B` sont côte à côte ; en vertical, le straddle chevauche la bordure inférieure (`render_cell(..., orient="h")` vs `"v"`).
+- Le bloc `::lyrics` n'est **pas** rendu en tuto.
+- Sortie multipage : `fichier-1.svg` (titre), `fichier-2.svg`… (tablature).

@@ -97,3 +97,234 @@ import kkml2svg as _k
 _svg = _k.render_svg(_k.parse_kkml('::tab\n合\"\n::\n'))[0]
 assert '゜' in _svg and '合' in _svg
 print("OK rendu nuchi-utu : glyphe ゜ dans le SVG")
+
+# 14. layout tuto : bloc 1280x720, page titre + pages tab (8 cases/dan, 7 dans/page)
+t14 = "@title t\n@layout tuto\n::tab\n合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合\n::\n::lyrics\ntest\n::\n"
+song = _k.parse_kkml(t14)
+assert song.layout == "tuto"
+svgs = _k.render_svg(song)
+assert all('width="1280"' in s and 'height="720"' in s for s in svgs), 'canvas non WxH'
+assert len(svgs) == 2, len(svgs)  # 1 titre + 1 tab (lyrics NON rendus en tuto)
+assert all('>test<' not in s for s in svgs)
+svgs2 = _k.render_svg(_k.parse_kkml(t14.replace('合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合', '合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合 合')))
+assert len(svgs2) == 3, len(svgs2)  # 1 titre + 2 pages tab (60/8 = 8 dans > 7)
+print("OK layout tuto : pages 1280x720, 8 cases/dan, 7 dans/page")
+
+# 15. layout tuto + titre avec ruby (mono/group/jukugo) : pas de KeyError
+t15 = "@title 安《あ》｛安里屋｝《あさとや》｛安《あ》里《さ》｝\n@layout tuto\n::tab\n合\n::\n"
+svgs15 = _k.render_svg(_k.parse_kkml(t15))
+assert all('width="1280"' in s and 'height="720"' in s for s in svgs15)
+assert len(svgs15) == 2
+print("OK tuto + titre ruby (mono/group/jukugo), pages 1280x720")
+
+CW = (1280 - 32) / (8 + 0.25)  # cell_w tuto, marge droite renforcée mr = 16 + CW/4
+
+# 16. tuto : bande marker à droite + straddle sur la bordure droite
+GO = chr(0x5408); GO5 = chr(0x5DE5); A = chr(0x3042)
+t16 = "@layout tuto\n::tab\n" + GO + "/" + GO5 + " " + GO + "\n::\n::vocal\n" + A + " -\n::\n"
+svgs16 = _k.render_svg(_k.parse_kkml(t16))
+tab16 = svgs16[1]
+assert tab16.count('<line') == 0 and chr(0x2193) not in tab16 and chr(0x2191) not in tab16  # plus de bande ni de flèches en tuto
+import re as _re
+mv = [(float(m.group(1)), float(m.group(2))) for m in _re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">', tab16)]
+assert mv and abs(mv[0][0] - (16 + CW/2)) < 0.5, mv  # syllabe centrée sur sa case (cell_w=156)
+assert 65 < mv[0][1] < 114.29, mv  # en bas de la case, au-dessus de la bordure inférieure (16+98.29)
+st = [m for m in _re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + GO5 + r'</text>', tab16)]
+assert st and abs(float(st[0].group(1)) - (16 + CW)) < 0.5, st  # straddle CENTRÉ sur la bordure droite (16+156=172)
+print("OK tuto : bande marker à droite + straddle sur bordure droite")
+
+# 17. token ":X" (ex. "(:X" après strip des parenthèses) : note centrée, pas décalée
+GO = chr(0x5408)
+svgs17 = _k.render_svg(_k.parse_kkml("@layout tuto\n::tab\n:" + GO + " " + GO + ":\n::\n"))
+t17 = svgs17[1]
+import re as _re17
+centres = {16 + CW/2, 16 + CW*1.5}  # centres des cases 0 et 1 (cell_w=156)
+for m in _re17.finditer(r'<text x="([\d.]+)" y="[\d.]+"[^>]*fill="black">' + GO + r'</text>', t17):
+    assert any(abs(float(m.group(1)) - c) < 0.5 for c in centres), m.group(1)  # centré sur sa case
+print("OK ':X' / 'X:' -> note centrée taille pleine")
+
+# 18. tuto : croche A/B -> note et straddle centrés entre eux verticalement
+GO, GO5 = chr(0x5408), chr(0x5DE5)
+s18 = _k.render_svg(_k.parse_kkml("@layout tuto\n::tab\n" + GO + "/" + GO5 + "\n::\n"))[1]
+import re as _re18
+ms = list(_re18.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)" fill="black">([^<]+)</text>', s18))
+pair = [(float(m.group(2)), int(m.group(3)), m.group(4)) for m in ms if m.group(4) in (GO, GO5)]
+assert len(pair) == 2, pair
+(y_main, fs_main, _), (y_str, fs_str, _) = pair
+# centre optique = baseline - 0.318 * taille (convention du code) -> doit être égal
+c_main = y_main - 0.318 * fs_main
+c_str = y_str - 0.318 * fs_str
+assert abs(c_main - c_str) < 0.6, (c_main, c_str)
+print("OK tuto : note et straddle centrés entre eux verticalement")
+
+# 19. tuto page titre : le segment ruby (mono) ne chevauche pas le texte plein
+TITLE19 = chr(0x3066)+chr(0x3043)+chr(0x3093)+chr(0x3055)+chr(0x3050)+chr(0x306c)+chr(0x82b1)+chr(0x300a)+chr(0x306f)+chr(0x306a)+chr(0x300b)
+pg19 = _k.render_svg(_k.parse_kkml("@title " + TITLE19 + "\n@layout tuto\n::tab\n" + chr(0x5408) + "\n::\n"))[0]
+import re as _re19
+ms19 = list(_re19.finditer(r'<text x="([\d.]+)" y="[\d.]+"[^>]*font-size="(\d+)"[^>]*>([^<]+)</text>', pg19))
+plain19 = next(m for m in ms19 if m.group(3).startswith(chr(0x3066)))
+hana19 = next(m for m in ms19 if m.group(3) == chr(0x82b1))
+fs19 = int(plain19.group(2))
+assert float(hana19.group(1)) - float(plain19.group(1)) >= len(plain19.group(3)) * fs19 * 0.9, (hana19.group(1), plain19.group(1), fs19)
+print("OK tuto titre ruby : 花 à droite de ぬ, pas de chevauchement")
+
+# 20. tuto page titre : le ruby est au-dessus du haut du glyphe de base (pas de chevauchement)
+pg20 = _k.render_svg(_k.parse_kkml("@title " + TITLE19 + "\n@layout tuto\n::tab\n" + chr(0x5408) + "\n::\n"))[0]
+import re as _re20
+ms20 = list(_re20.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]+)</text>', pg20))
+base20 = next(m for m in ms20 if m.group(3) == chr(0x82b1))   # 花
+ruby20 = next(m for m in ms20 if m.group(3) == chr(0x306f)+chr(0x306a))  # はな
+fs20 = int(base20.group(2))
+assert float(base20.group(1)) - float(ruby20.group(1)) >= 0.85 * fs20, (base20.group(1), ruby20.group(1), fs20)
+print("OK tuto titre : ruby au-dessus du haut de la base, sans chevauchement")
+
+# 21. tuto + vertical : parenthèses de koedashi/koekiri jamais rendues (inline formatting)
+t21 = "@layout tuto\n::tab\n" + chr(0x4E2D) + "\n::\n::vocal\n(" + chr(0x3042) + " " + chr(0x3044) + ")\n::\n"
+for lay in ("tuto", "vertical"):
+    s21 = _k.render_svg(_k.parse_kkml(t21), layout=lay)[1 if lay == "tuto" else 0]
+    texts21 = _re.findall(r'<text[^>]*>([^<]*)</text>', s21)
+    assert all('(' not in x and ')' not in x for x in texts21), (lay, texts21)
+print("OK parenthèses non rendues (tuto + vertical)")
+
+# 22. tuto : syllabe sans point au niveau de la note ; avec point en bas de case
+GO = chr(0x5408); A = chr(0x3042)
+t22 = "@layout tuto\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n" + A + " ." + A + "\n::\n"
+tab22 = _k.render_svg(_k.parse_kkml(t22))[1]
+import re as _re22
+voc22 = [(float(m.group(1)), float(m.group(2))) for m in _re22.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">([^<]*)</text>', tab22) if A in m.group(3)]
+# case 0 (x=94, centre y=65.14) : syllabe seule -> niveau note ; case 1 (x=250) : token ".あ" -> bas
+y0 = next(y for x, y in voc22 if abs(x - (16 + CW/2)) < 0.5)
+assert abs(y0 - (16 + 98.2857 - 6)) < 0.5, y0             # syllabe seule : sous note principale (x=94), EN BAS de case
+# token ".あ" (case 1, noire) : point à cx=250, syllabe à la bordure x=328, en bas de case
+y1 = next(y for x, y in voc22 if abs(x - (16 + CW*2)) < 0.5)
+assert abs(y1 - (16 + 98.2857 - 6)) < 0.5, y1              # bas de case - syl_pad
+print("OK tuto : syllabe seule sous la note principale (bas de case) ; avec point, répartie sous straddle")
+
+# 23. tuto : ".あ" -> point sous note principale, syllabe sous straddle ; "あ." -> inverse
+GO, GO5, A = chr(0x5408), chr(0x5DE5), chr(0x3042)
+DOT = chr(0x30FB)
+t23 = "@layout tuto\n::tab\n" + GO + "/" + GO5 + " " + GO + "\n::\n::vocal\n." + A + " " + A + ".\n::\n"
+tab23 = _k.render_svg(_k.parse_kkml(t23))[1]
+import re as _re23
+els = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re23.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab23)]
+# case 0 (croche 合/五, cx=94, bordure=172) : token ".あ" -> ・ à 94, あ à 172
+assert any(abs(x - (16 + CW/2)) < 0.5 and c == DOT for x, y, c in els), els
+assert any(abs(x - (16 + CW)) < 0.5 and c == A for x, y, c in els), els
+# case 1 (noire 合, cx=250, bordure=328) : token "あ." -> あ à 250, ・ à 328
+assert any(abs(x - (16 + CW*1.5)) < 0.5 and c == A for x, y, c in els), els
+assert any(abs(x - (16 + CW*2)) < 0.5 and c == DOT for x, y, c in els), els
+print("OK tuto : répartition point/syllabe sous note principale et straddle")
+
+# 24. tuto : 2 syllabes sans point -> 1re sous note principale, 2e sous straddle
+GO, GO5 = chr(0x5408), chr(0x5DE5)
+GUSA = chr(0x3050)+chr(0x3055); CHU = chr(0x3061)+chr(0x3085); MAASHI = chr(0x307e)+chr(0x30fc)+chr(0x3057)
+t24 = "@layout tuto\n::tab\n" + GO + "/" + GO5 + " " + GO + " " + GO + "\n::\n::vocal\n" + GUSA + " " + CHU + " " + MAASHI + "\n::\n"
+tab24 = _k.render_svg(_k.parse_kkml(t24))[1]
+import re as _re24
+els24 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re24.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab24)]
+assert any(abs(x - (16 + CW/2)) < 0.5 and c == chr(0x3050) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW)) < 0.5 and c == chr(0x3055) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW*1.5)) < 0.5 and c == CHU for x, y, c in els24), els24
+assert not any(abs(x - (16 + CW*2)) < 0.5 and c == chr(0x3085) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW*2.5)) < 0.5 and c == chr(0x307e)+chr(0x30fc) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW*3)) < 0.5 and c == chr(0x3057) for x, y, c in els24), els24
+print("OK tuto : 2 syllabes sans point réparties sous note principale / straddle")
+
+# 25. tuto : 4 éléments dans une case -> cx, cx+CW/4, cx+CW/2, cx+3CW/4 (toujours en bas)
+AIUE = chr(0x3042)+chr(0x3044)+chr(0x3046)+chr(0x3048)
+t25 = "@layout tuto\n::tab\n" + chr(0x5408) + "/" + chr(0x5DE5) + "\n::\n::vocal\n" + AIUE + "\n::\n"
+tab25 = _k.render_svg(_k.parse_kkml(t25))[1]
+import re as _re25
+els25 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re25.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">([^<]*)</text>', tab25)]
+cx0 = 16 + CW/2
+expected = {chr(0x3042): cx0, chr(0x3044): cx0 + CW/4, chr(0x3046): cx0 + CW/2, chr(0x3048): cx0 + 3*CW/4}
+for ch, ex in expected.items():
+    got = [x for x, y, c in els25 if c == ch]
+    assert got and abs(got[0] - ex) < 0.5, (ch, got, ex)
+assert all(abs(y - (16 + 98.2857 - 6)) < 0.5 for x, y, c in els25)  # toujours en bas
+print("OK tuto : 4 éléments -> 4 positions en quartiers, toujours en bas de case")
+
+# 26. tuto : n=3 éléments (cas des imports Portama, grille 3 unités/case)
+#    ".あい" -> ・, あ, い aux positions cx, cx+CW/3, cx+2CW/3 (toujours en bas)
+DOT = chr(0x30FB)
+t26 = "@layout tuto\n::tab\n" + chr(0x5408) + "/" + chr(0x5DE5) + "\n::\n::vocal\n." + chr(0x3042) + chr(0x3044) + "\n::\n"
+tab26 = _k.render_svg(_k.parse_kkml(t26))[1]
+import re as _re26
+els26 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re26.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab26)]
+cx0 = 16 + CW/2
+expected = {DOT: cx0, chr(0x3042): cx0 + CW/3, chr(0x3044): cx0 + 2*CW/3}
+for ch, ex in expected.items():
+    got = [x for x, y, c in els26 if c == ch]
+    assert got and abs(got[0] - ex) < 0.5, (ch, got, ex)
+assert all(abs(y - (16 + 98.2857 - 6)) < 0.5 for x, y, c in els26)
+print("OK tuto : n=3 (imports Portama) -> cx, cx+CW/3, cx+2CW/3, toujours en bas")
+
+# 27. horizontal partage les règles tuto : vocals en bas (x_i = cx + cw*i/n), straddle bordure droite
+t27 = "@layout horizontal\n::tab\n" + chr(0x5408) + "/" + chr(0x5DE5) + " " + chr(0x5408) + "\n::\n::vocal\n" + chr(0x3050)+chr(0x3055) + " ." + chr(0x3042) + "\n::\n"
+h27 = _k.render_svg(_k.parse_kkml(t27), layout="horizontal")[0]
+import re as _re27
+els27 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re27.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', h27)]
+assert any(abs(x - 42) < 0.5 and c == chr(0x3050) for x, y, c in els27), els27   # ぐ sous note principale (cell_w=52, cx0=42)
+assert any(abs(x - 68) < 0.5 and c == chr(0x3055) for x, y, c in els27), els27   # さ sous straddle (bordure 68)
+sts = [(float(m.group(1)), float(m.group(2))) for m in _re27.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + chr(0x5DE5) + r'</text>', h27)]
+main = [(float(m.group(1)), float(m.group(2))) for m in _re27.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + chr(0x5408) + r'</text>', h27)]
+assert sts and abs(sts[0][0] - 68) < 0.5, (sts, main)  # straddle sur la bordure droite
+# même centre optique que la note (baselines différentes car tailles différentes)
+c_main = main[0][1] - 0.318 * 22
+c_str = sts[0][1] - 0.318 * int(22 * 0.713)
+assert abs(c_main - c_str) < 0.6, (c_main, c_str)
+print("OK horizontal : vocals en bas de case + straddle sur bordure droite (orient=h)")
+
+# 28. tuto : chaque '.' = 1 élément ; les parenthèses ne comptent pas (pas de point fantôme)
+DOT = chr(0x30FB)
+for tok, n_expected in [("...", 3), (".)", 1), (".ゆ", 2), ("す.", 2), ("..ゆ.", 4)]:
+    els = _k._vocal_elements(tok)
+    assert len(els) == n_expected, (tok, els)
+    assert els.count("") == tok.replace('(', '').replace(')', '').count("."), (tok, els)
+print("OK _vocal_elements : n points -> n éléments, parenthèses ignorées")
+
+# 29. tuto : ⌝ (kaki-utu ^) en haut à droite de sa note, y compris sur le straddle
+NAKA, GO, GO5, CORNER = chr(0x4E2D), chr(0x5408), chr(0x5DE5), chr(0x231D)
+t29 = "@layout tuto\n::tab\n" + NAKA + "^ " + GO + "/" + GO5 + "^\n::\n"
+svg29 = _k.render_svg(_k.parse_kkml(t29))[1]
+import re as _re29
+els29 = [(float(m.group(1)), float(m.group(2)), float(m.group(3)), m.group(4)) for m in _re29.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]*)</text>', svg29)]
+FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2; BORDER1 = 16 + 2*CW; SS = int(FS*0.713)
+AVG = _k._tuto_avg_tech_map()["^"]   # tuto : position moyenne uchi-utu/kaki-utu
+DX, DY, SC = AVG['dx'], AVG['dy'], AVG['scale']
+main_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (CX0 + FS*DX)) < 0.5)
+assert abs(main_c[1] - (CY + FS*0.318 + FS*DY)) < 0.5, main_c   # position moyenne, note principale
+str_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (BORDER1 + SS*DX)) < 0.5)
+assert abs(str_c[1] - (CY + SS*0.318 + SS*DY)) < 0.5, str_c     # position moyenne, straddle
+assert str_c[2] == int(SS * 1.1 * SC)  # tech_fs avec scale moyenné
+print("OK tuto : ⌝ kaki-utu en haut à droite de sa note (main et straddle)")
+
+# 30. tuto : ' (uchi-utu) et ^ (kaki-utu) à la même position moyenne (dx=0.60, dy=-0.45)
+NAKA = chr(0x4E2D); GRAVEF = chr(0xFF40); CORNER = chr(0x231D)
+t30 = "@layout tuto\n::tab\n" + NAKA + "' " + NAKA + "^\n::\n"
+svg30 = _k.render_svg(_k.parse_kkml(t30))[1]
+import re as _re30
+els30 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re30.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', svg30)]
+FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2
+AVG30 = _k._tuto_avg_tech_map()['^']
+ex, ey = CX0 + FS*AVG30['dx'], CY + FS*0.318 + FS*AVG30['dy']
+g = next(e for e in els30 if e[2] == GRAVEF)   # ' dans la case 0
+c = next(e for e in els30 if e[2] == CORNER)    # ^ dans la case 1
+# même offset relatif moyen (dx=0.60, dy=-0.45) dans leur case respective
+assert abs((g[0] - CX0) - FS*AVG30['dx']) < 0.5 and abs((c[0] - (CX0 + CW)) - FS*AVG30['dx']) < 0.5, (g, c)
+assert abs(g[1] - ey) < 0.5 and abs(c[1] - ey) < 0.5, (g, c)  # même y (dy=-0.45)
+print("OK tuto : ' et ^ à la même position moyenne (dx=0.60, dy=-0.45)")
+
+# 31. tailles relatives des ornements : kaki ≈ fs (note), uchi ≈ 4/3 fs — tous layouts
+NAKA, G, C = chr(0x4E2D), chr(0xFF40), chr(0x231D)
+for layout, idx, fs in (("vertical", 0, 22), ("tuto", 1, 37)):
+    svg31 = _k.render_svg(_k.parse_kkml("@layout " + layout + "\n::tab\n" + NAKA + "' " + NAKA + "^\n::\n"), layout=layout)[idx]
+    import re as _re31
+    fs31 = {m.group(3): int(m.group(2)) for m in _re31.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]*)</text>', svg31) if m.group(3) in (G, C)}
+    if layout == "vertical":
+        assert fs31[G] == int(fs*1.1*1.21) and abs(fs31[G] - 4*fs/3) <= 1, fs31   # uchi ≈ 4/3 note
+        assert fs31[C] == int(fs*1.1*0.91) and abs(fs31[C] - fs) <= 1, fs31      # kaki ≈ note
+    else:
+        sc = (_k.TECHNIQUE_SUFFIXES["'"]["scale"] + _k.TECHNIQUE_SUFFIXES["^"]["scale"]) / 2
+        assert fs31[G] == fs31[C] == int(fs*1.1*sc), fs31  # tuto : même taille (moyenne)
+print("OK tailles ornements : kaki ≈ note, uchi ≈ 4/3 note (tuto : moyenne partagée)")
