@@ -165,3 +165,13 @@ hana19 = next(m for m in ms19 if m.group(3) == chr(0x82b1))
 fs19 = int(plain19.group(2))
 assert float(hana19.group(1)) - float(plain19.group(1)) >= len(plain19.group(3)) * fs19 * 0.9, (hana19.group(1), plain19.group(1), fs19)
 print("OK tuto titre ruby : 花 à droite de ぬ, pas de chevauchement")
+
+# 20. tuto page titre : le ruby est au-dessus du haut du glyphe de base (pas de chevauchement)
+pg20 = _k.render_svg(_k.parse_kkml("@title " + TITLE19 + "\n@layout tuto\n::tab\n" + chr(0x5408) + "\n::\n"))[0]
+import re as _re20
+ms20 = list(_re20.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]+)</text>', pg20))
+base20 = next(m for m in ms20 if m.group(3) == chr(0x82b1))   # 花
+ruby20 = next(m for m in ms20 if m.group(3) == chr(0x306f)+chr(0x306a))  # はな
+fs20 = int(base20.group(2))
+assert float(base20.group(1)) - float(ruby20.group(1)) >= 0.85 * fs20, (base20.group(1), ruby20.group(1), fs20)
+print("OK tuto titre : ruby au-dessus du haut de la base, sans chevauchement")

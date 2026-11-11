@@ -2865,7 +2865,9 @@ def _render_horizontal_ruby(out, segments, x, y, fs, fill, family="serif"):
     Retourne le x après le dernier segment. Avance par _char_w (largeur
     réelle des glyphes) pour ne pas chevaucher les segments entre eux."""
     ruby_fs = int(fs * RUBY_SCALE)
-    ruby_y = y - fs * 0.55  # ruby au-dessus, contact cadre-à-cadre
+    # ruby bien AU-DESSUS du glyphe de base : un CJK monte ~0.88em au-dessus
+    # de la baseline ; à 0.55em le ruby chevauchait le haut du caractère (ex. 花)
+    ruby_y = y - fs * 0.95
 
     for seg in segments:
         if seg["type"] == "plain":
