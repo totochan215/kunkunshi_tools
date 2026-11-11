@@ -1851,20 +1851,19 @@ def _tuto_svg_open(W, H):
 
 
 def _tuto_text_width(segs, fs):
-    # Largeur estimée d'un texte parsé en segments ruby, calquée sur
-    # _render_horizontal_ruby : char_w = fs * 0.55 par caractère de base.
-    char_w = fs * 0.55
+    # Largeur estimée d'un texte à segments ruby, même convention que
+    # _render_horizontal_ruby : _char_w par caractère (CJK = 1em, latin = 0.55em).
     w = 0.0
     for seg in segs:
         t = seg["type"]
         if t == "plain":
-            w += len(seg["text"]) * char_w
+            w += sum(_char_w(ch, fs) for ch in seg["text"])
         elif t == "mono":
-            w += char_w
+            w += _char_w(seg["base"], fs)
         elif t == "group":
-            w += len(seg["base"]) * char_w
+            w += sum(_char_w(ch, fs) for ch in seg["base"])
         elif t == "jukugo":
-            w += sum(len(base) for base, _ in seg["items"]) * char_w
+            w += sum(_char_w(ch, fs) for base, _ in seg["items"] for ch in base)
     return w
 
 
@@ -2850,44 +2849,51 @@ def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif"):
     return _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family)
 
 
+def _char_w(ch, fs):
+    # Largeur approximative d'un glyphe : pleine chasse (CJK/kana/kanji >= U+2E80)
+    # = 1em ; latin (romaji) = 0.55em. L'élément <text> SVG se rend à la largeur
+    # naturelle du glyphe : l'avance entre segments ruby doit suivre cette
+    # largeur, sinon les segments se chevauchent (ex. le mono 花 tombait sur
+    # les kana さぐぬ d'un titre てぃんさぐぬ花『はな』).
+    return fs if ord(ch) >= 0x2E80 else fs * 0.55
+
+
 def _render_horizontal_ruby(out, segments, x, y, fs, fill, family="serif"):
     """Rend des segments ruby en mode horizontal (ruby au-dessus de la base).
     x = position horizontale de départ
     y = position verticale du texte de base (baseline)
-    Retourne le x après le dernier segment."""
+    Retourne le x après le dernier segment. Avance par _char_w (largeur
+    réelle des glyphes) pour ne pas chevaucher les segments entre eux."""
     ruby_fs = int(fs * RUBY_SCALE)
     ruby_y = y - fs * 0.55  # ruby au-dessus, contact cadre-à-cadre
-    char_w = fs * 0.55       # largeur approximative d'un caractère CJK
-    ruby_char_w = ruby_fs * 0.55
 
     for seg in segments:
         if seg["type"] == "plain":
             out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
                        f'font-size="{fs}" fill="{fill}">'
                        f'{escape(seg["text"])}</text>')
-            x += len(seg["text"]) * char_w
+            x += sum(_char_w(c, fs) for c in seg["text"])
 
         elif seg["type"] == "mono":
             base, ruby = seg["base"], seg["ruby"]
+            base_w = _char_w(base, fs)
             out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
                        f'font-size="{fs}" fill="{fill}">{escape(base)}</text>')
             if ruby:
-                rw = len(ruby) * ruby_char_w
-                rx = x + (char_w - rw) / 2
+                rw = sum(_char_w(c, ruby_fs) for c in ruby)
+                rx = x + (base_w - rw) / 2
                 out.append(f'<text x="{rx}" y="{ruby_y}" '
                            f'font-family="{family}" font-size="{ruby_fs}" '
                            f'fill="{fill}">{escape(ruby)}</text>')
-            x += char_w
+            x += base_w
 
         elif seg["type"] == "group":
-            n_base = len(seg["base"])
-            base_w = n_base * char_w
+            base_w = sum(_char_w(c, fs) for c in seg["base"])
             out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
                        f'font-size="{fs}" fill="{fill}">'
                        f'{escape(seg["base"])}</text>')
             if seg["ruby"]:
-                n_ruby = len(seg["ruby"])
-                ruby_w = n_ruby * ruby_char_w
+                ruby_w = sum(_char_w(c, ruby_fs) for c in seg["ruby"])
                 rx = x + (base_w - ruby_w) / 2
                 out.append(f'<text x="{rx}" y="{ruby_y}" '
                            f'font-family="{family}" font-size="{ruby_fs}" '
@@ -2896,33 +2902,18 @@ def _render_horizontal_ruby(out, segments, x, y, fs, fill, family="serif"):
 
         elif seg["type"] == "jukugo":
             for base, ruby in seg["items"]:
-                if len(base) > 1:
-                    n_base = len(base)
-                    base_w = n_base * char_w
-                    out.append(f'<text x="{x}" y="{y}" '
-                               f'font-family="{family}" font-size="{fs}" '
-                               f'fill="{fill}">{escape(base)}</text>')
-                    if ruby:
-                        n_ruby = len(ruby)
-                        ruby_w = n_ruby * ruby_char_w
-                        rx = x + (base_w - ruby_w) / 2
-                        out.append(f'<text x="{rx}" y="{ruby_y}" '
-                                   f'font-family="{family}" '
-                                   f'font-size="{ruby_fs}" '
-                                   f'fill="{fill}">{escape(ruby)}</text>')
-                    x += base_w
-                else:
-                    out.append(f'<text x="{x}" y="{y}" '
-                               f'font-family="{family}" font-size="{fs}" '
-                               f'fill="{fill}">{escape(base)}</text>')
-                    if ruby:
-                        rw = len(ruby) * ruby_char_w
-                        rx = x + (char_w - rw) / 2
-                        out.append(f'<text x="{rx}" y="{ruby_y}" '
-                                   f'font-family="{family}" '
-                                   f'font-size="{ruby_fs}" '
-                                   f'fill="{fill}">{escape(ruby)}</text>')
-                    x += char_w
+                base_w = sum(_char_w(c, fs) for c in base)
+                out.append(f'<text x="{x}" y="{y}" '
+                           f'font-family="{family}" font-size="{fs}" '
+                           f'fill="{fill}">{escape(base)}</text>')
+                if ruby:
+                    ruby_w = sum(_char_w(c, ruby_fs) for c in ruby)
+                    rx = x + (base_w - ruby_w) / 2
+                    out.append(f'<text x="{rx}" y="{ruby_y}" '
+                               f'font-family="{family}" '
+                               f'font-size="{ruby_fs}" '
+                               f'fill="{fill}">{escape(ruby)}</text>')
+                x += base_w
 
     return x
 
@@ -2935,7 +2926,7 @@ def _render_horizontal_text(out, text, x, y, fs, fill, family="serif"):
     if not _has_ruby(segments):
         out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
                    f'font-size="{fs}" fill="{fill}">{escape(text)}</text>')
-        return x + len(text) * fs * 0.55
+        return x + sum(_char_w(ch, fs) for ch in text)
     return _render_horizontal_ruby(out, segments, x, y, fs, fill, family)
 
 
