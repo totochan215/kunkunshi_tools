@@ -368,3 +368,14 @@ assert tun34[0] > title34[0] + 20, (title34, tun34)           # à droite du tit
 rects34 = [float(m.group(1)) for m in _re34.finditer(r'<rect x="[\d.]+" y="([\d.]+)"', h34)]
 assert min(rects34) < 100, min(rects34)   # 1re rangée plus haut qu'avant (116)
 print("OK horizontal : accordage à droite du titre, 1re rangée y=%.0f (avant 116)" % min(rects34))
+
+# 35. vertical : logique points/vocal commune (_vocal_elements) — ".あ" -> ・ puis あ en colonne marker
+GO = chr(0x5408)
+v35 = _k.render_svg(_k.parse_kkml("@layout vertical\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n." + chr(0x3042) + " " + chr(0x3044) + "\n::\n"), layout="vertical")[0]
+import re as _re35
+dot35 = [ (float(m.group(1)), float(m.group(2))) for m in _re35.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#888">' + chr(0x30FB) + r'</text>', v35) ]
+syl35 = [ (float(m.group(1)), float(m.group(2))) for m in _re35.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">' + chr(0x3042) + r'</text>', v35) ]
+assert dot35 and syl35, "pas de ・/あ en vertical"
+assert abs(dot35[0][0] - syl35[0][0]) < 0.5, (dot35, syl35)   # même colonne marker
+assert dot35[0][1] < syl35[0][1], (dot35, syl35)               # ・ au-dessus de あ (lecture haut->bas)
+print("OK vertical : logique points/vocal commune (_vocal_elements, ・ puis syllabe)")
