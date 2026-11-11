@@ -31,6 +31,12 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   jumeau de `'` (uchi-utu tenu) ; glyphe rendu ゜ (U+309C, « apostrophe vide ») ;
   ＂ (U+FF02) normalisé en `"` via FULLWIDTH_MAP ; mapping Portama `nu` → `"`.
   `n` reste EXCLU (collision romaji : yon, bon…).
+- ❓ Koedashi/koekiri attenant à un point `.` (ex. `.)`, `(.`) : les parenthèses sont
+  retirées avant le découpage (`_vocal_elements`), donc elles ne changent PAS le nombre
+  de sous-positions vocales de la case (corrigé 2026-11-10, commit 5d4838a — cas ahabushi
+  case 44 : 3 points dans le KKML = 3 positions, plus de point fantôme). Point ouvert :
+  faut-il rendre le koedashi/koekiri sur le point (ex. ○/□ à côté du ・ en
+  vertical/horizontal) ? En layout tuto, ○/□ ne sont pas rendus pour le moment.
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
   jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
 
