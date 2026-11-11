@@ -337,7 +337,7 @@ g32 = next(e for e in els32 if e[2] == GRAVEF)   # case 0, cx=42
 c32 = next(e for e in els32 if e[2] == CORNER)    # case 1, cx=94
 FS32 = 22
 assert abs((g32[0] - 42) - FS32*AVG32['dx']) < 0.5 and abs((c32[0] - 94) - FS32*AVG32['dx']) < 0.5, (g32, c32)
-CY32 = 70 + 16 + 30 + 58/2  # header_h(70, sans titre) + mt + GAP_HEADER + cell_h/2
+CY32 = (26 + 8) + 16 + 12 + 58/2  # header_h(26+8 sans méta) + mt + GAP_HEADER(12, horizontal) + cell_h/2
 assert abs(g32[1] - c32[1]) < 0.5 and abs(g32[1] - (CY32 + FS32*0.318 + FS32*AVG32['dy'])) < 0.6, (g32, c32)
 print("OK horizontal : ' et ^ à la même position moyenne (dx=%.2f, dy=%.3f)" % (AVG32['dx'], AVG32['dy']))
 
@@ -355,3 +355,16 @@ assert abs(c33[1] - g33[1]) < 0.5 or True
 # en vertical les cases sont en colonne : même x, y différent ; on vérifie l'offset relatif en x
 assert abs((c33[0] - 42) - FS33*AVG33['dx']) < 0.5, c33
 print("OK vertical : ' et ^ même offset relatif moyen (dx=%.2f)" % AVG33['dx'])
+
+# 34. horizontal : accordage à droite du titre (même y), espace titre->tab réduit
+t34 = "@title test\n@tuning " + chr(0x672C)+chr(0x8ABF)+chr(0x5B50) + "\n@layout horizontal\n::tab\n" + chr(0x5408) + "\n::\n"
+h34 = _k.render_svg(_k.parse_kkml(t34), layout="horizontal")[0]
+import re as _re34
+texts34 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re34.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', h34)]
+title34 = next(x for x in texts34 if x[2] == "test")
+tun34 = next(x for x in texts34 if x[2] == chr(0x672C)+chr(0x8ABF)+chr(0x5B50))
+assert abs(tun34[1] - title34[1]) < 0.5, (title34, tun34)   # même ligne que le titre
+assert tun34[0] > title34[0] + 20, (title34, tun34)           # à droite du titre
+rects34 = [float(m.group(1)) for m in _re34.finditer(r'<rect x="[\d.]+" y="([\d.]+)"', h34)]
+assert min(rects34) < 100, min(rects34)   # 1re rangée plus haut qu'avant (116)
+print("OK horizontal : accordage à droite du titre, 1re rangée y=%.0f (avant 116)" % min(rects34))
