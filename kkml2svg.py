@@ -1347,7 +1347,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                 if ve and marker_w > 0:
                     _render_vrep_marker(out, mx, cy, cell_h,
                                         marker_w, 'end')
-            # syllabes vocales dans le marker
+            # syllabes vocales dans le marker — logique points commune
+            # (_vocal_elements) : chaque élément (point ・ ou syllabe) occupe une
+            # sous-partie verticale de la case, bloc centré (comme _draw_vertical_vocal).
             if vocal_col and marker_w > 0:
                 syl_fs = min(9.0, marker_w * 0.55)
                 step = syl_fs * 1.15  # bien > fs : pas de chevauchement entre petits kana
@@ -1358,22 +1360,30 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                         continue
                     cy = grid_y0 + ri * cell_h
                     sx = gx + cell_w + marker_w / 2
-                    sy = cy + cell_h / 2 + syl_fs / 3
-                    for k, ch in enumerate(syllable):
-                        if ch in ('(', ')'):
-                            continue  # position du koedashi/koekiri, déjà rendue dans la case
-                        yy = sy + k * step
-                        if ch == "ー":
-                            ry = yy - syl_fs * 0.35
-                            out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
+                    elems = _vocal_elements(syllable)
+                    n = max(len(elems), 1)
+                    sub_h = max(cell_h / n, syl_fs * 1.15)
+                    y_start = cy + (cell_h - sub_h * n) / 2
+                    for j, el in enumerate(elems):
+                        sy = y_start + sub_h * j + sub_h / 2 + syl_fs / 3
+                        if el == "":
+                            out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
                                        f'font-family="serif" font-size="{syl_fs}" '
-                                       f'fill="#333" '
-                                       f'transform="rotate(90 {sx} {ry})">'
-                                       f'{escape(ch)}</text>')
+                                       f'fill="#888">{chr(0x30FB)}</text>')
                         else:
-                            out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
-                                       f'font-family="serif" font-size="{syl_fs}" '
-                                       f'fill="#333">{escape(ch)}</text>')
+                            for k, ch in enumerate(el):
+                                yy = sy + k * step
+                                if ch == "ー":
+                                    ry = yy - syl_fs * 0.35
+                                    out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
+                                               f'font-family="serif" font-size="{syl_fs}" '
+                                               f'fill="#333" '
+                                               f'transform="rotate(90 {sx} {ry})">'
+                                               f'{escape(ch)}</text>')
+                                else:
+                                    out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
+                                               f'font-family="serif" font-size="{syl_fs}" '
+                                               f'fill="#333">{escape(ch)}</text>')
             x_right -= (group_w + NOMURA_DAN_GAP)
 
         # 3. paroles : colonnes verticales à gauche (dans virtuels de CETTE page)
