@@ -501,12 +501,19 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     MARGIN_L = 16
     MARGIN_R = 16
     MARGIN_T = 16
-    header_h = 70  # titre + accordage + métas
+    header_h = 70  # vertical sans titre
     if layout == "vertical" and (song.meta.get("title") or song.meta.get("tuning", "本調子")):
         header_h = 40  # titre/accordage rendus verticalement, en-tête réduit
-    # Le ruby du titre horizontal a besoin de ~13px au-dessus
-    if layout != "vertical" and title and _has_ruby(_parse_ruby(title)):
-        header_h = max(header_h, 80)
+    if layout != "vertical":
+        # horizontal : l'accordage est à droite du titre (une ligne de moins)
+        genre = song.meta.get("genre", "")
+        author = song.meta.get("author", "")
+        meta_lines = (1 if ((genre and genre != author) or author) else 0) \
+                   + (1 if any(song.meta.get(k) for k in ("composer", "lyricist", "origin")) else 0)
+        header_h = 26 + 14 * meta_lines + 8
+        # Le ruby du titre a besoin de ~13px au-dessus
+        if title and _has_ruby(_parse_ruby(title)):
+            header_h = max(header_h, 60)
     marker = song.meta.get("marker", "on") == "on"
 
     opts = {
@@ -1683,7 +1690,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
         else:
             prepared.append((sec_title, content, kind, []))
 
-    GAP_HEADER = 30
+    GAP_HEADER = 12
     GAP_TAB_LYRICS = 30
     # Taille des couplets selon @lyrics_size
     lyrics_size = opts.get('lyrics_size', 'medium') if opts else 'medium'
@@ -1715,16 +1722,17 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     out.append('<rect width="100%" height="100%" fill="white"/>')
 
     y = mt + 26
-    # Le titre avec ruby nécessite plus de hauteur d'en-tête
+    # Titre (ruby au-dessus si besoin) ; l'accordage est à DROITE du titre
     if title and _has_ruby(_parse_ruby(title)):
-        y_ruby = y - 26 * 0.55  # ruby au-dessus du titre
-        _render_horizontal_text(out, title, ml, y, 26, "black")
+        end_x = _render_horizontal_text(out, title, ml, y, 26, "black")
     elif title:
         out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
                    f'font-size="26" fill="black">{escape(title)}</text>')
+        end_x = ml + sum(_char_w(c, 26) for c in title)
+    else:
+        end_x = ml
     if tuning:
-        y += 22
-        out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
+        out.append(f'<text x="{end_x + 20:g}" y="{y}" font-family="serif" '
                    f'font-size="15" fill="#555">{escape(tuning)}</text>')
     y += 14
     # Genre et auteur
