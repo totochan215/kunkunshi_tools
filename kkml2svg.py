@@ -216,6 +216,16 @@ def _verse_indent_len(first_line):
         return 2   # indent SOUS le caractère suivant (1 cran plus bas)
     return 0
 
+
+def _verse_indent_target(lines):
+    """Indentation uniforme des colonnes de continuation d'une section de
+    paroles : sous le PLUS LONG des marqueurs de couplet de la section
+    (女、男、男女、一、…), plus une espace pleine chasse.
+    Ex. marqueurs 女、/男、/男女、 -> max 3 -> indent 4 pour toutes les continuations."""
+    m = max((_verse_indent_len(ln) for ln in lines), default=0)
+    return m + 1 if m > 0 else 0
+
+
 # Font stacks pour les styles japonais
 FONT_STYLE_SERIF = "serif"  # défaut (comportement historique)
 FONT_STYLE_MINCHO = ("Hiragino Mincho ProN, YuMincho, 'MS PMincho', "
@@ -741,8 +751,9 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             ly0 = header_h + mt + GAP_HEADER
             lyrics_bottom = ly0 + LYRICS_FS
             for _, data in lyrics_sections:
+                base_indent = _verse_indent_target(data)
                 for verse in _split_verses(data):
-                    for col, indent in _lyrics_columns_layout(verse):
+                    for col, indent in _lyrics_columns_layout(verse, base_indent):
                         if not col:
                             continue
                         h = (indent * LYRICS_SP
@@ -818,7 +829,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                     # Layout partagé avec l'estimation de hauteur :
                     # une colonne avec marqueur de couplet démarre en haut,
                     # une colonne de continuation s'indente sous le marqueur.
-                    layout = _lyrics_columns_layout(verse)
+                    layout = _lyrics_columns_layout(verse, _verse_indent_target(data))
                     for col_lines, verse_indent in layout:
                         vx = (ml + lyrics_total_w
                               - vi * (LYRICS_COL_W + LYRICS_VERSE_GAP)
@@ -981,8 +992,9 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
     lyr_gap0 = int(lyr_col_w0 * 0.8)
     lyr_cols = []
     for _, d in lyrics_sections:
+        base_indent = _verse_indent_target(d)
         for verse in _split_verses(d):
-            for col_lines, indent in _lyrics_columns_layout(verse):
+            for col_lines, indent in _lyrics_columns_layout(verse, base_indent):
                 lyr_cols.append((col_lines, indent))
     usable_w = (CHINDAMI_PAGE_W - 2 * CHINDAMI_FRAME_MARGIN_X
                 - CHINDAMI_TITLE_W - CHINDAMI_TITLE_GAP)
@@ -1171,8 +1183,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
     lyrics_col_count = 0
     lyrics_layouts = []   # [(col_lines, indent)]
     for _, data in lyrics_sections:
+        base_indent = _verse_indent_target(data)
         for verse in _split_verses(data):
-            for col_lines, indent in _lyrics_columns_layout(verse):
+            for col_lines, indent in _lyrics_columns_layout(verse, base_indent):
                 if not col_lines:
                     continue
                 lyrics_layouts.append((col_lines, indent))
@@ -1459,7 +1472,7 @@ def _lyrics_columns(verse):
     return columns
 
 
-def _lyrics_columns_layout(verse):
+def _lyrics_columns_layout(verse, base_indent=None):
     """Layout complet d'un couplet : liste de (col_lines, indent).
 
     Source unique pour le rendu ET pour l'estimation de hauteur.
@@ -1476,7 +1489,7 @@ def _lyrics_columns_layout(verse):
             own = _verse_indent_len(col[0])
             if own > 0:
                 indent = 0
-                cur_marker_indent = own
+                cur_marker_indent = own if base_indent is None else base_indent
             else:
                 indent = cur_marker_indent
         else:
