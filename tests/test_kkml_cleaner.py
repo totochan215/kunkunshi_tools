@@ -212,3 +212,18 @@ assert any(abs(x - 172) < 0.5 and c == A for x, y, c in els), els
 assert any(abs(x - 250) < 0.5 and c == A for x, y, c in els), els
 assert any(abs(x - 328) < 0.5 and c == DOT for x, y, c in els), els
 print("OK tuto : répartition point/syllabe sous note principale et straddle")
+
+# 24. tuto : 2 syllabes sans point -> 1re sous note principale, 2e sous straddle
+GO, GO5 = chr(0x5408), chr(0x5DE5)
+GUSA = chr(0x3050)+chr(0x3055); CHU = chr(0x3061)+chr(0x3085); MAASHI = chr(0x307e)+chr(0x30fc)+chr(0x3057)
+t24 = "@layout tuto\n::tab\n" + GO + "/" + GO5 + " " + GO + " " + GO + "\n::\n::vocal\n" + GUSA + " " + CHU + " " + MAASHI + "\n::\n"
+tab24 = _k.render_svg(_k.parse_kkml(t24))[1]
+import re as _re24
+els24 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re24.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab24)]
+assert any(abs(x - 94) < 0.5 and c == chr(0x3050) for x, y, c in els24), els24
+assert any(abs(x - 172) < 0.5 and c == chr(0x3055) for x, y, c in els24), els24
+assert any(abs(x - 250) < 0.5 and c == CHU for x, y, c in els24), els24
+assert not any(abs(x - 328) < 0.5 and c == chr(0x3085) for x, y, c in els24), els24
+assert any(abs(x - 406) < 0.5 and c == chr(0x307e)+chr(0x30fc) for x, y, c in els24), els24
+assert any(abs(x - 484) < 0.5 and c == chr(0x3057) for x, y, c in els24), els24
+print("OK tuto : 2 syllabes sans point réparties sous note principale / straddle")
