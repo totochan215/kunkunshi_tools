@@ -243,3 +243,18 @@ for ch, ex in expected.items():
     assert got and abs(got[0] - ex) < 0.5, (ch, got, ex)
 assert all(abs(y - (16 + 98.2857 - 6)) < 0.5 for x, y, c in els25)  # toujours en bas
 print("OK tuto : 4 éléments -> 4 positions en quartiers, toujours en bas de case")
+
+# 26. tuto : n=3 éléments (cas des imports Portama, grille 3 unités/case)
+#    ".あい" -> ・, あ, い aux positions cx, cx+CW/3, cx+2CW/3 (toujours en bas)
+DOT = chr(0x30FB)
+t26 = "@layout tuto\n::tab\n" + chr(0x5408) + "/" + chr(0x5DE5) + "\n::\n::vocal\n." + chr(0x3042) + chr(0x3044) + "\n::\n"
+tab26 = _k.render_svg(_k.parse_kkml(t26))[1]
+import re as _re26
+els26 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re26.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab26)]
+cx0 = 16 + CW/2
+expected = {DOT: cx0, chr(0x3042): cx0 + CW/3, chr(0x3044): cx0 + 2*CW/3}
+for ch, ex in expected.items():
+    got = [x for x, y, c in els26 if c == ch]
+    assert got and abs(got[0] - ex) < 0.5, (ch, got, ex)
+assert all(abs(y - (16 + 98.2857 - 6)) < 0.5 for x, y, c in els26)
+print("OK tuto : n=3 (imports Portama) -> cx, cx+CW/3, cx+2CW/3, toujours en bas")

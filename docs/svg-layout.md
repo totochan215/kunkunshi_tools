@@ -168,7 +168,7 @@ https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases 
 - une seule syllabe, pas de point `.` : **sous la note principale** (centre de la case, x = cx), en bas de case ;
 - deux syllabes, pas de point (ex. `ぐさ`) : la 1re sous la note principale (x = cx), la 2e sous le straddle (bordure droite). Le découpage en syllabes rattache les petits kana et `ー` à la syllabe précédente (`ちゅ` = 1 syllabe, `やっく` = やっ+く, `まーし` = まー+し) — valable aussi en uchinaguchi/langues ryukyu ;
 - token avec point(s) (subdivision) : les éléments (points `・` gris #888 + syllabes) sont répartis **en bas de case**, toujours alignés sur la ligne des vocals ;
-  pour n éléments, position i = `cx + cell_w * i/n` : i=0 sous la note principale, et pour n=4 : cx, cx+cw/4 (mi-chemin), cx+cw/2 (sous le straddle), cx+3cw/4 (mi-chemin vers la case suivante) ;
+  pour n éléments, position i = `cx + cell_w * i/n` : i=0 sous la note principale ; n=2 -> cx + bordure (straddle) ; n=3 (grille 3 unités/case des imports Portama) -> cx, cx+cw/3, cx+2cw/3 ; n=4 -> cx, cx+cw/4, cx+cw/2 (straddle), cx+3cw/4 (mi-chemin vers la case suivante) ;
 
 - En layout horizontal (`horizontal`, `tuto`), la note à cheval d'une croche `A/B` est **centrée sur la bordure droite** (verticale) de la case (l'ornement suit), et les deux notes d'un shuffle `A:B` sont côte à côte ; en vertical, le straddle chevauche la bordure inférieure (`render_cell(..., orient="h")` vs `"v"`).
 - Le bloc `::lyrics` n'est **pas** rendu en tuto.
