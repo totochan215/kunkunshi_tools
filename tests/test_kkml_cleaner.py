@@ -328,3 +328,18 @@ for layout, idx, fs in (("vertical", 0, 22), ("tuto", 1, 37)):
         sc = (_k.TECHNIQUE_SUFFIXES["'"]["scale"] + _k.TECHNIQUE_SUFFIXES["^"]["scale"]) / 2
         assert fs31[G] == fs31[C] == int(fs*1.1*sc), fs31  # tuto : même taille (moyenne)
 print("OK tailles ornements : kaki ≈ note, uchi ≈ 4/3 note (tuto : moyenne partagée)")
+
+# 32. horizontal : ' et ^ à la même position moyenne (comme tuto)
+NAKA = chr(0x4E2D); GRAVEF = chr(0xFF40); CORNER = chr(0x231D)
+t32 = "@layout horizontal\n::tab\n" + NAKA + "' " + NAKA + "^\n::\n"
+h32 = _k.render_svg(_k.parse_kkml(t32), layout="horizontal")[0]
+import re as _re32
+els32 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re32.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', h32)]
+AVG32 = _k._tuto_avg_tech_map()["^"]
+g32 = next(e for e in els32 if e[2] == GRAVEF)   # case 0, cx=42
+c32 = next(e for e in els32 if e[2] == CORNER)    # case 1, cx=94
+FS32 = 22
+assert abs((g32[0] - 42) - FS32*AVG32['dx']) < 0.5 and abs((c32[0] - 94) - FS32*AVG32['dx']) < 0.5, (g32, c32)
+CY32 = 70 + 16 + 30 + 58/2  # header_h(70, sans titre) + mt + GAP_HEADER + cell_h/2
+assert abs(g32[1] - c32[1]) < 0.5 and abs(g32[1] - (CY32 + FS32*0.318 + FS32*AVG32['dy'])) < 0.6, (g32, c32)
+print("OK horizontal : ' et ^ à la même position moyenne (dx=%.2f, dy=%.3f)" % (AVG32['dx'], AVG32['dy']))
