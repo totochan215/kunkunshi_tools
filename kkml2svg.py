@@ -1675,11 +1675,13 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     prepared = []
     for items in sections:
         sec_title, content, kind = items[0], items[1], items[2]
+        vocal = items[3] if len(items) > 3 else None
         if kind == "tab":
             rows = _wrap_horizontal(content, cols)
-            prepared.append((sec_title, rows, kind))
+            vrows = _wrap_horizontal(vocal, cols) if vocal else []
+            prepared.append((sec_title, rows, kind, vrows))
         else:
-            prepared.append((sec_title, content, kind))
+            prepared.append((sec_title, content, kind, []))
 
     GAP_HEADER = 30
     GAP_TAB_LYRICS = 30
@@ -1690,7 +1692,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     total_w = cols * cell_w + ml + mr
     total_h = header_h + mt + GAP_HEADER
     prev_kind = None
-    for sec_title, data, kind in prepared:
+    for sec_title, data, kind, _v in prepared:
         if sec_title:
             total_h += 22
         if kind == "lyrics" and prev_kind == "tab":
@@ -1750,7 +1752,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     y = header_h + mt + GAP_HEADER
     # Trouver la dernière section tab/tab-lyrics pour end_circle
     last_tab_idx = -1
-    for si, (_, _, kind) in enumerate(prepared):
+    for si, (_, _, kind, _v) in enumerate(prepared):
         if kind == "tab":
             last_tab_idx = si
     # @end_circle déprécié/ignoré : le ┘● est désormais rendu par le token
@@ -1761,7 +1763,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     h_last_filled = None
 
     prev_kind = None
-    for si, (sec_title, data, kind) in enumerate(prepared):
+    for si, (sec_title, data, kind, vrows0) in enumerate(prepared):
         if kind == "lyrics" and prev_kind == "tab":
             y += GAP_TAB_LYRICS
         if sec_title:
@@ -1769,7 +1771,9 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                        f'font-size="14" fill="#333">{escape(sec_title)}</text>')
             y += 20
         if kind == "tab":
-            for row in data:
+            h_syl_fs = int(fs * 0.6)
+            h_syl_pad = max(2, int(h_syl_fs * 0.28))
+            for ri, row in enumerate(data):
                 for idx, tok in enumerate(row):
                     x = ml + idx * cell_w
                     out.append(f'<rect x="{x}" y="{y}" width="{cell_w}" '
@@ -1779,7 +1783,12 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
                         base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                     render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
-                                cell_w, cell_h, opts)
+                                cell_w, cell_h, opts, orient="h")
+                    if vrows0 and ri < len(vrows0) and idx < len(vrows0[ri]):
+                        syl = vrows0[ri][idx]
+                        if syl and syl != "-" and syl.replace('(', '').replace(')', ''):
+                            _draw_vocal_cell(out, _vocal_elements(syl), x, y,
+                                             cell_w, cell_h, h_syl_fs, h_syl_pad)
                     if rs:
                         _render_repeat_arrow(out, x + cell_w * 0.85,
                                              y, cell_h, cell_w * 0.15, 'start')
@@ -1827,6 +1836,24 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
 TUTO_DEFAULT_BLOCK = (1280, 720)
 TUTO_DEFAULT_COLS = 8    # cases par dan (video exemple)
 TUTO_DEFAULT_DANS = 7    # dans par page (video exemple)
+
+
+def _draw_vocal_cell(out, elements, x, y, cell_w, cell_h, syl_fs, syl_pad):
+    # Ligne marker virtuelle (layouts horizontaux : horizontal, tuto) :
+    # les éléments du token vocal (points ・ et syllabes) vont en bas de case,
+    # sans toucher la bordure, répartis en x_i = cx + cell_w * i/n
+    # (i=0 sous la note principale ; n=2 -> bordure droite = straddle ;
+    #  n=3 -> cx, cx+cw/3, cx+2cw/3 ; n=4 -> cx, cx+cw/4, cx+cw/2, cx+3cw/4).
+    sy = y + cell_h - syl_pad
+    n = len(elements)
+    for i, part in enumerate(elements):
+        sx = x + cell_w / 2 + cell_w * (i / n)
+        if part == "":
+            out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
+                       f'font-family="serif" font-size="{syl_fs}" fill="#888">{chr(0x30FB)}</text>')
+        else:
+            out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
+                       f'font-family="serif" font-size="{syl_fs}" fill="#333">{escape(part)}</text>')
 
 
 def _split_syllables(text):
@@ -1968,27 +1995,8 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
                     # interprétées au parse, jamais rendues dans le layout
                     disp = syl.replace('(', '').replace(')', '')
                     if disp:
-                        #ligne marker virtuelle : les éléments du token vocal vont en
-                        #bas de case (sans toucher la bordure), répartis en x entre
-                        #le centre (sous la note principale) et la bordure droite
-                        #(sous le straddle). Une seule syllabe sans point -> sous la
-                        #note principale (centre). Le point est rendu ・ (#888).
-                        parts = _vocal_elements(syl)
-                        sy = y + cell_h - syl_pad
-                        n = len(parts)
-                        for i, part in enumerate(parts):
-                            # n éléments -> positions x_i = cx + cell_w * i/n :
-                            # i=0 sous la note principale, i=n-1 à droite ;
-                            # n=4 -> cx, cx+cw/4, cx+cw/2 (straddle), cx+3cw/4
-                            sx = x + cell_w / 2 + cell_w * (i / n)
-                            if part == "":
-                                out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
-                                           f'font-family="serif" font-size="{syl_fs}" '
-                                           f'fill="#888">{chr(0x30FB)}</text>')
-                            else:
-                                out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
-                                           f'font-family="serif" font-size="{syl_fs}" '
-                                           f'fill="#333">{escape(part)}</text>')
+                        _draw_vocal_cell(out, _vocal_elements(syl), x, y,
+                                         cell_w, cell_h, syl_fs, syl_pad)
     out.append("</svg>")
     return "\n".join(out)
 

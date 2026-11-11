@@ -127,7 +127,7 @@ Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sorti
 
 ### Mise en page horizontale standard
 
-Cette mise en page n'est pas encore documentée.
+Lecture gauche→droite, haut→bas. Depuis la PR tuto, le layout `horizontal` partage avec `tuto` : le straddle des croches chevauche la **bordure droite** des cases (`render_cell(..., orient="h")`), et les syllabes `::vocal` sont rendues en bas de leur case avec la même répartition (`_draw_vocal_cell`, positions `x_i = cx + cell_w*i/n`).
 
 ## Mises en page complexes
 

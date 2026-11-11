@@ -258,3 +258,15 @@ for ch, ex in expected.items():
     assert got and abs(got[0] - ex) < 0.5, (ch, got, ex)
 assert all(abs(y - (16 + 98.2857 - 6)) < 0.5 for x, y, c in els26)
 print("OK tuto : n=3 (imports Portama) -> cx, cx+CW/3, cx+2CW/3, toujours en bas")
+
+# 27. horizontal partage les règles tuto : vocals en bas (x_i = cx + cw*i/n), straddle bordure droite
+t27 = "@layout horizontal\n::tab\n" + chr(0x5408) + "/" + chr(0x5DE5) + " " + chr(0x5408) + "\n::\n::vocal\n" + chr(0x3050)+chr(0x3055) + " ." + chr(0x3042) + "\n::\n"
+h27 = _k.render_svg(_k.parse_kkml(t27), layout="horizontal")[0]
+import re as _re27
+els27 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re27.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', h27)]
+assert any(abs(x - 42) < 0.5 and c == chr(0x3050) for x, y, c in els27), els27   # ぐ sous note principale (cell_w=52, cx0=42)
+assert any(abs(x - 68) < 0.5 and c == chr(0x3055) for x, y, c in els27), els27   # さ sous straddle (bordure 68)
+sts = [(float(m.group(1)), float(m.group(2))) for m in _re27.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + chr(0x5DE5) + r'</text>', h27)]
+main = [(float(m.group(1)), float(m.group(2))) for m in _re27.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + chr(0x5408) + r'</text>', h27)]
+assert sts and abs(sts[0][0] - 68) < 0.5 and abs(sts[0][1] - main[0][1]) < 1, (sts, main)  # straddle sur bordure droite, même y
+print("OK horizontal : vocals en bas de case + straddle sur bordure droite (orient=h)")
