@@ -268,5 +268,9 @@ assert any(abs(x - 42) < 0.5 and c == chr(0x3050) for x, y, c in els27), els27  
 assert any(abs(x - 68) < 0.5 and c == chr(0x3055) for x, y, c in els27), els27   # さ sous straddle (bordure 68)
 sts = [(float(m.group(1)), float(m.group(2))) for m in _re27.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + chr(0x5DE5) + r'</text>', h27)]
 main = [(float(m.group(1)), float(m.group(2))) for m in _re27.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + chr(0x5408) + r'</text>', h27)]
-assert sts and abs(sts[0][0] - 68) < 0.5 and abs(sts[0][1] - main[0][1]) < 1, (sts, main)  # straddle sur bordure droite, même y
+assert sts and abs(sts[0][0] - 68) < 0.5, (sts, main)  # straddle sur la bordure droite
+# même centre optique que la note (baselines différentes car tailles différentes)
+c_main = main[0][1] - 0.318 * 22
+c_str = sts[0][1] - 0.318 * int(22 * 0.713)
+assert abs(c_main - c_str) < 0.6, (c_main, c_str)
 print("OK horizontal : vocals en bas de case + straddle sur bordure droite (orient=h)")
