@@ -515,6 +515,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
+        'tuto_tech_avg': layout == "tuto",  # tuto : position moyenne uchi-utu/kaki-utu pour ' et ^
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
@@ -2050,7 +2051,7 @@ def _wrap_horizontal(tokens, cols):
 # --------------------------------------------------------------------------- #
 # Helpers
 # --------------------------------------------------------------------------- #
-def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
+def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None, tech_map=None):
     """Dessine les marques de technique (souhou) autour de la cellule.
 
     Les marques de type 'char' sont rendues dans la même police (serif) et la
@@ -2070,7 +2071,7 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
     """
     gap = fs * 0.05
     for suffix in suffixes:
-        tech = TECHNIQUE_SUFFIXES[suffix]
+        tech = (tech_map or TECHNIQUE_SUFFIXES)[suffix]
         ttype = tech['type']
         if ttype == 'char':
             sym = tech['symbol']
@@ -2332,6 +2333,21 @@ def _warn_unknown_token(tok):
               file=sys.stderr)
 
 
+def _tuto_avg_tech_map():
+    # En tuto, les deux marques top-right (uchi-utu ', kaki-utu ^) partagent
+    # la MEME position : moyenne des dx/dy/scale des deux entrées.
+    u = TECHNIQUE_SUFFIXES["'"]
+    k = TECHNIQUE_SUFFIXES["^"]
+    avg = {'type': 'char', 'pos': 'top-right',
+           'dx': (u.get('dx', 0) + k.get('dx', 0)) / 2,
+           'dy': (u.get('dy', 0) + k.get('dy', 0)) / 2,
+           'scale': (u.get('scale', 1.0) + k.get('scale', 1.0)) / 2}
+    m = dict(TECHNIQUE_SUFFIXES)
+    m["'"] = dict(u, **avg)
+    m["^"] = dict(k, **avg)
+    return m
+
+
 def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v"):
     """Affiche un token dans une cellule.
 
@@ -2381,6 +2397,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     """
     if opts is None:
         opts = {}
+    tmap = _tuto_avg_tech_map() if opts.get('tuto_tech_avg') else None
+    def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None):
+        _render_techniques(out, suffixes, cx, cy, cw, ch, fs, text_w=text_w, tech_map=tmap)
 
     if tok in (EMPTY_TOKEN, "", None):
         return
@@ -2453,7 +2472,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                   f'font-family="serif" font-size="{effective_fs}" '
                   f'fill="black">{_note_svg(base_tok, effective_fs, opts)}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # 下尺 → 尺 entouré d'un cercle
@@ -2464,7 +2483,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape("尺")}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # 下老 → deux caractères condensés en demi-largeur via textLength
@@ -2476,7 +2495,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下老")}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=effective_fs * 1.0)
         return
 
@@ -2490,7 +2509,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下八")}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=effective_fs * 1.0)
         return
 
@@ -2508,7 +2527,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape(base_tok)}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=effective_fs * 1.2)
         return
 
@@ -2526,7 +2545,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape(base_tok)}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=target_w)
         return
 
@@ -2544,7 +2563,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                            f'text-anchor="middle" font-family="serif" '
                            f'font-size="{small}" fill="black">'
                            f'{escape(c)}</text>')
-            _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+            _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
             return
 
     if "/" in base_tok:
@@ -2568,7 +2587,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
         # Techniques de la note principale
         if main_tech:
-            _render_techniques(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
+            _rt(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
 
         if straddle_note:
             ss_pos = int(fs * 0.713)
@@ -2600,14 +2619,14 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                 if orient == "h":
                     # techniques du straddle : positionnées depuis le straddle
                     # (bordure droite), avec sa propre taille ss
-                    _render_techniques(out, tech_suffixes, straddle_x, cy,
+                    _rt(out, tech_suffixes, straddle_x, cy,
                                        cell_w, cell_h, ss)
                 else:
-                    _render_techniques(out, tech_suffixes, cx, straddle_y - fs * 0.318,
+                    _rt(out, tech_suffixes, cx, straddle_y - fs * 0.318,
                                        cell_w, cell_h, effective_fs)
         else:
             # Pas de note à cheval : les techniques s'appliquent à la note principale
-            _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+            _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # --- shuffle 早弾き : A:B (deux notes égales, empilées) --- #
@@ -2622,7 +2641,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                 out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                            f'font-family="serif" font-size="{fs}" fill="black">'
                            f'{_note_svg(lone, fs, opts)}</text>')
-                _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+                _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
                 return
         # En présence d'une borne de chant ( / ), les deux notes du shuffle
         # gardent la taille pleine (fs) : la borne est un petit glyphe à part.
@@ -2652,7 +2671,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                        f'text-anchor="middle" font-family="serif" '
                        f'font-size="{sh}" fill="black">'
                        f'{_note_svg(lower, sh, opts)}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # --- note simple (noire) --- #
@@ -2677,7 +2696,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">{escape(shown)}</text>')
 
-    _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+    _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
 
 
 def escape(s):
