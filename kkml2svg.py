@@ -515,7 +515,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
-        'tuto_tech_avg': layout == "tuto",  # tuto : position moyenne uchi-utu/kaki-utu pour ' et ^
+        'tuto_tech_avg': layout in ("tuto", "horizontal"),  # position moyenne uchi-utu/kaki-utu pour ' et ^ (tuto + horizontal)
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
