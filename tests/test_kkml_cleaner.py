@@ -378,6 +378,11 @@ syl35 = [ (float(m.group(1)), float(m.group(2))) for m in _re35.finditer(r'<text
 assert dot35 and syl35, "pas de ・/あ en vertical"
 assert abs(dot35[0][0] - syl35[0][0]) < 0.5, (dot35, syl35)   # même colonne marker
 assert dot35[0][1] < syl35[0][1], (dot35, syl35)               # ・ au-dessus de あ (lecture haut->bas)
+# le 1er élément (le point) est au CENTRE vertical de la case
+note35 = next(float(m.group(1)) for m in _re35.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="22"[^>]*>' + GO + r'</text>', v35))
+center35 = note35 - 22 * 0.318   # baseline note - offset -> centre de case
+syl_fs35 = 15
+assert abs(dot35[0][1] - (center35 + syl_fs35 / 3)) < 0.6, (dot35[0][1], center35)
 print("OK vertical : logique points/vocal commune (_vocal_elements, ・ puis syllabe)")
 
 # 36. nomura : logique points commune — ".あ" -> ・ + あ dans le marker
@@ -397,3 +402,15 @@ import re as _re37
 m = _re37.search(r'width="([\d.]+)" height="([\d.]+)"', n37[0])
 assert abs(float(m.group(1)) - 21*_k.CM) < 0.01 and abs(float(m.group(2)) - 29.7*_k.CM) < 0.01, m.groups()
 print("OK nomura : page = 21 x 29,7 cm via CM (%.2f x %.2f pt)" % (21*_k.CM, 29.7*_k.CM))
+
+# 38. vertical : n=2 -> 1er élément au centre, 2e à centre + cell_h/2 (multiplicateur i/n)
+GO = chr(0x5408)
+v38 = _k.render_svg(_k.parse_kkml("@layout vertical\n::tab\n" + GO + "\n::\n::vocal\n." + chr(0x3042) + "\n::\n"), layout="vertical")[0]
+import re as _re38
+d38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*fill="#888">' + chr(0x30FB) + r'</text>', v38))
+a38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*fill="#333">' + chr(0x3042) + r'</text>', v38))
+n38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="22"[^>]*>' + GO + r'</text>', v38))
+center38 = n38 - 22 * 0.318
+assert abs(d38 - (center38 + 15 / 3)) < 0.6, (d38, center38)          # point au centre
+assert abs(a38 - (center38 + 58 / 2 + 15 / 3)) < 0.6, (a38, center38)   # あ à centre + cell_h/2
+print("OK vertical : 1er élément au centre de la case, puis cell_h*i/n")

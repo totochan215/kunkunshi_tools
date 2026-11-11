@@ -1362,10 +1362,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                     sx = gx + cell_w + marker_w / 2
                     elems = _vocal_elements(syllable)
                     n = max(len(elems), 1)
-                    sub_h = max(cell_h / n, syl_fs * 1.15)
-                    y_start = cy + (cell_h - sub_h * n) / 2
                     for j, el in enumerate(elems):
-                        sy = y_start + sub_h * j + sub_h / 2 + syl_fs / 3
+                        # 1er élément au centre de la case, puis cell_h * j/n (comme vertical/horizontal)
+                        sy = cy + cell_h / 2 + cell_h * (j / n) + syl_fs / 3
                         if el == "":
                             out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
                                        f'font-family="serif" font-size="{syl_fs}" '
@@ -1581,11 +1580,10 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
             # toute la case (centré). Même règle qu'en horizontal/tuto.
             elems = _vocal_elements(token)
             n = max(len(elems), 1)
-            sub_h = max(cell_h / n, syllable_fs * 1.15)
-            total = sub_h * n
-            y_start = cy + (cell_h - total) / 2  # centrer le bloc dans la case
             for j, el in enumerate(elems):
-                sy = y_start + sub_h * j + sub_h / 2 + syllable_fs / 3
+                # 1er élément au CENTRE de la case, puis mêmes multiplicateurs
+                # qu'en horizontal/tuto : y_i = centre + cell_h * i/n
+                sy = cy + cell_h / 2 + cell_h * (j / n) + syllable_fs / 3
                 if el == "":
                     # point : rendu ・ (gris #888), occupe sa sous-partie
                     out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
