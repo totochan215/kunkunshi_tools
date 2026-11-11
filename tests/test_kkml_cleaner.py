@@ -290,9 +290,23 @@ svg29 = _k.render_svg(_k.parse_kkml(t29))[1]
 import re as _re29
 els29 = [(float(m.group(1)), float(m.group(2)), float(m.group(3)), m.group(4)) for m in _re29.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]*)</text>', svg29)]
 FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2; BORDER1 = 16 + 2*CW; SS = int(FS*0.713)
-main_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (CX0 + FS*0.70)) < 0.5)
-assert abs(main_c[1] - (CY + FS*0.318 + FS*(-0.95))) < 0.5, main_c   # haut à droite de la note principale
-str_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (BORDER1 + SS*0.70)) < 0.5)
-assert abs(str_c[1] - (CY + SS*0.318 + SS*(-0.95))) < 0.5, str_c     # haut à droite du straddle
-assert str_c[2] == int(SS * 1.1 * 0.9)  # tech_fs = int(ss*1.1*scale), scale kaki = 0.9
+AVG = _k._tuto_avg_tech_map()["^"]   # tuto : position moyenne uchi-utu/kaki-utu
+DX, DY, SC = AVG['dx'], AVG['dy'], AVG['scale']
+main_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (CX0 + FS*DX)) < 0.5)
+assert abs(main_c[1] - (CY + FS*0.318 + FS*DY)) < 0.5, main_c   # position moyenne, note principale
+str_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (BORDER1 + SS*DX)) < 0.5)
+assert abs(str_c[1] - (CY + SS*0.318 + SS*DY)) < 0.5, str_c     # position moyenne, straddle
+assert str_c[2] == int(SS * 1.1 * SC)  # tech_fs avec scale moyenné
 print("OK tuto : ⌝ kaki-utu en haut à droite de sa note (main et straddle)")
+
+# 30. tuto : ' (uchi-utu) et ^ (kaki-utu) à la même position moyenne (dx=0.60, dy=-0.45)
+NAKA = chr(0x4E2D); GRAVEF = chr(0xFF40); CORNER = chr(0x231D)
+t30 = "@layout tuto\n::tab\n" + NAKA + "' " + NAKA + "^\n::\n"
+svg30 = _k.render_svg(_k.parse_kkml(t30))[1]
+import re as _re30
+els30 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re30.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', svg30)]
+FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2
+ex, ey = CX0 + FS*0.60, CY + FS*0.318 + FS*(-0.45)
+assert any(abs(e[0]-ex) < 0.5 and abs(e[1]-ey) < 0.5 for e in els30 if e[2] == GRAVEF), (ex, ey)
+assert any(abs(e[0]-ex) < 0.5 and abs(e[1]-ey) < 0.5 for e in els30 if e[2] == CORNER), (ex, ey)  # même position moyenne
+print("OK tuto : ' et ^ à la même position moyenne (dx=0.60, dy=-0.45)")
