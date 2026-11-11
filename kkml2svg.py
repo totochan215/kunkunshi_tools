@@ -1871,16 +1871,25 @@ def _split_syllables(text):
 
 
 def _vocal_elements(tok):
-    # Aplatit un token ::vocal en éléments ordonnés : séparés par '.'
-    # (chaque partie vide = un point ・), chaque partie non vide découpée en
-    # syllabes. Ex. ".ちゅ" -> ['', 'ちゅ'] ; "ぐさ" -> ['ぐ', 'さ'].
+    # Aplatit un token ::vocal en éléments ordonnés : chaque '.' est UN
+    # élément (point ・), chaque run de caractères est un groupe de syllabes
+    # (découpé par _split_syllables). Les parenthèses (koedashi/koekiri) sont
+    # du inline formatting : retirées, jamais comptées comme éléments.
+    # Ex. ".ちゅ" -> ['', 'ちゅ'] ; "ぐさ" -> ['ぐ', 'さ'] ; "..." -> ['', '', ''] (3 points) ;
+    # ".)" -> [''] (1 point, la parenthèse ne compte pas).
     tok = tok.replace('(', '').replace(')', '')
     elems = []
-    for part in tok.split("."):
-        if part == "":
+    cur = ""
+    for ch in tok:
+        if ch == ".":
+            if cur:
+                elems.extend(_split_syllables(cur))
+                cur = ""
             elems.append("")
         else:
-            elems.extend(_split_syllables(part))
+            cur += ch
+    if cur:
+        elems.extend(_split_syllables(cur))
     return elems
 
 
