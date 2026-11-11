@@ -422,3 +422,12 @@ c39 = _k.render_svg(_k.parse_kkml("@layout chindami\n::tab\n" + chr(0x5408) + "\
 assert 'width="23cm"' in c39 and 'height="15cm"' in c39
 assert 'inkscape:export-xdpi="600"' in c39 and 'viewBox="0 0' in c39
 print("OK chindami : width=23cm height=15cm, viewBox pt, export dpi 600")
+
+# 40. nomura/chindami : métadonnées Dublin Core — dc:title (sans ruby) + dc:creator
+TITLE40 = chr(0x3066)+chr(0x3043)+chr(0x3093)+chr(0x3055)+chr(0x3050)+chr(0x306c)+chr(0x82b1)+chr(0x300a)+chr(0x306f)+chr(0x306a)+chr(0x300b)
+for lay in ("nomura", "chindami"):
+    s40 = _k.render_svg(_k.parse_kkml("@title " + TITLE40 + "\n@layout " + lay + "\n::tab\n" + chr(0x5408) + "\n::\n"), layout=lay)[0]
+    assert "<dc:title>" + chr(0x3066)+chr(0x3043)+chr(0x3093)+chr(0x3055)+chr(0x3050)+chr(0x306c)+chr(0x82b1) + "</dc:title>" in s40, lay
+    assert "<dc:creator>kunkunshi_tools</dc:creator>" in s40, lay
+    assert chr(0x300a) not in s40.split("</metadata>")[0].split("<dc:title>")[1], "ruby dans dc:title"
+print("OK métadonnées Inkscape : dc:title sans ruby + dc:creator=kunkunshi_tools (nomura, chindami)")
