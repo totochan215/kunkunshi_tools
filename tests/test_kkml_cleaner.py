@@ -290,9 +290,9 @@ svg29 = _k.render_svg(_k.parse_kkml(t29))[1]
 import re as _re29
 els29 = [(float(m.group(1)), float(m.group(2)), float(m.group(3)), m.group(4)) for m in _re29.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]*)</text>', svg29)]
 FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2; BORDER1 = 16 + 2*CW; SS = int(FS*0.713)
-main_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (CX0 + FS*0.85)) < 0.5)
-assert abs(main_c[1] - (CY + FS*0.318 + FS*(-1.20))) < 0.5, main_c   # haut à droite de la note principale
-str_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (BORDER1 + SS*0.85)) < 0.5)
-assert abs(str_c[1] - (CY + SS*0.318 + SS*(-1.20))) < 0.5, str_c     # haut à droite du straddle
+main_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (CX0 + FS*0.70)) < 0.5)
+assert abs(main_c[1] - (CY + FS*0.318 + FS*(-0.95))) < 0.5, main_c   # haut à droite de la note principale
+str_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (BORDER1 + SS*0.70)) < 0.5)
+assert abs(str_c[1] - (CY + SS*0.318 + SS*(-0.95))) < 0.5, str_c     # haut à droite du straddle
 assert str_c[2] == int(SS * 1.1 * 0.9)  # tech_fs = int(ss*1.1*scale), scale kaki = 0.9
 print("OK tuto : ⌝ kaki-utu en haut à droite de sa note (main et straddle)")
