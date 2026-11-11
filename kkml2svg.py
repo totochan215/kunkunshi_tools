@@ -2100,13 +2100,13 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
                 else:  # bottom-left
                     tx = cx - text_w / 2 - gap
                     anchor = "start" if rotate else "end"
-                ty = cy + 7 + fs * dy
+                ty = cy + fs * 0.318 + fs * dy
             else:
                 if tech['pos'] == 'top-right':
                     tx = cx + fs * dx
                 else:
                     tx = cx - fs * dx
-                ty = cy + 7 + fs * dy
+                ty = cy + fs * 0.318 + fs * dy
                 anchor = "middle"
             if rotate:
                 out.append(f'<text x="{tx}" y="{ty}" text-anchor="{anchor}" '
@@ -2598,8 +2598,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             # Les techniques de fin de token s'appliquent à la note à cheval :
             if tech_suffixes:
                 if orient == "h":
+                    # techniques du straddle : positionnées depuis le straddle
+                    # (bordure droite), avec sa propre taille ss
                     _render_techniques(out, tech_suffixes, straddle_x, cy,
-                                       cell_w, cell_h, effective_fs)
+                                       cell_w, cell_h, ss)
                 else:
                     _render_techniques(out, tech_suffixes, cx, straddle_y - fs * 0.318,
                                        cell_w, cell_h, effective_fs)
