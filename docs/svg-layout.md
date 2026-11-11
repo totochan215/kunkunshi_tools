@@ -164,7 +164,7 @@ https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases 
 - `@cells_per_dan` / `-c` = cases par dan (défaut 8 en tuto, 12 sinon) ; `@page_dans` / `-p` = dans par page (défaut 7 en tuto).
 - **Page 1 à part** : titre, accordage, auteur/compositeur/etc. centrés seuls sur la page.
 - Pages suivantes : la tablature, découpée en pages de `page_dans` dans max, **pleine largeur** (pas de bande marker en tuto : les flèches de répétition ↓/↑ ne sont pas rendues). Placement des syllabes `::vocal` dans leur case :
-- une seule syllabe, pas de point `.` : au **niveau de la note principale** (centre de la case) ;
+- une seule syllabe, pas de point `.` : **sous la note principale** (centre de la case, x = cx), en bas de case ;
 - token avec point(s) (subdivision) : les éléments sont répartis **en bas de case**, le 1er sous la note principale (centre), le 2e sous le straddle (bordure droite) ; le point lui-même est rendu `・` (gris #888).
 
 - En layout horizontal (`horizontal`, `tuto`), la note à cheval d'une croche `A/B` est **centrée sur la bordure droite** (verticale) de la case (l'ornement suit), et les deux notes d'un shuffle `A:B` sont côte à côte ; en vertical, le straddle chevauche la bordure inférieure (`render_cell(..., orient="h")` vs `"v"`).

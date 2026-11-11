@@ -192,11 +192,11 @@ import re as _re22
 voc22 = [(float(m.group(1)), float(m.group(2))) for m in _re22.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">([^<]*)</text>', tab22) if A in m.group(3)]
 # case 0 (x=94, centre y=65.14) : syllabe seule -> niveau note ; case 1 (x=250) : token ".あ" -> bas
 y0 = next(y for x, y in voc22 if abs(x - 94) < 0.5)
-assert abs(y0 - (16 + 98.2857/2 + 22*0.318)) < 0.5, y0   # syllabe seule : niveau note (centre case)
+assert abs(y0 - (16 + 98.2857 - 6)) < 0.5, y0             # syllabe seule : sous note principale (x=94), EN BAS de case
 # token ".あ" (case 1, noire) : point à cx=250, syllabe à la bordure x=328, en bas de case
 y1 = next(y for x, y in voc22 if abs(x - 328) < 0.5)
 assert abs(y1 - (16 + 98.2857 - 6)) < 0.5, y1              # bas de case - syl_pad
-print("OK tuto : syllabe sans point au niveau de la note ; avec point, répartie sous straddle")
+print("OK tuto : syllabe seule sous la note principale (bas de case) ; avec point, répartie sous straddle")
 
 # 23. tuto : ".あ" -> point sous note principale, syllabe sous straddle ; "あ." -> inverse
 GO, GO5, A = chr(0x5408), chr(0x5DE5), chr(0x3042)

@@ -1940,31 +1940,24 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
                     # interprétées au parse, jamais rendues dans le layout
                     disp = syl.replace('(', '').replace(')', '')
                     if disp:
-                        if "." not in syl:
-                            # une seule syllabe, pas de point : au niveau de la
-                            # note principale (centre optique = centre de case)
-                            sy = y + cell_h / 2 + syl_fs * 0.318
-                            out.append(f'<text x="{x + cell_w / 2:g}" y="{sy:g}" '
-                                       f'text-anchor="middle" font-family="serif" '
-                                       f'font-size="{syl_fs}" fill="#333">{escape(disp)}</text>')
-                        else:
-                            # subdivision (point.s) : les éléments du token sont
-                            # répartis en bas de case — elem[0] sous la note
-                            # principale (centre), elem[1] sous le straddle
-                            # (bordure droite). Le point lui-même est rendu (・).
-                            parts = disp.split(".")
-                            sy = y + cell_h - syl_pad
-                            n = len(parts)
-                            for i, part in enumerate(parts):
-                                sx = x + cell_w / 2 + (cell_w / 2) * (i / (n - 1)) if n > 1 else x + cell_w / 2
-                                if part == "":
-                                    out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
-                                               f'font-family="serif" font-size="{syl_fs}" '
-                                               f'fill="#888">{chr(0x30FB)}</text>')
-                                else:
-                                    out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
-                                               f'font-family="serif" font-size="{syl_fs}" '
-                                               f'fill="#333">{escape(part)}</text>')
+                        #ligne marker virtuelle : les éléments du token vocal vont en
+                        #bas de case (sans toucher la bordure), répartis en x entre
+                        #le centre (sous la note principale) et la bordure droite
+                        #(sous le straddle). Une seule syllabe sans point -> sous la
+                        #note principale (centre). Le point est rendu ・ (#888).
+                        parts = disp.split(".")
+                        sy = y + cell_h - syl_pad
+                        n = len(parts)
+                        for i, part in enumerate(parts):
+                            sx = x + cell_w / 2 + (cell_w / 2) * (i / (n - 1)) if n > 1 else x + cell_w / 2
+                            if part == "":
+                                out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
+                                           f'font-family="serif" font-size="{syl_fs}" '
+                                           f'fill="#888">{chr(0x30FB)}</text>')
+                            else:
+                                out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
+                                           f'font-family="serif" font-size="{syl_fs}" '
+                                           f'fill="#333">{escape(part)}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
