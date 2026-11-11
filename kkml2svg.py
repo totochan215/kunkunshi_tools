@@ -876,8 +876,9 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
 #   - jusqu'à 7 dans par page ; le titre (p.1) et les paroles (dernière
 #     colonne de la dernière page) consomment chacun l'équivalent d'un dan
 
-NOMURA_PAGE_W = 595.28
-NOMURA_PAGE_H = 841.89
+CM = 28.3465  # 1 cm en points (1 pt = 1/72 in, universel PDF/CSS/SVG)
+NOMURA_PAGE_W = 21 * CM      # A4 portrait = 21 x 29,7 cm = 595,28 pt (mesuré)
+NOMURA_PAGE_H = 29.7 * CM    # = 841,89 pt (mesuré)
 # Constantes primaires de la mise en page : largeur et hauteur du cadre
 # de page, et la marge de dans M (unique) :
 #   - entre le haut du cadre et le sommet des dans
@@ -903,7 +904,6 @@ NOMURA_CELL_H = (NOMURA_FRAME_H - 2 * NOMURA_DAN_GAP) / NOMURA_ROWS
 # Layout Chindami-Kunkunshi (recueils ちんだみ工工四百選集, 23 x 15 cm paysage)
 # Constantes v1 d'après docs/svg-layout.md ; à recalibrer sur samples PDF.
 # --------------------------------------------------------------------------- #
-CM = 28.3465  # 1 cm en points
 CHINDAMI_PAGE_W = 23 * CM          # 651,96 pt mesurée (MediaBox), paysage
 CHINDAMI_PAGE_H = 15 * CM          # 425,16 pt mesurée
 CHINDAMI_ROWS = 12                 # cases par pile (spec utilisateur, confirmé visuellement ~10-12)
