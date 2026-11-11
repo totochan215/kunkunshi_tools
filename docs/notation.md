@@ -241,6 +241,9 @@ Petits kana combinants reconnus : ぁぃぅぇぉゃゅょゎ (hiragana) et ァ�
 Chaque ligne dans une section `::vocal` correspond à la ligne de `::tab` de même index. Les temps (cases) sont séparés par des espaces. L'ajout de points permet de répartir les syllabes au sein d'un temps (le temps est divisé par le nombre de points et de syllabes).
 Des koedashi et koekiri peuvent être ajoutés ; ils n'ont pas d'impact sur la répartition dans la case et ne sont PAS rendus dans la colonne marker (la parenthèse sert uniquement à positionner le ○/□ dans la case de `::tab`). La parenthèse ouvrante du koedashi s'associe à l'élément situé juste après elle, qui peut être un point. La parenthèse fermante du koekiri s'associe à l'élément situé juste avant elle, qui peut être un point.
 
+### Découpage commun des tokens vocaux
+Tous les layouts utilisent `_vocal_elements` : chaque `.` = un élément (rendu `・` gris), chaque run de caractères est découpé en syllabes (`_split_syllables`, petits kana et `ー` rattachés). En horizontal/tuto, les éléments sont répartis en x dans la case (`_draw_vocal_cell`, `x_i = cx + cell_w·i/n`) ; en vertical, répartis en y dans la colonne marker (bloc centré dans la case).
+
 ### Alignement ligne par ligne
 
 - La syllabe i de la ligne vocale j s'aligne sur la note i de la ligne de tablature j
