@@ -1565,34 +1565,25 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
             sx = x + cell_w + marker_w / 2
             if not token or token == "-":
                 continue
-            # Système de points : un token contenant des `.` subdivise le temps.
-            if "." in token:
-                # Système de points : le temps de la case est divisé en n parts
-                # égales, n = syllabes + points (les points ne sont pas rendus
-                # mais occupent leur part). Un token sans point occupe toute la
-                # case (centré). On borne l'écart entre sous-temps à au moins
-                # syllable_fs * 1.1 pour éviter que les caractères se mordent,
-                # quitte à déborder légèrement de la case (déjà accepté).
-                # n = nombre de SYLLABES (les points ne comptent pas comme
-                # sous-temps occupés : ils marquent juste une subdivision).
-                elems = token.replace(".", " . ").split()
-                n = sum(1 for e in elems if e != ".")
-                n = max(n, 1)
-                sub_h = max(cell_h / n, syllable_fs * 1.15)
-                total = sub_h * n
-                y_start = cy + (cell_h - total) / 2  # centrer le bloc dans la case
-                j = 0  # index parmi les syllabes (les points ne consomment pas de part)
-                for el in elems:
-                    if el == ".":
-                        continue
-                    sy = y_start + sub_h * j + sub_h / 2 + syllable_fs / 3
+            # Logique commune des points et du vocal (_vocal_elements) :
+            # chaque élément (point ・ ou syllabe) occupe une sous-partie
+            # verticale de la case, bloc centré ; un token sans point occupe
+            # toute la case (centré). Même règle qu'en horizontal/tuto.
+            elems = _vocal_elements(token)
+            n = max(len(elems), 1)
+            sub_h = max(cell_h / n, syllable_fs * 1.15)
+            total = sub_h * n
+            y_start = cy + (cell_h - total) / 2  # centrer le bloc dans la case
+            for j, el in enumerate(elems):
+                sy = y_start + sub_h * j + sub_h / 2 + syllable_fs / 3
+                if el == "":
+                    # point : rendu ・ (gris #888), occupe sa sous-partie
+                    out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
+                               f'font-family="serif" font-size="{syllable_fs}" '
+                               f'fill="#888">{chr(0x30FB)}</text>')
+                else:
                     for k, ch in enumerate(el):
                         _emit(sx, sy + k * step, ch)
-                    j += 1
-                continue
-            sy = cy + cell_h / 2 + syllable_fs / 3  # centré sur la note
-            for k, ch in enumerate(token):
-                _emit(sx, sy + k * step, ch)
 
 
 def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
