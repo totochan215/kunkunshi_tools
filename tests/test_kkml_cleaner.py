@@ -399,9 +399,11 @@ print("OK nomura : logique points/vocal commune (_vocal_elements, ・ rendu)")
 GO = chr(0x5408)
 n37 = _k.render_svg(_k.parse_kkml("@layout nomura\n::tab\n" + GO + "\n::\n"), layout="nomura")
 import re as _re37
-m = _re37.search(r'width="([\d.]+)" height="([\d.]+)"', n37[0])
-assert abs(float(m.group(1)) - 21*_k.CM) < 0.01 and abs(float(m.group(2)) - 29.7*_k.CM) < 0.01, m.groups()
-print("OK nomura : page = 21 x 29,7 cm via CM (%.2f x %.2f pt)" % (21*_k.CM, 29.7*_k.CM))
+assert 'width="21cm"' in n37[0] and 'height="29.7cm"' in n37[0], "format A4 non déclaré en cm"
+assert 'inkscape:export-xdpi="600"' in n37[0] and 'inkscape:export-ydpi="600"' in n37[0], "dpi 600 non déclaré"
+vb = _re37.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', n37[0]).groups()
+assert abs(float(vb[0]) - 21*_k.CM) < 0.01 and abs(float(vb[1]) - 29.7*_k.CM) < 0.01, vb
+print("OK nomura : width=21cm height=29.7cm (A4 via CM), viewBox en pt, export dpi 600")
 
 # 38. vertical : n=2 -> 1er élément au centre, 2e à centre + cell_h/2 (multiplicateur i/n)
 GO = chr(0x5408)
@@ -414,3 +416,9 @@ center38 = n38 - 22 * 0.318
 assert abs(d38 - (center38 + 15 / 3)) < 0.6, (d38, center38)          # point au centre
 assert abs(a38 - (center38 + 58 / 2 + 15 / 3)) < 0.6, (a38, center38)   # あ à centre + cell_h/2
 print("OK vertical : 1er élément au centre de la case, puis cell_h*i/n")
+
+# 39. chindami : format 23x15cm + dpi 600 déclarés dans le SVG (Inkscape)
+c39 = _k.render_svg(_k.parse_kkml("@layout chindami\n::tab\n" + chr(0x5408) + "\n::\n"), layout="chindami")[0]
+assert 'width="23cm"' in c39 and 'height="15cm"' in c39
+assert 'inkscape:export-xdpi="600"' in c39 and 'viewBox="0 0' in c39
+print("OK chindami : width=23cm height=15cm, viewBox pt, export dpi 600")
