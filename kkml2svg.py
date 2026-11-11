@@ -1940,7 +1940,14 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
                     # interprétées au parse, jamais rendues dans le layout
                     disp = syl.replace('(', '').replace(')', '')
                     if disp:
-                        out.append(f'<text x="{x + cell_w / 2:g}" y="{y + cell_h - syl_pad:g}" '
+                        if "." in syl:
+                            # subdivision (points) : reste en bas de la case
+                            sy = y + cell_h - syl_pad
+                        else:
+                            # une seule syllabe, pas de point : au niveau de la
+                            # note principale (centre optique = centre de case)
+                            sy = y + cell_h / 2 + syl_fs * 0.318
+                        out.append(f'<text x="{x + cell_w / 2:g}" y="{sy:g}" '
                                    f'text-anchor="middle" font-family="serif" '
                                    f'font-size="{syl_fs}" fill="#333">{escape(disp)}</text>')
     out.append("</svg>")

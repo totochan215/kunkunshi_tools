@@ -183,3 +183,16 @@ for lay in ("tuto", "vertical"):
     texts21 = _re.findall(r'<text[^>]*>([^<]*)</text>', s21)
     assert all('(' not in x and ')' not in x for x in texts21), (lay, texts21)
 print("OK parenthèses non rendues (tuto + vertical)")
+
+# 22. tuto : syllabe sans point au niveau de la note ; avec point en bas de case
+GO = chr(0x5408); A = chr(0x3042)
+t22 = "@layout tuto\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n" + A + " ." + A + "\n::\n"
+tab22 = _k.render_svg(_k.parse_kkml(t22))[1]
+import re as _re22
+voc22 = [(float(m.group(1)), float(m.group(2))) for m in _re22.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">([^<]*)</text>', tab22) if A in m.group(3)]
+# case 0 (x=94, centre y=65.14) : syllabe seule -> niveau note ; case 1 (x=250) : token ".あ" -> bas
+y0 = next(y for x, y in voc22 if abs(x - 94) < 0.5)
+y1 = next(y for x, y in voc22 if abs(x - 250) < 0.5)
+assert abs(y0 - (16 + 98.2857/2 + 22*0.318)) < 0.5, y0   # centre case + offset syllabe
+assert abs(y1 - (16 + 98.2857 - 6)) < 0.5, y1              # bas de case - syl_pad
+print("OK tuto : syllabe sans point au niveau de la note, avec point en bas")
