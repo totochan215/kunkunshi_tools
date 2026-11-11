@@ -304,8 +304,8 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 
 Les marques diacritiques (`'`, `^`, `v`, `<`) sont rendues dans la même police et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
 
-- uchi-utu (｀) : `dx=0.50`, `dy=0.05`, `scale=1.1` (en haut-droite)
-- kaki-utu (⌝ natif, sans rotation, `scale=0.9`) : `dx=0.70`, `dy=-0.95` (en haut-droite, snug au-dessus de la note)
+- uchi-utu (｀) et nuchi-utu (゜) : `dx=0.50`, `dy=0.05`, `scale=1.21` — tech_fs ≈ 4/3 de la note (glyphes peu remplis)
+- kaki-utu (⌝ natif, sans rotation, `scale=0.91`) : `dx=0.70`, `dy=-0.95` — tech_fs ≈ taille de la note
 - aki-utu (V) : `dx=0.45`, `dy=0.15` (en bas-gauche)
 - kachi-utu (┗) : `dx=0.45`, `dy=0.15` (en bas-gauche)
 (rappel : `ty = cy + fs*0.318 + fs*dy` depuis 2026-11-10 — le +7 en dur ne scalait pas hors fs=22)
