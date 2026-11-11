@@ -192,7 +192,23 @@ import re as _re22
 voc22 = [(float(m.group(1)), float(m.group(2))) for m in _re22.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">([^<]*)</text>', tab22) if A in m.group(3)]
 # case 0 (x=94, centre y=65.14) : syllabe seule -> niveau note ; case 1 (x=250) : token ".あ" -> bas
 y0 = next(y for x, y in voc22 if abs(x - 94) < 0.5)
-y1 = next(y for x, y in voc22 if abs(x - 250) < 0.5)
-assert abs(y0 - (16 + 98.2857/2 + 22*0.318)) < 0.5, y0   # centre case + offset syllabe
+assert abs(y0 - (16 + 98.2857/2 + 22*0.318)) < 0.5, y0   # syllabe seule : niveau note (centre case)
+# token ".あ" (case 1, noire) : point à cx=250, syllabe à la bordure x=328, en bas de case
+y1 = next(y for x, y in voc22 if abs(x - 328) < 0.5)
 assert abs(y1 - (16 + 98.2857 - 6)) < 0.5, y1              # bas de case - syl_pad
-print("OK tuto : syllabe sans point au niveau de la note, avec point en bas")
+print("OK tuto : syllabe sans point au niveau de la note ; avec point, répartie sous straddle")
+
+# 23. tuto : ".あ" -> point sous note principale, syllabe sous straddle ; "あ." -> inverse
+GO, GO5, A = chr(0x5408), chr(0x5DE5), chr(0x3042)
+DOT = chr(0x30FB)
+t23 = "@layout tuto\n::tab\n" + GO + "/" + GO5 + " " + GO + "\n::\n::vocal\n." + A + " " + A + ".\n::\n"
+tab23 = _k.render_svg(_k.parse_kkml(t23))[1]
+import re as _re23
+els = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re23.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab23)]
+# case 0 (croche 合/五, cx=94, bordure=172) : token ".あ" -> ・ à 94, あ à 172
+assert any(abs(x - 94) < 0.5 and c == DOT for x, y, c in els), els
+assert any(abs(x - 172) < 0.5 and c == A for x, y, c in els), els
+# case 1 (noire 合, cx=250, bordure=328) : token "あ." -> あ à 250, ・ à 328
+assert any(abs(x - 250) < 0.5 and c == A for x, y, c in els), els
+assert any(abs(x - 328) < 0.5 and c == DOT for x, y, c in els), els
+print("OK tuto : répartition point/syllabe sous note principale et straddle")
