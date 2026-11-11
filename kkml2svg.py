@@ -1908,18 +1908,18 @@ def _tuto_title_page(song, W, H):
     return "\n".join(out)
 
 
-def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, marker_w, fs, opts, sec_title):
-    # Une page = jusqu'à page_dans rows (dans) de cols cases. Si marker_w > 0,
-    # bande marker verticale à DROITE de chaque dan (style Portama paysage) :
-    # séparateur vertical, syllabes ::vocal alignées sur les cases, flèches
-    # de répétition et marqueurs de boucle dans la bande.
+def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, sec_title):
+    # Une page = jusqu'à page_dans rows (dans) de cols cases, pleine largeur.
+    # Pas de bande marker en tuto : les flèches de répétition ne sont pas
+    # rendues (décision en attente sur la boucle vocale) ; les syllabes ::vocal
+    # vont en bas de leur case (ligne marker virtuelle : centrées, au-dessus
+    # de la bordure inférieure, sans chevaucher la note).
     out = _tuto_svg_open(W, H)
     y0 = mt
     if sec_title:
         out.append(f'<text x="{W - 16:g}" y="14" text-anchor="end" font-family="serif" '
                    f'font-size="12" fill="#999">{escape(sec_title)}</text>')
         y0 += 10
-    strip_x = ml + cols * cell_w
     syl_fs = int(fs * 0.6)
     syl_pad = max(2, int(syl_fs * 0.28))  # marge sous la baseline (ne touche pas la bordure)
     for r, row in enumerate(rows):
@@ -1928,69 +1928,33 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, marker_w, fs
             x = ml + idx * cell_w
             out.append(f'<rect x="{x:g}" y="{y:g}" width="{cell_w:g}" '
                        f'height="{cell_h:g}" fill="none" stroke="#999" stroke-width="0.75"/>')
-        if marker_w:
-            out.append(f'<line x1="{strip_x:g}" y1="{y:g}" x2="{strip_x:g}" y2="{y + cell_h:g}" '
-                       f'stroke="#999" stroke-width="0.75"/>')
         for idx, tok in enumerate(row):
             x = ml + idx * cell_w
             rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
             render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
                         cell_w, cell_h, opts, orient="h")
-            if marker_w:
-                mx = strip_x + marker_w / 2
-                if rs or re_ or vs or ve:
-                    ay = y + cell_h * (0.30 if (rs or vs) else 0.70)
-                    glyph = (chr(0x2193) if rs else chr(0x2191) if re_
-                             else chr(0x25CB) if vs else chr(0x25A1))
-                    out.append(f'<text x="{mx:g}" y="{ay + fs * 0.3:g}" text-anchor="middle" '
-                               f'font-family="serif" font-size="{int(fs * 0.8)}" '
-                               f'fill="black">{glyph}</text>')
-                if vrows and r < len(vrows) and idx < len(vrows[r]):
-                    syl = vrows[r][idx]
-                    if syl and syl != "-":
-                        # ligne marker virtuelle : syllabe en BAS de sa case,
-                        # centrée horizontalement, sans chevaucher la bordure
-                        # inférieure (baseline relevée de syl_pad) ni la note
-                        out.append(f'<text x="{x + cell_w / 2:g}" y="{y + cell_h - syl_pad:g}" '
-                                   f'text-anchor="middle" font-family="serif" '
-                                   f'font-size="{syl_fs}" fill="#333">{escape(syl)}</text>')
+            if vrows and r < len(vrows) and idx < len(vrows[r]):
+                syl = vrows[r][idx]
+                if syl and syl != "-":
+                    out.append(f'<text x="{x + cell_w / 2:g}" y="{y + cell_h - syl_pad:g}" '
+                               f'text-anchor="middle" font-family="serif" '
+                               f'font-size="{syl_fs}" fill="#333">{escape(syl)}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
 
-def _tuto_lyrics_pages(lines, W, H, opts):
-    fs = max(9, int(H * 0.035))
-    sp = int(fs * 1.6)
-    per_page = max(1, int((H - 32) // sp))
-    pages = []
-    for start in range(0, len(lines), per_page):
-        out = _tuto_svg_open(W, H)
-        y = 32
-        for ln in lines[start:start + per_page]:
-            if ln == "":
-                y += sp
-                continue
-            if _has_ruby(_parse_ruby(ln)):
-                _render_horizontal_text(out, ln, 16, y, fs, "#444")
-            else:
-                out.append(f'<text x="16" y="{y}" font-family="serif" '
-                           f'font-size="{fs}" fill="#444">{escape(ln)}</text>')
-            y += sp
-        out.append("</svg>")
-        pages.append("\n".join(out))
-    return pages
-
-
 def _render_tuto(song, sections, cols, page_dans, marker, opts):
+    # Layout tuto : horizontal, canvas WxH fixe (@tuto_block), 8 cases/dan et
+    # 7 dans/page par défaut (calibré sur la vidéo exemple). Page 1 = titre/
+    # accordage/infos seuls ; pages suivantes = tablature. Le bloc ::lyrics
+    # n'est PAS rendu en tuto.
     W, H = _tuto_block_size(song)
     if cols is None:
         cols = TUTO_DEFAULT_COLS
     if page_dans is None:
         page_dans = TUTO_DEFAULT_DANS
     ml = mr = mt = mb = 16
-    # Bande marker verticale à droite de chaque dan (si @marker on)
-    marker_w = int((W - ml - mr) / cols * 0.5) if marker else 0
-    cell_w = (W - ml - mr - marker_w) / cols
+    cell_w = (W - ml - mr) / cols
     cell_h = (H - mt - mb) / page_dans
     fs = max(8, int(cell_h * 0.38))  # ratio fs/case ~0,38 (calibrage Portama)
 
@@ -2004,10 +1968,7 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts):
             pages.append(_tuto_tab_page(rows[start:start + page_dans],
                                         vrows[start:start + page_dans],
                                         W, H, ml, mt, cols, cell_w, cell_h,
-                                        marker_w, fs, opts, sec_title))
-    for sec_title, content, kind, vocal in sections:
-        if kind == "lyrics" and any(ln for ln in content):
-            pages.extend(_tuto_lyrics_pages(content, W, H, opts))
+                                        fs, opts, sec_title))
     return pages
 
 
