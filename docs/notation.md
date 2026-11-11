@@ -23,7 +23,7 @@ Les tablatures peuvent préciser le doigté (指位 - yubii) lorsque nécessaire
 
 | Symbole   | Variante | Japonais | Doigté main gauche                 |
 |-----------|----------|----------|-----------------------------------|
-|  ⃝        | (　)     | 開弦      | Pas de doigté (Corde à vide)       |   
+| ○         | (　)     | 開弦      | Pas de doigté (Corde à vide)       |   
 | ㊀        | (一)     | 人差指     | Index                               |
 | ㊁        | (二)     | 中指      | Majeur                              |
 | ㊂        | (三)     | 無名指     | Non précisé (Majeur ou auriculaire) |
