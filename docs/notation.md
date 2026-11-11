@@ -298,6 +298,7 @@ Large mais fonctionnel. Le code traite ce cas dans une branche dédiée (3 carac
 ## Suffixes de technique (走法, souhou)
 
 Apposés après le caractère de position dans la figure KKML. Peuvent se combiner (ex : `中s'` = jeu faible + hammer-on).
+Rendu : `'` (uchi-utu) et `^` (kaki-utu) partagent la **même position relative moyenne** dans tous les layouts (moyenne des dx/dy/scale des deux entrées, voir `_avg_tech_map`).
 
 | Suffixe | Nom                    | Rendu SVG | Description |
 |---------|------------------------|-----------|-------------|

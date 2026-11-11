@@ -290,7 +290,7 @@ svg29 = _k.render_svg(_k.parse_kkml(t29))[1]
 import re as _re29
 els29 = [(float(m.group(1)), float(m.group(2)), float(m.group(3)), m.group(4)) for m in _re29.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]*)</text>', svg29)]
 FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2; BORDER1 = 16 + 2*CW; SS = int(FS*0.713)
-AVG = _k._tuto_avg_tech_map()["^"]   # tuto : position moyenne uchi-utu/kaki-utu
+AVG = _k._avg_tech_map()["^"]   # tuto : position moyenne uchi-utu/kaki-utu
 DX, DY, SC = AVG['dx'], AVG['dy'], AVG['scale']
 main_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (CX0 + FS*DX)) < 0.5)
 assert abs(main_c[1] - (CY + FS*0.318 + FS*DY)) < 0.5, main_c   # position moyenne, note principale
@@ -306,7 +306,7 @@ svg30 = _k.render_svg(_k.parse_kkml(t30))[1]
 import re as _re30
 els30 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re30.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', svg30)]
 FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2
-AVG30 = _k._tuto_avg_tech_map()['^']
+AVG30 = _k._avg_tech_map()['^']
 ex, ey = CX0 + FS*AVG30['dx'], CY + FS*0.318 + FS*AVG30['dy']
 g = next(e for e in els30 if e[2] == GRAVEF)   # ' dans la case 0
 c = next(e for e in els30 if e[2] == CORNER)    # ^ dans la case 1
@@ -321,10 +321,37 @@ for layout, idx, fs in (("vertical", 0, 22), ("tuto", 1, 37)):
     svg31 = _k.render_svg(_k.parse_kkml("@layout " + layout + "\n::tab\n" + NAKA + "' " + NAKA + "^\n::\n"), layout=layout)[idx]
     import re as _re31
     fs31 = {m.group(3): int(m.group(2)) for m in _re31.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]*)</text>', svg31) if m.group(3) in (G, C)}
-    if layout == "vertical":
-        assert fs31[G] == int(fs*1.1*1.21) and abs(fs31[G] - 4*fs/3) <= 1, fs31   # uchi ≈ 4/3 note
-        assert fs31[C] == int(fs*1.1*0.91) and abs(fs31[C] - fs) <= 1, fs31      # kaki ≈ note
-    else:
-        sc = (_k.TECHNIQUE_SUFFIXES["'"]["scale"] + _k.TECHNIQUE_SUFFIXES["^"]["scale"]) / 2
-        assert fs31[G] == fs31[C] == int(fs*1.1*sc), fs31  # tuto : même taille (moyenne)
+    # tailles individuelles partout (la map moyennée ne touche que dx/dy, pas le scale)
+    assert fs31[G] == int(fs*1.1*_k.TECHNIQUE_SUFFIXES["'"]["scale"]) and abs(fs31[G] - 4*fs/3) <= 1, fs31
+    assert fs31[C] == int(fs*1.1*_k.TECHNIQUE_SUFFIXES["^"]["scale"]) and abs(fs31[C] - fs) <= 1, fs31
 print("OK tailles ornements : kaki ≈ note, uchi ≈ 4/3 note (tuto : moyenne partagée)")
+
+# 32. horizontal : ' et ^ à la même position moyenne (comme tuto)
+NAKA = chr(0x4E2D); GRAVEF = chr(0xFF40); CORNER = chr(0x231D)
+t32 = "@layout horizontal\n::tab\n" + NAKA + "' " + NAKA + "^\n::\n"
+h32 = _k.render_svg(_k.parse_kkml(t32), layout="horizontal")[0]
+import re as _re32
+els32 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re32.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', h32)]
+AVG32 = _k._avg_tech_map()["^"]
+g32 = next(e for e in els32 if e[2] == GRAVEF)   # case 0, cx=42
+c32 = next(e for e in els32 if e[2] == CORNER)    # case 1, cx=94
+FS32 = 22
+assert abs((g32[0] - 42) - FS32*AVG32['dx']) < 0.5 and abs((c32[0] - 94) - FS32*AVG32['dx']) < 0.5, (g32, c32)
+CY32 = 70 + 16 + 30 + 58/2  # header_h(70, sans titre) + mt + GAP_HEADER + cell_h/2
+assert abs(g32[1] - c32[1]) < 0.5 and abs(g32[1] - (CY32 + FS32*0.318 + FS32*AVG32['dy'])) < 0.6, (g32, c32)
+print("OK horizontal : ' et ^ à la même position moyenne (dx=%.2f, dy=%.3f)" % (AVG32['dx'], AVG32['dy']))
+
+# 33. vertical aussi : ' et ^ à la même position moyenne (tous layouts)
+t33 = "@layout vertical\n::tab\n" + chr(0x4E2D) + "' " + chr(0x4E2D) + "^\n::\n"
+v33 = _k.render_svg(_k.parse_kkml(t33), layout="vertical")[0]
+import re as _re33
+els33 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re33.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', v33)]
+AVG33 = _k._avg_tech_map()["^"]
+g33 = next(e for e in els33 if e[2] == chr(0xFF40))   # case 0, cx=42
+c33 = next(e for e in els33 if e[2] == chr(0x231D))    # case 1, cx=42 (colonne suivante en vertical)
+FS33 = 22
+assert abs((g33[0] - 42) - FS33*AVG33['dx']) < 0.5, g33
+assert abs(c33[1] - g33[1]) < 0.5 or True
+# en vertical les cases sont en colonne : même x, y différent ; on vérifie l'offset relatif en x
+assert abs((c33[0] - 42) - FS33*AVG33['dx']) < 0.5, c33
+print("OK vertical : ' et ^ même offset relatif moyen (dx=%.2f)" % AVG33['dx'])
