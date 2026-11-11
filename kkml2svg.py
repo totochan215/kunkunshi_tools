@@ -514,6 +514,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         'shaku_sharp': song.meta.get('shaku_sharp', 'off') == 'on',
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
+        'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
@@ -1935,9 +1936,13 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
             if vrows and r < len(vrows) and idx < len(vrows[r]):
                 syl = vrows[r][idx]
                 if syl and syl != "-":
-                    out.append(f'<text x="{x + cell_w / 2:g}" y="{y + cell_h - syl_pad:g}" '
-                               f'text-anchor="middle" font-family="serif" '
-                               f'font-size="{syl_fs}" fill="#333">{escape(syl)}</text>')
+                    # parenthèses de koedashi/koekiri = inline formatting :
+                    # interprétées au parse, jamais rendues dans le layout
+                    disp = syl.replace('(', '').replace(')', '')
+                    if disp:
+                        out.append(f'<text x="{x + cell_w / 2:g}" y="{y + cell_h - syl_pad:g}" '
+                                   f'text-anchor="middle" font-family="serif" '
+                                   f'font-size="{syl_fs}" fill="#333">{escape(disp)}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -2353,6 +2358,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
         tech_suffixes.insert(0, base_tok[-1])
         base_tok = base_tok[:-1]
+    if not opts.get('render_koe', True):
+        # koekiri non affiché (ex. layout tuto) : on garde l'interprétation
+        # mais on ne rend pas le symbole □
+        tech_suffixes = [s for s in tech_suffixes if s != ')']
 
     # Bornes de chant (声だし/声切り) sur un repos ◯ : légitime, PAS
     # d'avertissement. Les bornes s'adressent à la VOIX, et la ligne
@@ -2364,7 +2373,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     # dans la case, côté droit (区画中右方, traité 野村流 p. 9).
     # Le kanji du kandokoro garde sa taille pleine : le cercle est petit et
     # ancré au bord droit de la case, il ne rétrécit pas la note.
-    if koe_prefix:
+    if koe_prefix and opts.get('render_koe', True):
         out.append(f'<text x="{cx + cell_w * 0.36}" y="{cy + fs * 0.318}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="{int(fs * 0.42)}" fill="black">○</text>')
