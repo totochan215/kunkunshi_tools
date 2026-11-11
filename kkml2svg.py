@@ -1037,7 +1037,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
                     if lyrics_here else 0)
         total_w = CHINDAMI_PAGE_W
         total_h = CHINDAMI_PAGE_H
-        out = _svg_open_print(total_w, total_h, 23, 15)  # page 23 x 15 cm, 600 dpi
+        out = _svg_open_print(total_w, total_h, 23, 15, title=title)  # page 23 x 15 cm, 600 dpi
 
         # Titre vertical à droite de la page 1, surmonté du n° de morceau
         if is_first and (title or musicno):
@@ -1256,7 +1256,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
 
         out = []
         out.append('<?xml version="1.0" encoding="UTF-8"?>')
-        out.extend(_svg_open_print(NOMURA_PAGE_W, NOMURA_PAGE_H, 21, 29.7)[1:])  # A4, 600 dpi
+        out.extend(_svg_open_print(NOMURA_PAGE_W, NOMURA_PAGE_H, 21, 29.7, title=title)[1:])  # A4, 600 dpi
 
         # filet de cadre (origine du placement relatif)
         out.append(f'<rect x="{frame_x0}" y="{frame_y0}" '
@@ -1911,16 +1911,41 @@ def _tuto_block_size(song):
 TARGET_DPI = 600  # résolution cible d'impression, déclarée dans le SVG (Inkscape la détecte)
 
 
-def _svg_open_print(w_pt, h_pt, w_cm, h_cm, dpi=TARGET_DPI):
+def _title_plain(text):
+    # Titre sans les rubys (texte de base seul) — pour les métadonnées.
+    out = []
+    for seg in _parse_ruby(text):
+        if seg["type"] == "plain":
+            out.append(seg["text"])
+        elif seg["type"] in ("mono", "group"):
+            out.append(seg["base"])
+        elif seg["type"] == "jukugo":
+            out.extend(b for b, _ in seg["items"])
+    return "".join(out)
+
+
+def _svg_open_print(w_pt, h_pt, w_cm, h_cm, dpi=TARGET_DPI, title=None):
     # Racine SVG : format physique en cm (width/height), viewBox en pt (1 unité = 1 pt
     # à l'impression), et dpi d'export Inkscape -> détection auto du format + résolution.
-    return ['<?xml version="1.0" encoding="UTF-8"?>',
-            f'<svg xmlns="http://www.w3.org/2000/svg" '
-            f'xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
-            f'width="{w_cm:g}cm" height="{h_cm:g}cm" '
-            f'viewBox="0 0 {w_pt:g} {h_pt:g}" '
-            f'inkscape:export-xdpi="{dpi}" inkscape:export-ydpi="{dpi}">',
-            '<rect width="100%" height="100%" fill="white"/>']
+    out = ['<?xml version="1.0" encoding="UTF-8"?>',
+           f'<svg xmlns="http://www.w3.org/2000/svg" '
+           f'xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" '
+           f'width="{w_cm:g}cm" height="{h_cm:g}cm" '
+           f'viewBox="0 0 {w_pt:g} {h_pt:g}" '
+           f'inkscape:export-xdpi="{dpi}" inkscape:export-ydpi="{dpi}">']
+    if title:
+        plain = _title_plain(title)
+        out.append('<metadata>')
+        out.append('  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" '
+                   'xmlns:dc="http://purl.org/dc/elements/1.1/">')
+        out.append('    <rdf:Description rdf:about="">')
+        out.append(f'      <dc:title>{escape(plain)}</dc:title>')
+        out.append('      <dc:creator>kunkunshi_tools</dc:creator>')
+        out.append('    </rdf:Description>')
+        out.append('  </rdf:RDF>')
+        out.append('</metadata>')
+    out.append('<rect width="100%" height="100%" fill="white"/>')
+    return out
 
 
 def _tuto_svg_open(W, H):
