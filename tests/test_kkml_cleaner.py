@@ -274,3 +274,11 @@ c_main = main[0][1] - 0.318 * 22
 c_str = sts[0][1] - 0.318 * int(22 * 0.713)
 assert abs(c_main - c_str) < 0.6, (c_main, c_str)
 print("OK horizontal : vocals en bas de case + straddle sur bordure droite (orient=h)")
+
+# 28. tuto : chaque '.' = 1 élément ; les parenthèses ne comptent pas (pas de point fantôme)
+DOT = chr(0x30FB)
+for tok, n_expected in [("...", 3), (".)", 1), (".ゆ", 2), ("す.", 2), ("..ゆ.", 4)]:
+    els = _k._vocal_elements(tok)
+    assert len(els) == n_expected, (tok, els)
+    assert els.count("") == tok.replace('(', '').replace(')', '').count("."), (tok, els)
+print("OK _vocal_elements : n points -> n éléments, parenthèses ignorées")
