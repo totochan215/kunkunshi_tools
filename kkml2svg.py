@@ -1977,7 +1977,10 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
                         sy = y + cell_h - syl_pad
                         n = len(parts)
                         for i, part in enumerate(parts):
-                            sx = x + cell_w / 2 + (cell_w / 2) * (i / (n - 1)) if n > 1 else x + cell_w / 2
+                            # n éléments -> positions x_i = cx + cell_w * i/n :
+                            # i=0 sous la note principale, i=n-1 à droite ;
+                            # n=4 -> cx, cx+cw/4, cx+cw/2 (straddle), cx+3cw/4
+                            sx = x + cell_w / 2 + cell_w * (i / n)
                             if part == "":
                                 out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
                                            f'font-family="serif" font-size="{syl_fs}" '
