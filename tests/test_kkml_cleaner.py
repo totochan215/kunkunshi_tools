@@ -431,3 +431,16 @@ for lay in ("nomura", "chindami"):
     assert "<dc:creator>kunkunshi_tools</dc:creator>" in s40, lay
     assert chr(0x300a) not in s40.split("</metadata>")[0].split("<dc:title>")[1], "ruby dans dc:title"
 print("OK métadonnées Inkscape : dc:title sans ruby + dc:creator=kunkunshi_tools (nomura, chindami)")
+
+# 41. indentation uniforme : sous le plus long marqueur de la section + 1 espace
+NY, MN, MNMN = chr(0x5973)+chr(0x3001), chr(0x7537)+chr(0x3001), chr(0x7537)+chr(0x5973)+chr(0x3001)
+lines41 = [NY + "aaa|suite1", "", MN + "bbb|suite2", "", MNMN + "ccc|suite3"]
+base41 = _k._verse_indent_target(lines41)
+assert base41 == 4, base41   # max(2,2,3) + 1
+for v in _k._split_verses(lines41):
+    for col, ind in _k._lyrics_columns_layout(v, base41):
+        if col[0].startswith((NY, MN, MNMN)):
+            assert ind == 0, (col[0], ind)          # colonne marqueur : en haut
+        else:
+            assert ind == 4, (col[0], ind)          # continuation : indent uniforme 4
+print("OK indentation uniforme : max marqueur (男女、=3) + 1 -> indent 4 partout")

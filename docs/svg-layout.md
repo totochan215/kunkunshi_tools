@@ -53,6 +53,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - Couleur : `#333`
 - Markup de saut de ligne : `|` dans une ligne de paroles force un saut de ligne (la ligne est éclatée à chaque `|`)
 - Numéros de couplet : les lignes commençant par `一、`, `二、`, etc. (numéraux CJK + 、) sont détectées via `VERSE_NUM_RE`. La longueur du numéro (ex : 2 pour `一、`) est utilisée comme indent : chaque ligne suivante du couplet reçoit un décalage vertical supplémentaire de `verse_indent * adjusted_sp` pour s'aligner sous le numéro.
+- Indentation uniforme (vertical/nomura/chindami) : les colonnes de continuation s'indentent sous le **plus long** des marqueurs de couplet de la section (`_verse_indent_target` = max des longueurs + 1 espace pleine chasse). Ex. marqueurs `女、`/`男、`/`男女、` -> indent 4 partout.
 - Ajustement de hauteur : désactivé. Les paroles utilisent un espacement fixe (`LYRICS_SP = 18`) et un alignement en haut, sans justification.
 
 ##### Calcul de l'espace paroles
