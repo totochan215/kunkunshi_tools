@@ -309,7 +309,7 @@ Rendu : `'` (uchi-utu) et `^` (kaki-utu) partagent la **même position relative 
 | `"`     | uchi-nuchi-utu (打ち抜き音) ou nuchi-utu (抜き音) | ゜ (U+309C, «apostrophe vide») en haut-droite, même police et taille que la note | Hammer-on sans tenir la note. Suffixe `"` jumeau de `'` (uchi-utu tenu) |
 | `^`     | kaki-utu (掛音)        | ⌝ (U+231D, «coin haut-droite») en haut-droite | Upstroke (gratter de bas en haut avec le bachi) |
 | `v`     | aki-utu (開音)         | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
-| `<`     | kachi-utu (掻音)       | ⌞ en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
+| `<`     | kachi-utu (掻音)       | ⌞ (U+231E, «coin bas-gauche») en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s`     | kuubanchi (小弾)       | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
 
 ## Contrôle du chant
