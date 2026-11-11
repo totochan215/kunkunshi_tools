@@ -1829,6 +1829,34 @@ TUTO_DEFAULT_COLS = 8    # cases par dan (video exemple)
 TUTO_DEFAULT_DANS = 7    # dans par page (video exemple)
 
 
+def _split_syllables(text):
+    # Découpe un texte japonais/uchinaguchi en syllabes : un petit kana
+    # (ゃゅょっ ァュョッ …) ou un chōonpu ー se rattache à la syllabe
+    # précédente (ちゅ -> [ちゅ], やっく -> [やっ, く], まーし -> [まー, し]).
+    combine = SMALL_KANA | {chr(0x3063), chr(0x30C3), chr(0x30FC), chr(0x3095), chr(0x3096)}
+    out = []
+    for ch in text:
+        if out and ch in combine:
+            out[-1] += ch
+        else:
+            out.append(ch)
+    return out
+
+
+def _vocal_elements(tok):
+    # Aplatit un token ::vocal en éléments ordonnés : séparés par '.'
+    # (chaque partie vide = un point ・), chaque partie non vide découpée en
+    # syllabes. Ex. ".ちゅ" -> ['', 'ちゅ'] ; "ぐさ" -> ['ぐ', 'さ'].
+    tok = tok.replace('(', '').replace(')', '')
+    elems = []
+    for part in tok.split("."):
+        if part == "":
+            elems.append("")
+        else:
+            elems.extend(_split_syllables(part))
+    return elems
+
+
 def _tuto_block_size(song):
     raw = (song.meta.get("tuto_block") or "").strip().lower()
     if raw:
@@ -1945,7 +1973,7 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
                         #le centre (sous la note principale) et la bordure droite
                         #(sous le straddle). Une seule syllabe sans point -> sous la
                         #note principale (centre). Le point est rendu ・ (#888).
-                        parts = disp.split(".")
+                        parts = _vocal_elements(syl)
                         sy = y + cell_h - syl_pad
                         n = len(parts)
                         for i, part in enumerate(parts):
