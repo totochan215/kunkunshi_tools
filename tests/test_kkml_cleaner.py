@@ -154,3 +154,14 @@ c_main = y_main - 0.318 * fs_main
 c_str = y_str - 0.318 * fs_str
 assert abs(c_main - c_str) < 0.6, (c_main, c_str)
 print("OK tuto : note et straddle centrés entre eux verticalement")
+
+# 19. tuto page titre : le segment ruby (mono) ne chevauche pas le texte plein
+TITLE19 = chr(0x3066)+chr(0x3043)+chr(0x3093)+chr(0x3055)+chr(0x3050)+chr(0x306c)+chr(0x82b1)+chr(0x300a)+chr(0x306f)+chr(0x306a)+chr(0x300b)
+pg19 = _k.render_svg(_k.parse_kkml("@title " + TITLE19 + "\n@layout tuto\n::tab\n" + chr(0x5408) + "\n::\n"))[0]
+import re as _re19
+ms19 = list(_re19.finditer(r'<text x="([\d.]+)" y="[\d.]+"[^>]*font-size="(\d+)"[^>]*>([^<]+)</text>', pg19))
+plain19 = next(m for m in ms19 if m.group(3).startswith(chr(0x3066)))
+hana19 = next(m for m in ms19 if m.group(3) == chr(0x82b1))
+fs19 = int(plain19.group(2))
+assert float(hana19.group(1)) - float(plain19.group(1)) >= len(plain19.group(3)) * fs19 * 0.9, (hana19.group(1), plain19.group(1), fs19)
+print("OK tuto titre ruby : 花 à droite de ぬ, pas de chevauchement")
