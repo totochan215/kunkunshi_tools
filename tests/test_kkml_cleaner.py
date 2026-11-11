@@ -229,3 +229,17 @@ assert not any(abs(x - (16 + CW*2)) < 0.5 and c == chr(0x3085) for x, y, c in el
 assert any(abs(x - (16 + CW*2.5)) < 0.5 and c == chr(0x307e)+chr(0x30fc) for x, y, c in els24), els24
 assert any(abs(x - (16 + CW*3)) < 0.5 and c == chr(0x3057) for x, y, c in els24), els24
 print("OK tuto : 2 syllabes sans point réparties sous note principale / straddle")
+
+# 25. tuto : 4 éléments dans une case -> cx, cx+CW/4, cx+CW/2, cx+3CW/4 (toujours en bas)
+AIUE = chr(0x3042)+chr(0x3044)+chr(0x3046)+chr(0x3048)
+t25 = "@layout tuto\n::tab\n" + chr(0x5408) + "/" + chr(0x5DE5) + "\n::\n::vocal\n" + AIUE + "\n::\n"
+tab25 = _k.render_svg(_k.parse_kkml(t25))[1]
+import re as _re25
+els25 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re25.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">([^<]*)</text>', tab25)]
+cx0 = 16 + CW/2
+expected = {chr(0x3042): cx0, chr(0x3044): cx0 + CW/4, chr(0x3046): cx0 + CW/2, chr(0x3048): cx0 + 3*CW/4}
+for ch, ex in expected.items():
+    got = [x for x, y, c in els25 if c == ch]
+    assert got and abs(got[0] - ex) < 0.5, (ch, got, ex)
+assert all(abs(y - (16 + 98.2857 - 6)) < 0.5 for x, y, c in els25)  # toujours en bas
+print("OK tuto : 4 éléments -> 4 positions en quartiers, toujours en bas de case")
