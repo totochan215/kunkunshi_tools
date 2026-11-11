@@ -117,6 +117,8 @@ assert all('width="1280"' in s and 'height="720"' in s for s in svgs15)
 assert len(svgs15) == 2
 print("OK tuto + titre ruby (mono/group/jukugo), pages 1280x720")
 
+CW = (1280 - 32) / (8 + 0.25)  # cell_w tuto, marge droite renforcée mr = 16 + CW/4
+
 # 16. tuto : bande marker à droite + straddle sur la bordure droite
 GO = chr(0x5408); GO5 = chr(0x5DE5); A = chr(0x3042)
 t16 = "@layout tuto\n::tab\n" + GO + "/" + GO5 + " " + GO + "\n::\n::vocal\n" + A + " -\n::\n"
@@ -125,10 +127,10 @@ tab16 = svgs16[1]
 assert tab16.count('<line') == 0 and chr(0x2193) not in tab16 and chr(0x2191) not in tab16  # plus de bande ni de flèches en tuto
 import re as _re
 mv = [(float(m.group(1)), float(m.group(2))) for m in _re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">', tab16)]
-assert mv and abs(mv[0][0] - 94) < 0.5, mv  # syllabe centrée sur sa case (cell_w=156)
+assert mv and abs(mv[0][0] - (16 + CW/2)) < 0.5, mv  # syllabe centrée sur sa case (cell_w=156)
 assert 65 < mv[0][1] < 114.29, mv  # en bas de la case, au-dessus de la bordure inférieure (16+98.29)
 st = [m for m in _re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="black">' + GO5 + r'</text>', tab16)]
-assert st and abs(float(st[0].group(1)) - 172) < 0.5, st  # straddle CENTRÉ sur la bordure droite (16+156=172)
+assert st and abs(float(st[0].group(1)) - (16 + CW)) < 0.5, st  # straddle CENTRÉ sur la bordure droite (16+156=172)
 print("OK tuto : bande marker à droite + straddle sur bordure droite")
 
 # 17. token ":X" (ex. "(:X" après strip des parenthèses) : note centrée, pas décalée
@@ -136,7 +138,7 @@ GO = chr(0x5408)
 svgs17 = _k.render_svg(_k.parse_kkml("@layout tuto\n::tab\n:" + GO + " " + GO + ":\n::\n"))
 t17 = svgs17[1]
 import re as _re17
-centres = {94, 250}  # centres des cases 0 et 1 (cell_w=156)
+centres = {16 + CW/2, 16 + CW*1.5}  # centres des cases 0 et 1 (cell_w=156)
 for m in _re17.finditer(r'<text x="([\d.]+)" y="[\d.]+"[^>]*fill="black">' + GO + r'</text>', t17):
     assert any(abs(float(m.group(1)) - c) < 0.5 for c in centres), m.group(1)  # centré sur sa case
 print("OK ':X' / 'X:' -> note centrée taille pleine")
@@ -191,10 +193,10 @@ tab22 = _k.render_svg(_k.parse_kkml(t22))[1]
 import re as _re22
 voc22 = [(float(m.group(1)), float(m.group(2))) for m in _re22.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">([^<]*)</text>', tab22) if A in m.group(3)]
 # case 0 (x=94, centre y=65.14) : syllabe seule -> niveau note ; case 1 (x=250) : token ".あ" -> bas
-y0 = next(y for x, y in voc22 if abs(x - 94) < 0.5)
+y0 = next(y for x, y in voc22 if abs(x - (16 + CW/2)) < 0.5)
 assert abs(y0 - (16 + 98.2857 - 6)) < 0.5, y0             # syllabe seule : sous note principale (x=94), EN BAS de case
 # token ".あ" (case 1, noire) : point à cx=250, syllabe à la bordure x=328, en bas de case
-y1 = next(y for x, y in voc22 if abs(x - 328) < 0.5)
+y1 = next(y for x, y in voc22 if abs(x - (16 + CW*2)) < 0.5)
 assert abs(y1 - (16 + 98.2857 - 6)) < 0.5, y1              # bas de case - syl_pad
 print("OK tuto : syllabe seule sous la note principale (bas de case) ; avec point, répartie sous straddle")
 
@@ -206,11 +208,11 @@ tab23 = _k.render_svg(_k.parse_kkml(t23))[1]
 import re as _re23
 els = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re23.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab23)]
 # case 0 (croche 合/五, cx=94, bordure=172) : token ".あ" -> ・ à 94, あ à 172
-assert any(abs(x - 94) < 0.5 and c == DOT for x, y, c in els), els
-assert any(abs(x - 172) < 0.5 and c == A for x, y, c in els), els
+assert any(abs(x - (16 + CW/2)) < 0.5 and c == DOT for x, y, c in els), els
+assert any(abs(x - (16 + CW)) < 0.5 and c == A for x, y, c in els), els
 # case 1 (noire 合, cx=250, bordure=328) : token "あ." -> あ à 250, ・ à 328
-assert any(abs(x - 250) < 0.5 and c == A for x, y, c in els), els
-assert any(abs(x - 328) < 0.5 and c == DOT for x, y, c in els), els
+assert any(abs(x - (16 + CW*1.5)) < 0.5 and c == A for x, y, c in els), els
+assert any(abs(x - (16 + CW*2)) < 0.5 and c == DOT for x, y, c in els), els
 print("OK tuto : répartition point/syllabe sous note principale et straddle")
 
 # 24. tuto : 2 syllabes sans point -> 1re sous note principale, 2e sous straddle
@@ -220,10 +222,10 @@ t24 = "@layout tuto\n::tab\n" + GO + "/" + GO5 + " " + GO + " " + GO + "\n::\n::
 tab24 = _k.render_svg(_k.parse_kkml(t24))[1]
 import re as _re24
 els24 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re24.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab24)]
-assert any(abs(x - 94) < 0.5 and c == chr(0x3050) for x, y, c in els24), els24
-assert any(abs(x - 172) < 0.5 and c == chr(0x3055) for x, y, c in els24), els24
-assert any(abs(x - 250) < 0.5 and c == CHU for x, y, c in els24), els24
-assert not any(abs(x - 328) < 0.5 and c == chr(0x3085) for x, y, c in els24), els24
-assert any(abs(x - 406) < 0.5 and c == chr(0x307e)+chr(0x30fc) for x, y, c in els24), els24
-assert any(abs(x - 484) < 0.5 and c == chr(0x3057) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW/2)) < 0.5 and c == chr(0x3050) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW)) < 0.5 and c == chr(0x3055) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW*1.5)) < 0.5 and c == CHU for x, y, c in els24), els24
+assert not any(abs(x - (16 + CW*2)) < 0.5 and c == chr(0x3085) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW*2.5)) < 0.5 and c == chr(0x307e)+chr(0x30fc) for x, y, c in els24), els24
+assert any(abs(x - (16 + CW*3)) < 0.5 and c == chr(0x3057) for x, y, c in els24), els24
 print("OK tuto : 2 syllabes sans point réparties sous note principale / straddle")
