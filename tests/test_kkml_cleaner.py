@@ -389,3 +389,11 @@ has_dot = chr(0x30FB) in svg36
 has_a = bool(_re36.search(r'fill="#333">' + chr(0x3042) + r'</text>', svg36))
 assert has_dot and has_a, "pas de ・/あ en nomura"
 print("OK nomura : logique points/vocal commune (_vocal_elements, ・ rendu)")
+
+# 37. nomura : page A4 exprimée via la constante CM (21 x 29,7 cm)
+GO = chr(0x5408)
+n37 = _k.render_svg(_k.parse_kkml("@layout nomura\n::tab\n" + GO + "\n::\n"), layout="nomura")
+import re as _re37
+m = _re37.search(r'width="([\d.]+)" height="([\d.]+)"', n37[0])
+assert abs(float(m.group(1)) - 21*_k.CM) < 0.01 and abs(float(m.group(2)) - 29.7*_k.CM) < 0.01, m.groups()
+print("OK nomura : page = 21 x 29,7 cm via CM (%.2f x %.2f pt)" % (21*_k.CM, 29.7*_k.CM))
