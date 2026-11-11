@@ -31,6 +31,12 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   jumeau de `'` (uchi-utu tenu) ; glyphe rendu ゜ (U+309C, « apostrophe vide ») ;
   ＂ (U+FF02) normalisé en `"` via FULLWIDTH_MAP ; mapping Portama `nu` → `"`.
   `n` reste EXCLU (collision romaji : yon, bon…).
+- ❓ Koedashi/koekiri attenant à un point `.` (ex. `.)`, `(.`) : les parenthèses sont
+  retirées avant le découpage (`_vocal_elements`), donc elles ne changent PAS le nombre
+  de sous-positions vocales de la case (corrigé 2026-11-10, commit 5d4838a — cas ahabushi
+  case 44 : 3 points dans le KKML = 3 positions, plus de point fantôme). Point ouvert :
+  faut-il rendre le koedashi/koekiri sur le point (ex. ○/□ à côté du ・ en
+  vertical/horizontal) ? En layout tuto, ○/□ ne sont pas rendus pour le moment.
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
   jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
 
@@ -298,10 +304,11 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 
 Les marques diacritiques (`'`, `^`, `v`, `<`) sont rendues dans la même police et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
 
-- uchi-utu (｀) : `dx=0.22`, `dy=0.05` (en haut-droite)
-- kaki-utu (┗ roté 180°, échelle 0.75) : `dx=0.28`, `dy=-0.22` (en haut-droite, barre supérieure au-dessus de la note)
+- uchi-utu (｀) et nuchi-utu (゜) : `dx=0.50`, `dy=0.045`, `scale=1.21` — tech_fs ≈ 4/3 de la note (glyphes peu remplis)
+- kaki-utu (⌝ natif, sans rotation, `scale=0.91`) : `dx=0.70`, `dy=-0.855` — tech_fs ≈ taille de la note (dy −10% depuis 2026-11-10)
 - aki-utu (V) : `dx=0.45`, `dy=0.15` (en bas-gauche)
 - kachi-utu (┗) : `dx=0.45`, `dy=0.15` (en bas-gauche)
+(rappel : `ty = cy + fs*0.318 + fs*dy` depuis 2026-11-10 — le +7 en dur ne scalait pas hors fs=22)
 
 Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 7 + fs * dy`. Aucun souhou ne modifie les coordonnées de la note, sauf `s` qui réduit la taille à 67% sans déplacer le centre.
 
@@ -329,6 +336,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - ✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (e288f91…).
 - ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées (7 dans virtuels max/page), jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
 - ✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx inchangée, ruby collé à droite, centrage du dan virtuel préservé (42d6699).
+- 🚧 (2026-11-10) Layout `tuto` (POC) : horizontal, canvas WxH fixe (`@tuto_block`, défaut 1280x720), 8 cases/dan et 7 dans/page (calibré sur la vidéo exemple https://www.youtube.com/watch?v=GvcZoeCbIPQ), page 1 = titre/accordage/infos seuls, ligne marker au-dessus de chaque dan si `::vocal` + `@marker on`. Reste : calage visuel fin (fs, marges) et SVG de référence d'un échantillon.
 - ⚪︎ Modèle chindami (paysage < A4) — en attente d'exemples.
 - ⚪︎ Modèle Paris Sanshin Club (paysage A4 + n° de recueil) — en attente d'exemples.
 - ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.

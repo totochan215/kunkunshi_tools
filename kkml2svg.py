@@ -13,7 +13,7 @@ Layout vertical (défaut) : les cases se lisent de haut en bas et de
 droite à gauche, comme dans les kunkunshi traditionnels.
 Layout horizontal : de gauche à droite et de haut en bas (style songbook).
 
-Métadonnée @layout vertical|horizontal dans le .kkml, ou -l/--layout en CLI.
+Métadonnée @layout vertical|horizontal|nomura|chindami|tuto dans le .kkml, ou -l/--layout en CLI.
 
 Options supplémentaires en-tête KKML (défauts : @layout vertical,
 @marker on, @font_style mincho, @shaku_circled off, @shaku_sharp off) :
@@ -154,17 +154,17 @@ TECHNIQUE_SUFFIXES = {
     # uchi-utu : apostrophe ASCII ' (canonique). Alias : ｀ (normalisé
     # via FULLWIDTH_MAP) et * / ＊ (dépréciés, gardés pour compat).
     "'": {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
+          'dx': 0.50, 'dy': 0.045, 'scale': 1.21},
     '*': {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
+          'dx': 0.50, 'dy': 0.045, 'scale': 1.21},
     # nuchi-utu = uchi-nuchi-utu (打ち抜き音) : hammer-on SANS tenir la note.
     # Suffixe `"` (U+0022), jumeau de `'` (uchi-utu tenu) ; `n` reste EXCLU
     # (collision romaji : yon, bon...). Glyphe rendu : ゜ (U+309C, apostrophe
     # vide), pendant creux du ｀ plein de uchi-utu. ＂ (U+FF02) normalisé en `"`.
     '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
-          'pos': 'top-right', 'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
+          'pos': 'top-right', 'dx': 0.50, 'dy': 0.045, 'scale': 1.21},
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
-          'scale': 0.9, 'dx': 0.85, 'dy': -1.20},
+          'scale': 0.91, 'dx': 0.70, 'dy': -0.855},
     'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
           'dx': 0.45, 'dy': 0.15},
     '<': {'name': 'kachi-utu', 'type': 'char',   'symbol': '┗', 'pos': 'bottom-left',
@@ -244,7 +244,7 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "shaku_circled", "shaku_sharp", "speed", "font_style",
-             "page_dans"}
+             "page_dans", "tuto_block"}
 class Song:
     def __init__(self):
         self.meta = {}
@@ -313,7 +313,7 @@ def parse_kkml(text):
                 except ValueError:
                     pass
             elif key == "layout":
-                song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami") else "vertical"
+                song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami", "tuto") else "vertical"
             else:
                 song.meta[key] = val
             i += 1
@@ -446,7 +446,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     # (vertical/horizontal : 12, chindami/nomura : imposé par la page), et
     # -c ne s'applique qu'aux layouts libres (vertical/horizontal).
     if cols is None:
-        cols = 12
+        cols = TUTO_DEFAULT_COLS if layout == "tuto" else 12
     if layout in ("chindami", "nomura"):
         cols = None  # ignoré : le layout fixe ses propres cases/dan
 
@@ -514,6 +514,8 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         'shaku_sharp': song.meta.get('shaku_sharp', 'off') == 'on',
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
+        'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
+        'tuto_tech_avg': layout == "tuto",  # tuto : position moyenne uchi-utu/kaki-utu pour ' et ^
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
@@ -523,6 +525,8 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         svgs = _render_chindami(song, sections, font_size, marker, opts)
     elif layout == "nomura":
         svgs = _render_nomura(song, sections, font_size, marker, opts)
+    elif layout == "tuto":
+        svgs = _render_tuto(song, sections, cols, page_dans, marker, opts)
     elif layout == "vertical":
         svgs = _render_vertical(song, sections, cols, cell_w, cell_h,
                                 font_size, MARGIN_L, MARGIN_R, MARGIN_T, header_h,
@@ -1672,11 +1676,13 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     prepared = []
     for items in sections:
         sec_title, content, kind = items[0], items[1], items[2]
+        vocal = items[3] if len(items) > 3 else None
         if kind == "tab":
             rows = _wrap_horizontal(content, cols)
-            prepared.append((sec_title, rows, kind))
+            vrows = _wrap_horizontal(vocal, cols) if vocal else []
+            prepared.append((sec_title, rows, kind, vrows))
         else:
-            prepared.append((sec_title, content, kind))
+            prepared.append((sec_title, content, kind, []))
 
     GAP_HEADER = 30
     GAP_TAB_LYRICS = 30
@@ -1687,7 +1693,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     total_w = cols * cell_w + ml + mr
     total_h = header_h + mt + GAP_HEADER
     prev_kind = None
-    for sec_title, data, kind in prepared:
+    for sec_title, data, kind, _v in prepared:
         if sec_title:
             total_h += 22
         if kind == "lyrics" and prev_kind == "tab":
@@ -1747,7 +1753,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     y = header_h + mt + GAP_HEADER
     # Trouver la dernière section tab/tab-lyrics pour end_circle
     last_tab_idx = -1
-    for si, (_, _, kind) in enumerate(prepared):
+    for si, (_, _, kind, _v) in enumerate(prepared):
         if kind == "tab":
             last_tab_idx = si
     # @end_circle déprécié/ignoré : le ┘● est désormais rendu par le token
@@ -1758,7 +1764,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     h_last_filled = None
 
     prev_kind = None
-    for si, (sec_title, data, kind) in enumerate(prepared):
+    for si, (sec_title, data, kind, vrows0) in enumerate(prepared):
         if kind == "lyrics" and prev_kind == "tab":
             y += GAP_TAB_LYRICS
         if sec_title:
@@ -1766,7 +1772,9 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                        f'font-size="14" fill="#333">{escape(sec_title)}</text>')
             y += 20
         if kind == "tab":
-            for row in data:
+            h_syl_fs = int(fs * 0.6)
+            h_syl_pad = max(2, int(h_syl_fs * 0.28))
+            for ri, row in enumerate(data):
                 for idx, tok in enumerate(row):
                     x = ml + idx * cell_w
                     out.append(f'<rect x="{x}" y="{y}" width="{cell_w}" '
@@ -1776,7 +1784,12 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
                         base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                     render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
-                                cell_w, cell_h, opts)
+                                cell_w, cell_h, opts, orient="h")
+                    if vrows0 and ri < len(vrows0) and idx < len(vrows0[ri]):
+                        syl = vrows0[ri][idx]
+                        if syl and syl != "-" and syl.replace('(', '').replace(')', ''):
+                            _draw_vocal_cell(out, _vocal_elements(syl), x, y,
+                                             cell_w, cell_h, h_syl_fs, h_syl_pad)
                     if rs:
                         _render_repeat_arrow(out, x + cell_w * 0.85,
                                              y, cell_h, cell_w * 0.15, 'start')
@@ -1813,6 +1826,223 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     out.append("</svg>")
     return "\n".join(out)
 
+# --------------------------------------------------------------------------- #
+# 3c. Rendu tuto (tutoriels video) - horizontal, bloc de taille fixe en pixels
+# --------------------------------------------------------------------------- #
+# Spec : docs/svg-layout.md ("Mise en page pour tutoriel video"). Exemple :
+# https://www.youtube.com/watch?v=GvcZoeCbIPQ, calibre sur la video :
+# 8 cases/dan, 7 dans/page. Page 1 = titre/accordage/infos seuls ; pages
+# suivantes = tablature horizontale (gauche->droite, haut->bas), canvas
+# exactement WxH (@tuto_block, defaut 1280x720).
+TUTO_DEFAULT_BLOCK = (1280, 720)
+TUTO_DEFAULT_COLS = 8    # cases par dan (video exemple)
+TUTO_DEFAULT_DANS = 7    # dans par page (video exemple)
+
+
+def _draw_vocal_cell(out, elements, x, y, cell_w, cell_h, syl_fs, syl_pad):
+    # Ligne marker virtuelle (layouts horizontaux : horizontal, tuto) :
+    # les éléments du token vocal (points ・ et syllabes) vont en bas de case,
+    # sans toucher la bordure, répartis en x_i = cx + cell_w * i/n
+    # (i=0 sous la note principale ; n=2 -> bordure droite = straddle ;
+    #  n=3 -> cx, cx+cw/3, cx+2cw/3 ; n=4 -> cx, cx+cw/4, cx+cw/2, cx+3cw/4).
+    sy = y + cell_h - syl_pad
+    n = len(elements)
+    for i, part in enumerate(elements):
+        sx = x + cell_w / 2 + cell_w * (i / n)
+        if part == "":
+            out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
+                       f'font-family="serif" font-size="{syl_fs}" fill="#888">{chr(0x30FB)}</text>')
+        else:
+            out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
+                       f'font-family="serif" font-size="{syl_fs}" fill="#333">{escape(part)}</text>')
+
+
+def _split_syllables(text):
+    # Découpe un texte japonais/uchinaguchi en syllabes : un petit kana
+    # (ゃゅょっ ァュョッ …) ou un chōonpu ー se rattache à la syllabe
+    # précédente (ちゅ -> [ちゅ], やっく -> [やっ, く], まーし -> [まー, し]).
+    combine = SMALL_KANA | {chr(0x3063), chr(0x30C3), chr(0x30FC), chr(0x3095), chr(0x3096)}
+    out = []
+    for ch in text:
+        if out and ch in combine:
+            out[-1] += ch
+        else:
+            out.append(ch)
+    return out
+
+
+def _vocal_elements(tok):
+    # Aplatit un token ::vocal en éléments ordonnés : chaque '.' est UN
+    # élément (point ・), chaque run de caractères est un groupe de syllabes
+    # (découpé par _split_syllables). Les parenthèses (koedashi/koekiri) sont
+    # du inline formatting : retirées, jamais comptées comme éléments.
+    # Ex. ".ちゅ" -> ['', 'ちゅ'] ; "ぐさ" -> ['ぐ', 'さ'] ; "..." -> ['', '', ''] (3 points) ;
+    # ".)" -> [''] (1 point, la parenthèse ne compte pas).
+    tok = tok.replace('(', '').replace(')', '')
+    elems = []
+    cur = ""
+    for ch in tok:
+        if ch == ".":
+            if cur:
+                elems.extend(_split_syllables(cur))
+                cur = ""
+            elems.append("")
+        else:
+            cur += ch
+    if cur:
+        elems.extend(_split_syllables(cur))
+    return elems
+
+
+def _tuto_block_size(song):
+    raw = (song.meta.get("tuto_block") or "").strip().lower()
+    if raw:
+        parts = raw.split("x")
+        if len(parts) == 2:
+            try:
+                w, h = int(parts[0]), int(parts[1])
+                if w > 0 and h > 0:
+                    return w, h
+            except ValueError:
+                pass
+        _warn_once("@tuto_block '%s' illisible, defaut %dx%d" % (raw, *TUTO_DEFAULT_BLOCK))
+    return TUTO_DEFAULT_BLOCK
+
+
+def _tuto_svg_open(W, H):
+    return ['<?xml version="1.0" encoding="UTF-8"?>',
+            f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
+            f'viewBox="0 0 {W} {H}">',
+            '<rect width="100%" height="100%" fill="white"/>']
+
+
+def _tuto_text_width(segs, fs):
+    # Largeur estimée d'un texte à segments ruby, même convention que
+    # _render_horizontal_ruby : _char_w par caractère (CJK = 1em, latin = 0.55em).
+    w = 0.0
+    for seg in segs:
+        t = seg["type"]
+        if t == "plain":
+            w += sum(_char_w(ch, fs) for ch in seg["text"])
+        elif t == "mono":
+            w += _char_w(seg["base"], fs)
+        elif t == "group":
+            w += sum(_char_w(ch, fs) for ch in seg["base"])
+        elif t == "jukugo":
+            w += sum(_char_w(ch, fs) for base, _ in seg["items"] for ch in base)
+    return w
+
+
+def _tuto_title_page(song, W, H):
+    # Page a part : titre, accordage et autres infos, centres.
+    out = _tuto_svg_open(W, H)
+    cx = W / 2
+    y = H * 0.40
+    title = song.meta.get("title", "")
+    fs_t = max(12, int(H * 0.07))
+    if title:
+        segs = _parse_ruby(title)
+        if _has_ruby(segs):
+            est = _tuto_text_width(segs, fs_t)
+            _render_horizontal_text(out, title, cx - est / 2, y, fs_t, "black")
+        else:
+            out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
+                       f'font-size="{fs_t}" fill="black">{escape(title)}</text>')
+        y += fs_t * 1.6
+    tuning = song.meta.get("tuning", "")
+    if tuning:
+        out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
+                   f'font-size="{max(10, int(H * 0.035))}" fill="#555">{escape(tuning)}</text>')
+        y += H * 0.06
+    lines = []
+    genre = song.meta.get("genre", "")
+    author = song.meta.get("author", "")
+    if genre and genre != author:
+        lines.append(genre)
+    if author:
+        lines.append(author)
+    for k in ("composer", "lyricist", "origin"):
+        v = song.meta.get(k, "")
+        if v:
+            lines.append(v)
+    for ln in lines:
+        out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
+                   f'font-size="{max(9, int(H * 0.028))}" fill="#777">{escape(ln)}</text>')
+        y += H * 0.05
+    out.append("</svg>")
+    return "\n".join(out)
+
+
+def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, sec_title):
+    # Une page = jusqu'à page_dans rows (dans) de cols cases, pleine largeur.
+    # Pas de bande marker en tuto : les flèches de répétition ne sont pas
+    # rendues (décision en attente sur la boucle vocale) ; les syllabes ::vocal
+    # vont en bas de leur case (ligne marker virtuelle : centrées, au-dessus
+    # de la bordure inférieure, sans chevaucher la note).
+    out = _tuto_svg_open(W, H)
+    y0 = mt
+    if sec_title:
+        out.append(f'<text x="{W - 16:g}" y="14" text-anchor="end" font-family="serif" '
+                   f'font-size="12" fill="#999">{escape(sec_title)}</text>')
+        y0 += 10
+    syl_fs = int(fs * 0.6)
+    syl_pad = max(2, int(syl_fs * 0.28))  # marge sous la baseline (ne touche pas la bordure)
+    for r, row in enumerate(rows):
+        y = y0 + r * cell_h
+        for idx in range(len(row)):
+            x = ml + idx * cell_w
+            out.append(f'<rect x="{x:g}" y="{y:g}" width="{cell_w:g}" '
+                       f'height="{cell_h:g}" fill="none" stroke="#999" stroke-width="0.75"/>')
+        for idx, tok in enumerate(row):
+            x = ml + idx * cell_w
+            rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
+            render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
+                        cell_w, cell_h, opts, orient="h")
+            if vrows and r < len(vrows) and idx < len(vrows[r]):
+                syl = vrows[r][idx]
+                if syl and syl != "-":
+                    # parenthèses de koedashi/koekiri = inline formatting :
+                    # interprétées au parse, jamais rendues dans le layout
+                    disp = syl.replace('(', '').replace(')', '')
+                    if disp:
+                        _draw_vocal_cell(out, _vocal_elements(syl), x, y,
+                                         cell_w, cell_h, syl_fs, syl_pad)
+    out.append("</svg>")
+    return "\n".join(out)
+
+
+def _render_tuto(song, sections, cols, page_dans, marker, opts):
+    # Layout tuto : horizontal, canvas WxH fixe (@tuto_block), 8 cases/dan et
+    # 7 dans/page par défaut (calibré sur la vidéo exemple). Page 1 = titre/
+    # accordage/infos seuls ; pages suivantes = tablature. Le bloc ::lyrics
+    # n'est PAS rendu en tuto.
+    W, H = _tuto_block_size(song)
+    if cols is None:
+        cols = TUTO_DEFAULT_COLS
+    if page_dans is None:
+        page_dans = TUTO_DEFAULT_DANS
+    ml = mt = mb = 16
+    # Marge droite renforée (16 + 1/4 de case) : les vocals placés sous le
+    # straddle de la dernière colonne ne doivent pas toucher la bordure droite
+    # du SVG. Marges haute/basse/gauche inchangées.
+    cell_w = (W - ml - 16) / (cols + 0.25)   # car mr = 16 + cell_w/4
+    mr = 16 + cell_w / 4
+    cell_h = (H - mt - mb) / page_dans
+    fs = max(8, int(cell_h * 0.38))  # ratio fs/case ~0,38 (calibrage Portama)
+
+    pages = [_tuto_title_page(song, W, H)]
+    for sec_title, content, kind, vocal in sections:
+        if kind != "tab":
+            continue
+        rows = _wrap_horizontal(content, cols)
+        vrows = _wrap_horizontal(vocal, cols) if vocal else []
+        for start in range(0, len(rows), page_dans):
+            pages.append(_tuto_tab_page(rows[start:start + page_dans],
+                                        vrows[start:start + page_dans],
+                                        W, H, ml, mt, cols, cell_w, cell_h,
+                                        fs, opts, sec_title))
+    return pages
+
 
 def _wrap_horizontal(tokens, cols):
     return [tokens[i : i + cols] for i in range(0, len(tokens), cols)]
@@ -1821,7 +2051,7 @@ def _wrap_horizontal(tokens, cols):
 # --------------------------------------------------------------------------- #
 # Helpers
 # --------------------------------------------------------------------------- #
-def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
+def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None, tech_map=None):
     """Dessine les marques de technique (souhou) autour de la cellule.
 
     Les marques de type 'char' sont rendues dans la même police (serif) et la
@@ -1841,7 +2071,7 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
     """
     gap = fs * 0.05
     for suffix in suffixes:
-        tech = TECHNIQUE_SUFFIXES[suffix]
+        tech = (tech_map or TECHNIQUE_SUFFIXES)[suffix]
         ttype = tech['type']
         if ttype == 'char':
             sym = tech['symbol']
@@ -1871,13 +2101,13 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None):
                 else:  # bottom-left
                     tx = cx - text_w / 2 - gap
                     anchor = "start" if rotate else "end"
-                ty = cy + 7 + fs * dy
+                ty = cy + fs * 0.318 + fs * dy
             else:
                 if tech['pos'] == 'top-right':
                     tx = cx + fs * dx
                 else:
                     tx = cx - fs * dx
-                ty = cy + 7 + fs * dy
+                ty = cy + fs * 0.318 + fs * dy
                 anchor = "middle"
             if rotate:
                 out.append(f'<text x="{tx}" y="{ty}" text-anchor="{anchor}" '
@@ -2103,7 +2333,22 @@ def _warn_unknown_token(tok):
               file=sys.stderr)
 
 
-def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
+def _tuto_avg_tech_map():
+    # En tuto, les deux marques top-right (uchi-utu ', kaki-utu ^) partagent
+    # la MEME position : moyenne des dx/dy/scale des deux entrées.
+    u = TECHNIQUE_SUFFIXES["'"]
+    k = TECHNIQUE_SUFFIXES["^"]
+    avg = {'type': 'char', 'pos': 'top-right',
+           'dx': (u.get('dx', 0) + k.get('dx', 0)) / 2,
+           'dy': (u.get('dy', 0) + k.get('dy', 0)) / 2,
+           'scale': (u.get('scale', 1.0) + k.get('scale', 1.0)) / 2}
+    m = dict(TECHNIQUE_SUFFIXES)
+    m["'"] = dict(u, **avg)
+    m["^"] = dict(k, **avg)
+    return m
+
+
+def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v"):
     """Affiche un token dans une cellule.
 
     Modes rythmiques :
@@ -2152,6 +2397,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     """
     if opts is None:
         opts = {}
+    tmap = _tuto_avg_tech_map() if opts.get('tuto_tech_avg') else None
+    def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None):
+        _render_techniques(out, suffixes, cx, cy, cw, ch, fs, text_w=text_w, tech_map=tmap)
 
     if tok in (EMPTY_TOKEN, "", None):
         return
@@ -2196,6 +2444,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
         tech_suffixes.insert(0, base_tok[-1])
         base_tok = base_tok[:-1]
+    if not opts.get('render_koe', True):
+        # koekiri non affiché (ex. layout tuto) : on garde l'interprétation
+        # mais on ne rend pas le symbole □
+        tech_suffixes = [s for s in tech_suffixes if s != ')']
 
     # Bornes de chant (声だし/声切り) sur un repos ◯ : légitime, PAS
     # d'avertissement. Les bornes s'adressent à la VOIX, et la ligne
@@ -2207,7 +2459,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
     # dans la case, côté droit (区画中右方, traité 野村流 p. 9).
     # Le kanji du kandokoro garde sa taille pleine : le cercle est petit et
     # ancré au bord droit de la case, il ne rétrécit pas la note.
-    if koe_prefix:
+    if koe_prefix and opts.get('render_koe', True):
         out.append(f'<text x="{cx + cell_w * 0.36}" y="{cy + fs * 0.318}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="{int(fs * 0.42)}" fill="black">○</text>')
@@ -2220,7 +2472,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                   f'font-family="serif" font-size="{effective_fs}" '
                   f'fill="black">{_note_svg(base_tok, effective_fs, opts)}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # 下尺 → 尺 entouré d'un cercle
@@ -2231,7 +2483,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape("尺")}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # 下老 → deux caractères condensés en demi-largeur via textLength
@@ -2243,7 +2495,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下老")}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=effective_fs * 1.0)
         return
 
@@ -2257,7 +2509,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下八")}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=effective_fs * 1.0)
         return
 
@@ -2275,7 +2527,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape(base_tok)}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=effective_fs * 1.2)
         return
 
@@ -2293,7 +2545,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape(base_tok)}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h,
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
                            effective_fs, text_w=target_w)
         return
 
@@ -2311,7 +2563,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                            f'text-anchor="middle" font-family="serif" '
                            f'font-size="{small}" fill="black">'
                            f'{escape(c)}</text>')
-            _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+            _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
             return
 
     if "/" in base_tok:
@@ -2325,8 +2577,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
             main_tech.insert(0, main_note[-1])
             main_note = main_note[:-1]
 
-        # Cercle autour du 尺 principal si @shaku_circled on
-        if main_note == "尺" and opts.get('shaku_circled'):
+        # Cercle autour du SHARP principal si @shaku_circled on
+        if main_note == "尖" and opts.get('shaku_circled'):
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
@@ -2335,33 +2587,62 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
         # Techniques de la note principale
         if main_tech:
-            _render_techniques(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
+            _rt(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
 
         if straddle_note:
             ss_pos = int(fs * 0.713)
-            straddle_y = cy + cell_h * 0.50 + ss_pos/3
             ss = int(effective_fs * 0.713)
-            # Cercle autour du 尺 à cheval si @shaku_circled on
-            if straddle_note == "尺" and opts.get('shaku_circled'):
+            if orient == "h":
+                # horizontal : la note à cheval chevauche la bordure DROITE (verticale)
+                # le kanji à cheval est CENTRÉ sur la bordure droite (verticale) ;
+                # l’ornement suit (positionné depuis straddle_x)
+                straddle_x = cx + cell_w * 0.50
+                # centré VERTICALEMENT avec la note principale : chaque glyphe
+                # est centré sur cy avec sa propre taille (baseline = cy + taille*0.318)
+                straddle_y = cy + ss * 0.318
+            else:
+                # vertical : chevauche la bordure INFÉRIEURE (horizontale)
+                straddle_x = cx
+                straddle_y = cy + cell_h * 0.50 + ss_pos / 3
+            # Cercle autour du SHARP à cheval si @shaku_circled on
+            if straddle_note == "尖" and opts.get('shaku_circled'):
                 r = ss * 0.713
-                out.append(f'<circle cx="{cx}" cy="{straddle_y - ss * 0.35}" r="{r}" '
+                ccx, ccy = (straddle_x, cy + 2) if orient == "h" else (cx, straddle_y - ss * 0.35)
+                out.append(f'<circle cx="{ccx}" cy="{ccy}" r="{r}" '
                            f'fill="none" stroke="black" stroke-width="0.8"/>')
-            out.append(f'<text x="{cx}" y="{straddle_y}" '
+            out.append(f'<text x="{straddle_x}" y="{straddle_y}" '
                        f'text-anchor="middle" font-family="serif" '
                        f'font-size="{ss}" fill="black">'
                        f'{_note_svg(straddle_note, ss, opts)}</text>')
             # Les techniques de fin de token s'appliquent à la note à cheval :
             if tech_suffixes:
-                _render_techniques(out, tech_suffixes, cx, straddle_y - fs * 0.318,
-                                   cell_w, cell_h, effective_fs)
+                if orient == "h":
+                    # techniques du straddle : positionnées depuis le straddle
+                    # (bordure droite), avec sa propre taille ss
+                    _rt(out, tech_suffixes, straddle_x, cy,
+                                       cell_w, cell_h, ss)
+                else:
+                    _rt(out, tech_suffixes, cx, straddle_y - fs * 0.318,
+                                       cell_w, cell_h, effective_fs)
         else:
             # Pas de note à cheval : les techniques s'appliquent à la note principale
-            _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+            _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # --- shuffle 早弾き : A:B (deux notes égales, empilées) --- #
     if ":" in base_tok:
         parts = base_tok.split(":", 1)
+        # Token ":X" ou "X:" (une seule note, ex. "(:X" / "X:)" après strip des
+        # parenthèses au parsing) : la note est rendue CENTRÉE, taille pleine
+        # (comme une noire) — pas décalée dans le slot "lower" du shuffle.
+        if len(parts) == 2 and (not parts[0] or not parts[1]):
+            lone = parts[0] or parts[1]
+            if lone:
+                out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
+                           f'font-family="serif" font-size="{fs}" fill="black">'
+                           f'{_note_svg(lone, fs, opts)}</text>')
+                _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+                return
         # En présence d'une borne de chant ( / ), les deux notes du shuffle
         # gardent la taille pleine (fs) : la borne est un petit glyphe à part.
         koe = koe_prefix or koe_suffix
@@ -2372,17 +2653,25 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
         # "(:合"), la note est parts[1] et parts[0] est vide.
         if koe and not parts[0] and parts[1]:
             parts = (parts[1], "")
-        y_main = cy + fs * 0.318 if koe else cy - fs * 0.18 + sh_pos/3
-        out.append(f'<text x="{cx}" y="{y_main}" '
+        if orient == "h":
+            # horizontal : deux notes côte à côte (gauche/droite)
+            y_main = y_lower = cy + fs * 0.318
+            x_main = cx if koe else cx - fs * 0.18 + sh_pos / 3
+            x_lower = cx + fs * 0.42 + sh_pos / 3
+        else:
+            x_main = x_lower = cx
+            y_main = cy + fs * 0.318 if koe else cy - fs * 0.18 + sh_pos / 3
+            y_lower = cy + fs * 0.42 + sh_pos / 3
+        out.append(f'<text x="{x_main}" y="{y_main}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="{sh}" fill="black">{_note_svg(parts[0], sh, opts)}</text>')
         lower = parts[1] if len(parts) > 1 else ""
         if lower:
-            out.append(f'<text x="{cx}" y="{cy + fs * 0.42 + sh_pos/3}" '
+            out.append(f'<text x="{x_lower}" y="{y_lower}" '
                        f'text-anchor="middle" font-family="serif" '
                        f'font-size="{sh}" fill="black">'
                        f'{_note_svg(lower, sh, opts)}</text>')
-        _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # --- note simple (noire) --- #
@@ -2407,7 +2696,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None):
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">{escape(shown)}</text>')
 
-    _render_techniques(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+    _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
 
 
 def escape(s):
@@ -2657,44 +2946,53 @@ def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif"):
     return _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family)
 
 
+def _char_w(ch, fs):
+    # Largeur approximative d'un glyphe : pleine chasse (CJK/kana/kanji >= U+2E80)
+    # = 1em ; latin (romaji) = 0.55em. L'élément <text> SVG se rend à la largeur
+    # naturelle du glyphe : l'avance entre segments ruby doit suivre cette
+    # largeur, sinon les segments se chevauchent (ex. le mono 花 tombait sur
+    # les kana さぐぬ d'un titre てぃんさぐぬ花『はな』).
+    return fs if ord(ch) >= 0x2E80 else fs * 0.55
+
+
 def _render_horizontal_ruby(out, segments, x, y, fs, fill, family="serif"):
     """Rend des segments ruby en mode horizontal (ruby au-dessus de la base).
     x = position horizontale de départ
     y = position verticale du texte de base (baseline)
-    Retourne le x après le dernier segment."""
+    Retourne le x après le dernier segment. Avance par _char_w (largeur
+    réelle des glyphes) pour ne pas chevaucher les segments entre eux."""
     ruby_fs = int(fs * RUBY_SCALE)
-    ruby_y = y - fs * 0.55  # ruby au-dessus, contact cadre-à-cadre
-    char_w = fs * 0.55       # largeur approximative d'un caractère CJK
-    ruby_char_w = ruby_fs * 0.55
+    # ruby bien AU-DESSUS du glyphe de base : un CJK monte ~0.88em au-dessus
+    # de la baseline ; à 0.55em le ruby chevauchait le haut du caractère (ex. 花)
+    ruby_y = y - fs * 0.95
 
     for seg in segments:
         if seg["type"] == "plain":
             out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
                        f'font-size="{fs}" fill="{fill}">'
                        f'{escape(seg["text"])}</text>')
-            x += len(seg["text"]) * char_w
+            x += sum(_char_w(c, fs) for c in seg["text"])
 
         elif seg["type"] == "mono":
             base, ruby = seg["base"], seg["ruby"]
+            base_w = _char_w(base, fs)
             out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
                        f'font-size="{fs}" fill="{fill}">{escape(base)}</text>')
             if ruby:
-                rw = len(ruby) * ruby_char_w
-                rx = x + (char_w - rw) / 2
+                rw = sum(_char_w(c, ruby_fs) for c in ruby)
+                rx = x + (base_w - rw) / 2
                 out.append(f'<text x="{rx}" y="{ruby_y}" '
                            f'font-family="{family}" font-size="{ruby_fs}" '
                            f'fill="{fill}">{escape(ruby)}</text>')
-            x += char_w
+            x += base_w
 
         elif seg["type"] == "group":
-            n_base = len(seg["base"])
-            base_w = n_base * char_w
+            base_w = sum(_char_w(c, fs) for c in seg["base"])
             out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
                        f'font-size="{fs}" fill="{fill}">'
                        f'{escape(seg["base"])}</text>')
             if seg["ruby"]:
-                n_ruby = len(seg["ruby"])
-                ruby_w = n_ruby * ruby_char_w
+                ruby_w = sum(_char_w(c, ruby_fs) for c in seg["ruby"])
                 rx = x + (base_w - ruby_w) / 2
                 out.append(f'<text x="{rx}" y="{ruby_y}" '
                            f'font-family="{family}" font-size="{ruby_fs}" '
@@ -2703,33 +3001,18 @@ def _render_horizontal_ruby(out, segments, x, y, fs, fill, family="serif"):
 
         elif seg["type"] == "jukugo":
             for base, ruby in seg["items"]:
-                if len(base) > 1:
-                    n_base = len(base)
-                    base_w = n_base * char_w
-                    out.append(f'<text x="{x}" y="{y}" '
-                               f'font-family="{family}" font-size="{fs}" '
-                               f'fill="{fill}">{escape(base)}</text>')
-                    if ruby:
-                        n_ruby = len(ruby)
-                        ruby_w = n_ruby * ruby_char_w
-                        rx = x + (base_w - ruby_w) / 2
-                        out.append(f'<text x="{rx}" y="{ruby_y}" '
-                                   f'font-family="{family}" '
-                                   f'font-size="{ruby_fs}" '
-                                   f'fill="{fill}">{escape(ruby)}</text>')
-                    x += base_w
-                else:
-                    out.append(f'<text x="{x}" y="{y}" '
-                               f'font-family="{family}" font-size="{fs}" '
-                               f'fill="{fill}">{escape(base)}</text>')
-                    if ruby:
-                        rw = len(ruby) * ruby_char_w
-                        rx = x + (char_w - rw) / 2
-                        out.append(f'<text x="{rx}" y="{ruby_y}" '
-                                   f'font-family="{family}" '
-                                   f'font-size="{ruby_fs}" '
-                                   f'fill="{fill}">{escape(ruby)}</text>')
-                    x += char_w
+                base_w = sum(_char_w(c, fs) for c in base)
+                out.append(f'<text x="{x}" y="{y}" '
+                           f'font-family="{family}" font-size="{fs}" '
+                           f'fill="{fill}">{escape(base)}</text>')
+                if ruby:
+                    ruby_w = sum(_char_w(c, ruby_fs) for c in ruby)
+                    rx = x + (base_w - ruby_w) / 2
+                    out.append(f'<text x="{rx}" y="{ruby_y}" '
+                               f'font-family="{family}" '
+                               f'font-size="{ruby_fs}" '
+                               f'fill="{fill}">{escape(ruby)}</text>')
+                x += base_w
 
     return x
 
@@ -2742,7 +3025,7 @@ def _render_horizontal_text(out, text, x, y, fs, fill, family="serif"):
     if not _has_ruby(segments):
         out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
                    f'font-size="{fs}" fill="{fill}">{escape(text)}</text>')
-        return x + len(text) * fs * 0.55
+        return x + sum(_char_w(ch, fs) for ch in text)
     return _render_horizontal_ruby(out, segments, x, y, fs, fill, family)
 
 
@@ -2755,7 +3038,7 @@ def main():
     ap.add_argument("-o", "--output", help="fichier SVG de sortie")
     ap.add_argument("-c", "--cells-per-dan", dest="cols", type=int,
                     help="cellules par dan : lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
-    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami"],
+    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami", "tuto"],
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
                     help="nombre max de dans par page (pagination multipage, surcharge @page_dans)")
