@@ -2000,8 +2000,12 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts):
         cols = TUTO_DEFAULT_COLS
     if page_dans is None:
         page_dans = TUTO_DEFAULT_DANS
-    ml = mr = mt = mb = 16
-    cell_w = (W - ml - mr) / cols
+    ml = mt = mb = 16
+    # Marge droite renforée (16 + 1/4 de case) : les vocals placés sous le
+    # straddle de la dernière colonne ne doivent pas toucher la bordure droite
+    # du SVG. Marges haute/basse/gauche inchangées.
+    cell_w = (W - ml - 16) / (cols + 0.25)   # car mr = 16 + cell_w/4
+    mr = 16 + cell_w / 4
     cell_h = (H - mt - mb) / page_dans
     fs = max(8, int(cell_h * 0.38))  # ratio fs/case ~0,38 (calibrage Portama)
 

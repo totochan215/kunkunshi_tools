@@ -161,6 +161,7 @@ https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases 
 
 - Format horizontal : lecture de gauche à droite et de haut en bas (comme `@layout horizontal`).
 - Canvas de taille fixe en pixels, pilotée par `@tuto_block LxH` (défaut `1280x720`) : chaque page SVG fait exactement `LxH`.
+- Marges : 16 px en haut/gauche/bas, **16 + 1/4 de case à droite** (les vocals sous le straddle de la dernière colonne ne touchent pas la bordure du SVG).
 - `@cells_per_dan` / `-c` = cases par dan (défaut 8 en tuto, 12 sinon) ; `@page_dans` / `-p` = dans par page (défaut 7 en tuto).
 - **Page 1 à part** : titre, accordage, auteur/compositeur/etc. centrés seuls sur la page.
 - Pages suivantes : la tablature, découpée en pages de `page_dans` dans max, **pleine largeur** (pas de bande marker en tuto : les flèches de répétition ↓/↑ ne sont pas rendues). Placement des syllabes `::vocal` dans leur case :
