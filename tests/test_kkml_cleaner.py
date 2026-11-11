@@ -313,3 +313,17 @@ c = next(e for e in els30 if e[2] == CORNER)    # ^ dans la case 1
 assert abs((g[0] - CX0) - FS*0.60) < 0.5 and abs((c[0] - (CX0 + CW)) - FS*0.60) < 0.5, (g, c)
 assert abs(g[1] - ey) < 0.5 and abs(c[1] - ey) < 0.5, (g, c)  # même y (dy=-0.45)
 print("OK tuto : ' et ^ à la même position moyenne (dx=0.60, dy=-0.45)")
+
+# 31. tailles relatives des ornements : kaki ≈ fs (note), uchi ≈ 4/3 fs — tous layouts
+NAKA, G, C = chr(0x4E2D), chr(0xFF40), chr(0x231D)
+for layout, idx, fs in (("vertical", 0, 22), ("tuto", 1, 37)):
+    svg31 = _k.render_svg(_k.parse_kkml("@layout " + layout + "\n::tab\n" + NAKA + "' " + NAKA + "^\n::\n"), layout=layout)[idx]
+    import re as _re31
+    fs31 = {m.group(3): int(m.group(2)) for m in _re31.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([^<]*)</text>', svg31) if m.group(3) in (G, C)}
+    if layout == "vertical":
+        assert fs31[G] == int(fs*1.1*1.21) and abs(fs31[G] - 4*fs/3) <= 1, fs31   # uchi ≈ 4/3 note
+        assert fs31[C] == int(fs*1.1*0.91) and abs(fs31[C] - fs) <= 1, fs31      # kaki ≈ note
+    else:
+        sc = (_k.TECHNIQUE_SUFFIXES["'"]["scale"] + _k.TECHNIQUE_SUFFIXES["^"]["scale"]) / 2
+        assert fs31[G] == fs31[C] == int(fs*1.1*sc), fs31  # tuto : même taille (moyenne)
+print("OK tailles ornements : kaki ≈ note, uchi ≈ 4/3 note (tuto : moyenne partagée)")

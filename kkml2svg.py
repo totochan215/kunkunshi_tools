@@ -154,17 +154,17 @@ TECHNIQUE_SUFFIXES = {
     # uchi-utu : apostrophe ASCII ' (canonique). Alias : ｀ (normalisé
     # via FULLWIDTH_MAP) et * / ＊ (dépréciés, gardés pour compat).
     "'": {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
+          'dx': 0.50, 'dy': 0.05, 'scale': 1.21},
     '*': {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
+          'dx': 0.50, 'dy': 0.05, 'scale': 1.21},
     # nuchi-utu = uchi-nuchi-utu (打ち抜き音) : hammer-on SANS tenir la note.
     # Suffixe `"` (U+0022), jumeau de `'` (uchi-utu tenu) ; `n` reste EXCLU
     # (collision romaji : yon, bon...). Glyphe rendu : ゜ (U+309C, apostrophe
     # vide), pendant creux du ｀ plein de uchi-utu. ＂ (U+FF02) normalisé en `"`.
     '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
-          'pos': 'top-right', 'dx': 0.50, 'dy': 0.05, 'scale': 1.1},
+          'pos': 'top-right', 'dx': 0.50, 'dy': 0.05, 'scale': 1.21},
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
-          'scale': 0.9, 'dx': 0.70, 'dy': -0.95},
+          'scale': 0.91, 'dx': 0.70, 'dy': -0.95},
     'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
           'dx': 0.45, 'dy': 0.15},
     '<': {'name': 'kachi-utu', 'type': 'char',   'symbol': '┗', 'pos': 'bottom-left',
