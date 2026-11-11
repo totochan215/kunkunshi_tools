@@ -515,7 +515,6 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
-        'tuto_tech_avg': layout in ("tuto", "horizontal"),  # position moyenne uchi-utu/kaki-utu pour ' et ^ (tuto + horizontal)
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
@@ -2333,18 +2332,18 @@ def _warn_unknown_token(tok):
               file=sys.stderr)
 
 
-def _tuto_avg_tech_map():
-    # En tuto, les deux marques top-right (uchi-utu ', kaki-utu ^) partagent
-    # la MEME position : moyenne des dx/dy/scale des deux entrées.
+def _avg_tech_map():
+    # Les deux marques top-right (uchi-utu ', kaki-utu ^) partagent la MEME
+    # position, tous layouts : moyenne des dx/dy/scale des deux entrées.
     u = TECHNIQUE_SUFFIXES["'"]
     k = TECHNIQUE_SUFFIXES["^"]
-    avg = {'type': 'char', 'pos': 'top-right',
-           'dx': (u.get('dx', 0) + k.get('dx', 0)) / 2,
-           'dy': (u.get('dy', 0) + k.get('dy', 0)) / 2,
-           'scale': (u.get('scale', 1.0) + k.get('scale', 1.0)) / 2}
+    dx = (u.get('dx', 0) + k.get('dx', 0)) / 2
+    dy = (u.get('dy', 0) + k.get('dy', 0)) / 2
     m = dict(TECHNIQUE_SUFFIXES)
-    m["'"] = dict(u, **avg)
-    m["^"] = dict(k, **avg)
+    # position moyenne partagée, mais scale/symbole restent ceux de chaque marque
+    # (kaki ≈ taille de la note, uchi ≈ 4/3)
+    m["'"] = dict(u, pos='top-right', dx=dx, dy=dy)
+    m["^"] = dict(k, pos='top-right', dx=dx, dy=dy)
     return m
 
 
@@ -2397,7 +2396,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     """
     if opts is None:
         opts = {}
-    tmap = _tuto_avg_tech_map() if opts.get('tuto_tech_avg') else None
+    tmap = _avg_tech_map()  # position moyenne partagée ' / ^, tous layouts
     def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None):
         _render_techniques(out, suffixes, cx, cy, cw, ch, fs, text_w=text_w, tech_map=tmap)
 
