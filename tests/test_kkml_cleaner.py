@@ -379,3 +379,13 @@ assert dot35 and syl35, "pas de ・/あ en vertical"
 assert abs(dot35[0][0] - syl35[0][0]) < 0.5, (dot35, syl35)   # même colonne marker
 assert dot35[0][1] < syl35[0][1], (dot35, syl35)               # ・ au-dessus de あ (lecture haut->bas)
 print("OK vertical : logique points/vocal commune (_vocal_elements, ・ puis syllabe)")
+
+# 36. nomura : logique points commune — ".あ" -> ・ + あ dans le marker
+GO = chr(0x5408)
+n36 = _k.render_svg(_k.parse_kkml("@layout nomura\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n." + chr(0x3042) + " " + chr(0x3044) + "\n::\n"), layout="nomura")
+svg36 = n36[0]
+import re as _re36
+has_dot = chr(0x30FB) in svg36
+has_a = bool(_re36.search(r'fill="#333">' + chr(0x3042) + r'</text>', svg36))
+assert has_dot and has_a, "pas de ・/あ en nomura"
+print("OK nomura : logique points/vocal commune (_vocal_elements, ・ rendu)")
