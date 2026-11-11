@@ -307,6 +307,9 @@ import re as _re30
 els30 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re30.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', svg30)]
 FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2
 ex, ey = CX0 + FS*0.60, CY + FS*0.318 + FS*(-0.45)
-assert any(abs(e[0]-ex) < 0.5 and abs(e[1]-ey) < 0.5 for e in els30 if e[2] == GRAVEF), (ex, ey)
-assert any(abs(e[0]-ex) < 0.5 and abs(e[1]-ey) < 0.5 for e in els30 if e[2] == CORNER), (ex, ey)  # même position moyenne
+g = next(e for e in els30 if e[2] == GRAVEF)   # ' dans la case 0
+c = next(e for e in els30 if e[2] == CORNER)    # ^ dans la case 1
+# même offset relatif moyen (dx=0.60, dy=-0.45) dans leur case respective
+assert abs((g[0] - CX0) - FS*0.60) < 0.5 and abs((c[0] - (CX0 + CW)) - FS*0.60) < 0.5, (g, c)
+assert abs(g[1] - ey) < 0.5 and abs(c[1] - ey) < 0.5, (g, c)  # même y (dy=-0.45)
 print("OK tuto : ' et ^ à la même position moyenne (dx=0.60, dy=-0.45)")
