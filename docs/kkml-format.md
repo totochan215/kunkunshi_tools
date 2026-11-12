@@ -67,7 +67,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@dans_per_page` | —          | Nombre max de dans par page (un SVG par page de n dans). `-p/--dans-per-page n` en CLI |
 | `@tuto_block`    | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
 | `@cells_per_dan` | —          | Nombre de cellules par dan. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal`, mais pas pour les mises en page `chindami` et `nomura`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
-| `@marker`        | `on`       | Active/désactive le marker (concept sémantique ; rendu en colonne/ligne marker selon le layout) : `on`/`off` |
+| `@marker`        | `on`       | Active/désactive les colonnes/lignes de marker : `on`/`off` |
 | `@end_circle`    | —          | **Déprécié**, ignoré |
 | `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.    |
 | `@shaku_circled` | `off`      | Rend les 尺 entourés d'un cercle : `on`/`off`      |
