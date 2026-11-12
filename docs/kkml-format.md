@@ -63,7 +63,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@comment`       | —          | Commentaire |
 | `@tuning`        | `本調子`   | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
 | `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ) |
-| `@layout`        | `vertical` | Mise en forme au rendu : `vertical`, `horizontal`, `nomura`, `chindami` ou `tuto` (voir [svg-layout.md](svg-layout.md)) |
+| `@layout`        | `vertical` | Modèle de rendu : `vertical`, `horizontal`, `nomura`, `chindami` ou `tuto` (voir [svg-layout.md](svg-layout.md)) |
 | `@page_dans`     | —          | Pagination multipage : nombre max de dans par page (un SVG par page de N dans). `-p/--page-dans N` en CLI |
 | `@tuto_block`    | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
 | `@cells_per_dan` | —          | Nombre de cellules par dan = propriété de mise en page, pas de la chanson. Ignoré au rendu ; utilisé par `kkml_cleaner.py` comme indice de repli (jamais de valeur par défaut : ne pas écraser les sauts de ligne choisis par l'utilisateur) ; `-c` en CLI pour vertical/horizontal (chindami et nomura imposent 12 cellules/dan). Ancien nom `@cols` accepté (renommé par le cleaner) |
