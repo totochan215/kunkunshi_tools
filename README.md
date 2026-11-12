@@ -33,7 +33,7 @@ Le convertisseur (`portama2kkml.py`) mappe :
 
 ### kkml2svg.py
 
-Rend un fichier KKML sous forme de tablature SVG, en appliquant les options de mise en page stockées dans les métadonnées ou forcées en ligne de commande.
+Rend un fichier KKML sous forme de mise en page SVG, en appliquant les options de mise en page stockées dans les métadonnées ou forcées en ligne de commande.
 
     python3 kkml2svg.py chanson.kkml -o chanson.svg
     python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
