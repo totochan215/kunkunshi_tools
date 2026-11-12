@@ -178,13 +178,13 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 | `｜` (U+FF5C)   | `\|`          | marques de répétition |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
 | `＋` (U+FF0B)   | `+`           | accord (taachi / tsuiri-bichi), forme canonique |
-| `ー` (U+30FC)   | `-`           | case vide uniquement - ne pas normaliser sinon |
+| `＝` (U+FF1D)   | `=`           | accord (taachi / tsuiri-bichi), variante de +   |
+| `ー` (U+30FC)   | `-`           | case vide uniquement - ne pas normaliser sinon  |
 | `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
 | `｀` (U+FF40)   | `'`           | uchi-utu (打音) |
 | `＂` (U+FF02)   | `"`           | nuchi-utu (打ち抜き音) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
-| `＝` (U+FF1D)   | `=`           | accord (taachi / tsuiri-bichi), variante de + |
 | `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
 | `）` (U+FF09)   | `)`           | koekiri, fin de boucle vocale  |
 
