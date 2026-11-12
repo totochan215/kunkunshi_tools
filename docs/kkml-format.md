@@ -125,17 +125,17 @@ Chaque case de tablature correspond à un temps. Les tablatures Kunkunshi ignore
 
 Séparateurs à l'intérieur d'une figure (dans une case) :
 
-| Séparateurs | Figure rythmique                        | Exemple              |
-|-------------|-----------------------------------------|----------------------|
-|             | Une noire                               | `合`                  |
-| `/`         | Deux croches                            | `合/工`               |
-| `//`        | Quatre doubles croches                  | `合//工//中//上`       |
-| `/` `//`    | Une croche et deux double croches       | `合/工//中`           |
-| `//` `/`    | Deux double croches et une croche       | `合//工/中`           |
-| `:`         | Une croche pointée et une double croche | `合:工`               |
-| `::`        | Une double croche et une croche pointée | `合::工`              |
-| `+` `=` `-` | Accord (notes simultanées, max 3) — `+` canonique, `=` et `-` variantes acceptées (`-` seul = case vide) | `四+工`, `四=工` ou `合+四+工` |
-| (aucun)     | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
+| Séparateurs  | Figure rythmique                        | Exemple              |
+|--------------|-----------------------------------------|----------------------|
+| (sans objet) |             | Une noire                               | `合`                  |
+| `/`          | Deux croches                            | `合/工`               |
+| `//`         | Quatre doubles croches                  | `合//工//中//上`       |
+| `/` `//`     | Une croche et deux double croches       | `合/工//中`           |
+| `//` `/`     | Deux double croches et une croche       | `合//工/中`           |
+| `:`          | Une croche pointée et une double croche | `合:工`               |
+| `::`         | Une double croche et une croche pointée | `合::工`              |
+| `+` `=` `-`  | Accord (notes simultanées, max 3) — `+` canonique, `=` et `-` variantes acceptées (`-` seul = case vide) | `四+工`, `四=工` ou `合+四+工` |
+| (aucun)      | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
 
 TODO: risque de collision entre :: et la fin de section.
 
@@ -248,7 +248,7 @@ TODO: décider du mode de représentation de 勺 en romaji (shaku, donc ambigu -
 
 #### Kandokoro en chiffres romains vers kandokoro en kanji
 
-Au sein des sections `tab::`, les kandokoro exprimés en chiffres romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. 
+Au sein des sections `tab::`, les kandokoro exprimés en chiffres romaji sont tolérés ; c'est toutefois la forme en kanji qui est canonique. 
 
 | Chiffre  | Kanji<br>(Canonique) |
 |----------|---------|
@@ -262,7 +262,7 @@ Au sein des sections `tab::`, les kandokoro exprimés en chiffres romaji sont to
 
 #### Positions étendues en kanji composite vers positions étendues en katakana + kanji
 
-Au sein des sections `tab::`, les kandokoro étendus exprimés sous la forme d'un kanji composite sont tolérés. C'est toutefois la forme katakana + kanji qui est canonique.
+Au sein des sections `tab::`, les kandokoro étendus exprimés sous la forme d'un kanji composite sont tolérés ; c'est toutefois la forme katakana + kanji qui est canonique.
 
 | Kanji          | Katakana + Kanji<br>(Canonique) |
 |----------------|------------------|
