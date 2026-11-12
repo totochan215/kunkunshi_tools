@@ -182,7 +182,7 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 | `ー` (U+30FC)   | `-`           | case vide uniquement - ne pas normaliser sinon  |
 | `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
 | `｀` (U+FF40)   | `'`           | uchi-utu (打音) |
-| `＂` (U+FF02)   | `"`           | nuchi-utu (打ち抜き音) |
+| `＂` (U+FF02)   | `"`           | uchi-nuchi-utu (打ち抜き音) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
 | `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
