@@ -64,9 +64,9 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@tuning`        | `本調子`   | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
 | `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ) |
 | `@layout`        | `vertical` | Modèle de rendu : `vertical`, `horizontal`, `nomura`, `chindami` ou `tuto` (voir [svg-layout.md](svg-layout.md)) |
-| `@page_dans`     | —          | Pagination multipage : nombre max de dans par page (un SVG par page de N dans). `-p/--page-dans N` en CLI |
+| `@dans_per_page` | —          | Nombre max de dans par page (un SVG par page de n dans). `-p/--dans-per-page n` en CLI |
 | `@tuto_block`    | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
-| `@cells_per_dan` | —          | Nombre de cellules par dan. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal`, mais pas pour les mises en page `chindami` et `nomura`, qui imposent la valeur `12`). `-c` en CLI. Ancien nom `@cols` accepté mais non canonique. |
+| `@cells_per_dan` | —          | Nombre de cellules par dan. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal`, mais pas pour les mises en page `chindami` et `nomura`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
 | `@marker`        | `on`       | Active/désactive le marker (concept sémantique ; rendu en colonne/ligne marker selon le layout) : `on`/`off` |
 | `@end_circle`    | —          | **Déprécié**, ignoré |
 | `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.    |
