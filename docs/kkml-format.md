@@ -55,7 +55,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@format`        | `KKML`     | Format de fichier |
 | `@version`       | —          | Numéro de version du format |
 | `@title`         | —          | Titre du morceau (ruby supporté) |
-| `@genre`         | —          | Genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu |
+| `@genre`         | —          | Genre musical. **Déprécié** |
 | `@author`        | —          | Auteur du morceau (ruby supporté) |
 | `@composer`      | —          | Compositeur (ruby supporté) |
 | `@lyricist`      | —          | Parolier (ruby supporté) |
