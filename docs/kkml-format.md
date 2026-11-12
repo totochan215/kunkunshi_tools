@@ -50,17 +50,17 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
 ## Métadonnées
 
-| Clé              | Défaut     | Description |
-|------------------|------------|-------------|
-| `@format`        | `KKML`     | Format de fichier |
-| `@version`       | —          | Numéro de version du format |
-| `@title`         | —          | Titre du morceau (ruby supporté) |
-| `@genre`         | —          | Genre musical. **Déprécié** |
+| Clé              | Défaut     | Description                       |
+|------------------|------------|-----------------------------------|
+| `@format`        | `KKML`     | Format de fichier                 |
+| `@version`       | —          | Numéro de version du format       |
+| `@title`         | —          | Titre du morceau (ruby supporté)  |
+| `@genre`         | —          | Genre musical. **Déprécié**       |
 | `@author`        | —          | Auteur du morceau (ruby supporté) |
-| `@composer`      | —          | Compositeur (ruby supporté) |
-| `@lyricist`      | —          | Parolier (ruby supporté) |
-| `@origin`        | —          | Origine (ruby supporté) |
-| `@comment`       | —          | Commentaire |
+| `@composer`      | —          | Compositeur (ruby supporté)       |
+| `@lyricist`      | —          | Parolier (ruby supporté)          |
+| `@origin`        | —          | Origine (ruby supporté)           |
+| `@comment`       | —          | Commentaire                       |
 | `@tuning`        | `本調子`   | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
 | `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ) |
 | `@layout`        | `vertical` | Modèle de rendu : `vertical`, `horizontal`, `nomura`, `chindami` ou `tuto` (voir [svg-layout.md](svg-layout.md)) |
@@ -69,19 +69,20 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@cells_per_dan` | —          | Nombre de cellules par dan. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal`, mais pas pour les mises en page `chindami` et `nomura`, qui imposent la valeur `12`). `-c` en CLI. Ancien nom `@cols` accepté mais non canonique. |
 | `@marker`        | `on`       | Active/désactive le marker (concept sémantique ; rendu en colonne/ligne marker selon le layout) : `on`/`off` |
 | `@end_circle`    | —          | **Déprécié**, ignoré |
-| `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG. |
-| `@shaku_circled` | `off`      | Rend les 尺 entourés d'un cercle : `on`/`off` |
+| `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.    |
+| `@shaku_circled` | `off`      | Rend les 尺 entourés d'un cercle : `on`/`off`      |
 | `@shaku_sharp`   | `off`      | Rend les 尺♯ accompagnés du symbole ♯ : `on`/`off` |
 | `@lyrics_size`   | `medium`   | Taille des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
 | `@ruby_size`     | `50`       | Taille du ruby en % de la taille de base. Non utilisé à ce jour |
-| `@musicno`       | —          | Numéro de morceau (pour compatibilité Portama) |
-| `@chogen`        | —          | Accordage absolu (pour compatibilité Portama)  |
-| `@speed`         | —          | Tempo (pour compatibilité Portama)             |
-| `@rythm`         | —          | Rythme (pour compatibilité Portama)            |
-| `@rythm_mode`    | —          | Mode rythmique (pour compatibilité Portama)    |
+| `@musicno`       | —          | Numéro de morceau (pour compatibilité Portama)     |
+| `@chogen`        | —          | Accordage absolu (pour compatibilité Portama)      |
+| `@speed`         | —          | Tempo (pour compatibilité Portama)                 |
+| `@rythm`         | —          | Rythme (pour compatibilité Portama)                |
+| `@rythm_mode`    | —          | Mode rythmique (pour compatibilité Portama)        |
 
 Toutes les métadonnées sont optionnelles. L'ordre est sans importance. Les métadonnées peuvent être localisées à tout début de ligne, y compris après des sections. Toute métadonnée s'applique à l'ensemble du fichier.
 En cas de doublon, la première occurrence prime.
+Les mises en page ou la ligne de commande peuvent surcharger certaines métadonnées, qui sont alors ignorées.
 
 ## Section
 
