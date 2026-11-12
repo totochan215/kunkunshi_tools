@@ -39,16 +39,16 @@ Rend un fichier KKML sous forme de tablature SVG, en appliquant les options de m
     python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
     cat chanson.kkml | python3 kkml2svg.py -          # stdin -> stdout
 
-Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto`, `-p/--page-dans N` (pagination multipage : un SVG par page de N dans max).
+Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto`, `-p/--dans-per-page`.
 
 ### kkml_cleaner.py — normaliser un KKML
 
 `kkml_cleaner.py` réécrit un fichier KKML sous sa forme canonique
 (idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
 
-    python3 kkml_cleaner.py morceau.kkml        # réécrit le fichier en place
-    python3 kkml_cleaner.py -n morceau.kkml     # mode test
-    python3 kkml_cleaner.py -n -o clean.kkml morceau.kkml
+    python3 kkml_cleaner.py morceau.kkml                  # réécrit le fichier en place
+    python3 kkml_cleaner.py -n morceau.kkml               # mode test
+    python3 kkml_cleaner.py -n -o clean.kkml morceau.kkml # écrit dans un autre morceau
 
 ### kkml2pdf.py
 
