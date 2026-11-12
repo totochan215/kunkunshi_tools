@@ -103,7 +103,7 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 
 ## Ruby
 
-Le ruby est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture des caractères kanji ou kana, ce qui est particulièrement utile dans les langues Ryukyu, car leurs lectures divergent fréquemment du japonais standard, y compris les lectures de kanas dans certains cas (ex. の pouvant être lu ぬ). Même en japonais standard, le ruby reste utile pour les musiciens peu à l'aise avec la lecture des kanjis et/ou dans le cas des kanjis rares.
+Le ruby (furigana) est un guide phonétique placé à droite du texte de base en écriture verticale, ou au-dessus en écriture horizontale. Il permet de préciser la lecture des caractères kanji ou kana, ce qui est particulièrement utile dans les langues Ryukyu, car leurs lectures divergent fréquemment du japonais standard, y compris les lectures de kanas dans certains cas (ex. の pouvant être lu ぬ). Même en japonais standard, le ruby reste utile pour les musiciens peu à l'aise avec la lecture des kanjis et/ou dans le cas des kanjis rares.
 
 Trois syntaxes sont possibles pour encoder les rubys en KKML :
 
