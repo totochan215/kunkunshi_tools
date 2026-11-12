@@ -175,7 +175,7 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 | `　` (U+3000)   | ` `           | séparateur de temps   |
 | `／` (U+FF0F)   | `/`           | deux croches          |
 | `：` (U+FF1A)   | `:`           | croche pointée + double croche, marques de répétition |
-| `｜` (U+FF5C)   | `\|`          | marques de répétition, séparateur de couplets dans `::lyrics` |
+| `｜` (U+FF5C)   | `\|`          | marques de répétition |
 | `♯`  (U+266F)   | `#`           | altération (尺＃) |
 | `＋` (U+FF0B)   | `+`           | accord (taachi / tsuiri-bichi), forme canonique |
 | `ー` (U+30FC)   | `-`           | case vide uniquement - ne pas normaliser sinon |
