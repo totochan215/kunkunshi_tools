@@ -27,7 +27,7 @@ contenu
 ::tab
 <tablature sous forme de cases représentant des temps, séparées par des espaces ;
 au sein de chaque case, figures représentant des notes, leurs altérations et leurs
-techniques de jeu (ornements)>
+techniques de jeu>
 ::
 
 ::vocal
