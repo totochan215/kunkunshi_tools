@@ -69,7 +69,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@cells_per_dan` | —          | Nombre de cellules par dan. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal`, mais pas pour les mises en page `chindami` et `nomura`, qui imposent la valeur `12`). `-c` en CLI. Ancien nom `@cols` accepté mais non canonique. |
 | `@marker`        | `on`       | Active/désactive le marker (concept sémantique ; rendu en colonne/ligne marker selon le layout) : `on`/`off` |
 | `@end_circle`    | —          | **Déprécié**, ignoré |
-| `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG |
+| `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG. |
 | `@shaku_circled` | `off`      | Rend les 尺 entourés d'un cercle : `on`/`off` |
 | `@shaku_sharp`   | `off`      | Rend les 尺♯ accompagnés du symbole ♯ : `on`/`off` |
 | `@lyrics_size`   | `medium`   | Taille des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
