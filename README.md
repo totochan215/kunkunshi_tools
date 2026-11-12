@@ -46,9 +46,9 @@ Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizon
 `kkml_cleaner.py` réécrit un fichier KKML sous sa forme canonique
 (idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
 
-    python3 kkml_cleaner.py morceau.kkml                  # réécrit le fichier en place
-    python3 kkml_cleaner.py -n morceau.kkml               # mode test
-    python3 kkml_cleaner.py -n -o clean.kkml morceau.kkml # écrit dans un autre morceau
+    python3 kkml_cleaner.py dirty.kkml                  # réécrit le fichier en place
+    python3 kkml_cleaner.py -n dirty.kkml               # mode test
+    python3 kkml_cleaner.py -n -o clean.kkml dirty.kkml # écrit dans un autre morceau
 
 ### kkml2pdf.py
 
