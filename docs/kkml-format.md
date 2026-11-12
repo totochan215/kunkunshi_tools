@@ -242,9 +242,11 @@ Au sein des sections `tab::`, les kandokoro exprimés en romaji sont tolérés ;
 | `jyū`    | `十`    |
 | `sai`    | `才`    |
 | `bon`    | `凡`    |
+| `dshaku` | `勺`    |
+
+NB: dshaku pour "down shaku".
 
 TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
-TODO: décider du mode de représentation de 勺 en romaji (shaku, donc ambigu -> dshaku pour "down shaku" ?)
 
 #### Kandokoro en chiffres romains vers kandokoro en kanji
 
