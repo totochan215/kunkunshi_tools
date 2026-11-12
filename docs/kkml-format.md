@@ -127,7 +127,7 @@ Séparateurs à l'intérieur d'une figure (dans une case) :
 
 | Séparateurs  | Figure rythmique                        | Exemple              |
 |--------------|-----------------------------------------|----------------------|
-| (sans objet) |             | Une noire                               | `合`                  |
+| (sans objet) | Une noire                               | `合`                  |
 | `/`          | Deux croches                            | `合/工`               |
 | `//`         | Quatre doubles croches                  | `合//工//中//上`       |
 | `/` `//`     | Une croche et deux double croches       | `合/工//中`           |
