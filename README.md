@@ -43,7 +43,7 @@ Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizon
 
 ### kkml_cleaner.py — normaliser un KKML
 
-`kkml_cleaner.py` réécrit un fichier KKML sous sa forme canonique
+Normalise un fichier KKML sous sa forme canonique. 
 (idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
 
     python3 kkml_cleaner.py dirty.kkml                  # réécrit le fichier en place
