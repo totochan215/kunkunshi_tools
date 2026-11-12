@@ -27,57 +27,58 @@ contenu
 ::tab
 <tablature sous forme de cases représentant des temps, séparées par des espaces ;
 au sein de chaque case, figures représentant des notes, leurs altérations et leurs
-techniques de jeu>
+techniques de jeu. Ajout possible de boucles instrumentales ou vocales.>
 ::
 
 ::vocal
-<chant syllabique : un mot (séparé par des espaces) = une syllabe,
-les points `.` subdivisent le temps en parts égales (les points eux-mêmes ne sont pas rendus mais marquent la subdivision) ; chaque ligne de
-::vocal correspond à la ligne de ::tab de même index>
+<placement du chant sur les temps de la tablature : découpage en syllabes,
+les points `.` et syllabes subdivisent chaque temps en parts égales. Chaque ligne de
+::vocal correspond à la ligne de ::tab de même index. Ajout possible de marques de
+début et de fin du chant.>
 ::
 
 ::lyrics
-<paroles en texte libre organisées par couplets, indépendamment des temps ;
-ruby supporté>
+<paroles en texte libre organisées par couplets, indépendamment des temps. 
+Ruby supporté>
 ::
 
 ```
 
-Le fichier est composé d'un en-tête de métadonnées et de sections thématiques. L'ordre n'est pas imposé. Les sections ne peuvent pas être imbriquées.
+Le fichier est composé d'un en-tête comportant des métadonnées, et de sections thématiques. L'ordre n'est pas imposé. Les sections ne peuvent pas être imbriquées.
 
 Les lignes précédées du symbole \# (commentaire) sont ignorées.
 
 ## Métadonnées
 
-| Clé | Défaut | Description |
-|-----|--------|-------------|
-| `@format` | `KKML` | Format de fichier |
-| `@version` | — | Numéro de version du format |
-| `@title` | — | Titre du morceau (ruby supporté) |
-| `@genre` | — | Genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu |
-| `@author` | — | Auteur du morceau (ruby supporté) |
-| `@composer` | — | Compositeur (ruby supporté) |
-| `@lyricist` | — | Parolier (ruby supporté) |
-| `@origin` | — | Origine (ruby supporté) |
-| `@comment` | — | Commentaire |
-| `@tuning` | `本調子` | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
-| `@base_note` | `C3` | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ) |
-| `@layout` | `vertical` | Mise en forme au rendu : `vertical`, `horizontal`, `nomura`, `chindami` ou `tuto` (voir [svg-layout.md](svg-layout.md)) |
-| `@page_dans` | — | Pagination multipage : nombre max de dans par page (un SVG par page de N dans). `-p/--page-dans N` en CLI |
-| `@tuto_block` | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
-| `@cells_per_dan` | — | Nombre de cellules par dan = propriété de mise en page, pas de la chanson. Ignoré au rendu ; utilisé par `kkml_cleaner.py` comme indice de repli (jamais de valeur par défaut : ne pas écraser les sauts de ligne choisis par l'utilisateur) ; `-c` en CLI pour vertical/horizontal (chindami et nomura imposent 12 cellules/dan). Ancien nom `@cols` accepté (renommé par le cleaner) |
-| `@marker` | `on` | Active/désactive le marker (concept sémantique ; rendu en colonne/ligne marker selon le layout) : `on`/`off` |
-| `@end_circle` | — | **Déprécié**, ignoré |
-| `@font_style` | `mincho` | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG |
-| `@shaku_circled` | `off` | Rend les 尺 entourés d'un cercle : `on`/`off` |
-| `@shaku_sharp` | `off` | Rend les 尺♯ accompagnés du symbole ♯ : `on`/`off` |
-| `@lyrics_size` | `medium` | Taille des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
-| `@ruby_size` | `50` | Taille du ruby en % de la taille de base. Non utilisé à ce jour |
-| `@musicno` | — | Numéro de morceau (compatibilité Portama) |
-| `@chogen` | — | Accordage absolu (compatibilité Portama) |
-| `@speed` | — | Tempo (compatibilité Portama) |
-| `@rythm` | — | Rythme (compatibilité Portama) |
-| `@rythm_mode` | — | Mode rythmique (compatibilité Portama) |
+| Clé              | Défaut     | Description |
+|------------------|------------|-------------|
+| `@format`        | `KKML`     | Format de fichier |
+| `@version`       | —          | Numéro de version du format |
+| `@title`         | —          | Titre du morceau (ruby supporté) |
+| `@genre`         | —          | Genre musical. Déprécié : sert de placeholder pour l'auteur lorsqu'il est connu |
+| `@author`        | —          | Auteur du morceau (ruby supporté) |
+| `@composer`      | —          | Compositeur (ruby supporté) |
+| `@lyricist`      | —          | Parolier (ruby supporté) |
+| `@origin`        | —          | Origine (ruby supporté) |
+| `@comment`       | —          | Commentaire |
+| `@tuning`        | `本調子`   | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
+| `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ) |
+| `@layout`        | `vertical` | Mise en forme au rendu : `vertical`, `horizontal`, `nomura`, `chindami` ou `tuto` (voir [svg-layout.md](svg-layout.md)) |
+| `@page_dans`     | —          | Pagination multipage : nombre max de dans par page (un SVG par page de N dans). `-p/--page-dans N` en CLI |
+| `@tuto_block`    | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
+| `@cells_per_dan` | —          | Nombre de cellules par dan = propriété de mise en page, pas de la chanson. Ignoré au rendu ; utilisé par `kkml_cleaner.py` comme indice de repli (jamais de valeur par défaut : ne pas écraser les sauts de ligne choisis par l'utilisateur) ; `-c` en CLI pour vertical/horizontal (chindami et nomura imposent 12 cellules/dan). Ancien nom `@cols` accepté (renommé par le cleaner) |
+| `@marker`        | `on`       | Active/désactive le marker (concept sémantique ; rendu en colonne/ligne marker selon le layout) : `on`/`off` |
+| `@end_circle`    | —          | **Déprécié**, ignoré |
+| `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG |
+| `@shaku_circled` | `off`      | Rend les 尺 entourés d'un cercle : `on`/`off` |
+| `@shaku_sharp`   | `off`      | Rend les 尺♯ accompagnés du symbole ♯ : `on`/`off` |
+| `@lyrics_size`   | `medium`   | Taille des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
+| `@ruby_size`     | `50`       | Taille du ruby en % de la taille de base. Non utilisé à ce jour |
+| `@musicno`       | —          | Numéro de morceau (pour compatibilité Portama) |
+| `@chogen`        | —          | Accordage absolu (pour compatibilité Portama)  |
+| `@speed`         | —          | Tempo (pour compatibilité Portama)             |
+| `@rythm`         | —          | Rythme (pour compatibilité Portama)            |
+| `@rythm_mode`    | —          | Mode rythmique (pour compatibilité Portama)    |
 
 Toutes les métadonnées sont optionnelles. L'ordre est sans importance. Les métadonnées peuvent être localisées à tout début de ligne, y compris après des sections. Toute métadonnée s'applique à l'ensemble du fichier.
 En cas de doublon, la première occurrence prime.
@@ -123,17 +124,17 @@ Chaque case de tablature correspond à un temps. Les tablatures Kunkunshi ignore
 
 Séparateurs à l'intérieur d'une figure (dans une case) :
 
-| Séparateurs| Figure rythmique                        | Exemple              |
-|------------|-----------------------------------------|----------------------|
-|            | Une noire                               | `合`                  |
-| `/`        | Deux croches                            | `合/工`               |
-| `//`       | Quatre doubles croches                  | `合//工//中//上`       |
-| `/` `//`   | Une croche et deux double croches       | `合/工//中`           |
-| `//` `/`   | Deux double croches et une croche       | `合//工/中`           |
-| `:`        | Une croche pointée et une double croche | `合:工`               |
-| `::`       | Une double croche et une croche pointée | `合::工`              |
+| Séparateurs | Figure rythmique                        | Exemple              |
+|-------------|-----------------------------------------|----------------------|
+|             | Une noire                               | `合`                  |
+| `/`         | Deux croches                            | `合/工`               |
+| `//`        | Quatre doubles croches                  | `合//工//中//上`       |
+| `/` `//`    | Une croche et deux double croches       | `合/工//中`           |
+| `//` `/`    | Deux double croches et une croche       | `合//工/中`           |
+| `:`         | Une croche pointée et une double croche | `合:工`               |
+| `::`        | Une double croche et une croche pointée | `合::工`              |
 | `+` `=` `-` | Accord (notes simultanées, max 3) — `+` canonique, `=` et `-` variantes acceptées (`-` seul = case vide) | `四+工`, `四=工` ou `合+四+工` |
-| (aucun)    | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
+| (aucun)     | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
 
 TODO: risque de collision entre :: et la fin de section.
 
@@ -195,11 +196,11 @@ Au sein des sections `tab::`, certains symboles/caractères graphiquement simila
 | Symbole       | Forme canonique | Usage (pour mémoire) |
 |---------------|-----------------|----------------------|
 | `○` (U+25CB)  | `◯` (U+25EF)   | Repos                |
-| `〇` (U+3007) | `◯` (U+25EF)    | Repos                |
+| `〇` (U+3007) | `◯` (U+25EF)   | Repos                |
 
 #### Kandokoro en romaji vers kandokoro en kanji
 
-Au sein des sections `tab::`, les kandokoro exprimés en romaji sont tolérés. C'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
+Au sein des sections `tab::`, les kandokoro exprimés en romaji sont tolérés ; c'est toutefois la forme en kanji qui est canonique. Cette tolérance vise à permettre la saisie de tablatures par un utilisateur qui ne disposerait pas d'un système de saisie en japonais.
 
 | Romaji   | Kanji<br>(Canonique) |
 |----------|---------|
@@ -242,7 +243,7 @@ Au sein des sections `tab::`, les kandokoro exprimés en romaji sont tolérés. 
 | `bon`    | `凡`    |
 
 TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
-TODO: décider du mode de représentation de 勺 en romaji (shaku, donc ambigu)
+TODO: décider du mode de représentation de 勺 en romaji (shaku, donc ambigu -> dshaku pour "down shaku" ?)
 
 #### Kandokoro en chiffres romains vers kandokoro en kanji
 
