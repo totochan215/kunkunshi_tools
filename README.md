@@ -14,7 +14,7 @@ Attribution : projet réalisé en partie par intelligence artificielle (https://
 
 ### portama2kkml.py
 
-Convertit un fichier JSON de [Portama](https://portama.com/) en KKML.
+Convertit un fichier JSON [Portama](https://portama.com/) en KKML.
 
     python3 portama2kkml.py input.json -o output.kkml
     cat input.json | python3 portama2kkml.py - > output.kkml
