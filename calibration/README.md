@@ -1,4 +1,4 @@
-# Références de calibrage (HORS du dépôt public — droits d'auteur)
+# Références de calibration (HORS du dépôt public — droits d'auteur)
 
 Les scans de recueils imprimés (chindami-kunkunshi, nomura-ryu, songbook
 Paris Sanshin Club) ne figurent PAS dans ce dépôt. Ils servent uniquement à
