@@ -14,7 +14,7 @@ Normalisation des noms pour l'appariement :
   avec la lecture en ruby.
 
 Usage :
-    python3 tests/run_tests.py                 # rend chaque .kkml (v+h)
+    python3 tests/run_tests.py                 # rend chaque .kkml (vertical+horizontal+mega)
     python3 tests/run_tests.py --write-svg     # écrit en plus les rendus
                                                 # dans samples/svg/
 Le test échoue si kkml2svg retourne non-zéro ou émet un AVERTISSEMENT.
@@ -72,7 +72,7 @@ def main() -> int:
         if kkml is None:
             print("   (pas de .kkml : ignoré pour le rendu)")
             continue
-        for layout in ("vertical", "horizontal"):
+        for layout in ("vertical", "horizontal", "mega"):
             out = (SVG_DIR / f"{kkml.stem}-{layout}.svg"
                    if args.write_svg else None)
             with tempfile.NamedTemporaryFile(suffix=".svg") as tmp:

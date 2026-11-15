@@ -10,7 +10,7 @@ Règles :
 ---
 # Feuille de route — kunkunshi_tools
 
-Dernière mise à jour : 4 novembre 2026
+Dernière mise à jour : 15 novembre 2026
 
 Pipeline : Portama JSON → KKML → SVG. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
@@ -168,7 +168,7 @@ python3 kkml2svg.py chanson.kkml            # -> chanson.svg
 cat chanson.kkml | python3 kkml2svg.py -     # stdin -> stdout
 ```
 
-Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal`
+Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal|nomura|chindami|tuto|mega`
 
 ### Structure du code
 
@@ -192,7 +192,7 @@ Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal`
 - Regroupe les sections en 4-uplets `(section_title, content, kind, vocal_data)`
 - `has_vocal = any(s[3] or s[2] == "vocal")` → active automatiquement la colonne marker
 - Constantes de rendu vocal : `SYLLABLE_FS = min(int(cell_h * 0.26), int(marker_w * 0.8))`
-- Route vers `_render_vertical` ou `_render_horizontal`
+- Route vers `_render_vertical`, `_render_horizontal`, `_render_nomura`, `_render_chindami`, `_render_tuto` ou `_render_mega` selon le layout
 
 #### 3a. Rendu vertical (`_render_vertical`, ~309-580)
 
@@ -337,6 +337,7 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées (7 dans virtuels max/page), jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
 - ✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx inchangée, ruby collé à droite, centrage du dan virtuel préservé (42d6699).
 - 🚧 (2026-11-10) Layout `tuto` (POC) : horizontal, canvas WxH fixe (`@tuto_block`, défaut 1280x720), 8 cases/dan et 7 dans/page (calibré sur la vidéo exemple https://www.youtube.com/watch?v=GvcZoeCbIPQ), page 1 = titre/accordage/infos seuls, ligne marker au-dessus de chaque dan si `::vocal` + `@marker on`. Reste : calage visuel fin (fs, marges) et SVG de référence d'un échantillon.
+- 🚧 (2026-11-15) Layout `mega` (POC, demande utilisateur avec exemple PJ) : page A3 paysage (42 × 29,7 cm), **2 blocs horizontaux empilés** de chacun **32 dans × 12 cases** (64 dans/page, 768 cases, pagination auto `fichier-N.svg`). Ordre de lecture : bloc du haut d'abord, haut→bas et droite→gauche dans chaque dan, puis bloc du bas idem. Colonne marker = **1/2 case** à droite de chaque dan (`marker_w = cell_w/2`, forcée par `::vocal`, sinon `@marker`). **Medley** : chaque chanson = `::section <nom>` + `::tab` ; le nom est imprimé en 11 pt centré au-dessus des colonnes de la chanson dans chaque bloc, et la dernière colonne de chaque chanson est complétée par des **ー (tenuto `.`, pas ⚪︎)** pour que la chanson suivante commence sur une colonne suivante. **Titre global `@title` en colonne verticale en haut à droite, à droite de tous les blocs (marge droite)**, répété sur chaque page ; paroles verticales à gauche de la 1re page (largeur réservée partout). Géométrie dérivée de la page : `cell_h = (page_h − 2×MEGA_MARGIN − MEGA_BLOCK_GAP)/24`, `cell_w = largeur dispo/(32×1,5)`, `fs = 0,38×cell_h` (constantes MEGA_* dans `kkml2svg.py`, fonction `_render_mega`, rendu des dans repris de `_draw_vertical_tab`). Dans la PJ (A3 = 2 A4 assemblés, couture imparfaite au milieu, **31 colonnes visibles par bloc** dans le scan) : case ≈ 22 × 32,5 pt, marker ≈ 11,5 pt. Reste : validation visuelle contre la PJ et calage fin (marges, gap, taille des noms de chansons).
 - ⚪︎ Modèle chindami (paysage < A4) — en attente d'exemples.
 - ⚪︎ Modèle Paris Sanshin Club (paysage A4 + n° de recueil) — en attente d'exemples.
 - ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.
