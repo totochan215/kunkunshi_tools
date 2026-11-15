@@ -301,7 +301,7 @@ Large mais fonctionnel. Le code traite ce cas dans une branche dédiée (3 carac
 ## Suffixes de technique (走法, souhou)
 
 Apposés après le caractère de position dans la figure KKML. Peuvent se combiner (ex : `中s'` = jeu faible + hammer-on).
-Rendu : `'` (uchi-utu) et `^` (kaki-utu) partagent la **même position relative moyenne** dans tous les layouts (moyenne des dx/dy/scale des deux entrées, voir `_avg_tech_map`).
+Rendu (calibrage Inkscape nov. 2026) : chaque marque a sa **propre position** (plus de position moyenne `'`/`^`). Le positionnement horizontal est relatif à la **taille réelle de la note** (`note_fs`) : la marque reste collée au coin du kanji, note pleine ou petite (croche à cheval, `s`). Détail des formules dans `_tech_char_pos` (kkml2svg.py) et dans `docs/svg-layout.md`.
 
 | Suffixe | Nom                    | Rendu SVG | Description |
 |---------|------------------------|-----------|-------------|

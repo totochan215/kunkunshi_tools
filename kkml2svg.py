@@ -179,22 +179,33 @@ def _normalize_tab_token(tok):
 TECHNIQUE_SUFFIXES = {
     # uchi-utu : apostrophe ASCII ' (canonique). Alias : ｀ (normalisé
     # via FULLWIDTH_MAP) et * / ＊ (dépréciés, gardés pour compat).
+    # Calibrage des positions : corrections manuelles sous Inkscape sur grille
+    # de test + 3 partitions (nov. 2026). Positionnement relatif à la TAILLE
+    # DE LA NOTE (note_fs), pas à la taille de l'ornement : la marque reste
+    # collée au coin du kanji, note pleine ou petite (croche à cheval).
+    # ' et ^ ne partagent PLUS une position moyenne : le calibrage montre
+    # des réglages distincts (｀ descend sur le coin haut-droit, ⌝ reste
+    # près de la tête de la note).
     "'": {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'dx': 0.50, 'dy': 0.045, 'scale': 1.21},
+          'dx': 0.58, 'anchor': 'note-top', 'drop': 0.91, 'scale': 1.21},
     '*': {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'dx': 0.50, 'dy': 0.045, 'scale': 1.21},
+          'dx': 0.58, 'anchor': 'note-top', 'drop': 0.91, 'scale': 1.21},
     # nuchi-utu = uchi-nuchi-utu (打ち抜き音) : hammer-on SANS tenir la note.
     # Suffixe `"` (U+0022), jumeau de `'` (uchi-utu tenu) ; `n` reste EXCLU
     # (collision romaji : yon, bon...). Glyphe rendu : ゜ (U+309C, apostrophe
     # vide), pendant creux du ｀ plein de uchi-utu. ＂ (U+FF02) normalisé en `"`.
+    # Position : à DROITE de la note, à mi-hauteur du kanji (calibrage nov. 2026).
     '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
-          'pos': 'top-right', 'dx': 0.50, 'dy': 0.045, 'scale': 1.21},
+          'pos': 'top-right', 'dx': 1.125, 'dy': 0.02, 'scale': 1.21},
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
-          'scale': 0.91, 'dx': 0.70, 'dy': -0.855},
+          'scale': 0.91, 'dx': 0.63, 'dy': -0.42},
     'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
-          'dx': 0.45, 'dy': 0.15},
-    '<': {'name': 'kachi-utu', 'type': 'char',   'symbol': '┗', 'pos': 'bottom-left',
-          'dx': 0.45, 'dy': 0.15},
+          'dx': 0.57, 'dy': 0.44},
+    # kachi-utu : ⌞ (U+231E, coin bas-gauche), pendant du ⌝ (kaki-utu).
+    # Calibrage Inkscape nov. 2026 (2e tour, glyphe ⌞) : le coin se place
+    # au contact du bas-gauche du kanji, PAS au coin de la case.
+    '<': {'name': 'kachi-utu', 'type': 'char',   'symbol': '⌞', 'pos': 'bottom-left',
+          'dx': 0.57, 'dy': 0.44},
     's': {'name': 'kuubanchi', 'type': 'small'},
 
     # 声切り (koe-kiri) : borne de fin de chant □ pour le chanteur.
@@ -2937,7 +2948,51 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
 # --------------------------------------------------------------------------- #
 # Helpers
 # --------------------------------------------------------------------------- #
-def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None, tech_map=None):
+def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None):
+    """Position (tx, ty, anchor) d'une marque de technique de type 'char'.
+
+    base_y  : baseline de la note porteuse.
+    note_fs : taille (font-size) de la note porteuse — pleine, petite
+              (croche à cheval) ou réduite ('s'). Les offsets horizontaux
+              sont exprimés en fractions de note_fs : la marque reste
+              collée au coin du kanji quelle que soit sa taille.
+
+    Vertical (ty) :
+      - 'anchor': 'note-top' (uchi-utu) : ty = sommet de la note + fs*drop,
+        la marque chevauche le coin haut-droit du kanji ;
+      - sinon : ty = base_y + fs*dy (dy propre à chaque marque).
+
+    Horizontal (tx) :
+      - texte mono-caractère : tx = cx ± note_fs*dx, ancre middle ;
+      - token multi-caractères (text_w) : top-right → ancre start en cx
+        (la marque surplombe le caractère de DROITE du token) ;
+        bottom-left → ancre end en cx - fs*0.34 (léger retrait à gauche
+        du token).
+    """
+    dx = tech.get('dx', 0.22)
+    dy = tech.get('dy', 0.05)
+    top = tech['pos'] == 'top-right'
+    if tech.get('anchor') == 'note-top':
+        ty = base_y - note_fs + fs * tech['drop']
+    else:
+        ty = base_y + fs * dy
+    if text_w is None:
+        tx = cx + note_fs * dx if top else cx - note_fs * dx
+        anchor = "middle"
+    else:
+        if top:
+            tx = cx
+            anchor = "start"
+        else:
+            # bottom-left multi-caractères : ancre end, léger retrait à
+            # gauche du token (calibrage ⌞ nov. 2026 : cx − 0,34·fs)
+            tx = cx - fs * 0.34
+            anchor = "end"
+    return tx, ty, anchor
+
+
+def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
+                       tech_map=None, note_fs=None):
     """Dessine les marques de technique (souhou) autour de la cellule.
 
     Les marques de type 'char' sont rendues dans la même police (serif) et la
@@ -2948,21 +3003,20 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None, t
     de la note. Chaque signe a ses propres offsets (dx, dy) pour respecter
     cette règle selon la forme de son glyphe.
 
-    text_w : largeur du texte rendu (textLength). Quand fournie, les marqueurs
-    sont positionnés par rapport au bord du texte au lieu du centre de la
-    cellule — évite le chevauchement avec les tokens multi-caractères (下老,
-    positions hautes). On utilise text-anchor="start" (top-right) ou "end"
-    (bottom-left) pour que le glyphe parte du bord, ce qui est robuste aux
-    variations de largeur entre polices.
+    text_w : largeur du texte rendu (textLength). Quand fournie, la marque
+    est positionnée par rapport au token multi-caractères (下老, positions
+    hautes) au lieu du centre de la cellule.
+
+    note_fs : taille réelle de la note porteuse quand elle diffère de fs
+    (croche à cheval rendue à ss). Par défaut note_fs = fs.
     """
-    gap = fs * 0.05
+    note_fs = fs if note_fs is None else note_fs
+    base_y = cy + fs * 0.318
     for suffix in suffixes:
         tech = (tech_map or TECHNIQUE_SUFFIXES)[suffix]
         ttype = tech['type']
         if ttype == 'char':
             sym = tech['symbol']
-            dx = tech.get('dx', 0.22)
-            dy = tech.get('dy', 0.05)
             scale = tech.get('scale', 1.0)
             rotate = tech.get('rotate', 0)
             tech_fs = int(fs * 1.1 * scale)
@@ -2975,27 +3029,11 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None, t
                            f'font-size="{int(fs * scale)}" '
                            f'fill="black">{escape(sym)}</text>')
                 continue
-            if text_w is not None:
-                # Positionnement par rapport au bord réel du texte.
-                # text-anchor est géré par le renderer SVG selon la police,
-                # donc le glyphe ne chevauche jamais le texte.
-                if tech['pos'] == 'top-right':
-                    tx = cx + text_w / 2 + gap
-                    # rotate 180 inverse gauche/droite : anchor "end" place
-                    # le glyphe à droite après rotation
-                    anchor = "end" if rotate else "start"
-                else:  # bottom-left
-                    tx = cx - text_w / 2 - gap
-                    anchor = "start" if rotate else "end"
-                ty = cy + fs * 0.318 + fs * dy
-            else:
-                if tech['pos'] == 'top-right':
-                    tx = cx + fs * dx
-                else:
-                    tx = cx - fs * dx
-                ty = cy + fs * 0.318 + fs * dy
-                anchor = "middle"
+            tx, ty, anchor = _tech_char_pos(tech, cx, base_y, fs, note_fs,
+                                             text_w=text_w)
             if rotate:
+                anchor = {"start": "end", "end": "start",
+                          "middle": "middle"}[anchor]
                 out.append(f'<text x="{tx}" y="{ty}" text-anchor="{anchor}" '
                            f'font-family="serif" font-size="{tech_fs}" '
                            f'fill="black" '
@@ -3227,18 +3265,11 @@ def _warn_unknown_token(tok):
 
 
 def _avg_tech_map():
-    # Les deux marques top-right (uchi-utu ', kaki-utu ^) partagent la MEME
-    # position, tous layouts : moyenne des dx/dy/scale des deux entrées.
-    u = TECHNIQUE_SUFFIXES["'"]
-    k = TECHNIQUE_SUFFIXES["^"]
-    dx = (u.get('dx', 0) + k.get('dx', 0)) / 2
-    dy = (u.get('dy', 0) + k.get('dy', 0)) / 2
-    m = dict(TECHNIQUE_SUFFIXES)
-    # position moyenne partagée, mais scale/symbole restent ceux de chaque marque
-    # (kaki ≈ taille de la note, uchi ≈ 4/3)
-    m["'"] = dict(u, pos='top-right', dx=dx, dy=dy)
-    m["^"] = dict(k, pos='top-right', dx=dx, dy=dy)
-    return m
+    # Historique : ' et ^ partageaient une position moyenne. Le calibrage
+    # Inkscape de nov. 2026 a montré des réglages distincts : chaque marque
+    # garde ses propres dx/dy. La map reste une copie (uniformise l'accès),
+    # sans moyennage.
+    return dict(TECHNIQUE_SUFFIXES)
 
 
 def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v"):
@@ -3260,9 +3291,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     Suffixes de technique (souhou), apposés après le kanji :
       '  → uchi-utu  (｀ en haut-droite, même police et taille que la note)
                alias : ｀ (pleine chasse), * / ＊ (dépréciés)
-      ^  → kaki-utu  (┗ roté 180° en haut-droite)
+      ^  → kaki-utu  (⌝ en haut-droite)
       v  → aki-utu   (V en bas-gauche, même police et taille que la note)
-      <  → kachi-utu (┗ en bas-gauche, même police et taille que la note)
+      <  → kachi-utu (⌞ en bas-gauche, même police et taille que la note)
       s  → kuubanchi (rendre le kanji plus petit, jeu faible)
 
 
@@ -3290,9 +3321,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     """
     if opts is None:
         opts = {}
-    tmap = _avg_tech_map()  # position moyenne partagée ' / ^, tous layouts
-    def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None):
-        _render_techniques(out, suffixes, cx, cy, cw, ch, fs, text_w=text_w, tech_map=tmap)
+    tmap = _avg_tech_map()  # copie des positions propres à chaque marque
+    def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None, note_fs=None):
+        _render_techniques(out, suffixes, cx, cy, cw, ch, fs, text_w=text_w,
+                           tech_map=tmap, note_fs=note_fs)
 
     if tok in (EMPTY_TOKEN, "", None):
         return
@@ -3371,7 +3403,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     # 下尺 → 尺 entouré d'un cercle
     if base_tok == "下尺":
         r = effective_fs * 0.6325
-        out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
+        # cercle centré sur le glyphe du 尺 (calibrage Inkscape nov. 2026 :
+        # centre = baseline − fs·0.318 = cy ; l'ancien cy+2 décentrait vers le bas)
+        out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                    f'fill="none" stroke="black" stroke-width="1"/>')
         out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
@@ -3515,8 +3549,11 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                     _rt(out, tech_suffixes, straddle_x, cy,
                                        cell_w, cell_h, ss)
                 else:
+                    # note_fs = ss : la marque se cale sur la petite note
+                    # à cheval (taille réelle du kanji porteur)
                     _rt(out, tech_suffixes, cx, straddle_y - fs * 0.318,
-                                       cell_w, cell_h, effective_fs)
+                                       cell_w, cell_h, effective_fs,
+                                       note_fs=ss)
         else:
             # Pas de note à cheval : les techniques s'appliquent à la note principale
             _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)

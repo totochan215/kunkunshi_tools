@@ -306,14 +306,15 @@ svg30 = _k.render_svg(_k.parse_kkml(t30))[1]
 import re as _re30
 els30 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re30.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', svg30)]
 FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2
-AVG30 = _k._avg_tech_map()['^']
-ex, ey = CX0 + FS*AVG30['dx'], CY + FS*0.318 + FS*AVG30['dy']
 g = next(e for e in els30 if e[2] == GRAVEF)   # ' dans la case 0
 c = next(e for e in els30 if e[2] == CORNER)    # ^ dans la case 1
-# même offset relatif moyen (dx=0.60, dy=-0.45) dans leur case respective
-assert abs((g[0] - CX0) - FS*AVG30['dx']) < 0.5 and abs((c[0] - (CX0 + CW)) - FS*AVG30['dx']) < 0.5, (g, c)
-assert abs(g[1] - ey) < 0.5 and abs(c[1] - ey) < 0.5, (g, c)  # même y (dy=-0.45)
-print("OK tuto : ' et ^ à la même position moyenne (dx=0.60, dy=-0.45)")
+# positions propres à chaque marque (calibrage Inkscape nov. 2026) :
+# ' et ^ ne partagent plus une position moyenne
+for cell_cx, tech, e in ((CX0, _k.TECHNIQUE_SUFFIXES["'"], g),
+                         (CX0 + CW, _k.TECHNIQUE_SUFFIXES["^"], c)):
+    tx, ty, _anc = _k._tech_char_pos(tech, cell_cx, CY + FS*0.318, FS, FS)
+    assert abs(e[0] - tx) < 0.5 and abs(e[1] - ty) < 0.5, (e, tx, ty)
+print("OK tuto : ' et ^ chacun à sa position propre (calibrage nov. 2026)")
 
 # 31. tailles relatives des ornements : kaki ≈ fs (note), uchi ≈ 4/3 fs — tous layouts
 NAKA, G, C = chr(0x4E2D), chr(0xFF40), chr(0x231D)
@@ -332,29 +333,32 @@ t32 = "@layout horizontal\n::tab\n" + NAKA + "' " + NAKA + "^\n::\n"
 h32 = _k.render_svg(_k.parse_kkml(t32), layout="horizontal")[0]
 import re as _re32
 els32 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re32.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', h32)]
-AVG32 = _k._avg_tech_map()["^"]
 g32 = next(e for e in els32 if e[2] == GRAVEF)   # case 0, cx=42
 c32 = next(e for e in els32 if e[2] == CORNER)    # case 1, cx=94
 FS32 = 22
-assert abs((g32[0] - 42) - FS32*AVG32['dx']) < 0.5 and abs((c32[0] - 94) - FS32*AVG32['dx']) < 0.5, (g32, c32)
-CY32 = (26 + 8) + 16 + 12 + 58/2  # header_h(26+8 sans méta) + mt + GAP_HEADER(12, horizontal) + cell_h/2
-assert abs(g32[1] - c32[1]) < 0.5 and abs(g32[1] - (CY32 + FS32*0.318 + FS32*AVG32['dy'])) < 0.6, (g32, c32)
-print("OK horizontal : ' et ^ à la même position moyenne (dx=%.2f, dy=%.3f)" % (AVG32['dx'], AVG32['dy']))
+# baseline réelle de la note (premier 中, case 0) : base robuste aux
+# variations de header/marges
+base32 = next(e for e in els32 if e[2] == NAKA)[1]
+# positions propres à chaque marque, calculées par le helper commun
+for cell_cx, tech, e in ((42, _k.TECHNIQUE_SUFFIXES["'"], g32),
+                         (94, _k.TECHNIQUE_SUFFIXES["^"], c32)):
+    tx, ty, _anc = _k._tech_char_pos(tech, cell_cx, base32, FS32, FS32)
+    assert abs(e[0] - tx) < 0.5 and abs(e[1] - ty) < 0.6, (e, tx, ty)
+print("OK horizontal : ' et ^ chacun à sa position propre (calibrage nov. 2026)")
 
 # 33. vertical aussi : ' et ^ à la même position moyenne (tous layouts)
 t33 = "@layout vertical\n::tab\n" + chr(0x4E2D) + "' " + chr(0x4E2D) + "^\n::\n"
 v33 = _k.render_svg(_k.parse_kkml(t33), layout="vertical")[0]
 import re as _re33
 els33 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re33.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', v33)]
-AVG33 = _k._avg_tech_map()["^"]
 g33 = next(e for e in els33 if e[2] == chr(0xFF40))   # case 0, cx=42
 c33 = next(e for e in els33 if e[2] == chr(0x231D))    # case 1, cx=42 (colonne suivante en vertical)
 FS33 = 22
-assert abs((g33[0] - 42) - FS33*AVG33['dx']) < 0.5, g33
-assert abs(c33[1] - g33[1]) < 0.5 or True
+U33 = _k.TECHNIQUE_SUFFIXES["'"]["dx"]; K33 = _k.TECHNIQUE_SUFFIXES["^"]["dx"]
 # en vertical les cases sont en colonne : même x, y différent ; on vérifie l'offset relatif en x
-assert abs((c33[0] - 42) - FS33*AVG33['dx']) < 0.5, c33
-print("OK vertical : ' et ^ même offset relatif moyen (dx=%.2f)" % AVG33['dx'])
+assert abs((g33[0] - 42) - FS33*U33) < 0.5, g33
+assert abs((c33[0] - 42) - FS33*K33) < 0.5, c33
+print("OK vertical : ' et ^ chacun à son offset propre (dx'=%.2f, dx^=%.2f)" % (U33, K33))
 
 # 34. horizontal : accordage à droite du titre (même y), espace titre->tab réduit
 t34 = "@title test\n@tuning " + chr(0x672C)+chr(0x8ABF)+chr(0x5B50) + "\n@layout horizontal\n::tab\n" + chr(0x5408) + "\n::\n"
@@ -363,7 +367,7 @@ import re as _re34
 texts34 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re34.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*>([^<]*)</text>', h34)]
 title34 = next(x for x in texts34 if x[2] == "test")
 tun34 = next(x for x in texts34 if x[2] == chr(0x672C)+chr(0x8ABF)+chr(0x5B50))
-assert abs(tun34[1] - title34[1]) < 0.5, (title34, tun34)   # même ligne que le titre
+assert abs(tun34[1] - (title34[1] - 0.38 * (26 - 15))) < 0.5, (title34, tun34)  # même ligne que le titre (encre centrée : 15 pt sur 26 pt)
 assert tun34[0] > title34[0] + 20, (title34, tun34)           # à droite du titre
 rects34 = [float(m.group(1)) for m in _re34.finditer(r'<rect x="[\d.]+" y="([\d.]+)"', h34)]
 assert min(rects34) < 100, min(rects34)   # 1re rangée plus haut qu'avant (116)
@@ -373,7 +377,7 @@ print("OK horizontal : accordage à droite du titre, 1re rangée y=%.0f (avant 1
 GO = chr(0x5408)
 v35 = _k.render_svg(_k.parse_kkml("@layout vertical\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n." + chr(0x3042) + " " + chr(0x3044) + "\n::\n"), layout="vertical")[0]
 import re as _re35
-dot35 = [ (float(m.group(1)), float(m.group(2))) for m in _re35.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#888">' + chr(0x30FB) + r'</text>', v35) ]
+dot35 = [ (float(m.group(1)), float(m.group(2))) for m in _re35.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">' + chr(0x30FB) + r'</text>', v35) ]
 syl35 = [ (float(m.group(1)), float(m.group(2))) for m in _re35.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">' + chr(0x3042) + r'</text>', v35) ]
 assert dot35 and syl35, "pas de ・/あ en vertical"
 assert abs(dot35[0][0] - syl35[0][0]) < 0.5, (dot35, syl35)   # même colonne marker
@@ -409,7 +413,7 @@ print("OK nomura : width=21cm height=29.7cm (A4 via CM), viewBox en pt, export d
 GO = chr(0x5408)
 v38 = _k.render_svg(_k.parse_kkml("@layout vertical\n::tab\n" + GO + "\n::\n::vocal\n." + chr(0x3042) + "\n::\n"), layout="vertical")[0]
 import re as _re38
-d38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*fill="#888">' + chr(0x30FB) + r'</text>', v38))
+d38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*fill="(?:#333|#888)">' + chr(0x30FB) + r'</text>', v38))
 a38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*fill="#333">' + chr(0x3042) + r'</text>', v38))
 n38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="22"[^>]*>' + GO + r'</text>', v38))
 center38 = n38 - 22 * 0.318

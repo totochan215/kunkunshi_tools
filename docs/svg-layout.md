@@ -124,7 +124,19 @@ Les paroles verticales n'ajoutent pas de hauteur (elles s'alignent sur la hauteu
 
 Le préfixe イ ou 口 peut aussi s'appliquer à 下老 et 下尺. La figure fait alors 3 caractères (ex. イ下尺 ou ロ下尺). Rendu : les 3 caractères condensés via `textLength` à 180% de la largeur d'un kanji avec `lengthAdjust="spacingAndGlyphs"`. Le 尺 n'est PAS entouré d'un cercle dans ce composé : le 下 reste visible et le rendu suit le patron de 下老 élargi à 3 caractères. Le composant est large mais nécessaire (Ex. utilisé dans Hiyamikachibushi).
 
-Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺' = イ尺 + uchi-utu) et sont positionnés par rapport au bord du texte. Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
+Rendu : préfixe et kanji condensés via un seul `<text>` avec `textLength` et `lengthAdjust="spacingAndGlyphs"`. 2 caractères → 120% de fs, 3 caractères (イ下尺) → 180% de fs. Les suffixes de technique s'appliquent (ex : イ尺' = イ尺 + uchi-utu) ; en multi-caractères, la marque top-right est posée au centre du token (ancre `start`, elle surplombe le caractère de droite), la marque bottom-left en retrait à gauche du token (ancre `end` à cx − 0,34·fs). Pour イ下尺 / ロ下尺, pas de cercle : les 3 caractères sont rendus condensés (le 下 reste visible).
+
+#### Suffixes de technique (souhou) — positionnement
+
+Calibrage Inkscape de nov. 2026 (grille de test + かぎやで風節, てぃんさぐぬ花, 十九の春). Formules dans `_tech_char_pos` (kkml2svg.py). `note_fs` = taille réelle de la note porteuse (pleine, croche à cheval `ss`, ou réduite par `s`) ; les offsets horizontaux sont des fractions de `note_fs`, la marque suit donc le coin du kanji quelle que soit sa taille.
+
+- `｀` uchi-utu (`'`) : haut-droit, chevauche le coin du kanji. `tx = cx + 0,58·note_fs` ; `ty = baseline − note_fs + 0,91·fs` (la marque descend sur le coin haut-droit, posée sur le sommet de la note). Notes pleines et petites notes calibrées (résidu < 1 px).
+- `゜` nuchi-utu (`"`) : à droite de la note, à mi-hauteur du kanji. `tx = cx + 1,125·note_fs`, `ty = baseline + 0,02·fs`.
+- `⌝` kaki-utu (`^`) : haut-droit, près de la tête de la note. `tx = cx + 0,63·note_fs`, `ty = baseline − 0,42·fs`.
+- `⌞` kachi-utu (`<`) et `V` aki-utu (`v`) : bas-gauche, au contact du kanji. `tx = cx − 0,57·note_fs`, `ty = baseline + 0,44·fs` ; en multi-caractères, ancre `end` à cx − 0,34·fs.
+- Taille des glyphes inchangée : uchi/nuchi ≈ 4/3 de la note (scale 1,21), kaki ≈ la note (0,91), kachi/aki ≈ 1,1.
+
+`'` et `^` ne partagent plus de position moyenne : le calibrage a montré des réglages distincts (le `｀` descend chevaucher la note, le `⌝` reste en retrait au-dessus).
 
 #### Pagination multipage
 
