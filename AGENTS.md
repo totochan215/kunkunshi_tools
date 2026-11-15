@@ -148,9 +148,10 @@ publication (LaTeX) et l'ergonomie (GUI).
 
 # Références de calibrage externes (hors dépôt)
 
-Les scans chindami/nomura-ryu/songbook sont dans le Drive privé (voir
-`calibration/README.md` pour les liens). Les constantes mesurées (NOMURA_*,
-CHINDAMI_*) figurent dans le code et dans ce fichier.
+Les constantes mesurées (NOMURA_*, CHINDAMI_*) figurent dans le code et
+dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
+dans le dépôt (droits d'auteur) ; leur provenance et leur emplacement
+privés ne sont pas référencés ici.
 
 # Architecture des convertisseurs Python
 
@@ -339,7 +340,6 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - 🚧 (2026-11-10) Layout `tuto` (POC) : horizontal, canvas WxH fixe (`@tuto_block`, défaut 1280x720), 8 cases/dan et 7 dans/page (calibré sur la vidéo exemple https://www.youtube.com/watch?v=GvcZoeCbIPQ), page 1 = titre/accordage/infos seuls, ligne marker au-dessus de chaque dan si `::vocal` + `@marker on`. Reste : calage visuel fin (fs, marges) et SVG de référence d'un échantillon.
 - 🚧 (2026-11-15) Layout `mega` (POC, demande utilisateur avec exemple PJ) : page A3 paysage (42 × 29,7 cm), **2 blocs horizontaux empilés** de chacun **32 dans × 12 cases** (64 dans/page, 768 cases, pagination auto `fichier-N.svg`). Ordre de lecture : bloc du haut d'abord, haut→bas et droite→gauche dans chaque dan, puis bloc du bas idem. Colonne marker = **1/2 case** à droite de chaque dan (`marker_w = cell_w/2`, forcée par `::vocal`, sinon `@marker`). **Medley** : chaque chanson = `::section <nom>` + `::tab` ; le nom est imprimé en 11 pt centré au-dessus des colonnes de la chanson dans chaque bloc, et la dernière colonne de chaque chanson est complétée par des **ー (tenuto `.`, pas ⚪︎)** pour que la chanson suivante commence sur une colonne suivante. **Titre global `@title` en colonne verticale en haut à droite, à droite de tous les blocs (marge droite)**, répété sur chaque page ; paroles verticales à gauche de la 1re page (largeur réservée partout). Géométrie dérivée de la page : `cell_h = (page_h − 2×MEGA_MARGIN − MEGA_BLOCK_GAP)/24`, `cell_w = largeur dispo/(32×1,5)`, `fs = 0,38×cell_h` (constantes MEGA_* dans `kkml2svg.py`, fonction `_render_mega`, rendu des dans repris de `_draw_vertical_tab`). Dans la PJ (A3 = 2 A4 assemblés, couture imparfaite au milieu, **31 colonnes visibles par bloc** dans le scan) : case ≈ 22 × 32,5 pt, marker ≈ 11,5 pt. Reste : validation visuelle contre la PJ et calage fin (marges, gap, taille des noms de chansons).
 - ⚪︎ Modèle chindami (paysage < A4) — en attente d'exemples.
-- ⚪︎ Modèle Paris Sanshin Club (paysage A4 + n° de recueil) — en attente d'exemples.
 - ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.
 - ⚪︎ Raffinements nomura en réserve : marqueur ⚪︎ de couplet, taille/espacement des paroles, calligraphie du titre.
 - ⚪︎ Raffinements supplémentaires de la mise en page nomura à définir plus tard (retours visuels utilisateur sur かぎやで風節 et 安波節 ; typiquement : ajustement fin du placement des couplets sur page dédiée, sous-colonnes marker, etc.).
