@@ -234,7 +234,7 @@ TECHNIQUE_CHARS = set(TECHNIQUE_SUFFIXES.keys())
 #   女　/ 男　  → couplet chanté par femmes/hommes, indent sous l'espace full-width
 VERSE_NUM_RE = re.compile(r'^([一二三四五六七八九十]+)、')
 # ⚫ ・ ● : indent sous le caractère suivant (offset 1)
-VERSE_MARK_RE = re.compile(r'^[⚫○・●]')
+VERSE_MARK_RE = re.compile(r'^[⚫⚪○・●]')
 # 女/男 (+女) suivis d'une virgule pleine chasse 、 OU d'un espace (full-width ou non)
 VERSE_GENDER_RE = re.compile(r'^([男女]+[、　\s])')
 
@@ -1775,6 +1775,33 @@ def _lyrics_columns(verse):
     return columns
 
 
+def _pad_inline_marker(ln):
+    """Matérialise la règle « en-tête toujours 3 caractères pleine chasse »
+    pour un marqueur INLINE (suivi du texte sur la même ligne) : le texte
+    démarre au caractère 4. Les espaces pleine chasse déjà présents dans
+    la source sont normalisés (même rendu avec ou sans espace explicite ;
+    idempotent). Un marqueur SEUL sur sa ligne n'est PAS touché (pose
+    historique validée : sauts de ligne), pas plus qu'un marqueur de
+    3 caractères ou plus (aucun remplissage possible) ni une ligne sans
+    marqueur."""
+    m = VERSE_NUM_RE.match(ln) or VERSE_GENDER_RE.match(ln)
+    if m:
+        L = len(m.group(0))
+        rest = ln[L:].lstrip("\u3000 \t")
+        if not rest or L >= 3:
+            return ln
+        return ln[:L] + "\u3000" * (3 - L) + rest
+    if VERSE_MARK_RE.match(ln):
+        head = ln[0]
+        if len(ln) > 1 and ln[1] in VARIATION_SELECTORS:
+            head += ln[1]   # ⚪︎ : sélecteur de variante fait partie du marqueur
+        rest = ln[len(head):].lstrip("\u3000 \t")
+        if not rest:
+            return ln
+        return head + "\u3000" * 2 + rest
+    return ln
+
+
 def _lyrics_columns_layout(verse, base_indent=None):
     """Layout complet d'un couplet : liste de (col_lines, indent).
 
@@ -1784,10 +1811,14 @@ def _lyrics_columns_layout(verse, base_indent=None):
     l'indentation courante pour les colonnes de continuation du même
     couplet (après |), qui s'indentent sous le marqueur. Une colonne
     blanche (après ||) réinitialise l'indentation courante : le couplet
-    suivant, même sans marqueur, ne s'indente pas sous le précédent."""
+    suivant, même sans marqueur, ne s'indente pas sous le précédent.
+    Chaque ligne commençant par un marqueur INLINE est normalisée par
+    _pad_inline_marker (texte au caractère 4, cf. règle des en-têtes de
+    3 caractères pleine chasse)."""
     layout = []
     cur_marker_indent = 0
     for col in _lyrics_columns(verse):
+        col = [_pad_inline_marker(ln) if ln else ln for ln in col]
         if col:
             own = _verse_indent_len(col[0])
             if own > 0:
@@ -3062,28 +3093,28 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
                     vx = (MEGA_PAGE_W - MEGA_MARGIN - title_offset
                           - LYRICS_COL_W / 2 - vi * col_step)
                     if col[0] == "T":
-                        # Titre vertical en gras, MÊME TAILLE que le texte
-                        # des couplets (LYRICS_FS) et EXACTEMENT la même
-                        # pose que les hayashi indentés à 3 positions :
-                        # le texte part de la 3e position du bloc (baseline
-                        # y0 + fs + 3·sp) et le guillemet OUVRANT 「 pend
-                        # une position AU-DESSUS du premier caractère
-                        # (2e position, pivoté 90° par _vertical_char),
-                        # 」 referme sous le dernier caractère. Garde
-                        # anti-débordement : fs réduit si le titre dépasse
-                        # la hauteur du bloc.
-                        tfs = LYRICS_FS
-                        tsp = LYRICS_SP
-                        need = 4 * tsp + _vertical_text_height(col[1], tfs, tsp)
+                        # Titre vertical en gras, PLUS GRAND que le texte
+                        # des couplets (fs 11, taille des en-têtes de la
+                        # tablature), encore remonté d'une position : le
+                        # guillemet OUVRANT 「 pend au niveau du haut de
+                        # bloc des colonnes (baseline y0 + fs, pivoté
+                        # 90° par _vertical_char), le texte part une
+                        # position plus bas (y0 + fs + 1·sp), 」 referme
+                        # sous le dernier caractère. Garde anti-déborde-
+                        # ment : fs réduit si le titre dépasse la hauteur
+                        # du bloc.
+                        tfs = 11
+                        tsp = int(tfs * 1.2)
+                        need = 2 * tsp + _vertical_text_height(col[1], tfs, tsp)
                         if need > blk_h:
-                            tfs = max(5, int(tfs * (blk_h - 4 * tsp) / max(need - 4 * tsp, 1)))
+                            tfs = max(5, int(tfs * (blk_h - 2 * tsp) / max(need - 2 * tsp, 1)))
                             tsp = int(tfs * 1.2)
                         out.append('<g font-weight="bold">')
-                        # 「 pendu une position au-dessus du premier caractère
-                        _vertical_char(out, "「", vx, y0 + tfs + 2 * tsp, tfs, "#000")
-                        _render_vertical_text(out, col[1], vx, y0 + tfs + 3 * tsp,
+                        # 「 au haut de bloc, une position au-dessus du texte
+                        _vertical_char(out, "「", vx, y0 + tfs, tfs, "#000")
+                        _render_vertical_text(out, col[1], vx, y0 + tfs + tsp,
                                               tfs, "#000", tsp)
-                        _vertical_char(out, "」", vx, y0 + tfs + 3 * tsp
+                        _vertical_char(out, "」", vx, y0 + tfs + tsp
                                        + _vertical_text_height(col[1], tfs, tsp),
                                        tfs, "#000")
                         out.append('</g>')
