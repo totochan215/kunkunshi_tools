@@ -56,6 +56,32 @@ SPECIAL_CHARS = set("○〇▲Ⓡ□×◯・#")
 RUBY_SCALE = 0.5
 EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
+# Ordre commun des blocs de métadonnées après le titre (tous layouts) :
+# auteur, compositeur, parolier (personnes), puis genre et origine
+# (classification), enfin l'accordage. tuning = @choushi (défaut 本調子) ;
+# genre n'est pas répété s'il égale author.
+META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "tuning")
+
+
+def _meta_blocks(song):
+    """Blocs de métadonnées dans l'ordre commun META_ORDER.
+    Retourne une liste de (texte, taille_police, fill) — le bloc tuning
+    porte la taille/fill de l'accordage (15, #555), les autres 12, #777.
+    Le genre n'est pas répété s'il est identique à l'auteur."""
+    blocks = []
+    genre = song.meta.get("genre", "")
+    author = song.meta.get("author", "")
+    for k in META_ORDER:
+        if k == "tuning":
+            val = song.meta.get("tuning", "本調子")
+            if val:
+                blocks.append((val, 15, "#555"))
+        else:
+            val = song.meta.get(k, "")
+            if not val or (k == "genre" and val == author):
+                continue
+            blocks.append((val, 12, "#777"))
+    return blocks
 REST_TOKEN = "◯"
 REST_VARIANTS = {"◯", "○", "〇"}  # O/o/0 retirés : collision romaji
 REPEAT_START = "|:"
@@ -202,6 +228,21 @@ VERSE_MARK_RE = re.compile(r'^[⚫○・●]')
 VERSE_GENDER_RE = re.compile(r'^([男女]+[、　\s])')
 
 
+# Hayashi （…） : ligne ENTIÈREMENT parenthésée (pleine ou demi-chasse,
+# avec ou sans annotations ｛…｝《…》) = interjection entre deux couplets
+# (ex. だんじゅかりゆし （いめのかじありよ船《ふに》）). Un hayashi n'est
+# PAS un couplet : il ne porte pas de marqueur, n'ouvre pas de couplet,
+# ne compte pas dans la numérotation (marqueurs numéraux) ni dans
+# l'indentation cible de la section ; il se rend en colonne propre,
+# alignée en haut (indent 0).
+HAYASHI_RE = re.compile(r'^[（(].*[)）]$')
+
+
+def _is_hayashi(line):
+    s = line.strip()
+    return len(s) >= 2 and HAYASHI_RE.match(s) is not None
+
+
 def _verse_indent_len(first_line):
     """Retourne le nombre de caractères à sauter pour l'indentation du couplet,
     ou 0 si pas de marqueur reconnu."""
@@ -221,9 +262,29 @@ def _verse_indent_target(lines):
     """Indentation uniforme des colonnes de continuation d'une section de
     paroles : sous le PLUS LONG des marqueurs de couplet de la section
     (女、男、男女、一、…), plus une espace pleine chasse.
-    Ex. marqueurs 女、/男、/男女、 -> max 3 -> indent 4 pour toutes les continuations."""
-    m = max((_verse_indent_len(ln) for ln in lines), default=0)
-    return m + 1 if m > 0 else 0
+    Ex. marqueurs 女、/男、/男女、 -> max 3 -> indent 4 pour toutes les
+    continuations. Exception : un marqueur NUMÉRAL plus long que 2
+    caractères (十、) ne compte pas s'il y a 10 couplets ou moins —
+    sinon le seul marqueur large (souvent le dernier) élargirait
+    l'indent de toute la section (ex. てぃんさぐぬ花 : 一、+ 1 espace,
+    indent 3 malgré le dixième couplet 十、)."""
+    entries = []   # (longueur du marqueur, numéral ?)
+    for ln in lines:
+        m = VERSE_NUM_RE.match(ln)
+        if m:
+            entries.append((len(m.group(0)), True))
+            continue
+        m = VERSE_GENDER_RE.match(ln)
+        if m:
+            entries.append((len(m.group(0)), False))
+            continue
+        if VERSE_MARK_RE.match(ln):
+            entries.append((2, False))
+    if not entries:
+        return 0
+    if len(entries) <= 10:
+        entries = [(2 if (num and L > 2) else L, num) for L, num in entries]
+    return max(L for L, _ in entries) + 1
 
 
 # Font stacks pour les styles japonais
@@ -384,16 +445,20 @@ def parse_kkml(text):
                         _info_input_variant(tk, EMPTY_TOKEN)
                         norm.append(EMPTY_TOKEN)
                         continue
-                    # Désambiguation : koedashi/koekiri ( et ) seuls appartiennent
-                    # à ::vocal exclusivement. `(:` / `:)` sont des boucles
-                    # vocales (liées à ::vocal) et restent tolérés ici pour
-                    # rétrocompatibilité, avec une info.
-                    if '(' in tk or ')' in tk:
-                        if tk.lstrip('|:').startswith('(:') or tk.endswith(')') and ':' in tk:
-                            _info_input_variant(tk, tk.replace('(', '').replace(')', ''))
-                        else:
-                            _warn_once(f"'{tk}' : ( ) koedashi/koekiri ignoré dans ::tab (réservé à ::vocal)")
-                        tk = tk.replace('(', '').replace(')', '')
+                    # Désambiguation : `(:` / `:)` sont les marqueurs de
+                    # boucle vocale (vocalRepStart/End Portama) composés avec
+                    # les cases de ::tab — ils PASSENT TELS QUELS et sont
+                    # déléggués à _strip_repeat_marks au rendu (symbole
+                    # └○/┘● en colonne marker). Les ( ) NUS restent réservés
+                    # à ::vocal : avertis + ignorés ici.
+                    bare = tk
+                    if bare.startswith('(:'):
+                        bare = bare[2:]
+                    if bare.endswith(':)'):
+                        bare = bare[:-2]
+                    if '(' in bare or ')' in bare:
+                        _warn_once(f"'{tk}' : ( ) koedashi/koekiri ignoré dans ::tab (réservé à ::vocal)")
+                        tk = bare.replace('(', '').replace(')', '')
                         if not tk:
                             continue
                     tk2, changed = _normalize_tab_token(tk)
@@ -513,17 +578,14 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     MARGIN_T = 16
     header_h = 70  # vertical sans titre
     if layout == "vertical" and (song.meta.get("title") or song.meta.get("tuning", "本調子")):
-        header_h = 40  # titre/accordage rendus verticalement, en-tête réduit
+        # Titre/accordage/parolier/compositeur/origine rendus verticalement
+        # à droite : l'en-tête haut-gauche est vide, marge de tête minimale.
+        header_h = 10
     if layout != "vertical":
-        # horizontal : l'accordage est à droite du titre (une ligne de moins)
-        genre = song.meta.get("genre", "")
-        author = song.meta.get("author", "")
-        meta_lines = (1 if ((genre and genre != author) or author) else 0) \
-                   + (1 if any(song.meta.get(k) for k in ("composer", "lyricist", "origin")) else 0)
-        header_h = 26 + 14 * meta_lines + 8
-        # Le ruby du titre a besoin de ~13px au-dessus
-        if title and _has_ruby(_parse_ruby(title)):
-            header_h = max(header_h, 60)
+        # horizontal : header_h est recalculé dans _render_horizontal à
+        # partir des règles verticales recyclées (air titre → tablature) ;
+        # la valeur passée ici est ignorée par ce renderer.
+        header_h = 26 + 8
     marker = song.meta.get("marker", "on") == "on"
 
     opts = {
@@ -594,11 +656,34 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
     title_offset = (TITLE_W + TITLE_GAP + title_ruby_w) if (title or tuning) else 0
     genre = song.meta.get("genre", "")
     author = song.meta.get("author", "")
-    show_genre = genre and genre != author
-    title_total_h = (len(title) * TITLE_SPACING +
-                     len(tuning) * TUNING_SPACING +
-                     (len(genre) if show_genre else 0) * TUNING_SPACING +
-                     len(author) * TUNING_SPACING + 20) if (title or tuning) else 0
+    # Hauteurs réelles (l'écartement ruby allonge les blocs) via le plan
+    def _meta_block_h(text, mfs, msp):
+        if not text:
+            return 0
+        return _plan_vertical_ruby(_parse_ruby(text), mfs, msp)[1]
+    # Blocs de la colonne titre : le titre, puis les métadonnées dans
+    # l'ordre commun META_ORDER (accordage en dernier) —
+    # (texte, fs, espacement, fill, avance verticale avant la baseline)
+    v_blocks = []
+    if title:
+        v_blocks.append((title, 26, TITLE_SPACING, "black", 20))
+    for k in META_ORDER:
+        if k == "tuning":
+            val = tuning
+        else:
+            val = song.meta.get(k, "")
+            if k == "genre" and val == author:
+                continue
+        if val:
+            v_blocks.append((val, 15, TUNING_SPACING,
+                             "#555" if k == "tuning" else "#777", 15))
+    # Règle alignée (layouts libres) : les métadonnées s'ajoutent SOUS le
+    # titre dans la MÊME colonne, autant que de besoin, SANS repli en
+    # colonne suivante ; la hauteur de page grandit pour couvrir tout le
+    # flux (titre + métadonnées).
+    title_total_h = (sum(lead + _meta_block_h(text, mfs, msp)
+                         for text, mfs, msp, _fill, lead in v_blocks)
+                     + (10 if v_blocks else 0))
 
     # --- Paroles verticales (à gauche de la grille) --- #
     # Taille des couplets selon @lyrics_size : small=50%, medium=75%, big=100% de fs
@@ -764,6 +849,22 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                         lyrics_bottom = max(lyrics_bottom, ly0 + LYRICS_FS + h)
             total_h = max(total_h, lyrics_bottom + mt)
 
+        # Colonnes du titre vertical : flux de blocs dans la hauteur de
+        # page ; un bloc qui ne tient pas passe ENTIERS en colonne
+        # suivante (à gauche de la précédente, largeur TITLE_W)
+        if v_blocks:
+            v_top = header_h + mt + GAP_HEADER
+            v_bottom = total_h - mt
+            v_cols = 1
+            vcy = v_top
+            for text, mfs, msp, _fill, lead in v_blocks:
+                bh = lead + _meta_block_h(text, mfs, msp)
+                if vcy + bh > v_bottom and vcy > v_top:
+                    v_cols += 1
+                    vcy = v_top
+                vcy += bh
+            total_w += (v_cols - 1) * TITLE_W
+
         out = []
         out.append('<?xml version="1.0" encoding="UTF-8"?>')
         out.append(
@@ -773,15 +874,9 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
         )
         out.append('<rect width="100%" height="100%" fill="white"/>')
 
-        # En-tête : métadonnées secondaires uniquement (genre, compositeur…)
-        y = mt + 18
-        meta_extras = []
-        for k in ("composer", "lyricist", "origin"):
-            if k in song.meta and song.meta[k]:
-                meta_extras.append(song.meta[k])
-        if meta_extras:
-            out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                       f'font-size="12" fill="#777">{escape("  ".join(meta_extras))}</text>')
+        # En-tête haut-gauche : vide en vertical (toutes les métadonnées
+        # secondaires — @lyricist, @composer, @origin — sont dans la colonne
+        # titre verticale à droite)
 
         y = header_h + mt + GAP_HEADER
 
@@ -847,29 +942,17 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
                                                        LYRICS_FS, "#333", LYRICS_SP)
                         vi += 1
 
-        # --- Titre vertical à droite de la grille --- #
-        if title or tuning:
-            tx = total_w - mr - TITLE_W / 2
+        # --- Titre vertical à droite de la grille (flux de blocs) --- #
+        if v_blocks:
             ty = header_h + mt + GAP_HEADER
-            if title:
-                ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
-                                               TITLE_SPACING)
-            else:
-                ty_end = ty
-            ty2 = ty_end
-            for i, ch in enumerate(tuning):
-                _vertical_char(out, ch, tx, ty2 + i * TUNING_SPACING + 15, 15, "#555")
-            # Genre et auteur sous l'accordage
-            genre = song.meta.get("genre", "")
-            author = song.meta.get("author", "")
-            show_genre = genre and genre != author
-            ty3 = ty2 + len(tuning) * TUNING_SPACING + 15
-            if show_genre:
-                for i, ch in enumerate(genre):
-                    _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
-                ty3 += len(genre) * TUNING_SPACING + 15
-            for i, ch in enumerate(author):
-                _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+            # Règle alignée : PAS de repli en colonne suivante — tous les
+            # blocs s'empilent sous le titre dans la même colonne, la page
+            # a grandi en conséquence (title_total_h couvre le flux entier).
+            tx_cur = total_w - mr - TITLE_W / 2
+            vcy = ty
+            for text, mfs, msp, fill, lead in v_blocks:
+                vcy = _vertical_grouped_text(out, text, tx_cur, vcy + lead,
+                                             mfs, fill, msp)
 
         out.append("</svg>")
         result.append("\n".join(out))
@@ -930,17 +1013,147 @@ CHINDAMI_CELL_W = 65 / 2.785         # ~23,3 pt : sous-colonne notes (p10 : bord
 CHINDAMI_MARKER_W = 32 / 2.785       # ~11,5 pt : sous-colonne marker (~1/3 de la pile)
 CHINDAMI_DAN_GAP = 0                 # le pas de 97 px inclut déjà case+marker
 CHINDAMI_TITLE_W = (1816 - 1750) / 2.785  # ~23,7 pt : colonne titre (droite)
-CHINDAMI_TITLE_GAP = 30 / 2.785      # ~10,8 pt entre grille et titre
+CHINDAMI_TITLE_GAP = 10               # TITLE_GAP vertical recyclé (règle : mêmes marges que la mise en page verticale)
 CHINDAMI_FRAME_MARGIN_X = 138 / 2.785  # ~49,6 pt : bord gauche 1re pile
-CHINDAMI_FS = 20                   # taille des notes (à valider visuellement)
+CHINDAMI_FS = 12                   # kanji kandokoro/notes : encre ≈ 31 px = 11,1 pt
+                                   # sur les scans 工工四百選集 (p078-080) → em ≈ 12 ;
+                                   # 2 kanji en straddle = 24 pt ≤ cell_w 23,3+ε
+CHINDAMI_LYR_FS_RATIO = 0.9        # paroles : encre ≈ 28 px = 10,0 pt sur scans
+                                   # → lyr_fs = 0,9 × CHINDAMI_FS ≈ 10,8 pt
+CHINDAMI_LYR_SEP = 12              # marge ENCRE paroles → bord de pile (scans :
+                                   # droite d'encre 637 px → pile 656-670 px ≈ 12 pt)
 CHINDAMI_MAX_DANS = 15             # max mesuré : 15 piles sur p10 (morceau n°3, page pleine)
+
+
+def _lyr_line_segments(s):
+    """Découpe une ligne de paroles en segments insécables pour le repli :
+    (texte, atomique, unités d'affichage). Un groupe ruby composite
+    ｛base｝《ruby》 ou une base suivie de son 《ruby》 forment UN segment
+    atomique (le parseur ne doit jamais voir le groupe coupé en deux) ;
+    les annotations 《…》 ne comptent pas dans les unités d'affichage."""
+    segs, buf, i = [], '', 0
+    def flush():
+        nonlocal buf
+        if buf:
+            segs.append((buf, False, len(buf)))
+            buf = ''
+    while i < len(s):
+        c = s[i]
+        if c == '｛':
+            j = s.find('｝', i + 1)
+            end = len(s) if j == -1 else j + 1
+            if j != -1 and end < len(s) and s[end] == '《':
+                k = s.find('》', end + 1)
+                end = len(s) if k == -1 else k + 1
+            flush()
+            units = max(1, j - i - 1) if j != -1 else max(1, end - i)
+            segs.append((s[i:end], True, units))
+            i = end
+        elif c == '《':
+            k = s.find('》', i + 1)
+            end = len(s) if k == -1 else k + 1
+            if buf:
+                prev = buf[-1]
+                buf = buf[:-1]
+                flush()
+                segs.append((prev + s[i:end], True, 1))
+            else:
+                segs.append((s[i:end], True, 1))
+            i = end
+        else:
+            buf += c
+            i += 1
+    flush()
+    return segs
+
+
+def _cap_lyr_column(col_lines, indent, max_u):
+    """Replie une colonne de paroles en sous-colonnes de ≤ max_u unités
+    (1 unité = 1 pas d'espacement lyr_sp = 1 glyphe de paroles, annotations
+    ruby exclues). Layout chindami : la hauteur de page est IMPOSÉE, une
+    colonne trop longue (couplet dépassant le bas de grille) est découpée
+    en sous-colonnes ; une ligne trop longue est coupée au caractère,
+    UNIQUEMENT entre segments atomiques (groupes ｛…｝《…》 et base+《…》
+    jamais coupés : un crash _parse_ruby avait révélé le besoin).
+    Indentation des sous-colonnes : la première sous-colonne garde l'indent
+    de la colonne (marqueur en haut = 0) ; les sous-colonnes de CONTINUATION
+    issues du découpage d'une colonne MARQUEUR s'alignent sur le niveau où
+    commence le TEXTE dans cette colonne : longueur du marqueur + 1 (le saut
+    de ligne entre la ligne du marqueur et la ligne de texte) si le marqueur
+    est seul sur sa ligne, longueur du marqueur si le texte suit sur la même
+    ligne. Ex. だんじゅかりゆし couplet 1 : le marqueur 一、 occupe 2
+    unités, だんじゅ… commence à l'unité 3 → la sous-colonne de
+    continuation (ぇる…) démarre AUSSI à l'unité 3 (même niveau que だん).
+    Une colonne sans marqueur repliée garde son indent pour toutes ses
+    sous-colonnes."""
+    def line_units(s):
+        return sum(u for _t, _a, u in _lyr_line_segments(s)) if s else 0
+    mk = _verse_indent_len(col_lines[0]) if col_lines else 0
+    if indent == 0 and mk > 0:
+        cont_indent = mk if line_units(col_lines[0]) > mk else mk + 1
+    else:
+        cont_indent = indent
+    def cost(lines, ind):
+        # hauteur en unités : indent + glyphes + sauts de ligne entre lignes
+        if not lines:
+            return 0
+        return ind + sum(line_units(l) for l in lines) + len(lines) - 1
+    if not col_lines or cost(col_lines, indent) <= max_u:
+        return [(col_lines, indent)]
+    subs, cur, li, cur_ind = [], [], '', indent
+    def close_line():
+        nonlocal li
+        if li:
+            cur.append(li)
+            li = ''
+    def close_sub():
+        nonlocal cur, cur_ind
+        close_line()
+        if cur:
+            subs.append((cur, cur_ind))
+            cur_ind = cont_indent
+        cur = []
+    for ln in col_lines:
+        if not ln:
+            close_line()
+            if not cur or cost(cur, cur_ind) + 1 <= max_u:
+                cur.append(ln)  # ligne vide : gap d'une unité
+            continue
+        for text, atomic, u in _lyr_line_segments(ln):
+            while True:
+                if not (cur or li):
+                    allowed = max_u - cur_ind
+                else:
+                    allowed = max_u - cost(cur + [li], cur_ind)
+                if u <= allowed:
+                    li += text
+                    break
+                if not atomic:
+                    if allowed > 0:
+                        li += text[:allowed]
+                        text = text[allowed:]
+                    close_sub()
+                    continue  # reste du texte plaine : sous-colonne neuve
+                close_sub()
+                if u > max_u - cur_ind:
+                    # segment insécable plus grand qu'une sous-colonne :
+                    # accepté seul avec léger dépassement (jamais coupé)
+                    li = text
+                    close_sub()
+                    break
+                # retenter le segment atomique dans une sous-colonne neuve
+        close_line()
+    close_sub()
+    return subs
 
 
 def _render_chindami(song, sections, fs, marker=False, opts=None):
     """Rendu multipage façon recueils Chindami Kunkunshi : page 23 x 15 cm
     paysage (sans liseré de page, cf. scans), piles de 12 cases lues haut->bas de droite->gauche,
     colonne marker = demi-case à droite de chaque pile, titre vertical à
-    droite de la page 1 surmonté du numéro de morceau (@musicno), paroles
+    droite de la page 1 surmonté du numéro de morceau (@musicno, écriture
+    horizontale : n° = 0 non écrit, > 999 tronqué mod 1000, pousse le
+    titre vers le bas), paroles
     (::lyrics) en colonnes verticales à gauche de la dernière page.
     Retourne une liste de SVG (un par page)."""
     title = song.meta.get("title", "")
@@ -989,88 +1202,140 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
     # pas, les colonnes de paroles passent sur des pages dédiées (per_page
     # colonnes par page). Jamais de débordement hors page, jamais de pile perdue.
     max_dans = CHINDAMI_MAX_DANS
-    lyr_fs0 = int(CHINDAMI_FS * 0.75)
+    lyr_fs0 = int(CHINDAMI_FS * CHINDAMI_LYR_FS_RATIO)
     lyr_col_w0 = int(lyr_fs0 * 1.33)
     lyr_gap0 = int(lyr_col_w0 * 0.8)
+    lyr_sp0 = int(lyr_fs0 * 1.2)
+    # Hauteur disponible pour une colonne de paroles : la page est IMPOSÉE
+    # (23 x 15 cm), un couplet plus long que la hauteur de grille est REPLIÉ
+    # en sous-colonnes ; l'excédent de colonnes passe sur des pages dédiées.
+    # haut d'encre de la première glyphe = haut de grille (baseline =
+    # GRID_TOP + 0,88·fs) ; bas d'encre de la dernière ≤ bas de grille
+    max_lyr_u = int((CHINDAMI_GRID_BOTTOM - CHINDAMI_GRID_TOP - lyr_fs0)
+                    // lyr_sp0) + 1
     lyr_cols = []
     for _, d in lyrics_sections:
         base_indent = _verse_indent_target(d)
         for verse in _split_verses(d):
             for col_lines, indent in _lyrics_columns_layout(verse, base_indent):
-                lyr_cols.append((col_lines, indent))
-    usable_w = (CHINDAMI_PAGE_W - 2 * CHINDAMI_FRAME_MARGIN_X
-                - CHINDAMI_TITLE_W - CHINDAMI_TITLE_GAP)
-    per_lyr_page = max(1, int(usable_w // (lyr_col_w0 + lyr_gap0)))
-    # colonnes de paroles qui tiennent à gauche de la dernière page de musique
-    if lyr_cols:
-        fit = 0
-        while fit < len(lyr_cols) and (fit + 1) * lyr_col_w0 + fit * lyr_gap0 + 12 <= usable_w - CHINDAMI_PILE_W:
-            fit += 1
-    else:
-        fit = 0
-
-    # capacité de piles sur la dernière page de musique avec les paroles à gauche
-    lyr_w_fit = fit * lyr_col_w0 + max(fit - 1, 0) * lyr_gap0 + 12 if fit else 0
-    room = max(1, int((usable_w - lyr_w_fit) // CHINDAMI_PILE_W))
+                lyr_cols.extend(_cap_lyr_column(col_lines, indent, max_lyr_u))
+    # Marge grille ↔ paroles : CHINDAMI_LYR_SEP (12 pt, calibrée sur les
+    # scans) GARANTIE entre le bord DROIT de l'encre des paroles (demi-em +
+    # ruby, qui va vers la droite, vers la grille) et le bord gauche de la
+    # pile la plus à gauche. La pagination réserve sep0 = G + fs/2 +
+    # max_ruby_w (ruby global conservateur) ; le rendu positionne la
+    # colonne la plus à droite à L_page - sep_page (ruby page-local).
+    max_ruby_w = 0
+    for _, d in lyrics_sections:
+        for verse in _split_verses(d):
+            for line in verse:
+                for seg in line.split('|'):
+                    if seg:
+                        max_ruby_w = max(max_ruby_w,
+                                         _ruby_needs_extra_width(seg, lyr_fs0))
+    # pagination conservatrice : sep0 couvre la marge G + demi-em + ruby
+    # global + demi-colonne (l'ancre droite laisse la place de la colonne
+    # la plus à gauche dans la fenêtre frame_x0..anchor)
+    lyr_sep0 = CHINDAMI_LYR_SEP + lyr_fs0 / 2 + max_ruby_w + lyr_col_w0 / 2
+    frame_w = CHINDAMI_PAGE_W - 2 * CHINDAMI_FRAME_MARGIN_X
+    per_lyr_page = max(1, int(frame_w // (lyr_col_w0 + lyr_gap0)))
 
     pages = []  # (c0, c1, is_first, lyr_slice)
     i = 0
     first = True
+    lyr_next = 0  # prochaine colonne de paroles à placer
     while i < len(tab_columns):
         remaining = len(tab_columns) - i
         budget = max_dans - (1 if first and (title or musicno) else 0)
-        # dernière page de musique = celle qui contient la dernière pile
-        is_last = (i + budget >= len(tab_columns))
+        take = min(budget, remaining)
+        # dernière page de musique : remplir l'espace libre à gauche des
+        # piles avec autant de colonnes de paroles qu'il en tient
+        # (L + P + title_offset + 12 ≤ largeur utile du cadre)
         lyr_slice = None
-        if lyr_cols and is_last and i + room >= len(tab_columns):
-            # la dernière page de musique accueille les piles restantes à droite
-            # des 'fit' colonnes de paroles (à gauche) : assez de piles pour
-            # que la grille + les paroles tiennent dans usable_w.
-            take = min(remaining, room)
-            lyr_slice = (0, fit)
-        else:
-            take = min(budget, remaining)
+        if i + take >= len(tab_columns) and lyr_next < len(lyr_cols):
+            avail_w = (frame_w - title_offset * (1 if first else 0)
+                       - take * CHINDAMI_PILE_W)
+            n_fit = 0
+            while (lyr_next + n_fit < len(lyr_cols) and
+                   (n_fit + 1) * lyr_col_w0 + n_fit * lyr_gap0 + lyr_sep0 <= avail_w):
+                n_fit += 1
+            if n_fit > 0:
+                lyr_slice = (lyr_next, lyr_next + n_fit)
+                lyr_next += n_fit
         pages.append((i, i + take, first, lyr_slice))
         i += take
         first = False
     if not pages:
-        pages = [(0, 0, True, (0, fit) if lyr_cols else None)]
+        pages = [(0, 0, True, None)]
     # pages dédiées paroles pour l'excédent
-    k = fit
-    while k < len(lyr_cols):
-        pages.append((0, 0, False, (k, min(k + per_lyr_page, len(lyr_cols)))))
-        k += per_lyr_page
+    while lyr_next < len(lyr_cols):
+        pages.append((0, 0, False,
+                      (lyr_next, min(lyr_next + per_lyr_page, len(lyr_cols)))))
+        lyr_next += per_lyr_page
 
     svgs = []
     for pno, (c0, c1, is_first, lyr_slice) in enumerate(pages, 1):
         n_cols = c1 - c0
-        lyr_fs = int(fs * 0.75)
+        lyr_fs = int(fs * CHINDAMI_LYR_FS_RATIO)
         lyr_col_w = int(lyr_fs * 1.33)
         lyrics_here = lyr_cols[lyr_slice[0]:lyr_slice[1]] if lyr_slice else []
-        lyrics_w = (len(lyrics_here) * lyr_col_w + max(len(lyrics_here) - 1, 0) * int(lyr_col_w * 0.8) + 12
-                    if lyrics_here else 0)
+        # marge grille↔paroles recyclée du vertical (12 + LYRICS_COL_W +
+        # max_ruby_w, ruby page-local comme en vertical)
+        page_ruby_w = 0
+        for col_lines, _i in lyrics_here:
+            for ln in col_lines:
+                if ln:
+                    for seg in ln.split('|'):
+                        if seg:
+                            page_ruby_w = max(page_ruby_w,
+                                              _ruby_needs_extra_width(seg, lyr_fs))
+        # marge grille↔paroles : CHINDAMI_LYR_SEP garantie entre l'encre
+        # droite des paroles (demi-em + ruby page-local, ruby vers la grille)
+        # et le bord gauche de la pile la plus à gauche
+        lyr_sep = CHINDAMI_LYR_SEP + lyr_fs / 2 + page_ruby_w
         total_w = CHINDAMI_PAGE_W
         total_h = CHINDAMI_PAGE_H
         out = _svg_open_print(total_w, total_h, 23, 15, title=title)  # page 23 x 15 cm, 600 dpi
 
         # Titre vertical à droite de la page 1, surmonté du n° de morceau
-        if is_first and (title or musicno):
+        # en écriture HORIZONTALE. Règle (cf. scans chindami) : si le n°
+        # existe, son haut d'encre est aligné sur le haut de grille et il
+        # REPOUSSE le titre vers le bas (le titre n'est alors plus aligné
+        # sur le haut de grille) ; sans n°, le haut d'encre du titre est
+        # aligné sur le haut de grille. n° = 0 -> non écrit ; n° > 999 ->
+        # tronqué à la valeur sous les milliers (mod 1000 ; 0 -> non écrit).
+        mno = musicno
+        try:
+            n = int(mno)
+            if n > 999:
+                n %= 1000
+            mno = str(n) if n else ""
+        except ValueError:
+            pass  # n° non numérique : rendu tel quel, pousse le titre pareil
+        if is_first and (title or mno):
             tx = frame_x1 - CHINDAMI_TITLE_W / 2
-            ty = frame_y0 + 6
-            if musicno:
-                out.append(f'<text x="{tx}" y="{ty + 10}" text-anchor="middle" '
-                           f'font-family="serif" font-size="11" fill="#333">{escape(musicno)}</text>')
-                ty += 22
+            title_top = frame_y0
+            if mno:
+                MNO_FS = 11
+                MNO_GAP = 8   # scans (p078) : bas d'encre du n° → haut
+                             # d'encre du titre ≈ 23 px = 8 pt ; dégage
+                             # aussi le ruby de la 1re glyphe du titre
+                out.append(f'<text x="{tx}" y="{frame_y0 + MNO_FS * 0.88:.2f}" '
+                           f'text-anchor="middle" font-family="serif" '
+                           f'font-size="{MNO_FS}" fill="#333">{escape(mno)}</text>')
+                title_top = frame_y0 + MNO_FS + MNO_GAP
             if title:
-                _render_vertical_text(out, title, tx, ty, 18, "#000", 22, font_family)
+                # Blocs <text> groupés (même règle que le vertical) : base
+                # en un seul élément, rubys indépendants, pivotés à part
+                _vertical_grouped_text(out, title, tx,
+                                      title_top + 18 * 0.88, 18, "#000", 22, font_family)
             if tuning:
-                _render_vertical_text(out, tuning, tx, frame_y1 - 4 - len(tuning) * 16,
-                                      11, "#555", 16, font_family)
+                _vertical_grouped_text(out, tuning, tx, frame_y1 - 4 - len(tuning) * 16,
+                                       11, "#555", 16, font_family)
 
-        # Piles de droite à gauche
+        # Piles de droite à gauche (jamais décalées par les paroles : celles-ci
+        # occupent l'espace libre à GAUCHE, réservé par la pagination)
         x_right = frame_x1 - title_offset if is_first else frame_x1
-        if lyrics_here:
-            x_right -= lyrics_w
         for ci in range(n_cols):
             x = x_right - (ci + 1) * group_w
             y0 = frame_y0
@@ -1082,9 +1347,28 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
             if marker_w > 0:
                 out.append(f'<rect x="{x+cell_w}" y="{y0}" width="{marker_w}" '
                            f'height="{rows*cell_h}" fill="none" stroke="#bbb" stroke-width="0.6"/>')
-            # notes + marqueurs
+            # SYMBOLES de contrôle d'abord (sous le texte : kandokoro et
+            # syllabes au-dessus des flèches/répétitions)
             col = tab_columns[c0 + ci]
             vcol = vocal_columns[c0 + ci] if c0 + ci < len(vocal_columns) else None
+            for ri in range(rows):
+                cy = y0 + ri * cell_h
+                tok = col[ri] if ri < len(col) else ""
+                rs, _bt, re_, vs, ve, _koe = _strip_repeat_marks(tok)
+                if marker_w > 0:
+                    if rs:
+                        _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start',
+                                             stroke="#bbb", sw=0.6)
+                    if re_:
+                        _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end',
+                                             stroke="#bbb", sw=0.6)
+                    if vs:
+                        _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start',
+                                            stroke="#bbb", sw=0.6)
+                    if ve:
+                        _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end',
+                                            stroke="#bbb", sw=0.6)
+            # NOTES par-dessus grille et symboles
             for ri in range(rows):
                 cy = y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
@@ -1093,15 +1377,6 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
                     base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                 render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                             cell_w, cell_h, opts)
-                if marker_w > 0:
-                    if rs:
-                        _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start')
-                    if re_:
-                        _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end')
-                    if vs:
-                        _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
-                    if ve:
-                        _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
             if vcol and marker_w > 0 and syllable_fs > 0:
                 # _draw_vertical_vocal positionne via total_w/mr ; on lui passe
                 # un mr fictif pour que la colonne tombe sur le x de la pile.
@@ -1111,14 +1386,26 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
         # Paroles verticales à gauche de la dernière page
         if lyrics_here:
             lyr_sp = int(lyr_fs * 1.2)
-            vx = frame_x0 + lyrics_w - lyr_col_w / 2
+            # ancre DROITE : la colonne la plus à droite est posée à
+            # (bord gauche de la pile la plus à gauche) - lyr_sep, ce qui
+            # garantit la marge CHINDAMI_LYR_SEP entre son encre droite
+            # (demi-em + ruby) et la grille ; pages dédiées paroles :
+            # ancre = bord droit du cadre
+            lyr_anchor = (x_right - n_cols * group_w) if n_cols > 0 else frame_x1
+            vx = lyr_anchor - lyr_sep
             for col_lines, indent in lyrics_here:
-                cy = frame_y0 + 6
+                # haut d'encre de la première glyphe = haut de grille
+                cy = frame_y0 + lyr_fs * 0.88
                 cy += indent * lyr_sp
                 for ln in col_lines:
-                    _render_vertical_text(out, ln, vx, cy, lyr_fs, "#333",
-                                          lyr_sp, font_family)
-                    cy += len(ln) * lyr_sp + lyr_sp
+                    # _render_vertical_text retourne la position après le
+                    # dernier glyphe affiché (les annotations ruby ne
+                    # consomment PAS d'unités) : n'ajouter qu'UN gap de
+                    # ligne, jamais len(ln) brut (double avancement,
+                    # débordement des colonnes rubyées)
+                    cy = _vertical_grouped_text(out, ln, vx, cy, lyr_fs, "#333",
+                                                lyr_sp, font_family)
+                    cy += lyr_sp
                 vx -= lyr_col_w + int(lyr_col_w * 0.8)
         out.append('</svg>')
         svgs.append("\n".join(out))
@@ -1334,7 +1621,25 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                 out.append(f'<rect x="{nx}" y="{cy}" width="{cell_w}" '
                            f'height="{cell_h}" fill="none" stroke="#333" '
                            f'stroke-width="0.6"/>')
-            # notes
+            # SYMBOLES de contrôle d'abord (sous le texte)
+            for ri in range(rows):
+                cy = grid_y0 + ri * cell_h
+                tok = col[ri] if ri < len(col) else ""
+                rs, _bt, re_, vs, ve, _koe = _strip_repeat_marks(tok)
+                if marker_w > 0:
+                    if rs:
+                        _render_repeat_arrow(out, mx, cy, cell_h, marker_w, 'start',
+                                             stroke="#333", sw=0.6)
+                    if re_ and marker_w > 0:
+                        _render_repeat_arrow(out, mx, cy, cell_h, marker_w, 'end',
+                                             stroke="#333", sw=0.6)
+                    if vs and marker_w > 0:
+                        _render_vrep_marker(out, mx, cy, cell_h, marker_w, 'start',
+                                            stroke="#333", sw=0.6)
+                    if ve and marker_w > 0:
+                        _render_vrep_marker(out, mx, cy, cell_h, marker_w, 'end',
+                                            stroke="#333", sw=0.6)
+            # NOTES par-dessus grille et symboles
             for ri in range(rows):
                 cy = grid_y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
@@ -1343,18 +1648,6 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                     base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                 render_cell(out, base_tok, nx + cell_w / 2, cy + cell_h / 2,
                             fs, cell_w, cell_h, opts)
-                if rs and marker_w > 0:
-                    _render_repeat_arrow(out, mx, cy, cell_h,
-                                          marker_w, 'start')
-                if re_ and marker_w > 0:
-                    _render_repeat_arrow(out, mx, cy, cell_h,
-                                          marker_w, 'end')
-                if vs and marker_w > 0:
-                    _render_vrep_marker(out, mx, cy, cell_h,
-                                        marker_w, 'start')
-                if ve and marker_w > 0:
-                    _render_vrep_marker(out, mx, cy, cell_h,
-                                        marker_w, 'end')
             # syllabes vocales dans le marker — logique points commune
             # (_vocal_elements) : chaque élément (point ・ ou syllabe) occupe une
             # sous-partie verticale de la case, bloc centré (comme _draw_vertical_vocal).
@@ -1376,7 +1669,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None):
                         if el == "":
                             out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
                                        f'font-family="serif" font-size="{syl_fs}" '
-                                       f'fill="#888">{chr(0x30FB)}</text>')
+                                       f'fill="#333">{chr(0x30FB)}</text>')
                         else:
                             for k, ch in enumerate(el):
                                 yy = sy + k * step
@@ -1509,10 +1802,20 @@ def _split_verses(lines):
     - marqueur de couplet en début de ligne (一、二、…, 女　, 男　,
       ⚫︎, ・, ○) : la ligne courante OUVRE un nouveau couplet,
       même sans ligne vide précédente (design flaw jukunoharu : couplets
-      sans retour à la ligne)."""
+      sans retour à la ligne).
+    Un hayashi (ligne entièrement entre parenthèses, ex. （いめのかじ
+    ありよ船）) ferme le couplet courant et forme une unité À PART :
+    interjection entre deux couplets, jamais comptée comme couplet
+    (n'incrémente pas le numéro)."""
     verses = []
     current = []
     for ln in lines:
+        if _is_hayashi(ln):
+            if current:
+                verses.append(current)
+                current = []
+            verses.append([ln])
+            continue
         if ln == "":
             if current:
                 verses.append(current)
@@ -1525,6 +1828,133 @@ def _split_verses(lines):
     if current:
         verses.append(current)
     return verses
+
+
+def _h_lyrics_atoms(segment, fs):
+    """Découpe un segment de paroles (syntaxe ruby comprise) en atomes
+    insécables : (chaîne KKML, largeur d'avance). Un caractère de base et
+    sa part de ruby forment un seul atome ; le texte clair éclate par
+    caractère (pour la coupe en fin de ligne)."""
+    atoms = []
+    combine = SMALL_KANA | {chr(0x3063), chr(0x30C3), chr(0x30FC),
+                            chr(0x3095), chr(0x3096)}
+    for seg in _parse_ruby(segment):
+        if seg["type"] == "plain":
+            for ch in seg["text"]:
+                # petit kana / chōonpu : insécable du caractère précédent
+                if ch in combine and atoms:
+                    prev_s, prev_w = atoms[-1]
+                    atoms[-1] = (prev_s + ch, prev_w + _char_w(ch, fs))
+                else:
+                    atoms.append((ch, _char_w(ch, fs)))
+        elif seg["type"] == "mono":
+            base, ruby = seg["base"], seg["ruby"] or ""
+            atoms.append((f"{base}《{ruby}》" if ruby else base,
+                          _char_w(base, fs)))
+        elif seg["type"] == "group":
+            base, ruby = seg["base"], seg["ruby"] or ""
+            n = len(base)
+            for j, ch in enumerate(base):
+                if ruby:
+                    r = ruby[round(len(ruby) * j / n):
+                             round(len(ruby) * (j + 1) / n)]
+                    atoms.append((f"｛{ch}｝《{r}》" if r else ch,
+                                  _char_w(ch, fs)))
+                else:
+                    atoms.append((ch, _char_w(ch, fs)))
+        elif seg["type"] == "jukugo":
+            for base, ruby in seg["items"]:
+                atoms.append((f"{base}《{ruby}》" if ruby else base,
+                              sum(_char_w(c, fs) for c in base)))
+    return atoms
+
+
+def _h_lyrics_layout(data, fs, usable_w):
+    """Transposition HORIZONTALE de la règle verticale des paroles
+    (_lyrics_columns_layout) : chaque colonne verticale (délimitée par
+    | / ||) devient une LIGNE ; les segments d'une même colonne se
+    suivent sur la ligne séparés par une espace pleine chasse (comme
+    espace pleine chasse (transposé de l'espace vertical de 1 LYRICS_SP
+    en colonne) ; une colonne qui commence par un marqueur de couplet
+    s'aligne à gauche (indent 0) et les continuations du couplet
+    s'indentent sous SON marqueur + 1 espace pleine chasse (indent par
+    couplet, ex. 女、-> 3, 男女、-> 4), pas à l'indentation uniforme de
+    la section. Règle alignée (layouts libres) : PAS de repli — une
+    colonne = une ligne, aussi longue soit-elle (usable_w = None →
+    largeur infinie ; la page s'élargit à la ligne la plus longue). Le
+    paramètre usable_w est conservé pour un éventuel repli explicite.
+    Une ligne vide est insérée automatiquement entre chaque couplet.
+    Retourne [(indent, texte_kkml), …] — texte vide = ligne blanche."""
+    if usable_w is None:
+        usable_w = float('inf')   # règle alignée : pas de repli
+    if usable_w <= fs:
+        usable_w = fs * 4
+    lines = []
+    base_indent = _verse_indent_target(data)
+    verses = _split_verses(data)
+    sep = "\u3000"   # espace pleine chasse entre segments d'une colonne
+
+    def _flush(cur, indent):
+        txt = "".join(cur).rstrip(sep)
+        lines.append((indent, txt, _has_ruby(_parse_ruby(txt))))
+
+    for vi, verse in enumerate(verses):
+        if vi > 0:
+            lines.append((0, "", False))   # saut de ligne automatique entre couplets
+        # Indent PAR COUPLET (horizontal) : sous SON marqueur + 1 espace
+        # pleine chasse, pas l'indentation uniforme de la section (女、-> 3,
+        # 男女、-> 4). Même clamp que _verse_indent_target : marqueur numéral
+        # > 2 caractères ramené à 2 si la section a 10 couplets ou moins.
+        vindent = base_indent
+        first = next((ln for ln in verse if ln), "")
+        m = VERSE_NUM_RE.match(first)
+        if m:
+            eff = len(m.group(0))
+            if eff > 2 and len(verses) <= 10:
+                eff = 2
+            vindent = eff + 1
+        elif _verse_indent_len(first) > 0:
+            vindent = _verse_indent_len(first) + 1
+        for col, indent in _lyrics_columns_layout(verse, vindent):
+            if not col:
+                lines.append((0, "", False))
+                continue
+            # Couplets INDENTÉS : les retours à la ligne automatiques d'une
+            # colonne qui commence par un marqueur reprennent à
+            # l'indentation du couplet (marqueur + 1 espace pleine chasse),
+            # pas à 0.
+            cont_indent = (vindent if indent == 0 and vindent > 0
+                           and _verse_indent_len(col[0]) > 0 else indent)
+            cur_indent = indent
+            cur, cur_w = [], 0.0
+            for si, segment in enumerate(col):
+                if si > 0:
+                    cur.append(sep)
+                    cur_w += fs
+                for atom, w in _h_lyrics_atoms(segment, fs):
+                    avail = usable_w - cur_indent * fs
+                    if cur and cur_w + w > avail:
+                        _flush(cur, cur_indent)
+                        cur, cur_w = [], 0.0
+                        cur_indent = cont_indent
+                    cur.append(atom)
+                    cur_w += w
+            if cur:
+                _flush(cur, cur_indent)
+    return lines
+
+
+def _h_lyrics_pitch(next_ruby, fs, base_sp):
+    """Interligne horizontal entre deux lignes de paroles : comme en
+    vertical (où la largeur de ruby est réservée via max_ruby_w entre les
+    colonnes), la place du ruby — AU-DESSUS de la ligne, de 0,95·fs
+    (ruby_y) à 0,95·fs + 0,88·ruby_fs du haut de son encre — est réservée
+    dans l'interligne. L'encre de la ligne précédente descend à
+    +0,12·fs de sa baseline ; +2 pt d'air. Transposé de la réservation
+    verticale (max_ruby_w), à l'orientation près."""
+    ruby_fs = int(fs * RUBY_SCALE)
+    ascent = 0.95 * fs + 0.88 * ruby_fs if next_ruby else 0.88 * fs
+    return max(base_sp, 0.12 * fs + ascent + 2)
 
 
 # Petits kana combinants (うちなぐち) : s'attachent au caractère principal
@@ -1593,10 +2023,10 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
                 # qu'en horizontal/tuto : y_i = centre + cell_h * i/n
                 sy = cy + cell_h / 2 + cell_h * (j / n) + syllable_fs / 3
                 if el == "":
-                    # point : rendu ・ (gris #888), occupe sa sous-partie
+                    # point : rendu ・ (même couleur que le texte, #333), occupe sa sous-partie
                     out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
                                f'font-family="serif" font-size="{syllable_fs}" '
-                               f'fill="#888">{chr(0x30FB)}</text>')
+                               f'fill="#333">{chr(0x30FB)}</text>')
                 else:
                     for k, ch in enumerate(el):
                         _emit(sx, sy + k * step, ch)
@@ -1634,34 +2064,26 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
                        f'height="{col_h}" fill="none" stroke="#bbb" '
                        f'stroke-width="0.75"/>')
 
-    # Passe 2 : toutes les notes par-dessus la grille
-    # Les flèches de répétition vont dans la colonne marker (à droite de chaque pile)
+    # Passe 2 : SYMBOLES de contrôle (flèches, répétitions du chant) — sous
+    # le texte (les kandokoro et syllabes restent au-dessus de tout trait)
     for x, col in col_positions:
         for ri in range(rows_per_col):
             cy = y0 + ri * cell_h
             tok = col[ri] if ri < len(col) else ""
-            rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-            if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
-            render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
-                        cell_w, cell_h, opts)
-            if rs and marker_w > 0:
-                _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start')
-            if re_ and marker_w > 0:
-                _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end')
-            if vs and marker_w > 0:
-                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
-            if ve and marker_w > 0:
-                _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
+            rs, _bt, re_, vs, ve, _koe = _strip_repeat_marks(tok)
+            if marker_w > 0:
+                if rs:
+                    _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start')
+                if re_:
+                    _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end')
+                if vs:
+                    _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start')
+                if ve:
+                    _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end')
 
-    # Passe 3 : rendre les syllabes vocales dans la colonne marker
-    if vocal_data is not None and marker_w > 0 and syllable_fs is not None:
-        _draw_vertical_vocal(out, vocal_data, rows_per_col, ml, y0,
-                             cell_w, cell_h, fs, total_w, mr, marker_w,
-                             title_offset, opts, syllable_fs)
-
-    # Marqueur de fin de chanson : dans le marker de la dernière colonne,
-    # à la hauteur du bas de la dernière case remplie
+    # Marqueur de fin de chanson (symbole) : dans le marker de la dernière
+    # colonne, à la hauteur du bas de la dernière case remplie — AVANT les
+    # textes (passes 3 et 4)
     if end_circle and marker_w > 0 and n_cols > 0:
         last_x, last_col = col_positions[-1]
         # Trouver la dernière case remplie (token non vide et non "-")
@@ -1675,12 +2097,127 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
             _render_end_circle(out, last_x + cell_w, last_filled_cy,
                                cell_h, marker_w)
 
+    # Passe 3 : toutes les NOTES par-dessus grille et symboles
+    for x, col in col_positions:
+        for ri in range(rows_per_col):
+            cy = y0 + ri * cell_h
+            tok = col[ri] if ri < len(col) else ""
+            rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
+            if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
+            render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
+                        cell_w, cell_h, opts)
+
+    # Passe 4 : rendre les syllabes vocales dans la colonne marker
+    if vocal_data is not None and marker_w > 0 and syllable_fs is not None:
+        _draw_vertical_vocal(out, vocal_data, rows_per_col, ml, y0,
+                             cell_w, cell_h, fs, total_w, mr, marker_w,
+                             title_offset, opts, syllable_fs)
+
     return y0 + col_h
 
 
 # --------------------------------------------------------------------------- #
 # 3b. Rendu horizontal (gauche→droite, haut→bas) — mode songbook
 # --------------------------------------------------------------------------- #
+def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
+                    stroke="#999", sw=0.75):
+    """Flèche de répétition dans la LIGNE marker horizontale (sous la rangée
+    de cases) — transposée de _render_repeat_arrow (colonne marker
+    verticale) : trait vertical depuis le haut de la ligne, puis coude
+    horizontal dans le sens de lecture, un seul path, triangle creux au
+    bout. 'start' (|:) pointe vers la droite (sens de lecture), 'end' (:|)
+    vers la gauche."""
+    v_len = marker_h * 0.66   # trait vertical depuis le haut de la ligne
+    h_len = v_len             # trait horizontal dans le sens de lecture
+    tri_size = marker_h * 0.22
+    tri_w = 3 ** 0.5 * tri_size
+    vy = y_top + v_len
+    if arrow_type == 'start':
+        vx = x_left + cell_w * 0.20
+        hx = vx + h_len
+        out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
+                   f'L {hx:g} {vy:g}" fill="none" '
+                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+        out.append(f'<polygon points="{hx:g},{vy - tri_size:g} '
+                   f'{hx:g},{vy + tri_size:g} {hx + tri_w:g},{vy:g}" '
+                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
+    else:
+        vx = x_left + cell_w * 0.80
+        hx = vx - h_len
+        out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
+                   f'L {hx:g} {vy:g}" fill="none" '
+                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+        out.append(f'<polygon points="{hx:g},{vy - tri_size:g} '
+                   f'{hx:g},{vy + tri_size:g} {hx - tri_w:g},{vy:g}" '
+                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
+
+
+def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
+                   stroke="#999", sw=0.75):
+    """Symbole de répétition du chant dans la ligne marker horizontale —
+    transposé de _render_vrep_marker : barre verticale, montant horizontal,
+    disque creux. 'end' ( )| ) : barre à ~80% de la case, montant vers la
+    gauche, disque à gauche ; 'start' ( |( ) : miroir à ~20%, montant et
+    disque vers la droite."""
+    v_len = marker_h * 0.66
+    r = marker_h * 0.22
+    vy = y_top + v_len
+    if marker_type == 'end':
+        vx = x_left + cell_w * 0.80
+        hx = vx - v_len
+        out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
+                   f'L {hx:g} {vy:g}" fill="none" '
+                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+        out.append(f'<circle cx="{hx - r:g}" cy="{vy:g}" r="{r:g}" '
+                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
+    else:
+        vx = x_left + cell_w * 0.20
+        hx = vx + v_len
+        out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
+                   f'L {hx:g} {vy:g}" fill="none" '
+                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+        out.append(f'<circle cx="{hx + r:g}" cy="{vy:g}" r="{r:g}" '
+                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
+
+
+def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
+                            syl_fs):
+    """Syllabes ::vocal dans la ligne marker horizontale (sous la rangée de
+    cases) — transposée de _draw_vertical_vocal : éléments (points ・ et
+    syllabes) répartis le long de la case (x_i = cx + cell_w·i/n, i=0 sous
+    la note principale), caractères combinants enfilés vers la droite, ー
+    non pivoté. Les parenthèses de koedashi/koekiri (positions déjà rendues
+    dans les cases) sont ignorées."""
+    if marker_h <= 0 or syl_fs <= 0:
+        return
+    sy = y_top + marker_h / 2 + syl_fs / 3
+    step = int(syl_fs * 1.15)
+    for idx in range(len(row)):
+        if idx >= len(vrow):
+            break
+        syl = vrow[idx]
+        if not syl or syl == "-":
+            continue
+        cx = ml + idx * cell_w + cell_w / 2
+        elems = _vocal_elements(syl)
+        n = max(len(elems), 1)
+        for j, el in enumerate(elems):
+            sx = cx + cell_w * (j / n)
+            if el == "":
+                out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
+                           f'font-family="serif" font-size="{syl_fs}" '
+                           f'fill="#333">{chr(0x30FB)}</text>')
+            else:
+                for k, ch in enumerate(el):
+                    if ch in ('(', ')'):
+                        continue
+                    out.append(f'<text x="{sx + k * step:g}" y="{sy:g}" '
+                               f'text-anchor="middle" font-family="serif" '
+                               f'font-size="{syl_fs}" '
+                               f'fill="#333">{escape(ch)}</text>')
+
+
 def _render_horizontal(song, sections, cols, cell_w, cell_h,
                        fs, ml, mr, mt, header_h, marker=False, opts=None):
     title = song.meta.get("title", "")
@@ -1697,26 +2234,85 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
         else:
             prepared.append((sec_title, content, kind, []))
 
-    GAP_HEADER = 12
-    GAP_TAB_LYRICS = 30
+    # Marges recyclées de la mise en page VERTICALE, transposées :
+    # - titre → tablature : air d'encre = TITLE_GAP + demi-solde de la
+    #   colonne titre (TITLE_W - 26) // 2, intégré au header_h
+    #   (GAP_HEADER = 0) ; le ruby du titre reste dans la marge de tête.
+    # - tablature → paroles : air = 12 + LYRICS_COL_W, même formule que
+    #   lyrics_offset − lyrics_total_w en vertical ; le +6 résiduel du
+    #   bloc tab et l'ascension d'encre du premier vers sont compensés.
+    GAP_HEADER = 0
+    TITLE_INK_DESCENT = 6     # descente d'encre du titre (26 pt)
+    H_TITLE_AIR = 10 + (36 - 26) // 2   # = TITLE_GAP vertical + demi-colonne
+    header_h = (26 + TITLE_INK_DESCENT + H_TITLE_AIR) if title else 26
+    # Marge droite élargie : straddle sur la bordure droite, ornements et
+    # vocals peuvent déborder à droite du bloc de tablature (c'est normal) ;
+    # une demi-case est le strict minimum.
+    mr = max(mr, cell_w // 2)
     # Taille des couplets selon @lyrics_size
     lyrics_size = opts.get('lyrics_size', 'medium') if opts else 'medium'
     h_lyrics_fs = int(fs * {'small': 0.5, 'medium': 0.75, 'big': 1.0}.get(lyrics_size, 0.75))
     h_lyrics_sp = int(h_lyrics_fs * 1.2)  # espacement vertical entre lignes de couplets
-    total_w = cols * cell_w + ml + mr
+    H_LYRICS_COL_W = int(h_lyrics_fs * 1.33)  # = LYRICS_COL_W vertical
+    # avancée y pour l'air recyclé (12 + H_LYRICS_COL_W d'air d'encre)
+    GAP_TAB_LYRICS = 12 + H_LYRICS_COL_W + int(h_lyrics_fs * 0.88) - 6
+    # Ligne marker (transposée de la colonne marker verticale) : sous chaque
+    # rangée de cases ; forcée si ::vocal est présent, sinon @marker (défaut on)
+    has_vocal = any(v for (_t, _d, k, v) in prepared if k == "tab" and v)
+    marker_on = marker or has_vocal
+    marker_h = cell_h // 2 if marker_on else 0
+    h_syl_fs = min(int(cell_w * 0.26), int(marker_h * 0.8)) if marker_h > 0 else 0
+    # Règle alignée (layouts libres) : les dimensions dépendent du CONTENU.
+    # - métadonnées : flux sur la ligne du titre, sans repli ; la page
+    #   s'élargit à la largeur du flux.
+    # - paroles : PAS de repli sur la largeur de la grille ; chaque colonne
+    #   verticale = une ligne, la page s'élargit à la ligne la plus longue.
+    # Largeur du flux de métadonnées (une seule ligne, même simulation
+    # que le rendu, blocs jamais scindés).
+    h_sep_w = 2 * _char_w(" ", 12)
+    meta_flow_w = _h_text_w(title, 26) + (20 if title else 0)
+    if title and _has_ruby(_parse_ruby(title)):
+        meta_flow_w = _render_horizontal_text([], title, ml, 0, 26, "black") - ml
+        meta_flow_w += 20
+    for text, hfs, _fill in _meta_blocks(song):
+        meta_flow_w += _h_text_w(text, hfs) + h_sep_w
+    # Largeur des paroles sans repli (usable_w infini) : mesurée avec le
+    # même moteur de rendu de texte (_render_horizontal_text → end x).
+    lyrics_flow_w = 0.0
+    for sec_title, data, kind, _v in prepared:
+        if kind == "lyrics":
+            for indent, txt, _rub in _h_lyrics_layout(data, h_lyrics_fs, None):
+                w = (indent * h_lyrics_fs
+                     + (_render_horizontal_text([], txt, 0, 0, h_lyrics_fs, "#444")
+                        if txt else 0))
+                lyrics_flow_w = max(lyrics_flow_w, w)
+    total_w = max(cols * cell_w,
+                  int(meta_flow_w) + ml,
+                  int(lyrics_flow_w) + ml) + mr
+    # (formule ci-dessus : max des largeurs de contenu + marges)
+    total_w = max(cols * cell_w,
+                  int(meta_flow_w) + ml,
+                  int(lyrics_flow_w) + ml) + mr
     total_h = header_h + mt + GAP_HEADER
     prev_kind = None
     for sec_title, data, kind, _v in prepared:
         if sec_title:
             total_h += 22
-        if kind == "lyrics" and prev_kind == "tab":
+        if kind in ("lyrics", "vocal") and prev_kind == "tab":
             total_h += GAP_TAB_LYRICS
         if kind == "tab":
-            total_h += len(data) * cell_h + 6
+            total_h += len(data) * (cell_h + marker_h) + 6
+        elif kind == "lyrics":
+            # même layout que le rendu (colonnes verticales → lignes,
+            # indentation, interlignes élargies pour le ruby comme en
+            # vertical) ; PAS de repli : usable_w=None → largeur infinie
+            hl = _h_lyrics_layout(data, h_lyrics_fs, None)
+            total_h += (len(hl) * h_lyrics_sp
+                        + sum(max(0, _h_lyrics_pitch(hl[i + 1][2], h_lyrics_fs,
+                                                     h_lyrics_sp) - h_lyrics_sp)
+                              for i in range(len(hl) - 1))) + 6
         else:
             total_h += len(data) * h_lyrics_sp + 6
-            if kind == "lyrics":
-                total_h += 16 * data.count("")
         prev_kind = kind
 
     out = []
@@ -1728,41 +2324,26 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     )
     out.append('<rect width="100%" height="100%" fill="white"/>')
 
-    y = mt + 26
-    # Titre (ruby au-dessus si besoin) ; l'accordage est à DROITE du titre
+    ty0 = mt + 26
+    # Titre (ruby au-dessus si besoin)
     if title and _has_ruby(_parse_ruby(title)):
-        end_x = _render_horizontal_text(out, title, ml, y, 26, "black")
+        end_x = _render_horizontal_text(out, title, ml, ty0, 26, "black")
     elif title:
-        out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
+        out.append(f'<text x="{ml}" y="{ty0}" font-family="serif" '
                    f'font-size="26" fill="black">{escape(title)}</text>')
         end_x = ml + sum(_char_w(c, 26) for c in title)
     else:
         end_x = ml
-    if tuning:
-        out.append(f'<text x="{end_x + 20:g}" y="{y}" font-family="serif" '
-                   f'font-size="15" fill="#555">{escape(tuning)}</text>')
-    y += 14
-    # Genre et auteur
-    genre = song.meta.get("genre", "")
-    author = song.meta.get("author", "")
-    show_genre = genre and genre != author
-    header_meta = []
-    if show_genre:
-        header_meta.append(genre)
-    if author:
-        header_meta.append(author)
-    if header_meta:
-        y += 14
-        out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                   f'font-size="12" fill="#777">{escape("  ".join(header_meta))}</text>')
-    meta_extras = []
-    for k in ("composer", "lyricist", "origin"):
-        if k in song.meta and song.meta[k]:
-            meta_extras.append(song.meta[k])
-    if meta_extras:
-        y += 14
-        out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                   f'font-size="12" fill="#777">{escape("  ".join(meta_extras))}</text>')
+    # Métadonnées dans l'ordre commun (_meta_blocks) : toutes à la suite du
+    # titre sur SA ligne, centrées verticalement sur lui (centres d'encre),
+    # SANS repli (règle alignée : la page s'est élargie au flux entier).
+    h_sep_w = 2 * _char_w(" ", 12)
+    hx = end_x + 20
+    for text, hfs, fill in _meta_blocks(song):
+        # centre d'encre du bloc sur celui du titre (26pt)
+        by = ty0 - 0.38 * (26 - hfs)
+        hxe = _render_horizontal_text(out, text, hx, by, hfs, fill)
+        hx = hxe + h_sep_w
 
     y = header_h + mt + GAP_HEADER
     # Trouver la dernière section tab/tab-lyrics pour end_circle
@@ -1779,16 +2360,18 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
 
     prev_kind = None
     for si, (sec_title, data, kind, vrows0) in enumerate(prepared):
-        if kind == "lyrics" and prev_kind == "tab":
+        if kind in ("lyrics", "vocal") and prev_kind == "tab":
             y += GAP_TAB_LYRICS
         if sec_title:
             out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
                        f'font-size="14" fill="#333">{escape(sec_title)}</text>')
             y += 20
         if kind == "tab":
-            h_syl_fs = int(fs * 0.6)
-            h_syl_pad = max(2, int(h_syl_fs * 0.28))
             for ri, row in enumerate(data):
+                # Passes par rangée (texte toujours au-dessus des filets et
+                # des symboles de contrôle) : 1) bordures des cases + ligne
+                # marker, 2) symboles de boucles, 3) notes, 4) vocaux
+                row_syms, row_notes = [], []
                 for idx, tok in enumerate(row):
                     x = ml + idx * cell_w
                     out.append(f'<rect x="{x}" y="{y}" width="{cell_w}" '
@@ -1797,43 +2380,71 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
                     if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
                         base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
-                    render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
-                                cell_w, cell_h, opts, orient="h")
-                    if vrows0 and ri < len(vrows0) and idx < len(vrows0[ri]):
-                        syl = vrows0[ri][idx]
-                        if syl and syl != "-" and syl.replace('(', '').replace(')', ''):
-                            _draw_vocal_cell(out, _vocal_elements(syl), x, y,
-                                             cell_w, cell_h, h_syl_fs, h_syl_pad)
+                    row_notes.append((base_tok, x))
                     if rs:
-                        _render_repeat_arrow(out, x + cell_w * 0.85,
-                                             y, cell_h, cell_w * 0.15, 'start')
+                        row_syms.append(('a', 'start', x))
                     if re_:
-                        _render_repeat_arrow(out, x + cell_w * 0.85,
-                                             y, cell_h, cell_w * 0.15, 'end')
+                        row_syms.append(('a', 'end', x))
                     if vs:
-                        _render_vrep_marker(out, x + cell_w * 0.85,
-                                            y, cell_h, cell_w * 0.15, 'start')
+                        row_syms.append(('v', 'start', x))
                     if ve:
-                        _render_vrep_marker(out, x + cell_w * 0.85,
-                                            y, cell_h, cell_w * 0.15, 'end')
+                        row_syms.append(('v', 'end', x))
                     if tok and tok != "-":
                         h_last_filled = (x + cell_w * 0.85, y)
-                y += cell_h
+                # Ligne marker sous la rangée : bordure, symboles de contrôle
+                # (flèches de répétition, répétitions du chant) et syllabes
+                # vocales — transposés de la colonne marker verticale
+                if marker_h > 0:
+                    # La ligne marker s'arrête à DROITE DE LA DERNIÈRE CASE
+                    # de la rangée (le dernier dan peut être incomplet)
+                    out.append(f'<rect x="{ml}" y="{y + cell_h:g}" '
+                               f'width="{len(row) * cell_w}" height="{marker_h}" '
+                               f'fill="none" stroke="#999" stroke-width="0.75"/>')
+                    ym = y + cell_h
+                    for kind_s, typ, x in row_syms:
+                        if kind_s == 'a':
+                            _h_repeat_arrow(out, x, ym, cell_w, marker_h, typ)
+                        else:
+                            _h_vrep_marker(out, x, ym, cell_w, marker_h, typ)
+                # Notes par-dessus bordures et symboles
+                for base_tok, x in row_notes:
+                    render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
+                                cell_w, cell_h, opts, orient="h")
+                # Syllabes vocales en dernier (texte)
+                if marker_h > 0 and vrows0 and ri < len(vrows0):
+                    _draw_marker_line_vocal(out, vrows0[ri], row, ml,
+                                            y + cell_h, cell_w, marker_h,
+                                            h_syl_fs)
+                y += cell_h + marker_h
             y += 6
             if do_end_circle and si == last_tab_idx and h_last_filled:
                 _render_end_circle(out, h_last_filled[0], h_last_filled[1],
                                    cell_h, h_marker_w)
         else:
-            for ln in data:
-                if ln == "":
-                    y += int(h_lyrics_fs * 1.0)
-                else:
-                    if _has_ruby(_parse_ruby(ln)):
-                        _render_horizontal_text(out, ln, ml, y, h_lyrics_fs, "#444")
+            if kind == "lyrics":
+                # Transposition horizontale de la règle verticale :
+                # colonnes → lignes, continuation indentée sous le marqueur,
+                # interligne élargi quand la ligne suivante porte un ruby ;
+                # PAS de repli (règle alignée, la page a grandi)
+                hl = _h_lyrics_layout(data, h_lyrics_fs, None)
+                for i, (indent, text, _rub) in enumerate(hl):
+                    if text:
+                        _render_horizontal_text(
+                            out, text, ml + indent * h_lyrics_fs, y,
+                            h_lyrics_fs, "#444")
+                    nxt = hl[i + 1][2] if i + 1 < len(hl) else False
+                    y += _h_lyrics_pitch(nxt, h_lyrics_fs, h_lyrics_sp)
+            else:
+                for ln in data:
+                    if ln == "":
+                        y += int(h_lyrics_fs * 1.0)
                     else:
-                        out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                                   f'font-size="{h_lyrics_fs}" fill="#444">{escape(ln)}</text>')
-                    y += h_lyrics_sp
+                        if _has_ruby(_parse_ruby(ln)):
+                            _render_horizontal_text(out, ln, ml, y, h_lyrics_fs, "#444")
+                        else:
+                            out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
+                                       f'font-size="{h_lyrics_fs}" fill="#444">{escape(ln)}</text>')
+                        y += h_lyrics_sp
             y += 6
         prev_kind = kind
 
@@ -1865,7 +2476,7 @@ def _draw_vocal_cell(out, elements, x, y, cell_w, cell_h, syl_fs, syl_pad):
         sx = x + cell_w / 2 + cell_w * (i / n)
         if part == "":
             out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
-                       f'font-family="serif" font-size="{syl_fs}" fill="#888">{chr(0x30FB)}</text>')
+                       f'font-family="serif" font-size="{syl_fs}" fill="#333">{chr(0x30FB)}</text>')
         else:
             out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
                        f'font-family="serif" font-size="{syl_fs}" fill="#333">{escape(part)}</text>')
@@ -2123,10 +2734,30 @@ MEGA_PAGE_H = 29.7 * CM    # = 841,89 pt
 MEGA_ROWS = 12             # cases par dan (hauteur d'un bloc vertical)
 MEGA_DANS_PER_BLOCK = 32   # blocs verticaux (dans) par bloc horizontal
 MEGA_BLOCKS = 2            # blocs horizontaux empilés par page A3
-MEGA_MARGIN = 20           # marge extérieure (pt)
-MEGA_BLOCK_GAP = 24        # gap vertical entre les blocs (titres de section)
+MEGA_MARGIN = 40           # marge extérieure (pt) ~5% page (calage PJ mega)
+MEGA_BLOCK_GAP = 30        # gap vertical entre les blocs ~1 case (calage PJ)
 MEGA_DANS_PER_PAGE = MEGA_BLOCKS * MEGA_DANS_PER_BLOCK  # 64 dans / page A3
 
+
+def _mega_title_halfw(text, fs):
+    """Largeur estimée d'un titre de section (CJK = fs, ASCII = 0.55 fs)."""
+    w = 0.0
+    for ch in text:
+        w += fs if ord(ch) > 0x2E80 else fs * 0.55
+    return w / 2
+
+
+def _mega_span_arrow(out, x_from, x_to, y, color="#555"):
+    """Flèche vectorielle horizontale de x_from vers x_to (pointe du côté de
+    x_to). Trace la hampe à y, tête triangulaire de 4 pt. Utilisée pour
+    associer un titre de section à son intervalle de dans (layout mega)."""
+    if x_to == x_from:
+        return
+    dx = 4 if x_to > x_from else -4
+    out.append(f'<line x1="{x_from:g}" y1="{y:g}" x2="{x_to - dx:g}" '
+               f'y2="{y:g}" stroke="{color}" stroke-width="0.9"/>')
+    out.append(f'<polygon points="{x_to:g},{y:g} {x_to - dx:g},{y - 2.4:g} '
+               f'{x_to - dx:g},{y + 2.4:g}" fill="{color}"/>')
 
 def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
     title = song.meta.get("title", "")
@@ -2177,7 +2808,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
     avail_w = MEGA_PAGE_W - 2 * MEGA_MARGIN - title_offset - lyrics_offset
     if marker:
         cell_w = avail_w / (MEGA_DANS_PER_BLOCK * 1.5)
-        marker_w = cell_w / 2
+        marker_w = cell_w / 2   # PJ mega : marker ~11,5 pt pour case ~22 pt
     else:
         cell_w = avail_w / MEGA_DANS_PER_BLOCK
         marker_w = 0
@@ -2194,7 +2825,9 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
         # pour que la chanson suivante commence sur une colonne suivante
         if cols and len(cols[-1]) < MEGA_ROWS:
             pad = MEGA_ROWS - len(cols[-1])
-            cols[-1] = list(cols[-1]) + [SUSTAIN_TOKEN] * pad
+            # Case vide (pas de tenuto) : la chanson suivante commence sur
+            # une colonne suivante, sans point ・ dans les cases de fin.
+            cols[-1] = list(cols[-1]) + [EMPTY_TOKEN] * pad
             if vcols and len(vcols) == len(cols):
                 vcols[-1] = list(vcols[-1]) + ["-"] * pad
         for ci, col in enumerate(cols):
@@ -2227,9 +2860,22 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
                     x_right = MEGA_PAGE_W - MEGA_MARGIN - title_offset - li * group_w
                     x_left = MEGA_PAGE_W - MEGA_MARGIN - title_offset - (lj + 1) * group_w
                     xc = (x_right + x_left) / 2
-                    out.append(f'<text x="{xc:g}" y="{y0 - 6:g}" text-anchor="middle" '
+                    ty = y0 - 6
+                    out.append(f'<text x="{xc:g}" y="{ty:g}" text-anchor="middle" '
                                f'font-family="serif" font-size="11" fill="#555">'
                                f'{escape(bdan[li][2])}</text>')
+                    # Flèches d'association : depuis chaque bord du titre vers
+                    # le bord extérieur de l'intervalle de dans du morceau
+                    # dans CE bloc (retrait 2 pt pour ne pas toucher le marker).
+                    hw = _mega_title_halfw(bdan[li][2], 11)
+                    ay = ty - 3.8  # milieu optique du texte fs 11
+                    x_to_first = x_right - 2
+                    x_to_last = x_left + 2
+                    pad = 4
+                    if x_to_first > xc + hw + pad + 8:
+                        _mega_span_arrow(out, xc + hw + pad, x_to_first, ay)
+                    if x_to_last < xc - hw - pad - 8:
+                        _mega_span_arrow(out, xc - hw - pad, x_to_last, ay)
                 li = lj + 1
             _draw_vertical_tab(out, cols, MEGA_ROWS, MEGA_MARGIN, y0,
                                cell_w, cell_h, fs, MEGA_PAGE_W, MEGA_MARGIN,
@@ -2378,7 +3024,13 @@ def _strip_repeat_marks(tok):
     # répétition (ex. "(|:合", "上:)|") — on les dépile dans n'importe quel
     # ordre pour ne garder que le contenu de la case.
     while True:
-        if tok.startswith('('):
+        if tok.startswith('(:'):
+            vs = True
+            tok = tok[2:]
+        elif tok.endswith(':)') and not tok.endswith('(:'):  # garde (: seul
+            ve = True
+            tok = tok[:-2]
+        elif tok.startswith('('):
             koe = True
             tok = tok[1:]
         elif tok.startswith(REPEAT_START):
@@ -2403,67 +3055,69 @@ def _strip_repeat_marks(tok):
     return rs, tok, re_, vs, ve, koe
 
 
-def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type):
+def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
+                         stroke="#bbb", sw=0.75):
     """Dessine une flèche de répétition en graphiques vectoriels SVG.
 
     La flèche part de la bordure gauche de la colonne marker (x_left),
     va horizontalement vers la droite sur 66% de marker_w, puis descend
     (ou monte) verticalement, et se termine par un triangle creux.
+    Le coude horizontal/vertical est UN SEUL path (pas deux <line>
+    superposées) ; trait de même largeur et couleur que la grille
+    (stroke/sw passés par le layout appelant, défaut = cases vertical).
 
     arrow_type: 'start' = flèche descendante (~80% haut), 'end' = flèche montante (~80% bas).
-    x_left = bordure gauche de la colonne marker.
-    cy = position verticale du haut de la case."""
-    sw = 1.2  # stroke-width
+    x_left = bordure gauche de la colonne marker. cy = position verticale du haut de la case."""
     h_len = marker_w * 0.66  # longueur du trait horizontal
     v_len = h_len  # trait vertical au moins aussi long que l'horizontal
     tri_size = marker_w * 0.22  # demi-largeur du triangle
     tri_h = 3 ** 0.5 * tri_size  # hauteur triangle équilatéral
 
     if arrow_type == 'start':
-        # Part à ~80% du haut : trait horizontal à cell_h * 0.20
+        # Part à ~20% du haut : trait horizontal à cell_h * 0.20
         hy = cy + cell_h * 0.20
-        # Trait horizontal : de x_left à x_left + h_len
+        # Coude propre : horizontal puis vertical descendant, un seul path
         hx = x_left + h_len
-        out.append(f'<line x1="{x_left}" y1="{hy}" x2="{hx}" y2="{hy}" '
-                   f'stroke="black" stroke-width="{sw}"/>')
-        # Trait vertical : de hy vers le bas sur v_len
         vy = hy + v_len
-        out.append(f'<line x1="{hx}" y1="{hy}" x2="{hx}" y2="{vy}" '
-                   f'stroke="black" stroke-width="{sw}"/>')
+        out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
+                   f'L {hx:g} {vy:g}" fill="none" '
+                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
         # Triangle creux pointant vers le bas, sommet à (hx, vy + tri_h)
         tip_y = vy + tri_h
-        out.append(f'<polygon points="{hx - tri_size},{vy} '
-                   f'{hx + tri_size},{vy} {hx},{tip_y}" '
-                   f'fill="none" stroke="black" stroke-width="{sw}"/>')
+        out.append(f'<polygon points="{hx - tri_size:g},{vy:g} '
+                   f'{hx + tri_size:g},{vy:g} {hx:g},{tip_y:g}" '
+                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
     else:
         # Part à ~80% du bas : trait horizontal à cell_h * 0.80
         hy = cy + cell_h * 0.80
         hx = x_left + h_len
-        out.append(f'<line x1="{x_left}" y1="{hy}" x2="{hx}" y2="{hy}" '
-                   f'stroke="black" stroke-width="{sw}"/>')
-        # Trait vertical : de hy vers le haut sur v_len
+        # Coude propre : horizontal puis vertical montant, un seul path
         vy = hy - v_len
-        out.append(f'<line x1="{hx}" y1="{hy}" x2="{hx}" y2="{vy}" '
-                   f'stroke="black" stroke-width="{sw}"/>')
+        out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
+                   f'L {hx:g} {vy:g}" fill="none" '
+                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
         # Triangle creux pointant vers le haut, sommet à (hx, vy - tri_h)
         tip_y = vy - tri_h
-        out.append(f'<polygon points="{hx - tri_size},{vy} '
-                   f'{hx + tri_size},{vy} {hx},{tip_y}" '
-                   f'fill="none" stroke="black" stroke-width="{sw}"/>')
+        out.append(f'<polygon points="{hx - tri_size:g},{vy:g} '
+                   f'{hx + tri_size:g},{vy:g} {hx:g},{tip_y:g}" '
+                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
 
 
-def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type):
+def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
+                        stroke="#bbb", sw=0.75):
     """Symbole de répétition du chant dans la colonne marker — même
     géométrie et même taille que l'ancien marqueur @end_circle
     (_render_end_circle) : barre horizontale sur 66% de marker_w, montant
     vertical, disque creux (rayon 22% de marker_w).
+    Le coude barre/montant est UN SEUL path (pas deux <line> superposées) ;
+    trait de même largeur et couleur que la grille (stroke/sw passés par
+    le layout appelant, défaut = cases vertical).
 
     marker_type: 'end' = )| → ┘● (barre à ~80% du bas, montant vers le
     haut, disque au-dessus) ; 'start' = |( → image spéculaire par rapport
     à l'axe HORIZONTAL : barre à ~20% du haut, montant vers le bas,
     disque en dessous.
     x_left = bordure gauche de la colonne marker. cy = haut de la case."""
-    sw = 1.2
     h_len = marker_w * 0.66
     v_len = h_len
     r = marker_w * 0.22
@@ -2471,22 +3125,21 @@ def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type):
     hx = x_left + h_len
     if marker_type == 'end':
         hy = cy + cell_h * 0.80
-        out.append(f'<line x1="{x_left}" y1="{hy}" x2="{hx}" y2="{hy}" '
-                   f'stroke="black" stroke-width="{sw}"/>')
+        # Coude propre : barre horizontale puis montant vers le haut
         vy = hy - v_len
-        out.append(f'<line x1="{hx}" y1="{hy}" x2="{hx}" y2="{vy}" '
-                   f'stroke="black" stroke-width="{sw}"/>')
-        out.append(f'<circle cx="{hx}" cy="{vy - r}" r="{r}" '
-                   f'fill="none" stroke="black" stroke-width="{sw}"/>')
+        out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
+                   f'L {hx:g} {vy:g}" fill="none" '
+                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+        out.append(f'<circle cx="{hx:g}" cy="{vy - r:g}" r="{r:g}" '
+                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
     else:  # 'start' : miroir horizontal — barre en haut, montant descendant
         hy = cy + cell_h * 0.20
-        out.append(f'<line x1="{x_left}" y1="{hy}" x2="{hx}" y2="{hy}" '
-                   f'stroke="black" stroke-width="{sw}"/>')
         vy = hy + v_len
-        out.append(f'<line x1="{hx}" y1="{hy}" x2="{hx}" y2="{vy}" '
-                   f'stroke="black" stroke-width="{sw}"/>')
-        out.append(f'<circle cx="{hx}" cy="{vy + r}" r="{r}" '
-                   f'fill="none" stroke="black" stroke-width="{sw}"/>')
+        out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
+                   f'L {hx:g} {vy:g}" fill="none" '
+                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+        out.append(f'<circle cx="{hx:g}" cy="{vy + r:g}" r="{r:g}" '
+                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
 
 
 def _render_end_circle(out, x_left, cy, cell_h, marker_w):
@@ -2883,33 +3536,78 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                            f'{_note_svg(lone, fs, opts)}</text>')
                 _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
                 return
+        # Shuffle à N notes (A:B:C..., N >= 3, ex. 老:四:◯) : notes égales
+        # empilées, généralisation du shuffle 2 notes (早弾き à 3 coups).
+        notes = base_tok.split(':')
+        if len(notes) >= 3 and all(notes):
+            n = len(notes)
+            sh = int(effective_fs * (0.60 if n == 3 else 0.52))
+            if orient == "h":
+                # horizontal : côte à côte, réparties sur la largeur
+                xs = [cx - fs * 0.42 + i * (fs * 0.84 / (n - 1)) for i in range(n)]
+                ys = [cy + fs * 0.318] * n
+            else:
+                # vertical : empilées de haut en bas, réparties sur la hauteur
+                ys = [cy - fs * 0.30 + i * (fs * 0.68 / (n - 1)) for i in range(n)]
+                xs = [cx] * n
+            for xnote, ynote, note in zip(xs, ys, notes):
+                out.append(f'<text x="{xnote:g}" y="{ynote:g}" '
+                           f'text-anchor="middle" font-family="serif" '
+                           f'font-size="{sh}" fill="black">'
+                           f'{_note_svg(note, sh, opts)}</text>')
+            _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+            return
         # En présence d'une borne de chant ( / ), les deux notes du shuffle
         # gardent la taille pleine (fs) : la borne est un petit glyphe à part.
         koe = koe_prefix or koe_suffix
         sh_pos = int(fs * 0.72)
-        sh = fs if koe and '/' not in base_tok else int(effective_fs * 0.72)
+        # Taille : 80% d'une note seule (noire) — nettement plus grand
+        # qu'une note à cheval (72%), sans atteindre la taille pleine.
+        # Clamp : la case doit tenir 2 glyphes + 3 marges (m ~ 0.45 sh).
+        sh = effective_fs * 0.8 if not (koe and '/' not in base_tok) else fs
+        if orient == "h":
+            sh = min(sh, cell_w / 2.9)
+        else:
+            sh = min(sh, cell_h / 2.9)
         # En présence d'une borne de chant, la note reste centrée comme une
         # noire (pas de décalage vers le haut). Si le ':' est en tête (ex.
         # "(:合"), la note est parts[1] et parts[0] est vide.
         if koe and not parts[0] and parts[1]:
             parts = (parts[1], "")
         if orient == "h":
-            # horizontal : deux notes côte à côte (gauche/droite)
-            y_main = y_lower = cy + fs * 0.318
-            x_main = cx if koe else cx - fs * 0.18 + sh_pos / 3
-            x_lower = cx + fs * 0.42 + sh_pos / 3
+            # horizontal : deux notes côte à côte, réparties sur la largeur
+            # avec des marges égales (bord − m − note − m − note − m − bord).
+            if koe:
+                y_main = y_lower = cy + fs * 0.318
+                x_main = cx
+                x_lower = cx + fs * 0.42 + sh_pos / 3
+            else:
+                y_main = y_lower = cy + fs * 0.318
+                x_left = cx - cell_w / 2
+                m = (cell_w - 2 * sh) / 3
+                x_main = x_left + m + sh / 2
+                x_lower = x_left + cell_w - m - sh / 2
         else:
             x_main = x_lower = cx
-            y_main = cy + fs * 0.318 if koe else cy - fs * 0.18 + sh_pos / 3
-            y_lower = cy + fs * 0.42 + sh_pos / 3
-        out.append(f'<text x="{x_main}" y="{y_main}" '
+            if koe:
+                y_main = cy + fs * 0.318
+                y_lower = cy + fs * 0.42 + sh_pos / 3
+            else:
+                # Distribution verticale à marges égales :
+                # bord haut − m − note − m − note − m − bord bas.
+                # bbox CJK ≈ [baseline − 0.88 em, baseline + 0.12 em].
+                cell_top = cy - cell_h / 2
+                m = (cell_h - 2 * sh) / 3
+                y_main = cell_top + m + sh * 0.88
+                y_lower = cell_top + cell_h - m - sh * 0.12
+        out.append(f'<text x="{x_main:g}" y="{y_main:g}" '
                    f'text-anchor="middle" font-family="serif" '
-                   f'font-size="{sh}" fill="black">{_note_svg(parts[0], sh, opts)}</text>')
+                   f'font-size="{sh:g}" fill="black">{_note_svg(parts[0], sh, opts)}</text>')
         lower = parts[1] if len(parts) > 1 else ""
         if lower:
-            out.append(f'<text x="{x_lower}" y="{y_lower}" '
+            out.append(f'<text x="{x_lower:g}" y="{y_lower:g}" '
                        f'text-anchor="middle" font-family="serif" '
-                       f'font-size="{sh}" fill="black">'
+                       f'font-size="{sh:g}" fill="black">'
                        f'{_note_svg(lower, sh, opts)}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
@@ -2952,14 +3650,17 @@ def escape(s):
 # Caractères à pivoter de 90° sens horaire en texte vertical
 # （ U+FF08, ） U+FF09, ( U+0028, ) U+0029
 # 「 U+300C, 」 U+300D, 『 U+300E, 』 U+300F
-VERTICAL_ROTATE_CHARS = set("（）()「」『』")
+VERTICAL_ROTATE_CHARS = set("（）()「」『』ー")
 
 
 def _vertical_char(out, ch, x, y, fs, fill, family="serif"):
     """Rend un caractère en texte vertical.
 
-    Les parenthèses （）() sont pivotées de 90° dans le sens horaire,
-    comme l'exige la typographie japonaise verticale.
+    Les parenthèses （）() et guillemets 「」『』 sont pivotées de 90° dans
+    le sens horaire, comme l'exige la typographie japonaise verticale.
+    Le signe ー (chōonpu, U+30FC) est également pivoté de 90° : barre
+    horizontale en horizontal, verticale en écriture verticale.
+    (Pas de pivot pour le tiret ASCII '-' ni pour 一, qui reste droit.)
     """
     if ch in VERTICAL_ROTATE_CHARS:
         cy = y - fs * 0.35  # centre visuel approximatif du glyphe
@@ -3090,82 +3791,163 @@ def _ruby_needs_extra_width(text, fs):
     return int(fs * 0.75 + ruby_fs * 0.5)
 
 
+def _plan_vertical_ruby(segments, fs, sp):
+    """Planifie la disposition verticale d'une suite de segments ruby.
+
+    Règle générique (comme les traiteurs de texte Word/LibreOffice) :
+    JAMAIS d'écartement des caractères AU SEIN d'un groupe rubyé —
+    ce sont les GROUPES (bases groupées) qui s'écartent, de manière à ce
+    que les blocs ruby se suivent en flux continu (haut du bloc ruby n+1
+    = bas du bloc ruby n + gap constant), sans à-coups. Le bloc ruby est
+    centré sur sa base quand le flux le permet ; sinon le groupe de base
+    est poussé vers le bas pour que son ruby prenne la suite du flux.
+    (Le ruby vivant dans sa propre colonne à droite, seuls les blocs ruby
+    peuvent se chevaucher entre eux.)
+
+    Retourne (plan, hauteur) où plan est une liste de
+    {'base': [(car, y), …], 'ruby': [(car, y), …]} — y RELATIFS au départ,
+    cumulés segment après segment. hauteur = y final du flux de base.
+    """
+    ruby_fs = int(fs * RUBY_SCALE)
+    ruby_sp = sp * 0.55
+    # Les glyphes sont rendus horizontaux empilés (baseline en y, encre de
+    # y-0.88em à y+0.12em) : le centre d'encre d'un glyphe est à y-0.38em.
+    # Pour centrer le bloc ruby sur l'ENCRE de sa base (et pas sur les
+    # baselines), on compense l'écart 0.38em x (fs - ruby_fs).
+    adj = 0.38 * (fs - ruby_fs)
+    # flux ruby continu : l'intervalle entre blocs suit le rythme intra-bloc
+    # (ruby_sp entre baselines), avec garde-fou minimal (boîte + interstice).
+    gap = ruby_fs * 0.4
+    step = max(ruby_sp, ruby_fs + gap)
+
+    def keep(ch):
+        return not (ch.isspace() or unicodedata.combining(ch)
+                    or ch in VARIATION_SELECTORS)
+
+    y = 0.0        # curseur du flux de base (next baseline)
+    ry_cur = None  # bas du dernier bloc ruby posé (flux ruby continu)
+    plan = []
+
+    def annotated(base, ruby):
+        """Pose un groupe rubyé : bases à sp (jamais écartées entre elles),
+        ruby centré sur sa base ou poussé à la suite du flux ruby."""
+        nonlocal y, ry_cur
+        n = len(base)
+        H_b = (n - 1) * sp
+        if not ruby:
+            plan.append({'base': [(ch, y + j * sp) for j, ch in enumerate(base)],
+                         'ruby': []})
+            y += n * sp
+            return
+        H_r = (len(ruby) - 1) * ruby_sp
+        # centrage sur les centres d'ENCRE (glyphe : encre de y-0.88em à
+        # y+0.12em, centre à y-0.38em) : le bloc ruby paraît sinon trop bas.
+        centered_ry = y + H_b / 2 - H_r / 2 - adj
+        if ry_cur is None:
+            ry = centered_ry
+        else:
+            ry = max(ry_cur + step, centered_ry)
+        b0 = ry + H_r / 2 - H_b / 2 + adj
+        if b0 < y:  # garde-fou (arrondis) : la base ne remonte jamais
+            b0 = y
+            ry = max(ry, y + H_b / 2 - adj - H_r / 2)
+        plan.append({'base': [(ch, b0 + j * sp) for j, ch in enumerate(base)],
+                     'ruby': [(rc, ry + j * ruby_sp) for j, rc in enumerate(ruby)]})
+        ry_cur = ry + H_r
+        y = b0 + H_b + sp   # le flux de base continue après la dernière base
+
+    for seg in segments:
+        if seg["type"] == "plain":
+            base = []
+            for ch in seg["text"]:
+                if ch.isspace():
+                    y += sp
+                    continue
+                if keep(ch):
+                    base.append((ch, y))
+                y += sp
+            plan.append({'base': base, 'ruby': []})
+        elif seg["type"] == "mono":
+            annotated(seg["base"], seg["ruby"] or "")
+        elif seg["type"] == "group":
+            annotated(seg["base"], seg["ruby"] or "")
+        elif seg["type"] == "jukugo":
+            for base, ruby in seg["items"]:
+                annotated(base, ruby or "")
+    return plan, y
+
+
 def _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family="serif"):
-    """Rend des segments ruby en mode vertical (ruby à droite).
+    """Rend des segments ruby en mode vertical (ruby à droite),
+    caractère par caractère, selon le plan de _plan_vertical_ruby
+    (écartement générique des bases quand les blocs ruby sont trop longs).
     x = position horizontale du texte de base
     y = position verticale de départ (baseline du 1er caractère)
     fs = taille de base, sp = espacement vertical entre caractères de base
     Retourne le y après le dernier segment."""
     ruby_fs = int(fs * RUBY_SCALE)
     ruby_x = x + fs * 0.75  # ruby à droite, espacé de la base
-    ruby_sp = sp * 0.55     # espacement ruby plus serré (car plus petit)
-    # _vertical_char place y à la baseline ; le centre visuel est à y - fs*0.35.
-    # Pour aligner le centre du ruby sur le centre de la base, il faut
-    # compenser la différence de hauteur : baseline_ruby = baseline_base - (fs - ruby_fs)*0.35
-    badj = (fs - ruby_fs) * 0.35
+    plan, h = _plan_vertical_ruby(segments, fs, sp)
+    for e in plan:
+        for ch, cy in e['base']:
+            _vertical_char(out, ch, x, y + cy, fs, fill, family)
+        for rc, ry in e['ruby']:
+            _vertical_char(out, rc, ruby_x, y + ry, ruby_fs, fill, family)
+    return y + h
 
-    for seg in segments:
-        if seg["type"] == "plain":
-            for ch in seg["text"]:
-                _vertical_char(out, ch, x, y, fs, fill, family)
-                y += sp
 
-        elif seg["type"] == "mono":
-            _vertical_char(out, seg["base"], x, y, fs, fill, family)
-            if seg["ruby"]:
-                n_ruby = len(seg["ruby"])
-                # Centre visuel du kanji : y - fs*0.35
-                # Centre du bloc ruby : ruby_start + (n_ruby-1)*ruby_sp/2 - ruby_fs*0.35
-                # Égaliser les deux : ruby_start = y - fs*0.35 + ruby_fs*0.35 - (n_ruby-1)*ruby_sp/2
-                ruby_start = y - (fs - ruby_fs) * 0.35 - (n_ruby - 1) * ruby_sp / 2
-                for j, rc in enumerate(seg["ruby"]):
-                    _vertical_char(out, rc, ruby_x, ruby_start + j * ruby_sp,
-                                   ruby_fs, fill, family)
-            y += sp
+def _vertical_grouped_text(out, text, x, y, fs, fill, sp, family="serif"):
+    """Rend un texte vertical en BLOCS <text> groupés (SVG 1.1, listes
+    x/y par glyphe) :
+      <text x="x x x …" y="y1 y2 …" …>caractères</text>
+    (liste x répétée : indispensable, sinon chaque glyphe conserve l'avance
+    naturelle du précédent et le texte part en escalier)
 
-        elif seg["type"] == "group":
-            n_base = len(seg["base"])
-            for j, ch in enumerate(seg["base"]):
-                _vertical_char(out, ch, x, y + j * sp, fs, fill, family)
-            if seg["ruby"]:
-                n_ruby = len(seg["ruby"])
-                base_block_h = (n_base - 1) * sp
-                ruby_block_h = (n_ruby - 1) * ruby_sp
-                ruby_y = y + (base_block_h - ruby_block_h) / 2 - badj
-                for j, rc in enumerate(seg["ruby"]):
-                    _vertical_char(out, rc, ruby_x, ruby_y + j * ruby_sp,
-                                   ruby_fs, fill, family)
-            y += n_base * sp
+    - Les caractères de BASE (tous segments confondus) sont regroupés en
+      UN SEUL bloc ; chaque annotation ruby est un bloc <text> indépendant
+      à droite de sa base (« les ruby vivent leur vie »), positions
+      calculées par _plan_vertical_ruby (écartement générique des bases
+      quand les blocs ruby sont trop longs).
+    - Rotation (ー, parenthèses, guillemets) : ces glyphes sortent du bloc
+      et sont rendus en éléments <text> individuels avec
+      transform="rotate(90 x cy)" (le pivot par glyphe de l'attribut rotate
+      étant dépendant du moteur de rendu).
+    Retourne le y après le dernier caractère (comme _render_vertical_text).
+    """
+    def _emit_group(chars, ys, gfs, gx):
+        # Les caractères pivotés (ー, parenthèses…) sortent du bloc : l'attribut
+        # rotate par glyphe a une sémantique variable selon les moteurs de
+        # rendu (pivot/anchor), alors que le transform="rotate(90 x cy)" sur
+        # élément individuel est éprouvé (même rendu que le per-char historique).
+        gchars, gys = [], []
+        for ch, cy in zip(chars, ys):
+            if ch in VERTICAL_ROTATE_CHARS:
+                _vertical_char(out, ch, gx, cy, gfs, fill, family)
+            else:
+                gchars.append(ch)
+                gys.append(cy)
+        if not gchars:
+            return
+        xs = " ".join(f"{gx:g}" for _ in gchars)
+        out.append(f'<text x="{xs}" y="{" ".join(f"{v:g}" for v in gys)}" '
+                   f'text-anchor="middle" font-family="{family}" '
+                   f'font-size="{gfs:g}" fill="{fill}">'
+                   f'{escape("".join(gchars))}</text>')
 
-        elif seg["type"] == "jukugo":
-            for base, ruby in seg["items"]:
-                if len(base) > 1:
-                    # Mini-groupe dans le jukugo
-                    n_base = len(base)
-                    for j, ch in enumerate(base):
-                        _vertical_char(out, ch, x, y + j * sp, fs, fill, family)
-                    if ruby:
-                        n_ruby = len(ruby)
-                        base_block_h = (n_base - 1) * sp
-                        ruby_block_h = (n_ruby - 1) * ruby_sp
-                        ruby_y = y + (base_block_h - ruby_block_h) / 2 - badj
-                        for j, rc in enumerate(ruby):
-                            _vertical_char(out, rc, ruby_x,
-                                           ruby_y + j * ruby_sp,
-                                           ruby_fs, fill, family)
-                    y += n_base * sp
-                else:
-                    _vertical_char(out, base, x, y, fs, fill, family)
-                    if ruby:
-                        n_ruby = len(ruby)
-                        ruby_start = y - (fs - ruby_fs) * 0.35 - (n_ruby - 1) * ruby_sp / 2
-                        for j, rc in enumerate(ruby):
-                            _vertical_char(out, rc, ruby_x,
-                                           ruby_start + j * ruby_sp,
-                                           ruby_fs, fill, family)
-                    y += sp
-
-    return y
+    segments = _parse_ruby(text)
+    plan, h = _plan_vertical_ruby(segments, fs, sp)
+    ruby_fs = int(fs * RUBY_SCALE)
+    ruby_x = x + fs * 0.75  # ruby à droite, espacé de la base
+    base_chars, base_ys = [], []   # bloc unique des caractères de base
+    for e in plan:
+        for ch, cy in e['base']:
+            base_chars.append(ch)
+            base_ys.append(y + cy)   # le plan donne des y RELATIFS
+        if e['ruby']:
+            _emit_group([c for c, _ in e['ruby']],
+                        [y + cy for _, cy in e['ruby']], ruby_fs, ruby_x)
+    _emit_group(base_chars, base_ys, fs, x)
+    return y + h
 
 
 def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif"):
@@ -3195,66 +3977,98 @@ def _char_w(ch, fs):
     return fs if ord(ch) >= 0x2E80 else fs * 0.55
 
 
+def _plan_horizontal_ruby(segments, fs):
+    """Planifie la disposition horizontale d'une suite de segments ruby.
+
+    Même règle Word/LibreOffice qu'en vertical (_plan_vertical_ruby) :
+    JAMAIS d'écartement des caractères au sein d'un groupe rubyé — ce sont
+    les GROUPES qui s'écartent, pour que les blocs ruby (au-dessus de la
+    base) se suivent en flux continu : bord gauche du bloc ruby n+1 >= bord
+    droit du bloc n + gap (0,4 x ruby_fs). Chaque bloc ruby est centré sur
+    sa base quand le flux le permet ; sinon le groupe de base est poussé
+    vers la droite. En horizontal, les avances (_char_w : CJK 1em, latin
+    0,55em) tiennent lieu de boîtes : le centrage sur les avances équivaut
+    au centrage sur l'encre.
+
+    Retourne (plan, largeur) où plan est une liste de
+    {'base': (texte, x), 'ruby': (texte, x) ou None} — x RELATIFS au départ,
+    cumulés segment après segment. largeur = x final du flux de base.
+    """
+    ruby_fs = int(fs * RUBY_SCALE)
+    gap = ruby_fs * 0.4   # interstice constant entre blocs ruby voisins
+
+    x = 0.0        # curseur du flux de base (bord gauche du prochain groupe)
+    rx_end = None  # bord droit du dernier bloc ruby posé (flux continu)
+    plan = []
+
+    def annotated(base, ruby):
+        nonlocal x, rx_end
+        base_w = sum(_char_w(c, fs) for c in base)
+        if not ruby:
+            plan.append({'base': (base, x), 'ruby': None})
+            x += base_w
+            return
+        ruby_w = sum(_char_w(c, ruby_fs) for c in ruby)
+        centered_rx = x + (base_w - ruby_w) / 2
+        if rx_end is None:
+            rx = centered_rx
+        else:
+            rx = max(rx_end + gap, centered_rx)
+        b0 = rx + ruby_w / 2 - base_w / 2
+        if b0 < x:  # garde-fou (arrondis) : la base ne remonte jamais
+            b0 = x
+            rx = max(rx, b0 + (base_w - ruby_w) / 2)
+        plan.append({'base': (base, b0), 'ruby': (ruby, rx)})
+        rx_end = rx + ruby_w
+        x = b0 + base_w   # le flux de base continue après la dernière base
+
+    for seg in segments:
+        if seg["type"] == "plain":
+            plan.append({'base': (seg["text"], x), 'ruby': None})
+            x += sum(_char_w(c, fs) for c in seg["text"])
+        elif seg["type"] == "mono":
+            annotated(seg["base"], seg["ruby"] or "")
+        elif seg["type"] == "group":
+            annotated(seg["base"], seg["ruby"] or "")
+        elif seg["type"] == "jukugo":
+            for base, ruby in seg["items"]:
+                annotated(base, ruby or "")
+    return plan, x
+
+
 def _render_horizontal_ruby(out, segments, x, y, fs, fill, family="serif"):
-    """Rend des segments ruby en mode horizontal (ruby au-dessus de la base).
+    """Rend des segments ruby en mode horizontal (ruby au-dessus de la base),
+    selon le plan de _plan_horizontal_ruby (règle d'écartement générique).
     x = position horizontale de départ
     y = position verticale du texte de base (baseline)
-    Retourne le x après le dernier segment. Avance par _char_w (largeur
-    réelle des glyphes) pour ne pas chevaucher les segments entre eux."""
+    Retourne le x après le dernier segment."""
     ruby_fs = int(fs * RUBY_SCALE)
     # ruby bien AU-DESSUS du glyphe de base : un CJK monte ~0.88em au-dessus
     # de la baseline ; à 0.55em le ruby chevauchait le haut du caractère (ex. 花)
     ruby_y = y - fs * 0.95
 
-    for seg in segments:
-        if seg["type"] == "plain":
-            out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
-                       f'font-size="{fs}" fill="{fill}">'
-                       f'{escape(seg["text"])}</text>')
-            x += sum(_char_w(c, fs) for c in seg["text"])
+    plan, w = _plan_horizontal_ruby(segments, fs)
+    for e in plan:
+        base, bx = e['base']
+        out.append(f'<text x="{x + bx:g}" y="{y}" font-family="{family}" '
+                   f'font-size="{fs}" fill="{fill}">{escape(base)}</text>')
+        if e['ruby']:
+            ruby, rx = e['ruby']
+            out.append(f'<text x="{x + rx:g}" y="{ruby_y}" '
+                       f'font-family="{family}" font-size="{ruby_fs}" '
+                       f'fill="{fill}">{escape(ruby)}</text>')
+    return x + w
 
-        elif seg["type"] == "mono":
-            base, ruby = seg["base"], seg["ruby"]
-            base_w = _char_w(base, fs)
-            out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
-                       f'font-size="{fs}" fill="{fill}">{escape(base)}</text>')
-            if ruby:
-                rw = sum(_char_w(c, ruby_fs) for c in ruby)
-                rx = x + (base_w - rw) / 2
-                out.append(f'<text x="{rx}" y="{ruby_y}" '
-                           f'font-family="{family}" font-size="{ruby_fs}" '
-                           f'fill="{fill}">{escape(ruby)}</text>')
-            x += base_w
 
-        elif seg["type"] == "group":
-            base_w = sum(_char_w(c, fs) for c in seg["base"])
-            out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
-                       f'font-size="{fs}" fill="{fill}">'
-                       f'{escape(seg["base"])}</text>')
-            if seg["ruby"]:
-                ruby_w = sum(_char_w(c, ruby_fs) for c in seg["ruby"])
-                rx = x + (base_w - ruby_w) / 2
-                out.append(f'<text x="{rx}" y="{ruby_y}" '
-                           f'font-family="{family}" font-size="{ruby_fs}" '
-                           f'fill="{fill}">{escape(seg["ruby"])}</text>')
-            x += base_w
-
-        elif seg["type"] == "jukugo":
-            for base, ruby in seg["items"]:
-                base_w = sum(_char_w(c, fs) for c in base)
-                out.append(f'<text x="{x}" y="{y}" '
-                           f'font-family="{family}" font-size="{fs}" '
-                           f'fill="{fill}">{escape(base)}</text>')
-                if ruby:
-                    ruby_w = sum(_char_w(c, ruby_fs) for c in ruby)
-                    rx = x + (base_w - ruby_w) / 2
-                    out.append(f'<text x="{rx}" y="{ruby_y}" '
-                               f'font-family="{family}" '
-                               f'font-size="{ruby_fs}" '
-                               f'fill="{fill}">{escape(ruby)}</text>')
-                x += base_w
-
-    return x
+def _h_text_w(text, fs):
+    """Largeur avancée d'un texte horizontal (ruby pris en compte via le
+    plan, sinon somme des largeurs de glyphes)."""
+    if not text:
+        return 0.0
+    segments = _parse_ruby(text)
+    if _has_ruby(segments):
+        return _plan_horizontal_ruby(segments, fs)[1]
+    return sum(_char_w(c, fs) for c in text)
 
 
 def _render_horizontal_text(out, text, x, y, fs, fill, family="serif"):
@@ -3263,8 +4077,8 @@ def _render_horizontal_text(out, text, x, y, fs, fill, family="serif"):
     Avec ruby : utilise _render_horizontal_ruby."""
     segments = _parse_ruby(text)
     if not _has_ruby(segments):
-        out.append(f'<text x="{x}" y="{y}" font-family="{family}" '
-                   f'font-size="{fs}" fill="{fill}">{escape(text)}</text>')
+        out.append(f'<text x="{x:g}" y="{y:g}" font-family="{family}" '
+                   f'font-size="{fs:g}" fill="{fill}">{escape(text)}</text>')
         return x + sum(_char_w(ch, fs) for ch in text)
     return _render_horizontal_ruby(out, segments, x, y, fs, fill, family)
 
