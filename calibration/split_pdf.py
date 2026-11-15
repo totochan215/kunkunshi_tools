@@ -11,10 +11,10 @@ Produit dans SORTIE/ :
 
 Dépendance : pip install pypdf   (script perso, pas dans le pipeline du dépôt)
 
-Convention : déposer le PDF complet dans le dossier Drive idoine (voir
-calibration/README.md), lancer ce script en local, puis uploader les pages
-splittées dans le même dossier Drive. Les pages d'index seront ensuite
-OCRisées séparément (indiquer les numéros de page PDF concernés).
+Le manifeste distingue `page_pdf` (numéro automatique, 1-based) de
+`page_imprimée` (à remplir à la main : la page imprimée peut différer de
+la page PDF). Les pages d'index d'un recueil sont ensuite OCRisées
+séparément (champ `titre_ocr` à ajouter au manifeste).
 """
 import argparse
 import json
