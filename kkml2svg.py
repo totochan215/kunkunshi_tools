@@ -271,31 +271,29 @@ def _verse_indent_len(first_line):
 
 def _verse_indent_target(lines):
     """Indentation uniforme des colonnes de continuation d'une section de
-    paroles : sous le PLUS LONG des marqueurs de couplet de la section
-    (女、男、男女、一、…), plus une espace pleine chasse.
-    Ex. marqueurs 女、/男、/男女、 -> max 3 -> indent 4 pour toutes les
-    continuations. Exception : un marqueur NUMÉRAL plus long que 2
-    caractères (十、) ne compte pas s'il y a 10 couplets ou moins —
-    sinon le seul marqueur large (souvent le dernier) élargirait
-    l'indent de toute la section (ex. てぃんさぐぬ花 : 一、+ 1 espace,
-    indent 3 malgré le dixième couplet 十、)."""
-    entries = []   # (longueur du marqueur, numéral ?)
+    paroles : les en-têtes de couplets occupent TOUJOURS 3 caractères
+    pleine chasse (marqueur + espaces pleine chasse de remplissage :
+    ー、　 / 女、　 / 男、　 / 十二、 / 男女、), donc l'indent cible vaut
+    3 pour tout marqueur d'au plus 3 caractères — un marqueur suivi du
+    texte sur la même ligne s'interprète comme « marqueur + espaces
+    jusqu'à 3 » (ex. 安波節 「一、安波ぬ…」 -> indent 3). Un marqueur
+    PLUS LONG que 3 caractères (ex. 二十二、) élargit l'indent de toute
+    la section (max(3, longueur))."""
+    entries = []
     for ln in lines:
         m = VERSE_NUM_RE.match(ln)
         if m:
-            entries.append((len(m.group(0)), True))
+            entries.append(len(m.group(0)))
             continue
         m = VERSE_GENDER_RE.match(ln)
         if m:
-            entries.append((len(m.group(0)), False))
+            entries.append(len(m.group(0)))
             continue
         if VERSE_MARK_RE.match(ln):
-            entries.append((2, False))
+            entries.append(2)
     if not entries:
         return 0
-    if len(entries) <= 10:
-        entries = [(2 if (num and L > 2) else L, num) for L, num in entries]
-    return max(L for L, _ in entries) + 1
+    return max(3, max(entries))
 
 
 # Font stacks pour les styles japonais
@@ -1088,12 +1086,11 @@ def _cap_lyr_column(col_lines, indent, max_u):
     jamais coupés : un crash _parse_ruby avait révélé le besoin).
     Indentation des sous-colonnes : la première sous-colonne garde l'indent
     de la colonne (marqueur en haut = 0) ; les sous-colonnes de CONTINUATION
-    issues du découpage d'une colonne MARQUEUR s'alignent sur le niveau où
-    commence le TEXTE dans cette colonne : longueur du marqueur + 1 (le saut
-    de ligne entre la ligne du marqueur et la ligne de texte) si le marqueur
-    est seul sur sa ligne, longueur du marqueur si le texte suit sur la même
-    ligne. Ex. だんじゅかりゆし couplet 1 : le marqueur 一、 occupe 2
-    unités, だんじゅ… commence à l'unité 3 → la sous-colonne de
+    issues du découpage d'une colonne MARQUEUR s'alignent au niveau
+    marqueur + 1 espace pleine chasse — un marqueur suivi du texte sur la
+    même ligne s'interprète comme « marqueur　» (règle uniforme, cf.
+    _verse_indent_target). Ex. だんじゅかりゆし couplet 1 : le marqueur 一、
+    occupe 2 unités, だんじゅ… commence à l'unité 3 → la sous-colonne de
     continuation (ぇる…) démarre AUSSI à l'unité 3 (même niveau que だん).
     Une colonne sans marqueur repliée garde son indent pour toutes ses
     sous-colonnes."""
@@ -1101,7 +1098,7 @@ def _cap_lyr_column(col_lines, indent, max_u):
         return sum(u for _t, _a, u in _lyr_line_segments(s)) if s else 0
     mk = _verse_indent_len(col_lines[0]) if col_lines else 0
     if indent == 0 and mk > 0:
-        cont_indent = mk if line_units(col_lines[0]) > mk else mk + 1
+        cont_indent = max(3, mk)   # en-tête toujours 3 caractères pleine chasse
     else:
         cont_indent = indent
     def cost(lines, ind):
@@ -1801,6 +1798,18 @@ def _lyrics_columns_layout(verse, base_indent=None):
         else:
             indent = 0
             cur_marker_indent = 0
+        # Hayashi （…） : règle typo japonaise — la parenthèse OUVRANTE pend
+        # juste AU-DESSUS du premier caractère du texte (une position), le
+        # texte s'alignant sur les autres continuations indentées (niveau
+        # base_indent). Réalisé au niveau des données : la ligne reçoit
+        # base_indent - 1 espaces pleine chasse EN TÊTE (les espaces
+        # avancent le flux vertical sans encre, comme partout) : （ au
+        # niveau base_indent - 1, いめ… au niveau base_indent.
+        if (len(col) == 1 and base_indent is not None and base_indent >= 2
+                and _is_hayashi(col[0])):
+            s = col[0].strip()
+            col = ["\u3000" * (base_indent - 1) + s]
+            indent = 0
         layout.append((col, indent))
     return layout
 
@@ -1920,12 +1929,9 @@ def _h_lyrics_layout(data, fs, usable_w):
         first = next((ln for ln in verse if ln), "")
         m = VERSE_NUM_RE.match(first)
         if m:
-            eff = len(m.group(0))
-            if eff > 2 and len(verses) <= 10:
-                eff = 2
-            vindent = eff + 1
+            vindent = max(3, len(m.group(0)))   # en-tête = 3 caractères pleine chasse
         elif _verse_indent_len(first) > 0:
-            vindent = _verse_indent_len(first) + 1
+            vindent = max(3, _verse_indent_len(first))
         for col, indent in _lyrics_columns_layout(verse, vindent):
             if not col:
                 lines.append((0, "", False))
@@ -2734,12 +2740,16 @@ def _wrap_horizontal(tokens, cols):
 # puis bloc du bas idem. Colonne marker d'une DEMI-CASE à droite de chaque dan
 # (comme en vertical). Medley : chaque chanson = une section (::section nom
 # + ::tab) ; le nom de la chanson est imprimé au-dessus des colonnes concernées
-# et la dernière colonne de chaque chanson est complétée par des ー (tenuto `.`,
-# pas de cercle de repos) pour que la chanson suivante commence sur une
-# colonne suivante. Titre global (@title) en colonne verticale en haut à droite,
-# à droite de tous les blocs (dans la marge), répété sur chaque page ; paroles
-# verticales à gauche de la 1re page. Pagination automatique : 64 dans par
-# page A3 (@page_dans / -p peut réduire ce plafond).
+# et la dernière colonne de chaque chanson est complétée par des cases VIDES
+# (pas de tenuto, pas de cercle de repos) pour que la chanson suivante commence
+# sur une colonne suivante. Titre global (@title) en colonne verticale en haut à
+# droite, à droite de tous les blocs (dans la marge), répété sur chaque page.
+# Paroles : la 1re page est RÉSERVÉE aux deux blocs de tablature, pleine
+# largeur ; les paroles n'y restent que si elles sont très compactes
+# (largeur réservée ≤ MEGA_LYRICS_INLINE_MAX_RATIO de la largeur utile),
+# sinon elles sont paginées sur des pages A3 dédiées APRÈS les pages de
+# tablature, en colonnes verticales de droite à gauche. Pagination
+# automatique : 64 dans par page A3 (@page_dans / -p peut réduire ce plafond).
 MEGA_PAGE_W = 42 * CM      # A3 paysage = 42 x 29,7 cm = 1190,55 pt
 MEGA_PAGE_H = 29.7 * CM    # = 841,89 pt
 MEGA_ROWS = 12             # cases par dan (hauteur d'un bloc vertical)
@@ -2748,10 +2758,19 @@ MEGA_BLOCKS = 2            # blocs horizontaux empilés par page A3
 MEGA_MARGIN = 40           # marge extérieure (pt) ~5% page (calage PJ mega)
 MEGA_BLOCK_GAP = 30        # gap vertical entre les blocs ~1 case (calage PJ)
 MEGA_DANS_PER_PAGE = MEGA_BLOCKS * MEGA_DANS_PER_BLOCK  # 64 dans / page A3
+# Les paroles ne restent dans la marge gauche de la 1re page que si elles sont
+# très compactes (largeur réservée ≤ ce ratio de la largeur utile de la grille).
+# Sinon : page 1 réservée aux deux blocs de tablature pleine largeur, paroles
+# paginées sur des pages A3 dédiées après les pages de tablature.
+MEGA_LYRICS_INLINE_MAX_RATIO = 0.15
 
 
 def _mega_title_halfw(text, fs):
-    """Largeur estimée d'un titre de section (CJK = fs, ASCII = 0.55 fs)."""
+    """Largeur estimée d'un titre de section (CJK = fs, ASCII = 0.55 fs),
+    ruby pris en compte via le plan ruby horizontal."""
+    segments = _parse_ruby(text)
+    if _has_ruby(segments):
+        return _plan_horizontal_ruby(segments, fs)[1] / 2
     w = 0.0
     for ch in text:
         w += fs if ord(ch) > 0x2E80 else fs * 0.55
@@ -2769,6 +2788,20 @@ def _mega_span_arrow(out, x_from, x_to, y, color="#555"):
                f'y2="{y:g}" stroke="{color}" stroke-width="0.9"/>')
     out.append(f'<polygon points="{x_to:g},{y:g} {x_to - dx:g},{y - 2.4:g} '
                f'{x_to - dx:g},{y + 2.4:g}" fill="{color}"/>')
+
+def _mega_song_header(out, text, xc, ty):
+    """Nom de chanson en chapeau (layout mega, tablature comme paroles) :
+    horizontal, 11 pt, #555, centré sur xc ; ruby éventuel (syntaxe 《》 et
+    ｛｝《》) rendu au-dessus de la base, largeur réelle du plan ruby."""
+    segments = _parse_ruby(text)
+    if _has_ruby(segments):
+        w = _plan_horizontal_ruby(segments, 11)[1]
+        _render_horizontal_ruby(out, segments, xc - w / 2, ty, 11, "#555")
+    else:
+        out.append(f'<text x="{xc:g}" y="{ty:g}" text-anchor="middle" '
+                   f'font-family="serif" font-size="11" fill="#555">'
+                   f'{escape(text)}</text>')
+
 
 def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
     title = song.meta.get("title", "")
@@ -2813,6 +2846,14 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
     else:
         lyrics_total_w = 0
         lyrics_offset = 0
+    # Page 1 réservée aux deux blocs de tablature, pleine largeur : les
+    # paroles n'y restent que très compactes, sinon elles comprimeraient
+    # cell_w. Elles passent alors sur des pages dédiées (voir plus bas).
+    tab_avail_w = MEGA_PAGE_W - 2 * MEGA_MARGIN - title_offset
+    inline_lyrics = (n_verses > 0
+                     and lyrics_offset <= MEGA_LYRICS_INLINE_MAX_RATIO * tab_avail_w)
+    if not inline_lyrics:
+        lyrics_offset = 0
 
     # Géométrie horizontale : la largeur restante est répartie sur
     # MEGA_DANS_PER_BLOCK dans (cell_w + marker_w = 1,5 cell_w avec marker)
@@ -2832,8 +2873,9 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
     for sec_id, (sec_title, content, kind, vocal) in enumerate(tab_sections):
         cols = _wrap_vertical(list(content), MEGA_ROWS)
         vcols = _wrap_vertical(list(vocal), MEGA_ROWS) if vocal else None
-        # Fin de chanson : compléter la dernière colonne par des ー (tenuto)
-        # pour que la chanson suivante commence sur une colonne suivante
+        # Fin de chanson : compléter la dernière colonne par des cases VIDES
+        # (pas de tenuto) pour que la chanson suivante commence sur une
+        # colonne suivante
         if cols and len(cols[-1]) < MEGA_ROWS:
             pad = MEGA_ROWS - len(cols[-1])
             # Case vide (pas de tenuto) : la chanson suivante commence sur
@@ -2872,9 +2914,8 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
                     x_left = MEGA_PAGE_W - MEGA_MARGIN - title_offset - (lj + 1) * group_w
                     xc = (x_right + x_left) / 2
                     ty = y0 - 6
-                    out.append(f'<text x="{xc:g}" y="{ty:g}" text-anchor="middle" '
-                               f'font-family="serif" font-size="11" fill="#555">'
-                               f'{escape(bdan[li][2])}</text>')
+                    # Nom de chanson, ruby éventuel compris
+                    _mega_song_header(out, bdan[li][2], xc, ty)
                     # Flèches d'association : depuis chaque bord du titre vers
                     # le bord extérieur de l'intervalle de dans du morceau
                     # dans CE bloc (retrait 2 pt pour ne pas toucher le marker).
@@ -2895,9 +2936,10 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
                                syllable_fs=SYLLABLE_FS)
             y0 += MEGA_ROWS * cell_h + MEGA_BLOCK_GAP
 
-        # Paroles verticales à gauche (1re page seulement ; la largeur est
+        # Paroles verticales à gauche (1re page seulement, et uniquement si
+        # assez compactes pour ne pas comprimer la grille ; la largeur est
         # réservée sur toutes les pages pour garder une géométrie constante)
-        if pi == 0 and lyrics_sections:
+        if pi == 0 and inline_lyrics:
             ly0 = MEGA_MARGIN
             vi = 0
             for _, data in lyrics_sections:
@@ -2918,31 +2960,175 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
                         vi += 1
 
         # --- Titre vertical à droite de la grille (répété sur chaque page) --- #
-        if title or tuning:
-            tx = MEGA_PAGE_W - MEGA_MARGIN - TITLE_W / 2
-            ty = MEGA_MARGIN
-            if title:
-                ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
-                                               TITLE_SPACING)
-            else:
-                ty_end = ty
-            ty2 = ty_end
-            for i, ch in enumerate(tuning):
-                _vertical_char(out, ch, tx, ty2 + i * TUNING_SPACING + 15, 15, "#555")
-            genre = song.meta.get("genre", "")
-            author = song.meta.get("author", "")
-            show_genre = genre and genre != author
-            ty3 = ty2 + len(tuning) * TUNING_SPACING + 15
-            if show_genre:
-                for i, ch in enumerate(genre):
-                    _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
-                ty3 += len(genre) * TUNING_SPACING + 15
-            for i, ch in enumerate(author):
-                _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+        _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
+                          TUNING_SPACING)
 
         out.append("</svg>")
         result.append("\n".join(out))
+
+    # --- Pages dédiées aux paroles (si trop larges pour la 1re page) :
+    # mêmes pages A3, même structure que la tablature : DEUX blocs
+    # horizontaux empilés de hauteur MEGA_ROWS*cell_h, colonnes verticales
+    # de droite à gauche, repli impératif à la hauteur du bloc, saut d'une
+    # colonne entre deux chansons, TITRE de chaque chanson en colonne
+    # verticale 「…」 en gras DEVANT ses paroles (remplace le chapeau
+    # horizontal) ; bloc du haut consommé → bloc du bas ; les deux consommés →
+    # page suivante ; colonne titre verticale répétée --- #
+    if lyrics_sections and not inline_lyrics:
+        blk_h = MEGA_ROWS * cell_h
+        usable_w = MEGA_PAGE_W - 2 * MEGA_MARGIN - title_offset
+        col_step = LYRICS_COL_W + LYRICS_VERSE_GAP
+        max_cols = max(1, int((usable_w + LYRICS_VERSE_GAP) / col_step))
+        # Association chanson → paroles : remonter les blocs bruts (le
+        # regroupement attache le titre au ::tab, pas aux ::lyrics qui le
+        # suivent) ; chaque section de paroles doit connaître sa chanson.
+        lyr_by_song = []
+        cur_song = None
+        for blk in song.blocks:
+            if blk.kind == "section":
+                cur_song = blk.label
+            elif blk.kind == "lyrics":
+                lyr_by_song.append((cur_song, blk.lines))
+        # Slots de colonnes : (lines, indent, song_title, song_id), («T»,
+        # song_title, song_id) pour la colonne titre, ou None pour la
+        # colonne vide de séparation entre deux chansons. Chaque
+        # colonne est repliée à la hauteur du bloc (l'indent de couplet ne
+        # porte que sur le premier fragment).
+        ly_cols = []
+        for si, (song_title, data) in enumerate(lyr_by_song):
+            scols = []   # colonnes de paroles de CETTE chanson
+            base_indent = _verse_indent_target(data)
+            for verse in _split_verses(data):
+                for col_lines, indent in _lyrics_columns_layout(verse, base_indent):
+                    # Niveau de continuation des fragments de REPLI : marqueur
+                    # + 1 espace pleine chasse (un marqueur inline s'inter-
+                    # prète comme « marqueur　», même règle que l'indent
+                    # cible de la section) ; colonne de continuation : son
+                    # indent.
+                    if col_lines and _verse_indent_len(col_lines[0]) > 0:
+                        wrap_ind = max(3, _verse_indent_len(col_lines[0]))
+                    elif indent > 0:
+                        wrap_ind = indent
+                    else:
+                        wrap_ind = 0
+                    first = True
+                    chunk = []
+                    used = (indent * LYRICS_SP) + LYRICS_FS
+                    for line in col_lines:
+                        # repli impératif : hauteur réelle de la ligne
+                        # (par caractère, ruby compris) + interligne
+                        lh = (LYRICS_SP
+                              + _vertical_text_height(line, LYRICS_FS, LYRICS_SP))
+                        if chunk and used + lh > blk_h:
+                            scols.append((chunk, indent if first else wrap_ind,
+                                          song_title, si))
+                            first = False
+                            chunk = []
+                            used = LYRICS_FS + wrap_ind * LYRICS_SP
+                        chunk.append(line)
+                        used += lh
+                    if chunk:
+                        scols.append((chunk, indent if first else wrap_ind,
+                                      song_title, si))
+            # Titre de chanson en COLONNE VERTICALE 「…」 en gras, placé
+            # AVANT les paroles de la chanson (sens de lecture droite →
+            # gauche : colonne la plus à droite du run). Il REMPLACE le
+            # chapeau horizontal (nom + flèches) des pages dédiées.
+            # Guillemets pivotés 90° par _vertical_char, comme toute
+            # ponctuation verticale. Slot («T», titre, song_id).
+            if scols:
+                if ly_cols:
+                    ly_cols.append(None)   # saut de colonne entre chansons
+                if song_title:   # paroles sans ::section : pas de titre
+                    ly_cols.append(("T", song_title, si))
+                ly_cols.extend(scols)
+        per_page = MEGA_BLOCKS * max_cols
+        ly_pages = [ly_cols[i:i + per_page]
+                    for i in range(0, len(ly_cols), per_page)] or [[]]
+        for page_cols in ly_pages:
+            out = _svg_open_print(MEGA_PAGE_W, MEGA_PAGE_H, 42, 29.7, title=title)
+            for b in range(MEGA_BLOCKS):
+                bcols = page_cols[b * max_cols:(b + 1) * max_cols]
+                if not bcols:
+                    break
+                y0 = MEGA_MARGIN + b * (blk_h + MEGA_BLOCK_GAP)
+                # (Plus de chapeau horizontal : le titre de chaque chanson
+                # est rendu en colonne verticale 「…」 en gras, devant ses
+                # paroles — cf. slot «T» ci-dessous.)
+                # Colonnes du bloc, de droite à gauche
+                for vi, col in enumerate(bcols):
+                    if col is None:
+                        continue
+                    vx = (MEGA_PAGE_W - MEGA_MARGIN - title_offset
+                          - LYRICS_COL_W / 2 - vi * col_step)
+                    if col[0] == "T":
+                        # Titre vertical en gras, MÊME TAILLE que le texte
+                        # des couplets (LYRICS_FS) et EXACTEMENT la même
+                        # pose que les hayashi indentés à 3 positions :
+                        # le texte part de la 3e position du bloc (baseline
+                        # y0 + fs + 3·sp) et le guillemet OUVRANT 「 pend
+                        # une position AU-DESSUS du premier caractère
+                        # (2e position, pivoté 90° par _vertical_char),
+                        # 」 referme sous le dernier caractère. Garde
+                        # anti-débordement : fs réduit si le titre dépasse
+                        # la hauteur du bloc.
+                        tfs = LYRICS_FS
+                        tsp = LYRICS_SP
+                        need = 4 * tsp + _vertical_text_height(col[1], tfs, tsp)
+                        if need > blk_h:
+                            tfs = max(5, int(tfs * (blk_h - 4 * tsp) / max(need - 4 * tsp, 1)))
+                            tsp = int(tfs * 1.2)
+                        out.append('<g font-weight="bold">')
+                        # 「 pendu une position au-dessus du premier caractère
+                        _vertical_char(out, "「", vx, y0 + tfs + 2 * tsp, tfs, "#000")
+                        _render_vertical_text(out, col[1], vx, y0 + tfs + 3 * tsp,
+                                              tfs, "#000", tsp)
+                        _vertical_char(out, "」", vx, y0 + tfs + 3 * tsp
+                                       + _vertical_text_height(col[1], tfs, tsp),
+                                       tfs, "#000")
+                        out.append('</g>')
+                        continue
+                    col_lines, indent = col[0], col[1]
+                    cy = y0 + LYRICS_FS
+                    if indent > 0:
+                        cy += indent * LYRICS_SP
+                    for lli, line in enumerate(col_lines):
+                        if lli > 0:
+                            cy += LYRICS_SP
+                        cy = _render_vertical_text(out, line, vx, cy,
+                                                   LYRICS_FS, "#333", LYRICS_SP)
+            _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
+                              TUNING_SPACING)
+            out.append("</svg>")
+            result.append("\n".join(out))
     return result
+
+
+def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
+                      TUNING_SPACING):
+    """Colonne titre vertical à droite de la page mega (titre, accordage,
+    genre, auteur) — répétée sur chaque page, tablature comme paroles."""
+    if title or tuning:
+        tx = MEGA_PAGE_W - MEGA_MARGIN - TITLE_W / 2
+        ty = MEGA_MARGIN
+        if title:
+            ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
+                                          TITLE_SPACING)
+        else:
+            ty_end = ty
+        ty2 = ty_end
+        for i, ch in enumerate(tuning):
+            _vertical_char(out, ch, tx, ty2 + i * TUNING_SPACING + 15, 15, "#555")
+        genre = song.meta.get("genre", "")
+        author = song.meta.get("author", "")
+        show_genre = genre and genre != author
+        ty3 = ty2 + len(tuning) * TUNING_SPACING + 15
+        if show_genre:
+            for i, ch in enumerate(genre):
+                _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+            ty3 += len(genre) * TUNING_SPACING + 15
+        for i, ch in enumerate(author):
+            _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
 
 
 # --------------------------------------------------------------------------- #
@@ -4003,6 +4189,26 @@ def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif"):
             y += sp
         return y
     return _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family)
+
+
+def _vertical_text_height(text, fs, sp):
+    """Hauteur réellement consommée par _render_vertical_text(text, …, sp) :
+    avance par caractère (espaces compris), caractères combinants ignorés ;
+    avec ruby, hauteur du plan ruby vertical (l'écartement ruby allonge le
+    flux). Utilisée pour le repli des colonnes de paroles en blocs de
+    hauteur fixée (layout mega)."""
+    segments = _parse_ruby(text)
+    if _has_ruby(segments):
+        return _plan_vertical_ruby(segments, fs, sp)[1]
+    h = 0.0
+    for ch in text:
+        if ch.isspace():
+            h += sp
+            continue
+        if unicodedata.combining(ch) or ch in VARIATION_SELECTORS:
+            continue
+        h += sp
+    return h
 
 
 def _char_w(ch, fs):
