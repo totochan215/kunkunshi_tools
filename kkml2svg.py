@@ -13,7 +13,7 @@ Layout vertical (défaut) : les cases se lisent de haut en bas et de
 droite à gauche, comme dans les kunkunshi traditionnels.
 Layout horizontal : de gauche à droite et de haut en bas (style songbook).
 
-Métadonnée @layout vertical|horizontal|nomura|chindami|tuto dans le .kkml, ou -l/--layout en CLI.
+Métadonnée @layout vertical|horizontal|nomura|chindami|tuto|mega dans le .kkml, ou -l/--layout en CLI.
 
 Options supplémentaires en-tête KKML (défauts : @layout vertical,
 @marker on, @font_style mincho, @shaku_circled off, @shaku_sharp off) :
@@ -323,7 +323,7 @@ def parse_kkml(text):
                 except ValueError:
                     pass
             elif key == "layout":
-                song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami", "tuto") else "vertical"
+                song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami", "tuto", "mega") else "vertical"
             else:
                 song.meta[key] = val
             i += 1
@@ -457,7 +457,7 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
     # -c ne s'applique qu'aux layouts libres (vertical/horizontal).
     if cols is None:
         cols = TUTO_DEFAULT_COLS if layout == "tuto" else 12
-    if layout in ("chindami", "nomura"):
+    if layout in ("chindami", "nomura", "mega"):
         cols = None  # ignoré : le layout fixe ses propres cases/dan
 
     title = song.meta.get("title", "")
@@ -543,6 +543,8 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         svgs = _render_nomura(song, sections, font_size, marker, opts)
     elif layout == "tuto":
         svgs = _render_tuto(song, sections, cols, page_dans, marker, opts)
+    elif layout == "mega":
+        svgs = _render_mega(song, sections, marker, opts, page_dans=page_dans)
     elif layout == "vertical":
         svgs = _render_vertical(song, sections, cols, cell_w, cell_h,
                                 font_size, MARGIN_L, MARGIN_R, MARGIN_T, header_h,
@@ -2101,6 +2103,174 @@ def _wrap_horizontal(tokens, cols):
 
 
 # --------------------------------------------------------------------------- #
+# 3d. Rendu mega (page A3 paysage : deux blocs horizontaux de 32 dans x 12 cases)
+# --------------------------------------------------------------------------- #
+# Mise en page "mega" (demande utilisateur, exemple en PJ) : une page A3
+# paysage (42 x 29,7 cm) tient DEUX blocs horizontaux empilés ; chaque bloc
+# contient jusqu'à 32 blocs verticaux (dans) de 12 cases, lus de haut en bas
+# et de droite à gauche dans chaque bloc (le bloc du haut se lit avant celui
+# du bas). Colonne marker d'une DEMI-CASE à droite de chaque dan (comme en
+# vertical). Titre/accordage en colonne verticale à droite (répétés sur chaque
+# page), paroles verticales à gauche de la 1re page. Pagination automatique :
+# 64 dans par page A3 (@page_dans / -p peut réduire ce plafond).
+MEGA_PAGE_W = 42 * CM      # A3 paysage = 42 x 29,7 cm = 1190,55 pt
+MEGA_PAGE_H = 29.7 * CM    # = 841,89 pt
+MEGA_ROWS = 12             # cases par dan (hauteur d'un bloc vertical)
+MEGA_DANS_PER_BLOCK = 32   # blocs verticaux (dans) par bloc horizontal
+MEGA_BLOCKS = 2            # blocs horizontaux empilés par page A3
+MEGA_MARGIN = 20           # marge extérieure (pt)
+MEGA_BLOCK_GAP = 24        # gap vertical entre les blocs (titres de section)
+MEGA_DANS_PER_PAGE = MEGA_BLOCKS * MEGA_DANS_PER_BLOCK  # 64 dans / page A3
+
+
+def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
+    title = song.meta.get("title", "")
+    tuning = song.meta.get("tuning", "本調子")
+
+    # Syllabes vocales présentes -> colonne marker forcée (comme vertical)
+    has_vocal = any(s[3] or s[2] == "vocal" for s in sections)
+    marker = marker or has_vocal
+
+    # Géométrie verticale : MEGA_BLOCKS blocs de MEGA_ROWS cases + gaps, marges
+    cell_h = ((MEGA_PAGE_H - 2 * MEGA_MARGIN - (MEGA_BLOCKS - 1) * MEGA_BLOCK_GAP)
+              / (MEGA_BLOCKS * MEGA_ROWS))
+    fs = max(8, int(cell_h * 0.38))  # ratio fs/case ~0,38 (calibrage Portama)
+
+    # --- Colonne titre verticale (à droite de la grille, comme vertical) --- #
+    TITLE_W = 36
+    TITLE_GAP = 10
+    TITLE_SPACING = 30
+    TUNING_SPACING = 22
+    title_ruby_w = _ruby_needs_extra_width(title, 26) if title else 0
+    title_offset = (TITLE_W + TITLE_GAP + title_ruby_w) if (title or tuning) else 0
+
+    # --- Paroles verticales (à gauche de la 1re page) --- #
+    lyrics_size = opts.get('lyrics_size', 'medium') if opts else 'medium'
+    LYRICS_FS = int(fs * {'small': 0.5, 'medium': 0.75, 'big': 1.0}.get(lyrics_size, 0.75))
+    LYRICS_SP = int(LYRICS_FS * 1.2)
+    LYRICS_COL_W = int(LYRICS_FS * 1.33)
+    LYRICS_VERSE_GAP = int(LYRICS_COL_W * 0.8)
+    lyrics_sections = [(s[0], s[1]) for s in sections if s[2] == "lyrics"]
+    n_verses = 0
+    max_ruby_w = 0
+    for _, data in lyrics_sections:
+        for verse in _split_verses(data):
+            n_verses += len(_lyrics_columns(verse))
+            for line in verse:
+                for seg in line.split('|'):
+                    if seg:
+                        max_ruby_w = max(max_ruby_w, _ruby_needs_extra_width(seg, LYRICS_FS))
+    if n_verses > 0:
+        lyrics_total_w = n_verses * LYRICS_COL_W + (n_verses - 1) * LYRICS_VERSE_GAP
+        lyrics_offset = lyrics_total_w + 12 + LYRICS_COL_W + max_ruby_w
+    else:
+        lyrics_total_w = 0
+        lyrics_offset = 0
+
+    # Géométrie horizontale : la largeur restante est répartie sur
+    # MEGA_DANS_PER_BLOCK dans (cell_w + marker_w = 1,5 cell_w avec marker)
+    avail_w = MEGA_PAGE_W - 2 * MEGA_MARGIN - title_offset - lyrics_offset
+    if marker:
+        cell_w = avail_w / (MEGA_DANS_PER_BLOCK * 1.5)
+        marker_w = cell_w / 2
+    else:
+        cell_w = avail_w / MEGA_DANS_PER_BLOCK
+        marker_w = 0
+    group_w = cell_w + marker_w
+    SYLLABLE_FS = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else int(fs * 0.6)
+
+    # --- Flux de dans (colonnes de MEGA_ROWS cases), vocal synchronisé --- #
+    stream = []  # (col, vocal_col|None, sec_title|None)
+    for sec_title, content, kind, vocal in sections:
+        if kind != "tab":
+            continue
+        cols = _wrap_vertical(list(content), MEGA_ROWS)
+        vcols = _wrap_vertical(list(vocal), MEGA_ROWS) if vocal else None
+        for ci, col in enumerate(cols):
+            stream.append((col, vcols[ci] if vcols and ci < len(vcols) else None,
+                           sec_title if ci == 0 else None))
+
+    per_page = MEGA_DANS_PER_PAGE
+    if page_dans:
+        per_page = max(1, min(page_dans, MEGA_DANS_PER_PAGE))
+    pages = [stream[i:i + per_page] for i in range(0, len(stream), per_page)] or [[]]
+
+    result = []
+    for pi, page_dans in enumerate(pages):
+        out = _svg_open_print(MEGA_PAGE_W, MEGA_PAGE_H, 42, 29.7, title=title)  # A3, 600 dpi
+        y0 = MEGA_MARGIN
+        for b in range(MEGA_BLOCKS):
+            bdan = page_dans[b * MEGA_DANS_PER_BLOCK:(b + 1) * MEGA_DANS_PER_BLOCK]
+            if not bdan:
+                break
+            cols = [d[0] for d in bdan]
+            vcols = [d[1] if d[1] is not None else ["-"] * MEGA_ROWS for d in bdan]
+            # Titre de section au-dessus du dan où la section démarre
+            for li, d in enumerate(bdan):
+                if d[2]:
+                    idx = b * MEGA_DANS_PER_BLOCK + li
+                    xe = MEGA_PAGE_W - MEGA_MARGIN - title_offset - idx * group_w
+                    out.append(f'<text x="{xe:g}" y="{y0 - 6:g}" text-anchor="end" '
+                               f'font-family="serif" font-size="11" fill="#555">'
+                               f'{escape(d[2])}</text>')
+            _draw_vertical_tab(out, cols, MEGA_ROWS, MEGA_MARGIN, y0,
+                               cell_w, cell_h, fs, MEGA_PAGE_W, MEGA_MARGIN,
+                               marker_w, title_offset, opts, end_circle=False,
+                               vocal_data=vcols if has_vocal else None,
+                               syllable_fs=SYLLABLE_FS)
+            y0 += MEGA_ROWS * cell_h + MEGA_BLOCK_GAP
+
+        # Paroles verticales à gauche (1re page seulement ; la largeur est
+        # réservée sur toutes les pages pour garder une géométrie constante)
+        if pi == 0 and lyrics_sections:
+            ly0 = MEGA_MARGIN
+            vi = 0
+            for _, data in lyrics_sections:
+                for verse in _split_verses(data):
+                    layout = _lyrics_columns_layout(verse, _verse_indent_target(data))
+                    for col_lines, verse_indent in layout:
+                        vx = (MEGA_MARGIN + lyrics_total_w
+                              - vi * (LYRICS_COL_W + LYRICS_VERSE_GAP)
+                              - LYRICS_COL_W / 2)
+                        cy = ly0 + LYRICS_FS
+                        if verse_indent > 0:
+                            cy += verse_indent * LYRICS_SP
+                        for li, line in enumerate(col_lines):
+                            if li > 0:
+                                cy += LYRICS_SP
+                            cy = _render_vertical_text(out, line, vx, cy,
+                                                       LYRICS_FS, "#333", LYRICS_SP)
+                        vi += 1
+
+        # --- Titre vertical à droite de la grille (répété sur chaque page) --- #
+        if title or tuning:
+            tx = MEGA_PAGE_W - MEGA_MARGIN - TITLE_W / 2
+            ty = MEGA_MARGIN
+            if title:
+                ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
+                                               TITLE_SPACING)
+            else:
+                ty_end = ty
+            ty2 = ty_end
+            for i, ch in enumerate(tuning):
+                _vertical_char(out, ch, tx, ty2 + i * TUNING_SPACING + 15, 15, "#555")
+            genre = song.meta.get("genre", "")
+            author = song.meta.get("author", "")
+            show_genre = genre and genre != author
+            ty3 = ty2 + len(tuning) * TUNING_SPACING + 15
+            if show_genre:
+                for i, ch in enumerate(genre):
+                    _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+                ty3 += len(genre) * TUNING_SPACING + 15
+            for i, ch in enumerate(author):
+                _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+
+        out.append("</svg>")
+        result.append("\n".join(out))
+    return result
+
+
+# --------------------------------------------------------------------------- #
 # Helpers
 # --------------------------------------------------------------------------- #
 def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None, tech_map=None):
@@ -3090,7 +3260,7 @@ def main():
     ap.add_argument("-o", "--output", help="fichier SVG de sortie")
     ap.add_argument("-c", "--cells-per-dan", dest="cols", type=int,
                     help="cellules par dan : lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
-    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami", "tuto"],
+    ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami", "tuto", "mega"],
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
                     help="nombre max de dans par page (pagination multipage, surcharge @page_dans)")

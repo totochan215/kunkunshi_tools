@@ -29,7 +29,7 @@ Rend un fichier KKML sous forme de mise en page SVG, en appliquant les options d
     python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
     cat chanson.kkml | python3 kkml2svg.py -          # stdin -> stdout
 
-Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto`, `-p/--dans-per-page`.
+Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page`.
 
 ### kkml_cleaner.py — normaliser un KKML
 
