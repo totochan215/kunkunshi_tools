@@ -31,7 +31,7 @@ Rend un fichier KKML sous forme de mise en page SVG, en appliquant les options d
 
 Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page`.
 
-### kkml_cleaner.py — normaliser un KKML
+### kkml_cleaner.py
 
 Normalise un fichier KKML sous sa forme canonique. 
 (idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
