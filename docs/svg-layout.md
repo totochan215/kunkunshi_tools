@@ -177,12 +177,13 @@ https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases 
 
 ### Mise en page mega (`@layout mega`)
 
-Le layout `mega` produit une page **A3 paysage (42 × 29,7 cm)** contenant **deux blocs horizontaux empilés**, chacun tenant jusqu'à **32 blocs verticaux (dans) de 12 cases**, lus de haut en bas et de droite à gauche dans chaque bloc (le bloc du haut se lit avant celui du bas) — soit **64 dans (768 cases) par page**.
+Le layout `mega` produit une page **A3 paysage (42 × 29,7 cm)** contenant **deux blocs horizontaux empilés**, chacun tenant jusqu'à **32 blocs verticaux (dans) de 12 cases** — soit **64 dans (768 cases) par page**. **Ordre de lecture** : bloc horizontal du haut d'abord, de haut en bas et de droite à gauche dans chaque dan, puis bloc horizontal du bas idem.
 
-- Constantes : `MEGA_PAGE_W = 42 cm`, `MEGA_PAGE_H = 29,7 cm`, `MEGA_ROWS = 12`, `MEGA_DANS_PER_BLOCK = 32`, `MEGA_BLOCKS = 2`, `MEGA_MARGIN = 20 pt`, `MEGA_BLOCK_GAP = 24 pt` (gap entre les deux blocs, qui accueille les titres de section).
+- Constantes : `MEGA_PAGE_W = 42 cm`, `MEGA_PAGE_H = 29,7 cm`, `MEGA_ROWS = 12`, `MEGA_DANS_PER_BLOCK = 32`, `MEGA_BLOCKS = 2`, `MEGA_MARGIN = 20 pt`, `MEGA_BLOCK_GAP = 24 pt` (gap entre les deux blocs, qui accueille les noms de chansons).
 - Géométrie dérivée de la page : `cell_h = (page_h − 2 × marge − gap) / (2 × 12)` ; `cell_w = largeur restante / (32 × 1,5)` avec marker, sinon `largeur restante / 32` ; `fs = 0,38 × cell_h`.
 - **Colonne marker d'une demi-case** (`marker_w = cell_w / 2`) à droite de chaque dan, comme en vertical ; forcée si `::vocal` est présent, sinon pilotée par `@marker` (défaut `on`). Flèches de répétition et syllabes vocales dans la colonne marker (rendu repris de `_draw_vertical_tab`).
-- La largeur restante exclut la **colonne titre verticale à droite** (`title_offset`, répétée sur chaque page, comme en vertical) et l'**espace des paroles verticales à gauche de la première page** (largeur réservée sur toutes les pages pour garder une géométrie constante).
-- Titre de section (`::section`) : texte horizontal de 11 pt au-dessus du bloc, aligné à droite sur le premier dan de la section.
+- **Titre global** (`@title`, ex. le nom du medley) en **colonne verticale en haut à droite, à droite de tous les blocs (dans la marge droite)** ; accordage/genre/auteur en dessous, répétés sur chaque page. L'espace de cette colonne (`title_offset`) est exclu de la largeur de la grille.
+- **Medley** : chaque chanson = une section (`::section <nom>` + `::tab`), plusieurs chansons compilées sur une même page (jusqu'à 64 dans). Le **nom de chaque chanson est imprimé en horizontal (11 pt) au-dessus des colonnes concernées** — centré sur l'étendue des dans de la chanson dans chaque bloc (une chanson qui traverse la césure entre les deux blocs est nommée au-dessus de ses colonnes dans chaque bloc). La **dernière colonne de chaque chanson est complétée par des cases ー** (tenuto `.`, pas de cercle de repos ⚪︎) pour que la chanson suivante commence sur une colonne suivante.
+- Paroles verticales à gauche de la première page (largeur réservée sur toutes les pages pour garder une géométrie constante).
 - Pagination automatique multipage : 64 dans par page A3 (`fichier-1.svg`, `fichier-2.svg`…) ; `@page_dans` / `-p N` réduit ce plafond. Les dans ne sont jamais coupés entre deux blocs.
 - Sortie imprimable : `width="42cm" height="29.7cm"`, viewBox en pt, dpi Inkscape 600 (comme `nomura`).

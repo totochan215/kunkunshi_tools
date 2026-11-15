@@ -2107,12 +2107,17 @@ def _wrap_horizontal(tokens, cols):
 # --------------------------------------------------------------------------- #
 # Mise en page "mega" (demande utilisateur, exemple en PJ) : une page A3
 # paysage (42 x 29,7 cm) tient DEUX blocs horizontaux empilés ; chaque bloc
-# contient jusqu'à 32 blocs verticaux (dans) de 12 cases, lus de haut en bas
-# et de droite à gauche dans chaque bloc (le bloc du haut se lit avant celui
-# du bas). Colonne marker d'une DEMI-CASE à droite de chaque dan (comme en
-# vertical). Titre/accordage en colonne verticale à droite (répétés sur chaque
-# page), paroles verticales à gauche de la 1re page. Pagination automatique :
-# 64 dans par page A3 (@page_dans / -p peut réduire ce plafond).
+# contient jusqu'à 32 blocs verticaux (dans) de 12 cases. Ordre de lecture :
+# bloc du haut d'abord, de haut en bas et de droite à gauche dans chaque dan,
+# puis bloc du bas idem. Colonne marker d'une DEMI-CASE à droite de chaque dan
+# (comme en vertical). Medley : chaque chanson = une section (::section nom
+# + ::tab) ; le nom de la chanson est imprimé au-dessus des colonnes concernées
+# et la dernière colonne de chaque chanson est complétée par des ー (tenuto `.`,
+# pas de cercle de repos) pour que la chanson suivante commence sur une
+# colonne suivante. Titre global (@title) en colonne verticale en haut à droite,
+# à droite de tous les blocs (dans la marge), répété sur chaque page ; paroles
+# verticales à gauche de la 1re page. Pagination automatique : 64 dans par
+# page A3 (@page_dans / -p peut réduire ce plafond).
 MEGA_PAGE_W = 42 * CM      # A3 paysage = 42 x 29,7 cm = 1190,55 pt
 MEGA_PAGE_H = 29.7 * CM    # = 841,89 pt
 MEGA_ROWS = 12             # cases par dan (hauteur d'un bloc vertical)
@@ -2180,15 +2185,21 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
     SYLLABLE_FS = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else int(fs * 0.6)
 
     # --- Flux de dans (colonnes de MEGA_ROWS cases), vocal synchronisé --- #
-    stream = []  # (col, vocal_col|None, sec_title|None)
-    for sec_title, content, kind, vocal in sections:
-        if kind != "tab":
-            continue
+    stream = []  # (col, vocal_col|None, sec_title|None, sec_id)
+    tab_sections = [s for s in sections if s[2] == "tab"]
+    for sec_id, (sec_title, content, kind, vocal) in enumerate(tab_sections):
         cols = _wrap_vertical(list(content), MEGA_ROWS)
         vcols = _wrap_vertical(list(vocal), MEGA_ROWS) if vocal else None
+        # Fin de chanson : compléter la dernière colonne par des ー (tenuto)
+        # pour que la chanson suivante commence sur une colonne suivante
+        if cols and len(cols[-1]) < MEGA_ROWS:
+            pad = MEGA_ROWS - len(cols[-1])
+            cols[-1] = list(cols[-1]) + [SUSTAIN_TOKEN] * pad
+            if vcols and len(vcols) == len(cols):
+                vcols[-1] = list(vcols[-1]) + ["-"] * pad
         for ci, col in enumerate(cols):
             stream.append((col, vcols[ci] if vcols and ci < len(vcols) else None,
-                           sec_title if ci == 0 else None))
+                           sec_title, sec_id))
 
     per_page = MEGA_DANS_PER_PAGE
     if page_dans:
@@ -2205,14 +2216,21 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None):
                 break
             cols = [d[0] for d in bdan]
             vcols = [d[1] if d[1] is not None else ["-"] * MEGA_ROWS for d in bdan]
-            # Titre de section au-dessus du dan où la section démarre
-            for li, d in enumerate(bdan):
-                if d[2]:
-                    idx = b * MEGA_DANS_PER_BLOCK + li
-                    xe = MEGA_PAGE_W - MEGA_MARGIN - title_offset - idx * group_w
-                    out.append(f'<text x="{xe:g}" y="{y0 - 6:g}" text-anchor="end" '
+            # Nom de chaque chanson (section) centré au-dessus de ses colonnes
+            # dans ce bloc (runs contigus de même section)
+            li = 0
+            while li < len(bdan):
+                lj = li
+                while lj + 1 < len(bdan) and bdan[lj + 1][3] == bdan[li][3]:
+                    lj += 1
+                if bdan[li][2]:
+                    x_right = MEGA_PAGE_W - MEGA_MARGIN - title_offset - li * group_w
+                    x_left = MEGA_PAGE_W - MEGA_MARGIN - title_offset - (lj + 1) * group_w
+                    xc = (x_right + x_left) / 2
+                    out.append(f'<text x="{xc:g}" y="{y0 - 6:g}" text-anchor="middle" '
                                f'font-family="serif" font-size="11" fill="#555">'
-                               f'{escape(d[2])}</text>')
+                               f'{escape(bdan[li][2])}</text>')
+                li = lj + 1
             _draw_vertical_tab(out, cols, MEGA_ROWS, MEGA_MARGIN, y0,
                                cell_w, cell_h, fs, MEGA_PAGE_W, MEGA_MARGIN,
                                marker_w, title_offset, opts, end_circle=False,
