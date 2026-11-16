@@ -26,8 +26,8 @@ contenu
 ::
 
 ::tab
-<tablature sous forme de cases représentant des temps, séparées par des espaces ;
-au sein de chaque case, figures représentant des notes, leurs altérations et leurs
+<tablature sous forme de cellules représentant des temps, séparées par des espaces ;
+au sein de chaque cellule, figures représentant des notes, leurs altérations et leurs
 techniques de jeu. Ajout possible de boucles instrumentales ou vocales.>
 ::
 
