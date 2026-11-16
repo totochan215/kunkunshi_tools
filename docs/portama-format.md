@@ -204,7 +204,7 @@ Valeurs de `orn` possibles :
 
 ## Encodage
 
-Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par des caractères PUA à 3 octets, de fait ces fichiers ne sont pas totalement lisibles dans un éditeur de texte. 
+Le fichier JSON Portama est encodé en UTF-8. Les positions, ornements et yubii sont codés par des caractères PUA à 3 octets ; de fait, ces fichiers ne sont pas totalement lisibles dans un éditeur de texte, sauf à disposer des polices kk4font1.ttf et/ou kk4font2.ttf installées.
 
 ## Colonne marker et données vocales (`allRubyData`)
 
