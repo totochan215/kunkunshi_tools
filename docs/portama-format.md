@@ -210,18 +210,18 @@ Le fichier JSON Portama est encodé en UTF-8. Les positions, ornements et yubii 
 
 `allRubyData` contient le texte vocal affiché dans la colonne *marker*. Clé = numéro de page en string, valeur = tableau de lignes, 1 ligne par *dan*.
 
+## Capacités audio
+
+Portama peut jouer l'audio des tablatures en interprétant chaque kandokoro comme une hauteur sonore basée sur `choshi` (carte du décalage de chaque corde en demi-tons par rapport à la note de base) et `chogen` (décalage global en demi-tons de la note de base).
+Le rendu audio se base sur `speed`, `rhythm` et `rhythmMode`. Les boucles instrumentales et vocales sont suivies ; `trackCount` indique le nombre de boucles à parcourir, et `currentTrack` l'indice actuel de répétition.
+`puaAudioMap` de main.js donne les positions exactes par corde.
+
 ## Limitations de Portama vs. KKML
 
 Portama ne connaît ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni aucun kanji hors de sa carte PUA.
 
 - Portama → KKML : sans perte (tout ce que Portama encode existe en KKML).
 - KKML → Portama : impossible pour les pièces utilisant des positions en イ hors carte Portama ou tout kanji hors du sous-ensemble Portama. Par ailleurs, les fichiers KKML présentant des découpages de cellules complexes par les vocals seront rendus de manière imparfaite dans Portama (risque de débordements).
-
-## Capacités audio
-
-Portama peut jouer l'audio des tablatures en interprétant chaque kandokoro comme une hauteur sonore basée sur `choshi` (carte du décalage de chaque corde en demi-tons par rapport à la note de base) et `chogen` (décalage global en demi-tons de la note de base).
-Le rendu audio se base sur `speed`, `rhythm` et `rhythmMode`. Les boucles instrumentales et vocales sont suivies ; `trackCount` indique le nombre de boucles à parcourir, et `currentTrack` l'indice actuel de répétition.
-`puaAudioMap` de main.js donne les positions exactes par corde.
 
 ## Source
 
