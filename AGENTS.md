@@ -78,7 +78,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   `::ruby`) sera le substrat commun à P3.
 - **Règles de layouting** (seuils appliqués au rendu, pas au format). Chaque règle a
   un défaut par layout et une méta KKML d'override (CLI prioritaire sur méta, comme
-  `@cells_per_dan`/`-c`, `@layout`/`-l`, `@page_dans`/`-p`) :
+  `@cells_per_dan`/`-c`, `@layout`/`-l`, `@dans_per_page`/`-p`) :
   - `@overflow allow|shrink|truncate|error` — syllabes/caractères qui dépassent la
     case. Défaut vertical : `allow` (chevauchement bord inférieur accepté, comportement
     historique). Défaut nomura : `error` (fidélité stricte à la grille traditionnelle).
@@ -159,7 +159,7 @@ privés ne sont pas référencés ici.
 
 ## `kkml2svg.py`
 
-Python 3 autonome, ~2096 lignes. Ce dépôt est la source de vérité du code.
+Python 3 autonome, ~4400 lignes (4403 au 2026-11-15). Ce dépôt est la source de vérité du code.
 
 ### CLI
 
@@ -169,14 +169,14 @@ python3 kkml2svg.py chanson.kkml            # -> chanson.svg
 cat chanson.kkml | python3 kkml2svg.py -     # stdin -> stdout
 ```
 
-Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal|nomura|chindami|tuto|mega`
+Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page N`
 
 ### Structure du code
 
 ### 0. Rendu multipage (`render_svg`)
 
 - `render_svg(...)` retourne désormais une **liste de SVG** (un par page).
-- Pagination : `@page_dans N` (méta) ou `-p/--page-dans N` (CLI). Défaut : None = une seule page (comportement historique).
+- Pagination : `@dans_per_page N` (méta ; `@page_dans` accepté comme ancien nom) ou `-p/--dans-per-page N` (CLI ; `--page-dans` reste accepté en alias). Défaut : None = une seule page (comportement historique).
 - `_render_vertical` découpe les sections tab en pages de N dans ; les colonnes vocales (`vocal_data`) sont tranchées en synchronisation avec les colonnes de tab (même slice).
 - Sections lyrics et titre vertical : répétés sur chaque page.
 - `main()` : 1 page → sortie simple ; n pages → `stem-1.svg` … `stem-n.svg`.
@@ -204,7 +204,7 @@ Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal|nomura|chinda
 #### 3b. Rendu vocal (`_draw_vertical_vocal`, ~613 + `SMALL_KANA`)
 
 - Un token = une syllabe, rendu dans la colonne marker centré sur la note
-- Token multi-caractères empilé : caractère principal aligné sur la note, caractères combinants dessous (espacement `syllable_fs * 0.85`), ー pivoté 90°
+- Token multi-caractères empilé : caractère principal aligné sur la note, caractères combinants dessous (espacement `int(syllable_fs * 1.15)` entre caractères combinants ; `SYLLABLE_SP = int(SYLLABLE_FS * 0.9)` entre syllabes d'une même case), ー pivoté 90°
 - Chevauchement du bord inférieur de case accepté
 
 #### 3c-nomura. Rendu Nomura-ryu (`_render_nomura`)
@@ -254,7 +254,7 @@ Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal|nomura|chinda
 
 - `POSITION_CHARS`, `REST_VARIANTS`, `TECHNIQUE_SUFFIXES` (uchi-utu `'` (alias `*`, `｀`), kaki-utu `^`, aki-utu `v`, kachi-utu `<`, kuubanchi `s`, taachi `=`)
 - `HIGH_PREFIX_I` / `HIGH_PREFIX_RO` (positions hautes イ/ロ + kanji compatibles)
-- `FONT_STYLES` : serif (défaut), mincho, gothic (`@font_style`)
+- `FONT_STYLES` : mincho (défaut), gothic, serif (`@font_style`)
 - `VERSE_*` : regex de numéros de couplet, puces, genre (男/女)
 
 ### Paramètres par défaut
@@ -287,14 +287,14 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 
 ## Détails de rendu (fonction render_cell) — déplacés depuis docs/notation.md
 
-- Noire : `font-size = fs` (ou `int(fs*0.67)` si kuubanchi), `y = cy + 7`, `text-anchor = middle`
-- Croche, note principale : `font-size = effective_fs`, `y = cy + 7`
-- Croche, note à cheval : `font-size = int(effective_fs * 0.713)` (+15%), position `straddle_y` calculée sur `fs` de base (inchangée par `s`), `y = straddle_y`
-- Shuffle, note supérieure : `font-size = int(effective_fs * 0.72)`, `y = cy - fs * 0.18 + sh_pos/3` (position sur fs de base)
-- Shuffle, note inférieure : `font-size = int(effective_fs * 0.72)`, `y = cy + fs * 0.42 + sh_pos/3` (position sur fs de base)
-- 尺 entouré (noire) : cercle SVG `r = effective_fs * 0.6325` (+15%), centre `(cx, cy+2)`, `stroke-width=1`
-- 尺 entouré (croche, note principale) : même cercle que la noire, dessiné avant le texte
-- 尺 entouré (croche, note à cheval) : cercle `r = ss * 0.713` (+15%), centre décalé vers le bas
+- Noire : `font-size = fs` (ou `int(fs*0.67)` si kuubanchi), baseline `y = cy + fs * 0.318` (depuis 2026-11-10 : le +7 en dur ne scalait pas hors fs=22), `text-anchor = middle`
+- Croche, note principale : `font-size = effective_fs`, `y = cy + fs * 0.318`
+- Croche, note à cheval : `font-size = int(effective_fs * 0.713)` (+15%), position `straddle_y` calculée sur `fs` de base (inchangée par `s`) ; horizontal : straddle centré sur la bordure droite (`straddle_x = cx + cell_w/2`, `straddle_y = cy + ss*0.318`) ; vertical : chevauche la bordure inférieure (`straddle_y = cy + cell_h/2 + ss_pos/3`) ; `y = straddle_y`
+- Shuffle A:B (2 notes) : `sh = effective_fs * 0.8` (fs pleine si borne de chant `(`/`)`), clamp `min(sh, cell/2.9)` ; vertical : empilées à marges égales sur la hauteur de case (bbox CJK baseline−0,88em … baseline+0,12em) ; horizontal : côte à côte à marges égales. Shuffle N≥3 notes (A:B:C…) : `sh = 0,60` (n=3) / `0,52` (n>3) × effective_fs, même distribution
+- 尺 entouré (noire, `@shaku_circled on`) : cercle SVG `r = effective_fs * 0.6325`, centre `(cx, cy+2)`, `stroke-width=1`
+- 尺 entouré (croche, note principale) : même cercle `(cx, cy+2)`, dessiné avant le texte
+- 尺 entouré (croche, note à cheval) : cercle `r = ss * 0.713`, centre `(straddle_x, cy+2)` en horizontal, `(cx, straddle_y - ss*0.35)` en vertical
+- 下尻 : TOUJOURS entouré (indépendamment de `@shaku_circled`) : cercle `r = effective_fs * 0.6325`, centre `(cx, cy)` — recentré sur le glyphe au calibrage nov. 2026 (l'ancien `cy+2` décentrait vers le bas)
 - Marques diacritiques : police serif, `font-size = int(effective_fs * 1.1)` (+10%). Positionnement : voir les deux modes ci-dessus (notes simples vs tokens multi-caractères avec text_w)
 - uchi-utu : caractère ｀ (accent grave, U+FF40) en haut-droite
 - 下老 : un seul `<text>` avec `textLength = effective_fs * 1.0`, `lengthAdjust="spacingAndGlyphs"`, `text-anchor` non spécifié (left). Techniques passées avec `text_w=effective_fs * 1.0`
@@ -303,21 +303,21 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 
 ## Offsets des marques diacritiques (TECHNIQUE_SUFFIXES) — déplacés depuis docs/notation.md
 
-Les marques diacritiques (`'`, `^`, `v`, `<`) sont rendues dans la même police et la même taille que la note (`int(fs * 1.1)`, +10%). Règle de positionnement : l'encre visible du signe ne doit pas chevaucher l'encre visible de la note. Chaque signe a ses propres offsets (dx, dy) dans `TECHNIQUE_SUFFIXES` :
+Calibrage Inkscape nov. 2026 (grille de test + こぐやで風節, てぃんさぐぬ花, 十九の春). Formules dans `_tech_char_pos` (kkml2svg.py) ; `_render_techniques` accepte `note_fs` = taille réelle de la note porteuse (pleine, croche à cheval `ss`, ou réduite par `s`). Baseline de la note : `base_y = cy + fs * 0.318`. Taille du glyphe : `tech_fs = int(fs * 1.1 * scale)`. Règle : l'encre du signe ne chevauche pas l'encre de la note.
 
-- uchi-utu (｀) et nuchi-utu (゜) : `dx=0.50`, `dy=0.045`, `scale=1.21` — tech_fs ≈ 4/3 de la note (glyphes peu remplis)
-- kaki-utu (⌝ natif, sans rotation, `scale=0.91`) : `dx=0.70`, `dy=-0.855` — tech_fs ≈ taille de la note (dy −10% depuis 2026-11-10)
-- aki-utu (V) : `dx=0.45`, `dy=0.15` (en bas-gauche)
-- kachi-utu (┗) : `dx=0.45`, `dy=0.15` (en bas-gauche)
-(rappel : `ty = cy + fs*0.318 + fs*dy` depuis 2026-11-10 — le +7 en dur ne scalait pas hors fs=22)
+- uchi-utu (`'`, alias `*`, glyphe ｀ U+FF40) : top-right, `tx = cx + 0.58·note_fs`, ancré sur le sommet de la note (`anchor: note-top`) : `ty = base_y − note_fs + 0.91·fs` — la marque descend chevaucher le coin haut-droit du kanji ; `scale=1.21`
+- nuchi-utu (`"`, glyphe ゜ U+309C) : à droite de la note, mi-hauteur du kanji : `tx = cx + 1.125·note_fs`, `ty = base_y + 0.02·fs` ; `scale=1.21`
+- kaki-utu (`^`, glyphe ⌝ U+231D natif, sans rotation) : top-right en retrait au-dessus de la note : `tx = cx + 0.63·note_fs`, `ty = base_y − 0.42·fs` ; `scale=0.91`
+- aki-utu (`v`, glyphe V) et kachi-utu (`<`, glyphe ⌞ U+231E — plus ┗ U+2517) : bottom-left au contact du kanji : `tx = cx − 0.57·note_fs`, `ty = base_y + 0.44·fs`
+- Token multi-caractères (`text_w` fourni, ex. 下老 / positions hautes) : top-right → ancre `start` en `cx` (la marque surplombe le caractère de droite) ; bottom-left → ancre `end` en `cx − 0.34·fs`
 
-Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 7 + fs * dy`. Aucun souhou ne modifie les coordonnées de la note, sauf `s` qui réduit la taille à 67% sans déplacer le centre.
+`'` et `^` ne partagent plus de position moyenne (calibrage nov. 2026 : ｀ descend chevaucher la note, ⌝ reste en retrait au-dessus). Les offsets horizontaux sont des fractions de `note_fs` : la marque suit le coin du kanji quelle que soit sa taille. Aucun souhou ne modifie les coordonnées de la note, sauf `s` qui réduit la taille à 67% sans déplacer le centre.
 
 ## Positionnement des syllabes vocales — déplacé depuis docs/notation.md
 
 - Taille de police : SYLLABLE_FS = min(int(cell_h * 0.26), int(marker_w * 0.8)) ≈ 15px avec les valeurs par défaut (cell_w=52, cell_h=58, marker_w=26)
 - Position x : centre de la colonne marker = `x + cell_w + marker_w / 2`
-- Position y : `cy + cell_h / 2 + syllable_fs / 3` (centré verticalement sur la note)
+- Position y : `cy + cell_h/2 + cell_h*(j/n) + syllable_fs/3` (j = indice de la sous-partie dans la case, n = nombre d'éléments du token ; 1er élément au centre de la case)
 - Couleur : gris foncé (#333)
 - Police : serif (même que les notes)
 
@@ -330,16 +330,16 @@ Les offsets sont des multiplicateurs de `fs` : `tx = cx ± fs * dx`, `ty = cy + 
 - `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons ; pas encore implémenté).
 - Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne rendent RIEN dans テスト節.pdf (dan 1, cases 13–19 : aucun graphique ni flèche), alors que d'autres pièces rendent des flèches dans la colonne marker. Le déclencheur exact du rendu des flèches reste à élucider.
 - `kkml2pdf.py` : script non écrit. Pipeline KKML → PDF à définir.
-## Modèles de page — état (2026-10-03)
+## Modèles de page — état (2026-11-15)
 
-- ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf.
+- ✅ SVG multipage (2026-10-02) : `@dans_per_page` / `-p` implémentés ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf.
 - ✅ Layout Nomura-ryu (2026-10-03) : portrait A4, cadre filet, 12 cases/dan, 7 dans/page — mesuré sur les scans Nomura-ryu (retirés du dépôt, droits d'auteur — voir `samples/nomura-ryu-pdf/README.md`), validé sur かぎやで風節 (3 pages : titre+6 / 7 / 6+couplets).
 - ✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (e288f91…).
 - ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées (7 dans virtuels max/page), jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
 - ✅ Ruby du titre (2026-10-03) : かぎやで風節.kkml titre phonétisé か《カ》｛ぎや｝《ヂャ》で《ディ》風《フウ》節《ブシ》 — base à tx inchangée, ruby collé à droite, centrage du dan virtuel préservé (42d6699).
 - 🚧 (2026-11-10) Layout `tuto` (POC) : horizontal, canvas WxH fixe (`@tuto_block`, défaut 1280x720), 8 cases/dan et 7 dans/page (calibré sur la vidéo exemple https://www.youtube.com/watch?v=GvcZoeCbIPQ), page 1 = titre/accordage/infos seuls, ligne marker au-dessus de chaque dan si `::vocal` + `@marker on`. Reste : calage visuel fin (fs, marges) et SVG de référence d'un échantillon.
-- 🚧 (2026-11-15) Layout `mega` (POC, demande utilisateur avec exemple PJ) : page A3 paysage (42 × 29,7 cm), **2 blocs horizontaux empilés** de chacun **32 dans × 12 cases** (64 dans/page, 768 cases, pagination auto `fichier-N.svg`). Ordre de lecture : bloc du haut d'abord, haut→bas et droite→gauche dans chaque dan, puis bloc du bas idem. Colonne marker = **1/2 case** à droite de chaque dan (`marker_w = cell_w/2`, forcée par `::vocal`, sinon `@marker`). **Medley** : chaque chanson = `::section <nom>` + `::tab` ; le nom est imprimé en 11 pt centré au-dessus des colonnes de la chanson dans chaque bloc, et la dernière colonne de chaque chanson est complétée par des **ー (tenuto `.`, pas ⚪︎)** pour que la chanson suivante commence sur une colonne suivante. **Titre global `@title` en colonne verticale en haut à droite, à droite de tous les blocs (marge droite)**, répété sur chaque page ; paroles verticales à gauche de la 1re page (largeur réservée partout). Géométrie dérivée de la page : `cell_h = (page_h − 2×MEGA_MARGIN − MEGA_BLOCK_GAP)/24`, `cell_w = largeur dispo/(32×1,5)`, `fs = 0,38×cell_h` (constantes MEGA_* dans `kkml2svg.py`, fonction `_render_mega`, rendu des dans repris de `_draw_vertical_tab`). Dans la PJ (A3 = 2 A4 assemblés, couture imparfaite au milieu, **31 colonnes visibles par bloc** dans le scan) : case ≈ 22 × 32,5 pt, marker ≈ 11,5 pt. Reste : validation visuelle contre la PJ et calage fin (marges, gap, taille des noms de chansons).
-- ⚪︎ Modèle chindami (paysage < A4) — en attente d'exemples.
+- 🚧 (2026-11-15) Layout `mega` (POC, demande utilisateur avec exemple PJ) : page A3 paysage (42 × 29,7 cm), **2 blocs horizontaux empilés** de chacun **32 dans × 12 cases** (64 dans/page, 768 cases, pagination auto `fichier-N.svg`). Ordre de lecture : bloc du haut d'abord, haut→bas et droite→gauche dans chaque dan, puis bloc du bas idem. Colonne marker = **1/2 case** à droite de chaque dan (`marker_w = cell_w/2`, forcée par `::vocal`, sinon `@marker`). **Medley** : chaque chanson = `::section <nom>` + `::tab` ; le nom est imprimé en 11 pt centré au-dessus des colonnes de la chanson dans chaque bloc (avec flèches d'association), et la dernière colonne de chaque chanson est complétée par des **cases vides (`-`, pas de tenuto)** pour que la chanson suivante commence sur une colonne suivante. **Titre global `@title` en colonne verticale en haut à droite, à droite de tous les blocs (marge droite)**, répété sur chaque page ; paroles verticales à gauche de la 1re page (largeur réservée partout). Géométrie dérivée de la page : `cell_h = (page_h − 2×MEGA_MARGIN − MEGA_BLOCK_GAP)/24`, `cell_w = largeur dispo/(32×1,5)`, `fs = 0,38×cell_h` (constantes MEGA_* dans `kkml2svg.py`, fonction `_render_mega`, rendu des dans repris de `_draw_vertical_tab`). Dans la PJ (A3 = 2 A4 assemblés, couture imparfaite au milieu, **31 colonnes visibles par bloc** dans le scan) : case ≈ 22 × 32,5 pt, marker ≈ 11,5 pt. Suites 26-42 (2026-11-15) : paroles paginées sur des **pages A3 dédiées** après les pages de tablature quand la largeur réservée dépasse 15 % de la grille (`MEGA_LYRICS_INLINE_MAX_RATIO`), avec la même structure de 2 blocs, repli obligatoire à la hauteur de bloc et **titre de chaque chanson en colonne verticale 「…」 gras fs 11 remonté au haut de bloc** ; hayashi ; en-têtes de couplets toujours 3 caractères pleine chasse, matérialisés par `_pad_inline_marker` ; marqueur ⚪︎ (U+26AA, +U+FE0E) reconnu comme marqueur de couplet. Reste : validation visuelle contre la PJ et calage fin (marges, gap, taille des noms de chansons).
+- ✅ (2026-11-15) Layout `chindami` complet : page 23 × 15 cm paysage imposée (viewBox en pt), piles de 12 cases lues haut→bas droite→gauche, colonne marker ~1/2 case à droite de chaque pile, 15 piles/page (14 en p.1 quand le titre occupe sa colonne), `@musicno` écrit en HORIZONTAL fs 11 au sommet de la colonne titre et repoussant le titre de `fs + 8` pt (n° > 999 tronqué mod 1000, 0 non écrit), repli des paroles en sous-colonnes de hauteur de grille, pages dédiées paroles, textes verticaux en blocs `<text>` groupés (constantes `CHINDAMI_*`, fonction `_render_chindami`).
 - ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.
 - ⚪︎ Raffinements nomura en réserve : marqueur ⚪︎ de couplet, taille/espacement des paroles, calligraphie du titre.
 - ⚪︎ Raffinements supplémentaires de la mise en page nomura à définir plus tard (retours visuels utilisateur sur かぎやで風節 et 安波節 ; typiquement : ajustement fin du placement des couplets sur page dédiée, sous-colonnes marker, etc.).
@@ -362,7 +362,7 @@ Ces mesures (かぎやで風節.pdf, テスト節.pdf) servent au calibrage du r
 - Géométrie du PDF (A4 paysage, TCPDF) : cadre 28,3–819,2 × 28,3–575,4 pt ; piles au pas de 60,9 pt, cadre 52,4 pt (notes 28,3 + marker 24,1) ; 12 piles/page, 12 cases/pile, hauteur 43,94 pt ; notes fs=17, straddle fs=13 ; ratios marker/notes 0,85 (nous 0,5), cell_h/notes 1,55 (nous 1,12), fs/cell_h 0,39 (nous 0,38).
 - Géométrie fine des marques (テスト節.pdf) : orn fs 14 (dx +6,16, dy +4,03 ; isSmall 10, dx +8,07) ; acc fs 14 (dx −2,84, dy +4,02 ; isSmall 10, dx −4,84) ; yubii fs 12,5 (dx −15,46, dy +0,93, colonne dédiée à gauche) ; ○/□ fs 9 (marker +14,8 pt, dy +3,3).
 - Polices embarquées : Untitled1 (Type0, Identity-H, upem 1024 ; CID = codepoint PUA) pour les notes, IPAexMincho pour le texte. Contours des glyphes de テスト節.pdf extraits (chemins SVG upem 1024) — disponibles pour la rénovation du rendu des ornements.
-- Constantes pour une éventuelle section `::ruby` : ruby_fs/note_fs = 0,65 ; avance ligne = cell_h/3 ; tuck petit kana = 1,18 × fs (notre espacement actuel : syllable_fs × 0,85).
+- Constantes pour une éventuelle section `::ruby` : ruby_fs/note_fs = 0,65 ; avance ligne = cell_h/3 ; tuck petit kana = 1,18 × fs (chez nous : `SYLLABLE_SP` = 0,9 × syllable_fs entre syllabes, `step` = 1,15 × syllable_fs entre caractères combinants).
 
 ## Constantes de calibrage mesurées sur les scans Nomura-ryu (recherche)
 
