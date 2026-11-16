@@ -83,8 +83,8 @@ Exemple :
       `|:` `:|` = boucle instrumentale, `(:` `:)` = boucle vocale, `' " ^ v < s` = ornements (caractères de technique).
     - `::vocal` — paroles en phonétique alignées sur la tablature,
     - `::lyrics` — paroles complètes avec support éventuel du guide phonétique (ruby), sans alignement sur la tablature.
-      Variantes : `::lyrics-kanji-ruby`, `::lyrics-kanji`, `::lyrics-kana-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
-      `::lyrics` est un alias de `::lyrics-kanji-ruby` (kanji + rubys).
+      Variantes : `::lyrics-kanji`, `::lyrics-ruby`, `::lyrics-kana`, `::lyrics-romaji`.
+      `::lyrics` est un alias de `::lyrics-ruby` (kanji + rubys).
 
 Détail complet : [docs/notation.md](docs/notation.md) et [docs/kkml-format.md](docs/kkml-format.md).
 
