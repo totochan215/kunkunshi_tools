@@ -189,7 +189,7 @@ NB: une cellule de KKML correspond donc à **deux** cellules de Portama : une ce
 
 Notes :
 
-- Les PUA U+E009, U+E019, U+E029, et U+E034 à U+E040 ne sont pas utilisés. La liste s'arrête à U+E044.
+- Les PUA U+E009, U+E019, U+E029, et U+E034 à U+E040 ne sont pas utilisés. La liste de PUA s'arrête à U+E044.
 - Portama utilise les webfonts [kk4font1.ttf](https://www.portama.com/editor/fonts/kk4font1.ttf) (mincho) et [kk4font2.ttf](https://www.portama.com/editor/fonts/kk4font2.ttf) (gothic) pour représenter ces symboles à l'écran et dans les PDF exportés. Ces fontes semblent avoir été composées sur mesure pour les besoins du kunkunshi. Elles sont marquées "Copyright (c) 2026, feava" et ne sont pas assorties d'une licence explicite, donc soumises au règles standard du droit d'auteur. Nous ne les utilisons pas dans le projet kunkunshi_tools.
 
 ## Ornements (souhou)
