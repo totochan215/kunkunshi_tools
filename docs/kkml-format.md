@@ -192,7 +192,7 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 
 Au sein des sections `::tab` et `::vocal`, les équivalents UTF-8 des signes ASCII ci-dessous sont tolérés. C'est toutefois la forme ASCII qui est canonique. 
 
-| Double largeur  | ASCII | Usage (pour mémoire) |
+| UTF-8           | ASCII | Usage (pour mémoire) |
 |-----------------|-------|----------------------|
 | `♯` (U+266F)    | `#`   | Dièse                |
 | `♭` (U+266D)    | `b`   | Bémol (lettre b)     |
