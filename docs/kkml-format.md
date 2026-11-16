@@ -85,7 +85,7 @@ Toutes les métadonnées sont optionnelles. L'ordre est sans importance. Les mé
 En cas de doublon, la première occurrence prime.
 Les mises en page ou la ligne de commande peuvent surcharger certaines métadonnées, qui sont alors ignorées.
 
-## Section
+## Sections
 
 - `::tab` — section de tablature, organisé en temps (figures), séparés par des espaces. **Boucle vocale** : `(:` en début de token, `:)` en fin (ex. `(:合`, `中:)`), rendue comme marqueur de boucle dans la colonne marker. **Désambiguation** : les marqueurs de boucle (`|:`, `:|`, `(:`, `:)`) ne figurent QUE dans `::tab` ; les koedashi/koekiri (`(`, `)`) ne figurent QUE dans `::vocal`. Un `( )` dans `::tab` est ignoré avec un avertissement ; une boucle dans `::vocal` est ignorée avec un avertissement. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
 - `::vocal` — chant syllabique aligné sur les temps de la tablature : un mot (séparé par des espaces) = une syllabe, les points `.` subdivisent le temps en parts égales. Chaque ligne de `::vocal` correspond à la ligne de `::tab` de même index (la syllabe i reste alignée sur la note i ; une ligne de chant plus courte est complétée par des cases vides). Un token `ー`/`ｰ`/`－` ISOLÉ vaut case vide ; collé à une syllabe (ex. `よー`) il reste la voyelle longue. **Désambiguation** : `(` / `)` (koedashi/koekiri) ne figurent QUE dans `::vocal` ; les boucles `|: :| (: :) |( )|` y sont ignorées avec avertissement (réservées à `::tab`). Les anciennes sections `::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal` (acceptés avec une info stderr).
@@ -120,11 +120,11 @@ Détails :
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
 - En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les sections `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et sections. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::vocal` est par construction déjà écrit en phonétique.
 
-## Cases de tablature
+## Cellules de tablature
 
-Chaque case de tablature correspond à un temps. Les tablatures Kunkunshi ignorent la notion de mesure (regroupement de temps tels que 3/4 ou 4/4).
+Chaque cellule de tablature correspond à un temps. Les tablatures Kunkunshi ignorent la notion de mesure (regroupement de temps tels que 3/4 ou 4/4).
 
-Séparateurs à l'intérieur d'une figure (dans une case) :
+Séparateurs à l'intérieur d'une figure (dans une cellule) :
 
 | Séparateurs  | Figure rythmique                        | Exemple              |
 |--------------|-----------------------------------------|----------------------|
