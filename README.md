@@ -43,6 +43,8 @@ Normalise un fichier KKML sous sa forme canonique.
     python3 kkml_cleaner.py -n dirty.kkml               # mode test
     python3 kkml_cleaner.py -n -o clean.kkml dirty.kkml # écrit dans un autre morceau
 
+Options CLI : `-n`, `-o/--output`
+
 ### kkml2pdf.py
 
 Conversion KKML → PDF : script non écrit à ce jour.
