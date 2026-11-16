@@ -73,8 +73,8 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.    |
 | `@shaku_circled` | `off`      | Rend les 尺 entourés d'un cercle : `on` : activé, `off` : désactivé |
 | `@shaku_sharp`   | `off`      | Rend les 尺♯ accompagnés du symbole ♯ : `on` : activé, `off` : désactivé |
-| `@lyrics_size`   | `medium`   | Taille des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
-| `@ruby_size`     | `50`       | Taille du ruby en % de la taille de base. Non utilisé à ce jour |
+| `@lyrics_size`   | `medium`   | Taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
+| `@ruby_size`     | `50`       | Taille de police du ruby, en % de la taille de base. **Non utilisé à ce jour** |
 | `@musicno`       | —          | Numéro de morceau (pour compatibilité Portama)     |
 | `@chogen`        | —          | Accordage absolu (pour compatibilité Portama)      |
 | `@speed`         | —          | Tempo (pour compatibilité Portama)                 |
