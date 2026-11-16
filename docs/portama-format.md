@@ -70,7 +70,7 @@ Chaque cellule est un objet avec :
 | Clé               | Type   | Description |
 |-------------------|--------|-------------|
 | `note`            | string | Caractère PUA Unicode (entre U+E000 et U+E030) représentant la position à jouer, cf. [ci-dessous](#correspondance-pua--symboles), ou chaîne vide. |
-| `isSmall`         | bool   | Taille de note : `true` = petite note, non renseigné = standard. Défaut : non renseigné |
+| `isSmall`         | bool   | Petite note : `true` = oui, non renseigné = non. Défaut : non renseigné |
 | `acc`             | string | Altération : `sharp` = Dièse (♯), `flat` = bémol (♭).|
 | `orn`             | string | Ornement/souhou : `k` = kaki-utu, `u` = uchi-utu, `nu` = nuchi-utu. |
 | `yubii`           | int    | Doigté de main gauche : `1` = 人差指, `2` = 中指, `3` = 無名指, `4` = 小指.|
