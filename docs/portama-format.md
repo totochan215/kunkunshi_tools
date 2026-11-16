@@ -78,7 +78,7 @@ Chaque cellule est un objet avec :
 | `repeatEnd`       | bool   | Indique si la cellule correspond à une fin de répétition. `true` = oui, non renseigné = non. Défaut : non renseigné |
 | `vocalRepStart`   | bool   | Indique si la cellule correspond à un début de boucle vocale. `true` = oui, non renseigné = non. Défaut : non renseigné |
 | `vocalRepEnd`     | bool   | Indique si la cellule correspond à une fin de boucle vocale. `true` = oui, non renseigné = non. Défaut : non renseigné |
-| `vocalPosMarkers` | array  | 1D : vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : ??; pos = "mid" : milieu de cellule, pos = ?? : ??  |
+| `vocalPosMarkers` | array  | 1D : vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : haut de cellule; pos = "mid" : milieu de cellule, pos = ?? : bas de cellule |
 | `note2`           | string | Deuxième note par case        |
 | `acc2`            | string | Deuxième altération par case  |
 | `orn2`            | string | Deuxième ornement par case    |
