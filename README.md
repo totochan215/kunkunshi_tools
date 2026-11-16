@@ -16,8 +16,11 @@ Attribution : projet réalisé en partie par intelligence artificielle (https://
 
 Convertit un fichier JSON [Portama](https://portama.com/) en KKML.
 
-    python3 portama2kkml.py input.json -o output.kkml
-    cat input.json | python3 portama2kkml.py - > output.kkml
+    python3 portama2kkml.py chanson.json -o chanson.kkml
+    python3 portama2kkml.py chanson.json                        # -> chanson.kkml
+    cat chanson.json | python3 portama2kkml.py - > chanson.kkml
+
+Options CLI : `-o/--output`
 
 Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence), styles rythmiques (standard, hayabichi), repères de répétition (instrumental, chant), repères de respiration (koedashi, koekiri), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), hauteur de base (1 à 8), tempo, autres métadonnées, paroles, etc.
 
