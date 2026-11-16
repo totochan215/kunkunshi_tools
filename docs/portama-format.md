@@ -50,7 +50,7 @@ Portama ([portama.com/kunkun4](https://portama.com/kunkun4/)) est un éditeur en
 | `rhythm`              | string  | Rythme. `0` = ?, `100` = ?. |
 | `rhythmMode`          | string  | Mode rythmique. `0` = ?, `100` = ?. |
 | `orientation`         | string  | Orientation de la mise en page : `landscape` = paysage, `portrait` = portrait. |
-| `allLyricsData`       | array   | Paroles organisées par cadres, cf. ci-dessous |
+| `allLyricsData`       | array   | Paroles organisées par cadres, cf. [ci-dessous](#structure-du-tableau-alllyricsdata) |
 | `lyricsPageBreak`     | string  | `auto` = pagination automatique. |
 | `lyricsFDisplayNumber`| string  | Indique si le numéro de couplet doit être affiché, `yes` = oui, `no` = non. |
 | `lyricsFontSize`      | string  | Taille de police pour les paroles. Ex. : `10pt` |
