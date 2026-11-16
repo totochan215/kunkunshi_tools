@@ -206,7 +206,7 @@ Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par 
 
 `allRubyData` contient le texte vocal affiché dans la colonne marker (sous-colonne droite de chaque pile). Clé = numéro de page en string, valeur = tableau de lignes, 1 ligne par dan (19 lignes pour かぎやで風節 = 19 dans).
 
-## Limitations de Portama vs KKML
+## Limitations de Portama vs. KKML
 
 Portama ne connaît ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni les kanji hors de sa carte PUA.
 
@@ -215,8 +215,8 @@ Portama ne connaît ni les positions イ non cartographiées (上半老, 上老,
 
 ## Capacités audio
 
-Portama peut jouer l'audio des tablatures en interprétant chaque note PUA comme une hauteur sonore basée sur `choshi` (décalages par corde) et `chogen` (décalage global en demi-tons, `chogen - 5`). `puaAudioMap` de main.js donne les positions exactes par corde.
+Portama peut jouer l'audio des tablatures en interprétant chaque kandokoro comme une hauteur sonore basée sur `choshi` (carte du décalage de chaque corde en demi-tons par rapport à la note de base) et `chogen` (décalage global en demi-tons de la note de base). `puaAudioMap` de main.js donne les positions exactes par corde.
 
 ## Source
 
-Ce document a été construit par analyse du moteur `main.js` de Portama ([portama.com/editor/js/main.js?V=2.55](https://www.portama.com/editor/js/main.js?V=2.55)), recoupée avec celle de quelques paires de fichiers JSON/PDF et du morceau de test créé pour l'analyse : テスト節.json / テスト節.pdf.
+Ce document a été construit par analyse du moteur `main.js` V2.55 de Portama ([portama.com/editor/js/main.js?V=2.55](https://www.portama.com/editor/js/main.js?V=2.55)), recoupée avec celle de quelques paires de fichiers JSON/PDF et d'un morceau de test créé pour l'analyse : テスト節.json / テスト節.pdf.
