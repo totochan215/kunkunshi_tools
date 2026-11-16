@@ -77,7 +77,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@ruby_size`     | `50`       | Taille de police du ruby, en % de la taille de base. **Non utilisé à ce jour** |
 | `@musicno`       | —          | Numéro de morceau (pour compatibilité Portama)     |
 | `@chogen`        | —          | Accordage absolu (pour compatibilité Portama)      |
-| `@speed`         | —          | Tempo (pour compatibilité Portama)                 |
+| `@speed`         | —          | Tempo, en battements par minute (pour compatibilité Portama)                 |
 | `@rythm`         | —          | Rythme (pour compatibilité Portama)                |
 | `@rythm_mode`    | —          | Mode rythmique (pour compatibilité Portama)        |
 
