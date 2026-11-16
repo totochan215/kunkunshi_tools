@@ -171,13 +171,12 @@ Au sein des sections `::tab` et `::vocal`, ainsi que hors des sections, les lign
 
 Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des signes en demie-largeur ci-dessous sont tolérés. C'est toutefois la forme en demie-largeur qui est canonique. 
 
-| Double largeur  | Demie-largeur | Usage (pour mémoire) |
-|-----------------|---------------|----------------------|
+| Double largeur  | Demie-largeur | Usage (pour mémoire)  |
+|-----------------|---------------|-----------------------|
 | `　` (U+3000)   | ` `           | séparateur de temps   |
 | `／` (U+FF0F)   | `/`           | deux croches          |
 | `：` (U+FF1A)   | `:`           | croche pointée + double croche, marques de répétition |
 | `｜` (U+FF5C)   | `\|`          | marques de répétition |
-| `♯`  (U+266F)   | `#`           | altération (尺＃) |
 | `＋` (U+FF0B)   | `+`           | accord (taachi / tsuiri-bichi), forme canonique |
 | `＝` (U+FF1D)   | `=`           | accord (taachi / tsuiri-bichi), variante de +   |
 | `ー` (U+30FC)   | `-`           | case vide uniquement - ne pas normaliser sinon  |
