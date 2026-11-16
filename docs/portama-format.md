@@ -210,9 +210,8 @@ Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par 
 
 Portama ne connaît ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni les kanji hors de sa carte PUA.
 
-- Portama → KKML : sans perte (tout ce que Portama encode existe en KKML). Mapping requis : orn `nu` → suffixe `n`, yubii 1–4, acc ♯/♭ sur toute note, vocalPosMarkers, chogen → @tuning (décalage en demi-tons), notes E003–E028.
-- KKML → Portama : impossible pour les pièces utilisant des positions en イ hors carte Portama ou tout kanji hors du sous-ensemble Portama.
-
+- Portama → KKML : sans perte (tout ce que Portama encode existe en KKML).
+- KKML → Portama : impossible pour les pièces utilisant des positions en イ hors carte Portama ou tout kanji hors du sous-ensemble Portama. Par ailleurs, les fichiers KKML présentant des découpages de cellules complexes par les vocals seront rendus de manière imparfaite dans Portama (risque de débordements).
 
 ## Capacités audio
 
