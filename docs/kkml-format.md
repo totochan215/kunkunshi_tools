@@ -305,4 +305,4 @@ Ces bonnes pratiques visent à faciliter l'exécution du morceau en ayant le fic
 
 ## Pour en savoir plus
 
-Voir [notation musicale](notation.md) pour le détail des figures, modes rythmiques, suffixes de technique, positions étendues, positions hautes (préfixes イ/ロ), et options d'en-tête.
+Voir [notation musicale](notation.md) pour le détail des figures, modes rythmiques, suffixes de technique, positions étendues et options d'en-tête.
