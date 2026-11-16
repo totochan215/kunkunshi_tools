@@ -91,7 +91,7 @@ Indique la présence éventuelle d'un marqueur vocal dans l'une des trois positi
 
 | Clé        | Type   | Description |
 |------------|--------|-------------|
-| `top`      | string | Type de marqueur vocal : "vocalStart" = début, "vocalEnd" = fin, vide = pas de marqueur. |
+| `top`      | string | Type de marqueur vocal : `vocalStart` = début, `vocalEnd` = fin, vide = pas de marqueur. |
 | `mid`      | string | ''          |
 | `bottom`   | string | ''          |
 
