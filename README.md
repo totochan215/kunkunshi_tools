@@ -40,7 +40,7 @@ Normalise un fichier KKML sous sa forme canonique.
 (idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
 
     python3 kkml_cleaner.py dirty.kkml                  # réécrit le fichier en place
-    python3 kkml_cleaner.py -n dirty.kkml               # mode test
+    python3 kkml_cleaner.py -n dirty.kkml               # mode test (dry run)
     python3 kkml_cleaner.py -n -o clean.kkml dirty.kkml # écrit dans un autre morceau
 
 Options CLI : `-n`, `-o/--output`
