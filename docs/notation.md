@@ -181,9 +181,9 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 
 #### Positions étendues
 
-| Position | Lecture                | Hauteur (demi-tons) | Doigt | Variante |
-|----------|------------------------|---------------------|------|----------|
-| 下勺      | したしゃく (shita-shaku) | -1                  | —    | 尺♯       |     
+| Position | Lecture                 | Hauteur (demi-tons) | Doigt | Variante |
+|----------|-------------------------|---------------------|------|-----------|
+| 下勺     | したしゃく (shita-shaku) | -1                  | —    | 尺♯       |     
 
 ## Symboles spéciaux
 
@@ -191,8 +191,10 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 - `-` — case vide, en fin de morceau, pour remplir le dernier dan. Rien n'est rendu. Note : `四+五` (avec `+` entre deux notes) est un accord, pas une case vide — le `-` seul est la case vide.
 - `|:` — début de boucle instrumentale. Peut être utilisé comme symbole autonome ou préfixé à une note (ex. `|:工`). Une flèche vectorielle descendante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical descendant, triangle creux pointant vers le bas.
 - `:|` — fin de boucle instrumentale. Peut être utilisé comme symbole autonome ou suffixé à une note (ex. `尺:|`). Une flèche vectorielle montante est rendue dans la colonne marker à droite de la case : trait horizontal depuis la bordure gauche, trait vertical montant, triangle creux pointant vers le haut.
-- `|(` — début de boucle vocale. **Déprécié (2026-11-01)** : boucle vocale à noter `(: ... :)` dans `::vocal`.
-- `|)` — fin de boucle vocale.
+- `(:` — début de boucle vocale.
+- `:)` — fin de boucle vocale.
+- - `|(` — début de boucle vocale. **Déprécié (2026-11-01)**
+- `|)` — fin de boucle vocale. **Déprécié (2026-11-01)**
 
 Les boucles de répétition (`|:` … `:|`) ne sont pas limitées au début d'une chanson (le terme « intro » est trompeur). Elles peuvent apparaître à n'importe quel endroit, et une chanson peut en contenir plusieurs. Les boucles ne peuvent pas être imbriquées.
 
