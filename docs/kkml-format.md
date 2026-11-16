@@ -189,7 +189,14 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 | `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
 | `）` (U+FF09)   | `)`           | koekiri, fin de boucle vocale  |
 
-NB: le bémol `♭` (U+266D) n'a pas d'équivalent en demie-largeur ; il ne peut être saisi qu'en pleine largeur.
+#### Altérations
+
+Au sein des sections `::tab` et `::vocal`, les équivalents UTF-8 des signes ASCII ci-dessous sont tolérés. C'est toutefois la forme ASCII qui est canonique. 
+
+| Double largeur  | ASCII | Usage (pour mémoire) |
+|-----------------|-------|----------------------|
+| `♯` (U+266F)    | `#`   | Dièse                |
+| `♭` (U+266D)    | `b`   | Bémol (lettre b)     |
 
 #### Caractères graphiquement similaires
 
