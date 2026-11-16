@@ -143,6 +143,8 @@ La combinaison d'une cellule paire et d'une cellule impaire donne les figures ry
 | note (isSmall=true)  | vide     | Kuubanchi       | `As`             |
 | vide                 | vide     | Case vide       | `-`              |
 
+NB: une cellule de KKML correspond donc à **deux** cellules de Portama : une cellule paire et une cellule impaire.
+
 ## Correspondance PUA → symboles
 
 | PUA    | Symbole  | Commentaire            |
