@@ -219,7 +219,9 @@ Portama ne connaît ni les positions イ non cartographiées (上半老, 上老,
 
 ## Capacités audio
 
-Portama peut jouer l'audio des tablatures en interprétant chaque kandokoro comme une hauteur sonore basée sur `choshi` (carte du décalage de chaque corde en demi-tons par rapport à la note de base) et `chogen` (décalage global en demi-tons de la note de base). `puaAudioMap` de main.js donne les positions exactes par corde.
+Portama peut jouer l'audio des tablatures en interprétant chaque kandokoro comme une hauteur sonore basée sur `choshi` (carte du décalage de chaque corde en demi-tons par rapport à la note de base) et `chogen` (décalage global en demi-tons de la note de base).
+Le rendu audio se base sur `speed`, `rhythm` et `rhythmMode`. Les boucles instrumentales et vocales sont suivies ; `trackCount` indique le nombre de boucles à parcourir, et `currentTrack` l'indice actuel de répétition.
+`puaAudioMap` de main.js donne les positions exactes par corde.
 
 ## Source
 
