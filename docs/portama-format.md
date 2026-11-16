@@ -36,7 +36,7 @@ Portama ([portama.com/kunkun4](https://portama.com/kunkun4/)) est un éditeur en
 | `numDans`             | int     | Nombre de dans du morceau. |
 | `cellsPerDan`         | int     | Nombre de cellules par dan (`24` ou `36`). Défaut : `24`|
 | `score`               | array   | Contenu de la tablature, cf. ci-dessous |
-| `allRubyData`         | array   | Paroles en phonétique avec alignement sur le rythme, cf. ci-dessous |
+| `allRubyData`         | array   | Paroles en phonétique avec alignement sur le rythme, cf. [ci-dessous](#structure-du-tableau-alllyricsdata) |
 | `price`               | int     | Prix en Yen pour les morceaux publiés sur la plateforme. Défaut : 0 |
 | `isPublished`         | int     | Indique si le morceau est publié sur la plateforme. Défaut : 0 |
 | `viewSize`            | int     | Inconnu (présumé : niveau de zoom de la visualisation). Défaut : 100 |
