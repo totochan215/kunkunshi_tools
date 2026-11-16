@@ -180,8 +180,8 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 | `＋` (U+FF0B)   | `+`           | accord (taachi / tsuiri-bichi), forme canonique |
 | `＝` (U+FF1D)   | `=`           | accord (taachi / tsuiri-bichi), variante de +   |
 | `ー` (U+30FC)   | `-`           | case vide uniquement - ne pas normaliser sinon  |
-| `＊` (U+FF0A)   | `*`           | uchi-utu (打音) |
 | `｀` (U+FF40)   | `'`           | uchi-utu (打音) |
+| `＊` (U+FF0A)   | `*`           | uchi-utu (打音), variante de `'` |
 | `＂` (U+FF02)   | `"`           | uchi-nuchi-utu (打ち抜き音) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
