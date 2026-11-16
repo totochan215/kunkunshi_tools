@@ -121,6 +121,8 @@ Tableau 1D: ([couplet])
 | `height`   | real   | Hauteur du bloc dans la mise en page     |
 | `fontSize` | string | Taille de police du bloc. Ex. : `10pt`   |
 
+TODO: préciser l'origine et l'unité des valeurs.
+
 ### Organisation des cellules par dan
 
 Portama autorise deux réglages :
