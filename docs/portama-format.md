@@ -208,11 +208,11 @@ Le fichier JSON Portama est encodé en UTF-8. Les positions, ornements et yubii 
 
 ## Colonne marker et données vocales (`allRubyData`)
 
-`allRubyData` contient le texte vocal affiché dans la colonne marker (sous-colonne droite de chaque pile). Clé = numéro de page en string, valeur = tableau de lignes, 1 ligne par dan (19 lignes pour かぎやで風節 = 19 dans).
+`allRubyData` contient le texte vocal affiché dans la colonne *marker*. Clé = numéro de page en string, valeur = tableau de lignes, 1 ligne par *dan*.
 
 ## Limitations de Portama vs. KKML
 
-Portama ne connaît ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni les kanji hors de sa carte PUA.
+Portama ne connaît ni les positions イ non cartographiées (上半老, 上老, イ六, イ七, etc.) ni aucun kanji hors de sa carte PUA.
 
 - Portama → KKML : sans perte (tout ce que Portama encode existe en KKML).
 - KKML → Portama : impossible pour les pièces utilisant des positions en イ hors carte Portama ou tout kanji hors du sous-ensemble Portama. Par ailleurs, les fichiers KKML présentant des découpages de cellules complexes par les vocals seront rendus de manière imparfaite dans Portama (risque de débordements).
