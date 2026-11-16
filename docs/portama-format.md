@@ -200,7 +200,7 @@ Valeurs de `orn` possibles :
 
 ## Encodage
 
-Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par des caractères PUA à 3 octets.
+Le fichier JSON est en UTF-8. Les positions, ornements et yubii sont codés par des caractères PUA à 3 octets, de fait ces fichiers ne sont pas totalement lisibles dans un éditeur de texte. 
 
 ## Colonne marker et données vocales (`allRubyData`)
 
