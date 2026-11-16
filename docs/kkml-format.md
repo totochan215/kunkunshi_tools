@@ -67,7 +67,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@layout`        | `vertical` | Modèle de rendu : `vertical`, `horizontal`, `nomura`, `chindami`, `tuto` ou `mega` (voir [svg-layout.md](svg-layout.md)) |
 | `@dans_per_page` | —          | Nombre max de *dans* par page avant un saut de page forcé |
 | `@tuto_block`    | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
-| `@cells_per_dan` | —          | Nombre de cellules par dan. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal` (défaut `12`) et `tuto` (défaut `8`), mais pas par `chindami`, `nomura` et `mega`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
+| `@cells_per_dan` | —          | Nombre de cellules par *dan*. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal` (défaut `12`) et `tuto` (défaut `8`), mais pas par `chindami`, `nomura` et `mega`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
 | `@marker`        | `on`       | Active/désactive les colonnes/lignes de marker : `on`/`off` |
 | `@end_circle`    | —          | **Déprécié**, ignoré |
 | `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.    |
