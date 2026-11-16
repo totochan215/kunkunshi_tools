@@ -33,8 +33,8 @@ Portama ([portama.com/kunkun4](https://portama.com/kunkun4/)) est un éditeur en
 | `version`             | string  | Numéro de version du JSON Portama. Défaut : `2.2` = version courante au 26/09/2026. |
 | `musicno`             | int     | Identifiant du morceau sur Portama. Défaut : `0`. |
 | `userId`              | int     | Identifiant de l'utilisateur sur Portama. Défaut : `0`. |
-| `numDans`             | int     | Nombre de dans du morceau. |
-| `cellsPerDan`         | int     | Nombre de cellules par dan (`24` ou `36`). Défaut : `24`|
+| `numDans`             | int     | Nombre de *dans* du morceau. |
+| `cellsPerDan`         | int     | Nombre de cellules par *dan* (`24` ou `36`). Défaut : `24`|
 | `score`               | array   | Contenu de la tablature, cf. ci-dessous |
 | `allRubyData`         | array   | Paroles en phonétique avec alignement sur le rythme, cf. [ci-dessous](#structure-du-tableau-alllyricsdata) |
 | `price`               | int     | Prix en Yen pour les morceaux publiés sur la plateforme. Défaut : 0 |
@@ -125,8 +125,8 @@ Tableau 1D: ([couplet])
 
 Portama autorise deux réglages :
 
-- `cellsPerDan` = `24` : 12 paires de cellules (24 cellules) par dan : utilisation indiquée pour le layout au format paysage
-- `cellsPerDan` = `32` : 16 paires de cellules (32 cellules) par dan : utilisation indiquée pour le layout au format portrait
+- `cellsPerDan` = `24` : 12 paires de cellules (24 cellules) par *dan* : utilisation indiquée pour le layout au format paysage
+- `cellsPerDan` = `32` : 16 paires de cellules (32 cellules) par *dan* : utilisation indiquée pour le layout au format portrait
 
 Les cellules sont organisées comme suit :
 
