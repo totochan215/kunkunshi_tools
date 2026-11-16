@@ -103,9 +103,9 @@ def clean(text):
             info("@cols renommé en @cells_per_dan")
             key = "cells_per_dan"
         meta.setdefault(key, val)
-    # @layout / @page_dans lus hors song.meta
+    # @layout / @dans_per_page lus hors song.meta (@page_dans = ancien nom)
     if getattr(song, "page_dans", None) is not None:
-        meta.setdefault("page_dans", str(song.page_dans))
+        meta.setdefault("dans_per_page", str(song.page_dans))
 
     # --- sections : normalisation + complétion structurelle ---
     blocks = song.blocks

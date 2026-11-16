@@ -324,7 +324,7 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "shaku_circled", "shaku_sharp", "speed", "font_style",
-             "page_dans", "tuto_block"}
+             "page_dans", "dans_per_page", "tuto_block"}
 class Song:
     def __init__(self):
         self.meta = {}
@@ -387,7 +387,9 @@ def parse_kkml(text):
                 # ignoré au parsing, le layout applique son propre défaut
                 # (ou -c en CLI pour vertical/horizontal).
                 pass
-            elif key == "page_dans":
+            elif key in ("dans_per_page", "page_dans"):
+                if key == "page_dans":
+                    _info_input_variant("@page_dans", "@dans_per_page")  # ancien nom, accept\u00e9
                 try:
                     song.page_dans = int(val)
                 except ValueError:
@@ -2780,7 +2782,7 @@ def _wrap_horizontal(tokens, cols):
 # (largeur réservée ≤ MEGA_LYRICS_INLINE_MAX_RATIO de la largeur utile),
 # sinon elles sont paginées sur des pages A3 dédiées APRÈS les pages de
 # tablature, en colonnes verticales de droite à gauche. Pagination
-# automatique : 64 dans par page A3 (@page_dans / -p peut réduire ce plafond).
+# automatique : 64 dans par page A3 (@dans_per_page / -p peut réduire ce plafond).
 MEGA_PAGE_W = 42 * CM      # A3 paysage = 42 x 29,7 cm = 1190,55 pt
 MEGA_PAGE_H = 29.7 * CM    # = 841,89 pt
 MEGA_ROWS = 12             # cases par dan (hauteur d'un bloc vertical)
@@ -4368,8 +4370,8 @@ def main():
                     help="cellules par dan : lignes par colonne (vertical) ou colonnes par rangée (horizontal)")
     ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami", "tuto", "mega"],
                     help="force le layout (surcharge @layout)")
-    ap.add_argument("-p", "--page-dans", type=int, dest="page_dans",
-                    help="nombre max de dans par page (pagination multipage, surcharge @page_dans)")
+    ap.add_argument("-p", "--dans-per-page", "--page-dans", type=int, dest="page_dans",
+                    help="nombre max de dans par page (pagination multipage, surcharge @dans_per_page)")
     args = ap.parse_args()
 
     if args.input == "-":

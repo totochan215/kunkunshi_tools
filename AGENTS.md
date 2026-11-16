@@ -78,7 +78,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   `::ruby`) sera le substrat commun à P3.
 - **Règles de layouting** (seuils appliqués au rendu, pas au format). Chaque règle a
   un défaut par layout et une méta KKML d'override (CLI prioritaire sur méta, comme
-  `@cells_per_dan`/`-c`, `@layout`/`-l`, `@page_dans`/`-p`) :
+  `@cells_per_dan`/`-c`, `@layout`/`-l`, `@dans_per_page`/`-p`) :
   - `@overflow allow|shrink|truncate|error` — syllabes/caractères qui dépassent la
     case. Défaut vertical : `allow` (chevauchement bord inférieur accepté, comportement
     historique). Défaut nomura : `error` (fidélité stricte à la grille traditionnelle).
@@ -169,14 +169,14 @@ python3 kkml2svg.py chanson.kkml            # -> chanson.svg
 cat chanson.kkml | python3 kkml2svg.py -     # stdin -> stdout
 ```
 
-Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--page-dans N`
+Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page N`
 
 ### Structure du code
 
 ### 0. Rendu multipage (`render_svg`)
 
 - `render_svg(...)` retourne désormais une **liste de SVG** (un par page).
-- Pagination : `@page_dans N` (méta) ou `-p/--page-dans N` (CLI). Défaut : None = une seule page (comportement historique).
+- Pagination : `@dans_per_page N` (méta ; `@page_dans` accepté comme ancien nom) ou `-p/--dans-per-page N` (CLI ; `--page-dans` reste accepté en alias). Défaut : None = une seule page (comportement historique).
 - `_render_vertical` découpe les sections tab en pages de N dans ; les colonnes vocales (`vocal_data`) sont tranchées en synchronisation avec les colonnes de tab (même slice).
 - Sections lyrics et titre vertical : répétés sur chaque page.
 - `main()` : 1 page → sortie simple ; n pages → `stem-1.svg` … `stem-n.svg`.
@@ -332,7 +332,7 @@ Calibrage Inkscape nov. 2026 (grille de test + こぐやで風節, てぃんさ�
 - `kkml2pdf.py` : script non écrit. Pipeline KKML → PDF à définir.
 ## Modèles de page — état (2026-11-15)
 
-- ✅ SVG multipage (2026-10-02) : `@page_dans` / `-p` implémentés ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf.
+- ✅ SVG multipage (2026-10-02) : `@dans_per_page` / `-p` implémentés ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf.
 - ✅ Layout Nomura-ryu (2026-10-03) : portrait A4, cadre filet, 12 cases/dan, 7 dans/page — mesuré sur les scans Nomura-ryu (retirés du dépôt, droits d'auteur — voir `samples/nomura-ryu-pdf/README.md`), validé sur かぎやで風節 (3 pages : titre+6 / 7 / 6+couplets).
 - ✅ Géométrie Nomura (2026-10-03) : 3 constantes primaires (cadre 559,3 × 745,9 pt, marge de dans M = 14,5 unique partout), tout dérivé — boucle vérifiée au pt près (e288f91…).
 - ✅ Couplets nomura (2026-10-03) : 3 colonnes/dan virtuel calées sur la largeur de dan (eebf527, 1bbf95c) ; excédent sur pages suivantes dédiées (7 dans virtuels max/page), jamais de débordement du cadre, jamais de dan de musique perdu (3ec6aca). Validé sur cas limite 6 couplets (4 pages, p.4 couplets seuls).
