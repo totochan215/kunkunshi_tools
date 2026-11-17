@@ -81,7 +81,7 @@ Exemple :
     一、｛今日｝《きゆ》の《ぬ》誇《ふく》らしゃや　何をにぎやなたてる　莟で居る花の　露行逢たごと
     ::
 
-(Extrait de かぎやで風節 (Kajadifu bushi))
+*Extrait de かぎやで風節 (Kajadifu bushi)*
 
 - Métadonnées : `@title`, `@tuning`, `@cells_per_dan`, `@layout`, `@marker`, `@author`,
   `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc.
