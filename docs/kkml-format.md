@@ -132,6 +132,8 @@ Détails :
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
 - En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les sections `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et sections. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::vocal` est par construction déjà écrit en phonétique.
 
+TODO: considérer l'usage de `《》` plutôt que `《》`.
+
 ## Cellules de tablature
 
 Chaque cellule de tablature correspond à un temps. Les tablatures Kunkunshi ignorent la notion de mesure (regroupement de temps tels que 3/4 ou 4/4).
@@ -195,6 +197,7 @@ Au sein des sections `::tab` et `::vocal`, les équivalents pleine largeur des s
 | `｀` (U+FF40)   | `'`           | uchi-utu (打音) |
 | `＊` (U+FF0A)   | `*`           | uchi-utu (打音), variante de `'` |
 | `＂` (U+FF02)   | `"`           | uchi-nuchi-utu (打ち抜き音) |
+| `〃` (U+3003)   | `"`           | uchi-nuchi-utu (打ち抜き音) |
 | `＾` (U+FF3E)   | `^`           | kaki-utu (掛音) |
 | `＜` (U+FF1C)   | `<`           | kachi-utu (掻音) |
 | `（` (U+FF08)   | `(`           | koedashi, début de boucle vocale |
