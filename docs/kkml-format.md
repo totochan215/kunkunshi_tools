@@ -251,7 +251,7 @@ Au sein des sections `tab::`, les kandokoro exprimés en romaji sont tolérés ;
 | `bon`    | `凡`    |
 | `dshaku` | `勺`    |
 
-NB: dshaku pour "down shaku".
+NB: dshaku pour "down shaku". sai, bon et dshaku ne peuvent pas être utilisés dans les sections existantes ; ils auront leur place dans une future section dédiée à la hauteur de chant, nécessaire pour pouvoir rendre complètement les recueils nomura-ryu.
 
 TODO: séparer explicitement les méthodes Hepburn et Kunrei (et Nippon-shiki ?)
 
