@@ -101,7 +101,7 @@ Détail complet : [docs/notation.md](docs/notation.md) et [docs/kkml-format.md](
 - [docs/portama-format.md](docs/portama-format.md) — description du format JSON Portama
 - [docs/svg-layout.md](docs/svg-layout.md) — description des mises en page SVG (dimensions, constantes, etc.)
 
-La roadmap du projet et le contexte technique pour contributeurs/agents IA sont dans [AGENTS.md](AGENTS.md).
+La roadmap du projet et le contexte technique pour contributeurs/agents IA sont dans [AGENTS.md](AGENTS.md). Les agents IA écrivent exclusivement dans ce fichier.
 
 ## Echantillons de fichiers
 
