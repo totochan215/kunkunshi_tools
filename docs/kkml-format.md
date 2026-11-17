@@ -87,20 +87,31 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 
 ## Sections
 
-- `::tab` — section de tablature, organisé en temps (figures), séparés par des espaces. **Boucle vocale** : `(:` en début de token, `:)` en fin (ex. `(:合`, `中:)`), rendue comme marqueur de boucle dans la colonne marker. **Désambiguation** : les marqueurs de boucle (`|:`, `:|`, `(:`, `:)`) ne figurent QUE dans `::tab` ; les koedashi/koekiri (`(`, `)`) ne figurent QUE dans `::vocal`. Un `( )` dans `::tab` est ignoré avec un avertissement ; une boucle dans `::vocal` est ignorée avec un avertissement. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
-- `::vocal` — chant syllabique aligné sur les temps de la tablature : un mot (séparé par des espaces) = une syllabe, les points `.` subdivisent le temps en parts égales. Chaque ligne de `::vocal` correspond à la ligne de `::tab` de même index (la syllabe i reste alignée sur la note i ; une ligne de chant plus courte est complétée par des cases vides). Un token `ー`/`ｰ`/`－` ISOLÉ vaut case vide ; collé à une syllabe (ex. `よー`) il reste la voyelle longue. **Désambiguation** : `(` / `)` (koedashi/koekiri) ne figurent QUE dans `::vocal` ; les boucles `|: :| (: :) |( )|` y sont ignorées avec avertissement (réservées à `::tab`). Les anciennes sections `::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal` (acceptés avec une info stderr).
-- `::lyrics` — section de paroles, divisé en couplets. Séparateurs de couplets : ligne vide, OU marqueur de couplet en début de ligne (voir ci-dessous) — un marqueur force le changement de couplet même sans ligne vide, et donc un saut de colonne en layout vertical. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
+### Tab
+`::tab` — section de tablature, organisé en temps (figures), séparés par des espaces. **Boucle vocale** : `(:` en début de token, `:)` en fin (ex. `(:合`, `中:)`), rendue comme marqueur de boucle dans la colonne marker. **Désambiguation** : les marqueurs de boucle (`|:`, `:|`, `(:`, `:)`) ne figurent QUE dans `::tab` ; les koedashi/koekiri (`(`, `)`) ne figurent QUE dans `::vocal`. Un `( )` dans `::tab` est ignoré avec un avertissement ; une boucle dans `::vocal` est ignorée avec un avertissement. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
+
+`::` ferme la section courante.
+
+### Vocal
+`::vocal` — chant syllabique aligné sur les temps de la tablature : un mot (séparé par des espaces) = une syllabe, les points `.` subdivisent le temps en parts égales. Chaque ligne de `::vocal` correspond à la ligne de `::tab` de même index (la syllabe i reste alignée sur la note i ; une ligne de chant plus courte est complétée par des cases vides). Un token `ー`/`ｰ`/`－` ISOLÉ vaut case vide ; collé à une syllabe (ex. `よー`) il reste la voyelle longue. **Désambiguation** : `(` / `)` (koedashi/koekiri) ne figurent QUE dans `::vocal` ; les boucles `|: :| (: :) |( )|` y sont ignorées avec avertissement (réservées à `::tab`). Les anciennes sections `::tab-lyrics` et `::tab-vocals` sont des alias dépréciés de `::vocal` (acceptés avec une info stderr).
+
+`::` ferme la section courante.
+
+### Lyrics
+`::lyrics` — section de paroles, divisé en couplets. Séparateurs de couplets : ligne vide, OU marqueur de couplet en début de ligne (voir ci-dessous) — un marqueur force le changement de couplet même sans ligne vide, et donc un saut de colonne en layout vertical. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `○` `●` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
   - `女` `男` `男女` suivis de `、` (virgule pleine chasse, ex. `女、`) ou d'un espace (ex. `女　`) — couplet chanté par les femmes `女`, les hommes `男` ou les deux `男女`. 
     Plusieurs types de couplets peuvent être mélangés dans un même morceau.
-- Variantes phonétiques des paroles : `::lyrics-kanji`, `::lyrics-ruby`, `::lyrics-romaji`, `::lyrics-kana` —
+
+Variantes phonétiques des paroles : `::lyrics-kanji`, `::lyrics-ruby`, `::lyrics-romaji`, `::lyrics-kana` —
   pour les chansons dont on conserve plusieurs versions phonétiques (par ex. une en kanji pour les japonais,
   une en romaji pour les étrangers). Toutes ces variantes partagent la grammaire et le rendu de `::lyrics`
   (couplets, colonnes `|`/`||`, rubys). `::lyrics` est un alias de `::lyrics-ruby` : kanji avec support des rubys.
   `::lyrics-kanji` désigne une version en kanjis seuls (sans rubys), `::lyrics-kana` une transcription en kanas,
   `::lyrics-romaji` une romanisation.
-- `::` ferme la section courante.
+
+`::` ferme la section courante.
 
 ## Ruby
 
