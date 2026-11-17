@@ -8,7 +8,7 @@ En bref, un outil pour sanshin 🪕 ... sous python ! 🐍 😂
 - Pipeline 2 : Saisie/mise à jour texte en KKML → SVG / PDF → Impression ou finalisation dans un logiciel d'édition
 - Pipeline 3 (à l'étude) : Saisie texte en KKML → JSON Portama → Finalisation dans l'éditeur Portama
 
-Etat du projet : `Proof of Concept`. Le but est de parvenir à une spécification cohérente et englobante du format KKML et de ses outils.
+Etat d'avancement : `Proof of Concept`. Le but est de parvenir à une spécification cohérente et englobante du format KKML et de ses outils.
 
 Projet réalisé en partie par intelligence artificielle (https://chat.mistral.ai/code/)
 
