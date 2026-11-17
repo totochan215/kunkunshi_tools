@@ -8,7 +8,7 @@ Règles :
 - Tests : `python3 tests/run_tests.py`. Python 3 stdlib uniquement, aucune dépendance.
 
 ---
-# Feuille de route — kunkunshi_tools
+# Feuille de route
 
 Dernière mise à jour : 15 novembre 2026
 
