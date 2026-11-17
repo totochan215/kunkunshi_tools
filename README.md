@@ -24,7 +24,7 @@ Convertit un fichier JSON [Portama](https://portama.com/) en KKML.
 
 Options CLI : `-o/--output`
 
-Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence), styles rythmiques (standard, hayabichi), repères de répétition (instrumental, chant), repères de respiration (koedashi, koekiri), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), hauteur de base (1 à 8), tempo, autres métadonnées, paroles, etc.
+Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence), styles rythmiques (standard, hayabichi), repères de répétition (instrumental, chant), repères de respiration (koedashi, koekiri), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), hauteur de base, tempo, autres métadonnées, paroles, etc.
 
 ### kkml2svg.py
 
