@@ -70,7 +70,7 @@ Le caractère 下 n'est pas une position autonome : c'est un préfixe de demi-to
 |----------|------------|-----------------------------|-------|----------------------|
 | 下老     | shita-rō (したろう)         | 15,1                        | 男     | Parfois appelé ge-rō |
 | 尺♯      | shaku-sharp (しゃくシャープ)　| 17,6                       | 中     |                      |
-| 下尺     | shita-shaku （したしゃく）    | 17,6                        | 中    |                      |
+| 下尺     | shita-shaku （したしゃく）    | 17,6                        | 中    | Synonyme de shaku-sharp |
 | 下八     | shita-hachi （したはち）     | 24,3                        | 女    |                      |
 
 * Même remarque que ci-dessus concernant la distance à l'utaguchi.
