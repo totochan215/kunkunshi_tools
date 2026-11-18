@@ -45,7 +45,7 @@ Normalise un fichier KKML sous sa forme canonique.
     python3 kkml_cleaner.py -n dirty.kkml               # mode test (dry run)
     python3 kkml_cleaner.py -n -o clean.kkml dirty.kkml # écrit dans un autre morceau
 
-Options CLI : `-n`, `-o/--output`
+Options CLI : `-n/--dry-run`, `-o/--output`
 
 ### kkml2pdf.py
 
