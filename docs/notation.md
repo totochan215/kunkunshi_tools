@@ -26,7 +26,7 @@ Les tablatures peuvent préciser le doigté (指位 - yubii) lorsque nécessaire
 | ○         | (　)     |               | 開弦     | Pas de doigté (Corde à vide)        |   
 | ㊀        | (一)     | ㈠            | 人差指    | Index                               |
 | ㊁        | (二)     | ㈡            | 中指      | Majeur                              |
-| ㊂        | (三)     | ㈢            | 無名指    | Non précisé (Majeur ou auriculaire) |
+| ㊂        | (三)     | ㈢            | 無名指    | Non précisé (majeur ou auriculaire) |
 | ㊃        | (四)     | ㈣            | 小指      | Auriculaire                         |
 
 ## Positions de base
