@@ -173,17 +173,17 @@ Elles ne correspondent pas à une position réelle sur le manche du sanshin (une
 
 #### Positions de base
 
-| Position | Lecture      | Hauteur (demi-tons)   | Doigt | Variante |
-|----------|--------------|-----------------------|-------|----------|
-| 才       | さい　 (sai)   | -5                    | —     | 毛（もう） |
-| 凡       | ぼん　(bon)    | -3                    | —     | —　　     |
-| 勺       | しゃく (shaku) | -2                    | —     | 厘 (りん)  |
+| Position | Lecture      | Hauteur (demi-tons)   | Corde | Doigté | Variante |
+|----------|--------------|-----------------------|-------|--------|----------|
+| 才       | さい　 (sai)   | -5                   | —     | —      | 毛（もう） |
+| 凡       | ぼん　(bon)    | -3                   | —     | —      | —　　     |
+| 勺       | しゃく (shaku) | -2                   | —     | —      | 厘 (りん)  |
 
 #### Positions étendues
 
-| Position | Lecture                 | Hauteur (demi-tons) | Doigt | Variante |
-|----------|-------------------------|---------------------|------|-----------|
-| 下勺     | したしゃく (shita-shaku) | -1                  | —    | 尺♯       |     
+| Position | Lecture                 | Hauteur (demi-tons) | Corde | Doigté | Variante |
+|----------|-------------------------|---------------------|-------|--------|-----------|
+| 下勺     | したしゃく (shita-shaku) | -1                  | —     | —      | 尺♯       |     
 
 ## Symboles spéciaux
 
