@@ -123,6 +123,11 @@ FULLWIDTH_MAP = {
 # est une voyelle longue légitime ailleurs, on ne devine pas l'intention).
 EMPTY_INPUT_VARIANTS = {'ー', 'ｰ', '－'}
 
+# Variantes de saisie des doigtés (yubii) : formes parenthésées (U+3220-U+3223,
+# « variante 2 » de notation.md) normalisées en numéraux encerclés ㊀-㊃
+# (U+3280-U+3283), forme canonique.
+YUBII_INPUT_VARIANTS = {'㈠': '㊀', '㈡': '㊁', '㈢': '㊂', '㈣': '㊃'}
+
 # Kandokoro saisis en romaji (Hepburn/Kunrei tolérés) -> kanji canonique.
 # Token entier uniquement : les suffixes de technique restent accolés au kanji.
 ROMAJI_TO_KANJI = {
@@ -162,6 +167,10 @@ def _normalize_tab_token(tok):
     forme canonique : pleine chasse (FULLWIDTH_MAP), kanjis composites,
     romaji et chiffres (token entier). Renvoie (token, a_été_modifié)."""
     out = ''.join(FULLWIDTH_MAP.get(ch, ch) for ch in tok)
+    for ch, repl in YUBII_INPUT_VARIANTS.items():
+        if ch in out:
+            _info_input_variant(ch, repl)
+            out = out.replace(ch, repl)
     for ch, repl in COMPOSITE_TO_TOKEN.items():
         if ch in out:
             _info_input_variant(ch, repl)
@@ -215,6 +224,21 @@ TECHNIQUE_SUFFIXES = {
     # PRÉFIXE : la bouche s'ouvre AVANT la note, ex. (中.)
     ')': {'name': 'koe-kiri (声切り)',   'type': 'char', 'symbol': '□',
           'pos': 'inside-right', 'dx': 0.36, 'dy': 0.318, 'scale': 0.42},
+
+    # Doigtés (yubii) : suffixes ㊀-㊃ (U+3280-U+3283) apposés à la note dans
+    # ::tab (ex. 合㊀), JAMAIS des positions autonomes (confusion avec le
+    # silence ◯). Portama : champ cell.yubii 1-4 (PUA U+E041-E044).
+    # Calibrage PDF Portama (テスト節.pdf, paysage) : glyphe à GAUCHE de la
+    # note dans la case, même baseline, fs ≈ 0,735 × fs note (12,5/17),
+    # dx ≈ 0,91 × note_fs, ancre middle.
+    '㊀': {'name': 'yubii 1 (index 人差指)',   'type': 'char', 'symbol': '㊀',
+          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+    '㊁': {'name': 'yubii 2 (majeur 中指)',  'type': 'char', 'symbol': '㊁',
+          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+    '㊂': {'name': 'yubii 3 (non précisé 無名指)', 'type': 'char', 'symbol': '㊂',
+          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+    '㊃': {'name': 'yubii 4 (auriculaire 小指)', 'type': 'char', 'symbol': '㊃',
+          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
 }
 # Positions hautes (préfixes イ / ロ)
 #   イ  = 人偏 (亻) — 1 octave au-dessus du kanji de droite
@@ -227,6 +251,10 @@ HIGH_POS_KANJI = {"合", "乙", "老", "四", "上", "尺", "工", "五", "中"}
 HIGH_PREFIXES = {HIGH_PREFIX_I, HIGH_PREFIX_RO}
 
 TECHNIQUE_CHARS = set(TECHNIQUE_SUFFIXES.keys())
+
+# Caractères de doigté (yubii) : suffixes de note uniquement, jamais des
+# positions de grille (les ㊀-㊃ ne figurent PAS dans POSITION_CHARS).
+YUBII_CHARS = {"㊀", "㊁", "㊂", "㊃"}
 
 # Marqueurs de couplet :
 #   一、 etc.  → numéro de couplet (CJK + 、), indent sous le 、
@@ -3588,6 +3616,13 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
         tech_suffixes.insert(0, base_tok[-1])
         base_tok = base_tok[:-1]
+    # Doigtés (yubii) : un token composé UNIQUEMENT de ㊀-㊃ n'est pas une
+    # note (les ㊀-㊃ ne sont jamais des positions autonomes : confusion avec
+    # le silence ◯) — avertissement, rien n'est rendu.
+    if base_tok and all(ch in YUBII_CHARS for ch in base_tok):
+        _warn_once("yubii ㊀-㊃ sans note : suffixe attendu sur une note de ::tab "
+                   "(ex. 合㊀), jamais une position autonome")
+        return
     if not opts.get('render_koe', True):
         # koekiri non affiché (ex. layout tuto) : on garde l'interprétation
         # mais on ne rend pas le symbole □
