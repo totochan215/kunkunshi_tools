@@ -129,6 +129,9 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ⬜ Pipeline de publication LaTeX : collaboration avec éditeurs et communauté large.
   Pas de LilyPond / portée standard.
 - ⬜ GUI : combler l'écart avec Portama (avantage GUI).
+- ⬜ Internationalisation (non prioritaire) : basculer le projet en anglais, ou en multilingue
+  français / anglais / japonais (README, `docs/`, messages et diagnostics des scripts Python,
+  commentaires du code). À trancher le moment venu : anglais seul vs i18n complète.
 - ✅ `kkml_cleaner.py` (2026-11-01, PR #10) : normaliser un KKML sur sa forme canonique (formes pleine chasse → demi-largeur, romaji/chiffres → kanji kandokoro, kanji composites → katakana+kanji, `::tab-lyrics`/`::tab-vocals` → `::vocal`, ordre des sections `::tab` `::vocal` `::lyrics`). Réutilise les tables de normalisation de `kkml2svg.py` ; sortie : KKML canonique, idempotent (cleaner(cleaner(x)) == cleaner(x)). Règles de complétion structurelle :
   - `::vocal` manquante → la créer, remplie de cases vides (`-`) alignées sur `::tab` (même nombre de cases par ligne) ;
   - `::vocal` désalignée de `::tab` (cases/ligne différentes) mais total de cases identique → réaligner ligne à ligne sur `::tab` ; si le total ne boucle pas → avertissement stderr, PAS de réalignement ;
