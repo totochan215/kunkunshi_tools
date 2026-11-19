@@ -16,3 +16,5 @@ jobs:
         run: python3 tests/run_tests.py
       - name: Lancer les tests kkml2pdf
         run: python3 tests/test_kkml2pdf.py
+      - name: Lancer les tests yubii
+        run: python3 tests/test_yubii.py

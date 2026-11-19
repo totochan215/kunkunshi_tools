@@ -29,6 +29,8 @@ Les tablatures peuvent préciser le doigté (指位 - yubii) lorsque nécessaire
 | ㊂        | (三)     | ㈢            | 無名指    | Non précisé (majeur ou auriculaire) |
 | ㊃        | (四)     | ㈣            | 小指      | Auriculaire                         |
 
+**Encodage KKML** : le doigté est un **suffixe de note dans `::tab`** — ㊀㊁㊂㊃ (U+3280-U+3283) accolés au token (ex. `合㊀`). Les variantes parenthésées ㈠㈡㈢㈣ (U+3220-U+3223) sont normalisées en ㊀㊁㊂㊃. Les ㊀㊁㊂㊃ ne sont **jamais des positions autonomes** dans la grille (confusion avec le silence ◯ : un token composé uniquement de ㊀㊁㊂㊃ est refusé avec un avertissement). Rendu SVG (calibrage PDF Portama テスト節.pdf) : glyphe à gauche de la note dans la case, même baseline, taille ≈ 73 % de la note (`kkml2svg.py`, `TECHNIQUE_SUFFIXES`, pos `left`). Côté Portama : champ `cell.yubii` 1-4 (PUA U+E041-E044). Dans les recueils Nomura-ryu, les ㊀㊁㊂㊃ figurent en marge gauche (colonne dédiée) — rendu en marge non implémenté à ce jour (voir P4 dans AGENTS.md).
+
 ## Positions de base
 
 Les caractères de position, ou kandokoro (勘所), représentent les positions sur le manche du sanshin. Les 14 positions de base sont, dans l'ordre croissant des hauteurs de notes :
