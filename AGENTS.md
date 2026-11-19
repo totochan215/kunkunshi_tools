@@ -10,9 +10,9 @@ Règles :
 ---
 # Feuille de route
 
-Dernière mise à jour : 15 novembre 2026
+Dernière mise à jour : 19 novembre 2026
 
-Pipeline : Portama JSON → KKML → SVG. Ce document est la référence unique pour
+Pipeline : Portama JSON → KKML → SVG / PDF. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
 
 ## 0. Syntaxe KKML — points à trancher (personne n'utilise encore KKML, il y a le temps)
@@ -270,6 +270,30 @@ Options : `-o output`, `-c cells_per_dan`, `-l vertical|horizontal|nomura|chinda
 | cells_per_dan | 12 | cellules par dan, lignes par colonne (vertical) — défaut depuis le 14 sept. 2026 (avant : 9) |
 | marker_w | cell_w // 2 | colonne marker (auto si ::vocal) |
 
+## `kkml2pdf.py`
+
+Python 3 autonome (stdlib) **plus** dépendances externes optionnelles détectées à l'exécution : un moteur SVG→PDF et un outil de fusion PDF. Ce dépôt est la source de vérité du code.
+
+### CLI
+
+```bash
+python3 kkml2pdf.py chanson.kkml -o chanson.pdf
+python3 kkml2pdf.py chanson.kkml            # -> chanson.pdf
+cat chanson.kkml | python3 kkml2pdf.py -     # stdin -> output.pdf
+```
+
+Options : `-o output`, `-c cells_per_dan`, `-l layout`, `-p/--dans-per-page N` (passés à `render_svg`), `--engine auto|rsvg-convert|inkscape|cairosvg`, `--merger auto|pypdf|pdfunite|gs`, `--keep-temp DIR`.
+
+### Chaîne
+
+- `render_pages(text, layout, cols, page_dans)` : `parse_kkml` + garde + `kkml2svg.render_svg(...)` → `(layout_effectif, [svg, ...])`. Garde : seuls `chindami`/`nomura`/`mega` (`LAYOUTS_CM`) sont acceptés — les seuls layouts dont kkml2svg émet la racine SVG en cm (`_svg_open_print`) ; les layouts libres (page en pt/px selon le contenu) lèvent `UnsupportedLayout` → exit 2.
+- `page_size_cm(svg)` : lit `width`/`height` en cm sur la racine `<svg>` (log par page ; `None` → AVERTISSEMENT).
+- `produce_pdf(svgs, out, engine, merger, workdir)` : écrit `page-N.svg` dans un répertoire temporaire (`--keep-temp DIR` les conserve), convertit chaque page en `page-N.pdf` via `convert_page`, fusionne dans l'ordre via `merge_pdfs`.
+- `convert_page(engine, svg, pdf)` : `rsvg-convert -f pdf -o`, `inkscape --export-type=pdf --export-filename=`, ou `cairosvg.svg2pdf(url=..., write_to=...)`. La taille de page PDF vient du cm du SVG (MediaBox en pt = cm × 28,3465).
+- `merge_pdfs(merger, pdfs, out)` : `pypdf.PdfWriter.append` page par page, ou CLI `pdfunite` / `gs -sDEVICE=pdfwrite`.
+- Détection : `detect_engine`/`detect_merger` (`auto` = premier disponible ; `--engine`/`--merger` pour forcer). `cairosvg` n'est retenu que si son import réussit (sinon OSError libcairo). Aucun disponible → ERREUR + exit 1 avec la liste des installables.
+- `engine`/`merger` acceptent aussi une fonction appelable — utilisé par `tests/test_kkml2pdf.py`.
+
 ## `portama2kkml.py`
 
 Python 3 autonome. Ce dépôt est la source de vérité du code.
@@ -332,7 +356,7 @@ Calibrage Inkscape nov. 2026 (grille de test + こぐやで風節, てぃんさ�
 - Mapping conversion restant à définir : `yubii: 1-4` → KKML, `vocalPosMarkers` → KKML, orn `nu` → suffixe `n` (proposition).
 - `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons ; pas encore implémenté).
 - Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne rendent RIEN dans テスト節.pdf (dan 1, cases 13–19 : aucun graphique ni flèche), alors que d'autres pièces rendent des flèches dans la colonne marker. Le déclencheur exact du rendu des flèches reste à élucider.
-- `kkml2pdf.py` : script non écrit. Pipeline KKML → PDF à définir.
+- ✅ `kkml2pdf.py` (2026-11-19) : KKML → PDF multipage pour les layouts à format cm prédéfini (chindami/nomura/mega) — voir la section architecture `kkml2pdf.py` ci-dessous.
 ## Modèles de page — état (2026-11-15)
 
 - ✅ SVG multipage (2026-10-02) : `@dans_per_page` / `-p` implémentés ; contrainte Portama 12 dans/page vérifiée sur かぎやで風節.pdf.
@@ -343,7 +367,9 @@ Calibrage Inkscape nov. 2026 (grille de test + こぐやで風節, てぃんさ�
 - 🚧 (2026-11-10) Layout `tuto` (POC) : horizontal, canvas WxH fixe (`@tuto_block`, défaut 1280x720), 8 cases/dan et 7 dans/page (calibré sur la vidéo exemple https://www.youtube.com/watch?v=GvcZoeCbIPQ), page 1 = titre/accordage/infos seuls, ligne marker au-dessus de chaque dan si `::vocal` + `@marker on`. Reste : calage visuel fin (fs, marges) et SVG de référence d'un échantillon.
 - 🚧 (2026-11-15) Layout `mega` (POC, demande utilisateur avec exemple PJ) : page A3 paysage (42 × 29,7 cm), **2 blocs horizontaux empilés** de chacun **32 dans × 12 cases** (64 dans/page, 768 cases, pagination auto `fichier-N.svg`). Ordre de lecture : bloc du haut d'abord, haut→bas et droite→gauche dans chaque dan, puis bloc du bas idem. Colonne marker = **1/2 case** à droite de chaque dan (`marker_w = cell_w/2`, forcée par `::vocal`, sinon `@marker`). **Medley** : chaque chanson = `::section <nom>` + `::tab` ; le nom est imprimé en 11 pt centré au-dessus des colonnes de la chanson dans chaque bloc (avec flèches d'association), et la dernière colonne de chaque chanson est complétée par des **cases vides (`-`, pas de tenuto)** pour que la chanson suivante commence sur une colonne suivante. **Titre global `@title` en colonne verticale en haut à droite, à droite de tous les blocs (marge droite)**, répété sur chaque page ; paroles verticales à gauche de la 1re page (largeur réservée partout). Géométrie dérivée de la page : `cell_h = (page_h − 2×MEGA_MARGIN − MEGA_BLOCK_GAP)/24`, `cell_w = largeur dispo/(32×1,5)`, `fs = 0,38×cell_h` (constantes MEGA_* dans `kkml2svg.py`, fonction `_render_mega`, rendu des dans repris de `_draw_vertical_tab`). Dans la PJ (A3 = 2 A4 assemblés, couture imparfaite au milieu, **31 colonnes visibles par bloc** dans le scan) : case ≈ 22 × 32,5 pt, marker ≈ 11,5 pt. Suites 26-42 (2026-11-15) : paroles paginées sur des **pages A3 dédiées** après les pages de tablature quand la largeur réservée dépasse 15 % de la grille (`MEGA_LYRICS_INLINE_MAX_RATIO`), avec la même structure de 2 blocs, repli obligatoire à la hauteur de bloc et **titre de chaque chanson en colonne verticale 「…」 gras fs 11 remonté au haut de bloc** ; hayashi ; en-têtes de couplets toujours 3 caractères pleine chasse, matérialisés par `_pad_inline_marker` ; marqueur ⚪︎ (U+26AA, +U+FE0E) reconnu comme marqueur de couplet. Reste : validation visuelle contre la PJ et calage fin (marges, gap, taille des noms de chansons).
 - ✅ (2026-11-15) Layout `chindami` complet : page 23 × 15 cm paysage imposée (viewBox en pt), piles de 12 cases lues haut→bas droite→gauche, colonne marker ~1/2 case à droite de chaque pile, 15 piles/page (14 en p.1 quand le titre occupe sa colonne), `@musicno` écrit en HORIZONTAL fs 11 au sommet de la colonne titre et repoussant le titre de `fs + 8` pt (n° > 999 tronqué mod 1000, 0 non écrit), repli des paroles en sous-colonnes de hauteur de grille, pages dédiées paroles, textes verticaux en blocs `<text>` groupés (constantes `CHINDAMI_*`, fonction `_render_chindami`).
-- ⚪︎ Assemblage PDF (SVG→PDF, embed polices CJK) — `kkml2pdf.py` non écrit.
+- ✅ (2026-11-19) `kkml2pdf.py` : PDF multipage pour les layouts à format cm prédéfini uniquement (chindami 23×15, nomura A4 21×29,7, mega A3 42×29,7) — chaîne `kkml2svg.render_svg` (liste de pages SVG en cm) → conversion page par page (moteur auto : rsvg-convert, inkscape, cairosvg) → fusion (auto : pypdf, pdfunite, gs) ; layouts libres refusés (exit 2, message explicite), MediaBox = taille cm du SVG. Tests : `tests/test_kkml2pdf.py` (garde layout, tailles cm, multipage, pipeline avec faux moteur + fusion pypdf, CLI). Bac à sable : ratios de page rendus 0,707 / 1,533 / 1,414 conformes (A4 portrait / 23×15 / A3 paysage).
+- ⚪︎ (2026-11-19) Blocage pré-existant dans `kkml2svg` : `kkml2svg.py -l chindami` sur `samples/kkml/かぎやで風節.kkml` ne termine pas (> 60 s ; `安波節.kkml` en chindami : 0,00 s, 2 pages). À investiguer dans `_render_chindami` (repli/pagination des paroles ?). Indépendant de `kkml2pdf.py`.
+- ✅ (2026-11-19) Assemblage PDF : `kkml2pdf.py` — kkml2svg (`render_svg`, liste de pages SVG en cm) → moteur SVG→PDF page à page (auto : rsvg-convert, inkscape, cairosvg) → fusion multipage (auto : pypdf, pdfunite, gs). L'embed des polices CJK reste du ressort du moteur SVG→PDF.
 - ⚪︎ Raffinements nomura en réserve : marqueur ⚪︎ de couplet, taille/espacement des paroles, calligraphie du titre.
 - ⚪︎ Raffinements supplémentaires de la mise en page nomura à définir plus tard (retours visuels utilisateur sur かぎやで風節 et 安波節 ; typiquement : ajustement fin du placement des couplets sur page dédiée, sous-colonnes marker, etc.).
 - ⚪︎ Tester le rendu d'安波節 (6 couplets = 2 dans virtuels) pour valider la pagination multi-dans virtuels.

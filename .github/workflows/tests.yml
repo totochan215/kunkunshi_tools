@@ -14,3 +14,5 @@ jobs:
           python-version: "3.x"
       - name: Lancer les tests
         run: python3 tests/run_tests.py
+      - name: Lancer les tests kkml2pdf
+        run: python3 tests/test_kkml2pdf.py
