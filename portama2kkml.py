@@ -107,6 +107,13 @@ ORN_TO_SUFFIX = {
 }
 
 
+# Doigtés (yubii) Portama -> suffixes KKML ㊀-㊃ (U+3280-U+3283, suffixe de
+# note dans ::tab, ex. 合㊀). cell.yubii = 1-4 ; les PUA U+E041-E044 peuvent
+# aussi apparaître comme `note` (yubii encodé directement dans la position).
+YUBII_INT_TO_SUFFIX = {1: '㊀', 2: '㊁', 3: '㊂', 4: '㊃'}
+YUBII_PUA_TO_SUFFIX = {0xE041: '㊀', 0xE042: '㊁', 0xE043: '㊂', 0xE044: '㊃'}
+
+
 def pua_to_kanji(pua_char):
     """Convertit un caractère PUA Portama en kanji kunkunshi."""
     if not pua_char:
@@ -118,15 +125,22 @@ def pua_to_kanji(pua_char):
 def cell_to_note(cell, is_main):
     """Convertit une cellule Portama en token KKML (kanji + suffixes).
 
-    Retourne None si la cellule est vide (pas de note).
+    Retourne (token, yubii) : token None si la cellule est vide (pas de note),
+    yubii = suffixe ㊀-㊃ (U+3280-U+3283) si la cellule porte un doigté
+    (champ `yubii`, ou note PUA U+E041-E044).
     """
     note = cell.get("note", "")
+    yubii = YUBII_INT_TO_SUFFIX.get(cell.get("yubii", 0), "")
     if not note:
-        return None
+        return None, yubii
+
+    if note and ord(note[0]) in YUBII_PUA_TO_SUFFIX:
+        # yubii encodé comme note PUA : pas de note de base, juste le doigté
+        return None, YUBII_PUA_TO_SUFFIX[ord(note[0])] or yubii
 
     kanji = pua_to_kanji(note)
     if not kanji:
-        return None
+        return None, yubii
 
     # Dièse (accidental sharp) → 尺♯ (seulement pour 尺)
     if cell.get("acc") == "sharp" and kanji == "尺":
@@ -140,7 +154,7 @@ def cell_to_note(cell, is_main):
     if is_main and cell.get("isSmall", False):
         suffix += "s"
 
-    return kanji + suffix
+    return kanji + suffix, yubii
 
 
 def dan_to_tokens(dan):
@@ -157,8 +171,10 @@ def dan_to_tokens(dan):
     pairs = [(dan[i], dan[i + 1]) for i in range(0, len(dan) - 1, 2)]
 
     for main_cell, straddle_cell in pairs:
-        main_note = cell_to_note(main_cell, is_main=True)
-        straddle_note = cell_to_note(straddle_cell, is_main=False)
+        main_note, main_yubii = cell_to_note(main_cell, is_main=True)
+        straddle_note, straddle_yubii = cell_to_note(straddle_cell, is_main=False)
+        # Un seul doigté par case KKML : priorité à la note principale.
+        yubii = main_yubii or straddle_yubii
 
         prefix = ""
         suffix = ""
@@ -171,22 +187,22 @@ def dan_to_tokens(dan):
         if main_note is None:
             # Pas de note principale : case vide (ou juste repeat marker)
             if prefix or suffix:
-                tokens.append(prefix + "-" + suffix)
+                tokens.append(prefix + "-" + suffix + yubii)
             else:
-                tokens.append("-")
+                tokens.append("-" + yubii)
             continue
 
         if straddle_note is not None:
             # Deux notes dans la paire
             if main_cell.get("isSmall", False):
                 # Shuffle 早弾き (deux notes égales, petites)
-                token = f"{prefix}{main_note}:{straddle_note}{suffix}"
+                token = f"{prefix}{main_note}:{straddle_note}{suffix}{yubii}"
             else:
                 # Croche (main pleine taille + straddle petite)
-                token = f"{prefix}{main_note}/{straddle_note}{suffix}"
+                token = f"{prefix}{main_note}/{straddle_note}{suffix}{yubii}"
         else:
             # Noire (note principale seule)
-            token = f"{prefix}{main_note}{suffix}"
+            token = f"{prefix}{main_note}{suffix}{yubii}"
 
         tokens.append(token)
 
