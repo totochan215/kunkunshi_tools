@@ -83,7 +83,7 @@ def _meta_blocks(song):
             blocks.append((val, 12, "#777"))
     return blocks
 REST_TOKEN = "◯"
-REST_VARIANTS = {"◯", "○", "〇"}  # O/o/0 retirés : collision romaji
+REST_VARIANTS = {"◯", "○", "〇", "⚪"}  # O/o/0 retirés : collision romaji
 REPEAT_START = "|:"
 REPEAT_END = ":|"
 
@@ -182,6 +182,16 @@ def _normalize_tab_token(tok):
     # `-` et `=` restent des séparateurs d'accord valides (non canoniques ;
     # `+` est canonique) : on ne les normalise PAS en `+`, le rendu des accords
     # les accepte tous. Seul le token `-` isolé = case vide.
+    # Préfixe 口 (U+53E3, radical) accepté comme variante de ロ (U+30ED) pour les
+    # positions hautes 2 caractères (ex. 口上 = ロ上) :
+    if len(out) == 2 and out[0] == "口" and out[1] in HIGH_POS_KANJI:
+        _info_input_variant(out, "ロ" + out[1])
+        out = "ロ" + out[1]
+    # Bémol ASCII `b` en suffixe d'une position (ex. 合b = 合♭) ; `#` → ♯ via FULLWIDTH_MAP :
+    if len(out) == 2 and out[0] in POSITION_CHARS and out[1] == "b":
+        out = out[0] + "♭"
+    # sélecteurs de variante (U+FE00-FE0F) retirés des tokens ::tab/::vocal :
+    out = "".join(c for c in out if c not in VARIATION_SELECTORS)
     return out, out != tok
 
 # Suffixes de technique (souhou) — apposés après le caractère de position
@@ -239,6 +249,16 @@ TECHNIQUE_SUFFIXES = {
           'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
     '㊃': {'name': 'yubii 4 (auriculaire 小指)', 'type': 'char', 'symbol': '㊃',
           'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+
+    # Altérations en suffixe sur TOUTE note (ex. 合♯, 合♭) — Portama acc sharp/flat.
+    # ASCII `#` → ♯ via FULLWIDTH_MAP ; `b` → ♭ via _normalize_tab_token.
+    # Calibrage PDF Portama (テスト節.pdf) : marque en haut-droite de la note, fs ≈ 0,53 × fs
+    # note (9/17), dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs. `尺♯` n'est PAS décomposé
+    # (cas spécial plus bas, option @shaku_sharp).
+    '♯': {'name': 'dièse (altération)', 'type': 'char', 'symbol': '♯',
+          'pos': 'top-right', 'dx': 0.87, 'dy': -0.2, 'scale': 0.48},
+    '♭': {'name': 'bémol (altération)', 'type': 'char', 'symbol': '♭',
+          'pos': 'top-right', 'dx': 0.87, 'dy': -0.2, 'scale': 0.48},
 }
 # Positions hautes (préfixes イ / ロ)
 #   イ  = 人偏 (亻) — 1 octave au-dessus du kanji de droite
@@ -3616,7 +3636,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     # on ne touche PAS à base_tok ici — la branche shuffle gère ':' quelle que
     # soit sa position, et la note garde sa taille pleine (effective_fs = fs).
     tech_suffixes = []
-    while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
+    # `尺♯` n'est pas décomposé : cas spécial géré plus bas (option @shaku_sharp)
+    while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS and base_tok != "尺♯":
         tech_suffixes.insert(0, base_tok[-1])
         base_tok = base_tok[:-1]
     # Doigtés (yubii) : un token composé UNIQUEMENT de ㊀-㊃ n'est pas une
@@ -3757,7 +3778,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
 
         # Extraire les techniques de la note principale (avant le /)
         main_tech = []
-        while len(main_note) > 1 and main_note[-1] in TECHNIQUE_CHARS:
+        while len(main_note) > 1 and main_note[-1] in TECHNIQUE_CHARS and main_note != "尺♯":
             main_tech.insert(0, main_note[-1])
             main_note = main_note[:-1]
 
