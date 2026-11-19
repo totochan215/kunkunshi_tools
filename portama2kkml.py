@@ -209,6 +209,36 @@ def dan_to_tokens(dan):
     return tokens
 
 
+# Métadonnées de compatibilité Portama : clé KKML -> champ JSON Portama.
+# Les valeurs sont des chaînes côté JSON (sauf musicno, entier) et sont
+# stockées telles quelles dans KKML, pour permettre le round-trip.
+META_TO_PORTAMA_FIELD = {
+    "musicno": "musicno",
+    "chogen": "chogen",
+    "speed": "speed",
+    "rythm": "rhythm",
+    "rythm_mode": "rhythmMode",
+}
+
+
+def portama_fields_from_meta(meta):
+    """Sens inverse (kkml2portama) : reconstruit les champs Portama depuis les
+    métadonnées KKML. -> dict {champ Portama: valeur typée}."""
+    out = {}
+    for key, field in META_TO_PORTAMA_FIELD.items():
+        val = meta.get(key, "")
+        if val == "":
+            continue
+        if field == "musicno":
+            try:
+                out[field] = int(val)
+                continue
+            except ValueError:
+                pass  # valeur non entière : on garde la chaîne brute
+        out[field] = val
+    return out
+
+
 def convert_portama_to_kkml(data):
     """Convertit les données JSON Portama en texte KKML."""
     lines = []
@@ -231,6 +261,13 @@ def convert_portama_to_kkml(data):
 
     # Marqueur activé par défaut dans Portama
     lines.append("@marker on")
+
+    # Métadonnées de compatibilité Portama, émises telles quelles quand le
+    # champ est présent dans le JSON (présence/absence préservée pour le
+    # round-trip ; ordre = ordre canonique du cleaner).
+    for key, field in META_TO_PORTAMA_FIELD.items():
+        if field in data and data[field] not in (None, ""):
+            lines.append(f"@{key} {data[field]}")
 
     lines.append("")
     lines.append("::tab")

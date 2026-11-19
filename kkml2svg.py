@@ -352,7 +352,9 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "shaku_circled", "shaku_sharp", "speed", "font_style",
-             "page_dans", "dans_per_page", "tuto_block"}
+             "page_dans", "dans_per_page", "tuto_block",
+             # compatibilité Portama (valeurs stockées telles quelles dans song.meta)
+             "musicno", "chogen", "base_note", "rythm", "rythm_mode"}
 class Song:
     def __init__(self):
         self.meta = {}
@@ -402,7 +404,8 @@ def parse_kkml(text):
         m = re.match(r"@(\S+)\s*(.*)", stripped)
         key, val = (m.group(1), m.group(2).strip()) if m else (None, None)
         if m and key not in META_KEYS and len(key) > 1:
-            for mk in META_KEYS:
+            # préfixe le plus long d'abord : @rythm_mode0 ne doit pas matcher @rythm
+            for mk in sorted(META_KEYS, key=len, reverse=True):
                 if key.startswith(mk) and len(key) > len(mk):
                     _info_input_variant("@" + key, "@" + mk + " " + key[len(mk):])
                     val = key[len(mk):] + ((" " + val) if val else "")
