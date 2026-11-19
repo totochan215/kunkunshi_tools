@@ -61,7 +61,7 @@ l'export du logiciel d'édition.
     python3 kkml2pdf.py chanson.kkml                  # -> chanson.pdf
     cat chanson.kkml | python3 kkml2pdf.py -          # stdin -> output.pdf
 
-Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page`, `--engine auto|rsvg-convert|inkscape|cairosvg`, `--merger auto|pypdf|pdfunite|gs`, `--keep-temp DIR` (conserve les SVG/PDF intermédiaires).
+Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout nomura|chindami|mega`, `-p/--dans-per-page`, `--engine auto|rsvg-convert|inkscape|cairosvg`, `--merger auto|pypdf|pdfunite|gs`, `--keep-temp DIR` (conserve les SVG/PDF intermédiaires).
 
 La taille de page PDF (MediaBox) est celle du SVG en cm. Dépendances externes
 optionnelles (hors stdlib) : un moteur SVG→PDF détecté automatiquement
