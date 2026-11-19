@@ -13,10 +13,9 @@ Couvre :
 - vocalPosMarkers (cellule isSmall, mid) -> section ::vocal avec .( / .) ;
 - variantes de saisie acceptées par kkml2svg : 口+kanji -> ロ+kanji,
   ⚪︎ (U+26AA + U+FE0E) -> repos ◯, `#` -> ♯, `b` -> ♭ ;
-- la correction manuelle rend sans avertissement (vertical/horizontal/mega)
-  et correspond au convertisseur après normalisation, sauf deux PUA où la
-  correction de l'utilisateur diffère de la table de docs/portama-format.md
-  (E014 : イ尺 écrit vs 下尺 documenté ; E028 : イ上 écrit vs イ五 documenté).
+- la correction manuelle (révisée par l'utilisateur) rend sans avertissement
+  (vertical/horizontal/mega) et correspond au convertisseur à l'identique
+  après normalisation (variantes 口→ロ, ○/⚪︎→◯).
 
 Usage :
     python3 tests/test_testbushi.py
@@ -90,11 +89,12 @@ print("OK métadonnées @musicno/@chogen/@speed/@rythm/@rythm_mode émises")
 # --- 2. Section ::vocal : marqueurs mid des cellules à cheval --------------
 voc = vocal_lines(k.parse_kkml(kkml))
 assert len(voc) == 5, voc
-assert voc[0] == ["-"] * 12
-assert voc[1] == ["-"] * 6 + [".(", ".)"] + ["-"] * 4, voc[1]
+assert voc[0] == ["-"] * 10 + ["(", ")"], voc[0]
+assert voc[1] == [")"] + ["-"] * 5 + [".(", ".)"] + ["-"] * 4, voc[1]
 assert voc[4] == ["-"] * 3
 assert "::vocal" in kkml
-print("OK ::vocal : .( .) en ligne 2 positions 7-8, lignes paddées à `-`")
+print("OK ::vocal : ( ) en ligne 1 pos. 11-12 et ) en ligne 2 pos. 1 (cellules principales), "
+      ".( .) en ligne 2 pos. 7-8 (cellules à cheval mid)")
 
 # --- 3. La sortie du convertisseur rend sans avertissement ------------------
 for layout in ("vertical", "horizontal", "mega"):
@@ -110,16 +110,11 @@ for layout in ("vertical", "horizontal", "mega"):
 print("OK samples/kkml/テスト節.kkml (correction manuelle) sans avertissement")
 
 # --- 5. Correction manuelle == convertisseur après normalisation ------------
-# (sauf E014/E028 où la correction diffère de la table doc : voir docstring)
 u_tab = tab_lines(k.parse_kkml(user_kkml))
 c_tab = tab_lines(k.parse_kkml(kkml))
-diffs = [(i, j, a, b) for i, (la, lb) in enumerate(zip(u_tab, c_tab))
-         for j, (a, b) in enumerate(zip(la, lb)) if a != b]
-assert diffs == [(3, 1, "イ" + SHI, "下" + SHI),   # E014 : correction イ尺, doc 下尺
-                 (4, 1, "イ" + "上", "イ" + "五")], diffs  # E028 : correction イ上, doc イ五
+assert u_tab == c_tab, (u_tab, c_tab)
 assert vocal_lines(k.parse_kkml(user_kkml)) == vocal_lines(k.parse_kkml(kkml))
-print("OK correction manuelle = convertisseur après normalisation "
-      "(écarts documentés E014/E028 exceptés)")
+print("OK correction manuelle = convertisseur à l'identique après normalisation")
 
 # --- 6. Variantes de saisie normalisées au parsing ---------------------------
 song = k.parse_kkml(f"::tab\n合# 合b {KOU}上 　{REST_WHITE} {SHI_SHARP}\n::\n")
@@ -158,11 +153,11 @@ toks = p2k.dan_to_tokens(dan)
 assert toks == [f"(:合", f"合:)"], toks
 print("OK vocalRepStart/End -> (:合 / 合:)")
 
-v = p2k.dan_to_vocal([{"note": ""}, {"note": chr(0xE000), "isSmall": True,
-                                        "vocalPosMarkers": {"mid": "vocalStart"}},
+v = p2k.dan_to_vocal([{"note": chr(0xE000), "vocalPosMarkers": {"mid": "vocalStart"}},
+                      {},
                       {"note": ""}, {"note": chr(0xE000), "isSmall": True,
                                      "vocalPosMarkers": {"mid": "vocalEnd"}}])
-assert v == [".(", ".)"], v
-print("OK dan_to_vocal : mid vocalStart/vocalEnd -> .( / .)")
+assert v == ["(", ".)"], v
+print("OK dan_to_vocal : cellule principale -> ( / ), cellule à cheval mid -> .( / .)")
 
 print("\nTous les tests testbushi passent.")

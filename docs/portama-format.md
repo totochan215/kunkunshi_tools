@@ -148,7 +148,7 @@ La combinaison d'une cellule paire et d'une cellule impaire donne les figures ry
 
 NB: une cellule de KKML correspond donc à **deux** cellules de Portama : une cellule paire et une cellule impaire. Une cellule terminale impaire isolée (dan de longueur impaire) est convertie comme une note principale seule.
 
-Codage KKML (portama2kkml.py) des champs de boucle/marqueurs : `repeatStart`/`repeatEnd` → `|:B` / `B:|`, `vocalRepStart`/`vocalRepEnd` → `(:B` / `B:)` dans `::tab` ; `vocalPosMarkers` d'une cellule **à cheval** (`isSmall`) en position `mid` → `.(` / `.)` dans la ligne `::vocal` de même index (une ligne par dan, complétée par des `-`) ; les marqueurs des cellules principales et les positions `top`/`bottom` ne sont pas encodés (info stderr).
+Codage KKML (portama2kkml.py) des champs de boucle/marqueurs : `repeatStart`/`repeatEnd` → `|:B` / `B:|`, `vocalRepStart`/`vocalRepEnd` → `(:B` / `B:)` dans `::tab` ; `vocalPosMarkers` → ligne `::vocal` de même index (une ligne par dan, complétée par des `-`), à la position de la paire : cellule **principale** → `(` (vocalStart) / `)` (vocalEnd), marqueur nu ; cellule **à cheval** (`isSmall`) en position `mid` → `.(` / `.)` (le point = hauteur milieu) ; positions `top`/`bottom` d'une cellule à cheval non encodées (info stderr).
 
 ## Correspondance PUA → symboles
 
