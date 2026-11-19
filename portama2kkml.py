@@ -234,12 +234,15 @@ def dan_to_tokens(dan):
     return tokens
 
 
-# Marqueurs vocaux Portama (vocalPosMarkers) → tokens de la section ::vocal.
-# Seuls les marqueurs d'une cellule à cheval (isSmall) sont encodés, à la
-# position de la paire dans la ligne ::vocal : mid + vocalStart → ".(" ,
-# mid + vocalEnd → ".)" (le point = hauteur milieu de la case). Les marqueurs
-# des cellules principales et les positions top/bottom ne sont pas supportés
-# (journalisés et ignorés).
+# Marqueurs vocaux Portama (vocalPosMarkers) → tokens de la section ::vocal,
+# à la position de la paire dans la ligne ::vocal :
+# - cellule principale (index pair) : vocalStart → "(" , vocalEnd → ")"
+#   (marqueur nu ; la position top/mid/bottom de la cellule n'est pas encodée) ;
+# - cellule à cheval (index impair) en position mid :
+#   vocalStart → ".(" , vocalEnd → ".)" (le point = hauteur milieu de la case).
+# Les positions top/bottom d'une cellule à cheval ne sont pas supportées
+# (journalisées et ignorées).
+VOCAL_MAIN_MARKER_TOKEN = {"vocalStart": "(", "vocalEnd": ")"}
 VOCAL_POS_MARKER_TOKEN = {
     "mid": {"vocalStart": ".(", "vocalEnd": ".)"},
 }
@@ -251,23 +254,26 @@ def _info(msg):
 
 def dan_to_vocal(dan):
     """Ligne ::vocal associée à un dan : un token par paire (comme ::tab),
-    `-` par défaut. Voir VOCAL_POS_MARKER_TOKEN pour les marqueurs encodés."""
+    `-` par défaut. Voir VOCAL_MAIN_MARKER_TOKEN / VOCAL_POS_MARKER_TOKEN."""
     line = []
     n = len(dan)
     for i in range(0, n, 2):
         main_cell = dan[i]
         small_cell = dan[i + 1] if i + 1 < n else {}
         tok = "-"
-        vpm = small_cell.get("vocalPosMarkers") or {}
-        for pos, kind in vpm.items():
-            tok2 = VOCAL_POS_MARKER_TOKEN.get(pos, {}).get(kind, "")
+        for kind in (main_cell.get("vocalPosMarkers") or {}).values():
+            tok2 = VOCAL_MAIN_MARKER_TOKEN.get(kind, "")
             if tok2:
                 tok = tok2
             elif kind:
-                _info(f"vocalPosMarkers pos={pos!r} kind={kind!r} non supporté (ignoré)")
-        if main_cell.get("vocalPosMarkers"):
-            _info("vocalPosMarkers sur cellule principale ignoré "
-                  "(seules les cellules à cheval isSmall sont encodées dans ::vocal)")
+                _info(f"vocalPosMarkers kind={kind!r} sur cellule principale non supporté (ignoré)")
+        if tok == "-":
+            for pos, kind in (small_cell.get("vocalPosMarkers") or {}).items():
+                tok2 = VOCAL_POS_MARKER_TOKEN.get(pos, {}).get(kind, "")
+                if tok2:
+                    tok = tok2
+                elif kind:
+                    _info(f"vocalPosMarkers pos={pos!r} kind={kind!r} non supporté (ignoré)")
         line.append(tok)
     return line
 
