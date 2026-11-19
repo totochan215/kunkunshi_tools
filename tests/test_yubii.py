@@ -92,16 +92,30 @@ dans = p2k.dan_to_tokens([{"note": chr(0xE000), "yubii": 4}, {"note": ""},
 assert dans[0] == GO + Y[4], dans
 print("OK portama2kkml : yubii=4 -> 合㊃, PUA E043 -> ㊂ sans note")
 
-# 8. portama2kkml sur l'échantillon テスト節.json (yubii 1/2/4 en dan 2)
-fn = next(n for n in os.listdir("samples/portama-json") if n.startswith(chr(0x30C6)))
+# 8. portama2kkml sur l'échantillon qui contient des yubii (テスト節.json :
+#    dan 2, cellules 18/20/22 -> 合㊀ 合㊁ 合㊃). Localisation via le JSON :
+#    os.listdir n'a pas d'ordre garanti (テンヨー節 commence aussi par テ).
+import json as _json
+target = None
+for n in sorted(os.listdir("samples/portama-json")):
+    j = _json.load(open(f"samples/portama-json/{n}", encoding="utf-8"))
+    hits = [(di, c["yubii"]) for di, dan in enumerate(j.get("score", []))
+            for c in dan if c.get("yubii")]
+    if hits:
+        target = (n, hits)
+assert target, "aucun échantillon Portama avec yubii"
+fn, hits = target
 r = subprocess.run([sys.executable, "portama2kkml.py",
                     f"samples/portama-json/{fn}"],
                    capture_output=True, text=True)
 assert r.returncode == 0, r.stderr
-tab = r.stdout.split("::tab")[1]
-line2 = [ln for ln in tab.splitlines() if ln.strip()][1]
-assert f"{GO}{Y[1]}" in line2 and f"{GO}{Y[2]}" in line2 and f"{GO}{Y[4]}" in line2, line2
-print(f"OK テスト節.json -> dan 2 : {GO}㊀ {GO}㊁ {GO}㊃")
+tab_lines = [ln for ln in r.stdout.split("::tab")[1].splitlines() if ln.strip()]
+for di, yb in hits:
+    assert di < len(tab_lines), (di, len(tab_lines))
+    assert GO + Y[yb] in tab_lines[di], (fn, di, tab_lines[di])
+n_yb = sum(ln.count(y) for ln in tab_lines for y in Y.values())
+assert n_yb == len(hits), (n_yb, len(hits))
+print(f"OK {fn} -> {len(hits)} doigtés convertis (ex. dan {hits[0][0]} : {GO}{Y[hits[0][1]]})")
 
 # 9. Extraction inverse (préparation kkml2portama) : suffixe final -> int yubii
 SUFFIX_TO_INT = {v: i for i, v in Y.items()}
