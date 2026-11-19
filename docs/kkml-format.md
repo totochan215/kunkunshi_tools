@@ -152,6 +152,8 @@ Séparateurs à l'intérieur d'une figure (dans une cellule) :
 | `+` `=` `-`  | Accord (notes simultanées, max 3) — `+` canonique, `=` et `-` variantes acceptées | `四+工`, `四=工` ou `合+四+工` |
 | (aucun)      | Position étendue, altération, etc.      | `下老`, `イ尺`, `尺♯`… |
 
+Suffixes accolés à la note (techniques de jeu `souhou`, doigtés `yubii`) : voir [notation.md](notation.md). En particulier, les doigtés se notent ㊀㊁㊂㊃ (U+3280-U+3283) en suffixe de la note (ex. `合㊀`) — jamais seuls dans une case (confusion avec le silence ◯).
+
 TODO: risque de collision entre :: et la fin de section.
 
 En cas de figure non reconnue (ni position, ni séparateur, ex. `合工尺`), le convertisseur émet une alerte sur stderr (une seule fois par figure unique) et applique un rendu dégradé — les 3 premiers caractères au maximum, condensés en largeur comme `イ中` (2 caractères) ou `イ下尺` (3 caractères). L'ancien comportement « ornement » (empilement vertical de tous les caractères) est déprécié : il n'a pas de sémantique musicale (les kanji empilés réels sont des croches `A/B`, du hayabiki `A:B` ou des accords `A+B`, chacun ayant son séparateur).
