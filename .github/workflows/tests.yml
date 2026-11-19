@@ -20,3 +20,5 @@ jobs:
         run: python3 tests/test_yubii.py
       - name: Lancer les tests portama_meta
         run: python3 tests/test_portama_meta.py
+      - name: Lancer les tests testbushi
+        run: python3 tests/test_testbushi.py
