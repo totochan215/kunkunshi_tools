@@ -144,8 +144,11 @@ La combinaison d'une cellule paire et d'une cellule impaire donne les figures ry
 | note (isSmall=true)  | note     | Shuffle (早弾き) | `A:B`            |
 | note (isSmall=true)  | vide     | Kuubanchi       | `As`             |
 | vide                 | vide     | Case vide       | `-`              |
+| vide                 | note     | Note à cheval seule (pas de note principale) | `-/B` |
 
-NB: une cellule de KKML correspond donc à **deux** cellules de Portama : une cellule paire et une cellule impaire.
+NB: une cellule de KKML correspond donc à **deux** cellules de Portama : une cellule paire et une cellule impaire. Une cellule terminale impaire isolée (dan de longueur impaire) est convertie comme une note principale seule.
+
+Codage KKML (portama2kkml.py) des champs de boucle/marqueurs : `repeatStart`/`repeatEnd` → `|:B` / `B:|`, `vocalRepStart`/`vocalRepEnd` → `(:B` / `B:)` dans `::tab` ; `vocalPosMarkers` d'une cellule **à cheval** (`isSmall`) en position `mid` → `.(` / `.)` dans la ligne `::vocal` de même index (une ligne par dan, complétée par des `-`) ; les marqueurs des cellules principales et les positions `top`/`bottom` ne sont pas encodés (info stderr).
 
 ## Correspondance PUA → symboles
 
