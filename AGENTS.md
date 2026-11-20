@@ -10,7 +10,7 @@ Règles :
 ---
 # Feuille de route
 
-Dernière mise à jour : 19 novembre 2026
+Dernière mise à jour : 20 novembre 2026
 
 Pipeline : Portama JSON → KKML → SVG / PDF. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
@@ -151,6 +151,48 @@ Le convertisseur est plus avancé que threedaymonk/kunkunshi et Kunkunshi Editor
 (accords, positions composées, souhou, vocal, répétitions). Portama reste en avance
 sur l'interface. La priorité est la fidélité notationnelle (P0 → P3) avant la
 publication (LaTeX) et l'ergonomie (GUI).
+
+## 6. Conformité typographie japonaise (JLREQ) — ⬜
+
+Référence : [Requirements for Japanese Text Layout 日本語組版処理の要件（日本語版）](https://www.w3.org/TR/jlreq/) (W3C) —
+annexe A (classes de caractères cl-01…cl-30), §3.2.6 (espacement inter-caractères, quart de
+cadratin), règles de retour à la ligne (kinsoku 行頭禁則 / 行末禁則, base JIS X 4051),
+écriture verticale (formes de présentation U+FE30–FE4F / UAX #50 Vertical_Orientation).
+Propositions discutées le 2026-11-20.
+
+Déjà conforme : rotation 90° de ー （）()「」『』 en vertical
+(`VERTICAL_ROTATE_CHARS`, `kkml2svg.py`) appliquée au titre, métadonnées et paroles ;
+ruby mono/group/jukugo avec segments atomiques au repli (`_lyr_line_segments`) ;
+petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
+
+- ⬜ P0 Kinsoku au repli des colonnes : table de classes JLREQ + 行頭禁則 (cl-02 fermetures,
+  cl-06 ponctuation 。、…, cl-09 々〻, cl-10 ー, cl-11 petits kana, cl-29) et 行末禁則
+  (cl-01 ouvrantes) dans `_cap_lyr_column` (et `_h_lyrics_layout` si repli horizontal un jour
+  activé) ; kinsoku simple avec追い出し par défaut ; ぶら下げ limité aux ponctuations
+  cl-06 en fin de colonne (à relier à `@overflow`) ; méta proposée `@kinsoku simple|strict|off`
+  (défaut `simple` en vertical/chindami, `off` en nomura pour la fidélité grille).
+- ⬜ P0 Yakumono en vertical : 、。，． placés dans le quart supérieur droit de la chasse
+  (formes verticales U+FE11/FE12) au lieu du centrage de `_vertical_char` ; étendre
+  `VERTICAL_ROTATE_CHARS` avec ― – ‥ … ′ ″ et les formes U+FE30–FE4F.
+- ⬜ P1 Petits kana (cl-11) tassés (avance ~0,6 em + décalage haut-droite) dans TOUTES les
+  colonnes verticales (paroles/titre via `_render_vertical_text`), pas seulement la colonne
+  marker ; inclus dans 行頭禁則.
+- ⬜ P1 Quart de cadratin (四分アキ) CJK↔latin (JLREQ §3.2.6 : 1/4 em entre cl-15/16/19
+  et cl-27, aucun en début/fin de ligne) : fonction d'avance par classes de caractères
+  pour le flux horizontal et l'espacement vertical (étendre/remplacer `_char_w`).
+- ⬜ P1 Normalisations `kkml_cleaner.py` : katakana demi-chasse U+FF61–FF9F → pleine chasse
+  (le rendu suppose des chasses carrées 1 em), tirets ‐‑‒–—― → canonique
+  (ー réservé au kana), ‥ vs … selon orientation, quotes occidentales “”‘’ →
+  「」『』 ; diagnostic info comme les règles existantes.
+- ⬜ P2 Séquences insécables (分割禁止 : `100%`, `¥100`, paires de parenthèses)
+  en segments atomiques dans `_lyr_line_segments`, au-delà des groupes ruby.
+- ⬜ P2 Écriture verticale native `writing-mode="vertical-rl"` + `text-orientation: mixed`
+  (UAX #50) en option, rendu manuel actuel en repli (rsvg-convert/inkscape pour le PDF).
+- ⬜ P2 Documentation + tests : section « conformité typographie japonaise » dans
+  `docs/svg-layout.md` avec le lien JLREQ et les déviations volontaires (indent de couplet
+  à 3 chasses pleines vs 字下げ 1 em du JLREQ, propre aux recueils 工工四) ; tests golden
+  (colonne finissant par 、, repli devant ）, petit kana / ー en tête de colonne, texte
+  mixte kanji/romaji).
 
 # Références de calibrage externes (hors dépôt)
 
