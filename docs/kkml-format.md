@@ -147,6 +147,7 @@ Séparateurs à l'intérieur d'une figure (dans une cellule) :
 | `//`         | Quatre doubles croches                  | `合//工//中//上`       |
 | `/` `//`     | Une croche et deux double croches       | `合/工//中`           |
 | `//` `/`     | Deux double croches et une croche       | `合//工/中`           |
+| `/` avec `-` à gauche | Note à cheval seule (pas de note principale — Portama : cellule principale vide + straddle) | `-/合` |
 | `:`          | Une croche pointée et une double croche | `合:工`               |
 | `::`         | Une double croche et une croche pointée | `合::工`              |
 | `+` `=` `-`  | Accord (notes simultanées, max 3) — `+` canonique, `=` et `-` variantes acceptées | `四+工`, `四=工` ou `合+四+工` |
@@ -214,6 +215,8 @@ Au sein des sections `::tab` et `::vocal`, les équivalents UTF-8 des signes ASC
 | `♯` (U+266F)    | `#`   | Dièse                |
 | `♭` (U+266D)    | `b`   | Bémol                |
 
+En **suffixe d'une note quelconque** (ex. `合♯`, `合♭`), `♯`/`♭` denote une altération (champ `acc` de Portama : `sharp`/`flat`), rendue en haut-droite de la note à ≈ 48 % de sa taille. Cas spécial : `尺♯` (U+5C3A U+266F) n'est PAS décomposé en note + suffixe — il est rendu selon l'option `@shaku_sharp`.
+
 #### Caractères graphiquement similaires
 
 Au sein des sections `tab::`, certains symboles/caractères graphiquement similaires à leur forme canonique sont tolérés.
@@ -222,6 +225,9 @@ Au sein des sections `tab::`, certains symboles/caractères graphiquement simila
 |---------------|-----------------|----------------------|
 | `○` (U+25CB)  | `◯` (U+25EF)   | Repos                |
 | `〇` (U+3007) | `◯` (U+25EF)   | Repos                |
+| `⚪` (U+26AA) | `◯` (U+25EF)   | Repos (les sélecteurs de variante U+FE00-FE0F sont retirés des tokens, ex. `⚪︎` = U+26AA U+FE0E) |
+
+Préfixe `口` (U+53E3, radical) accepté comme variante de `ロ` (U+30ED) dans les positions hautes à 2 caractères (ex. `口上` = `ロ上`).
 
 #### Kandokoro en romaji vers kandokoro en kanji
 
