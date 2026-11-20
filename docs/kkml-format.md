@@ -75,11 +75,11 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@shaku_sharp`   | `off`      | Rend les 尺♯ accompagnés du symbole ♯ : `on` : activé, `off` : désactivé |
 | `@lyrics_size`   | `medium`   | Taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
 | `@ruby_size`     | `50`       | Taille de police du ruby, en % de la taille de base. **Non utilisé à ce jour** |
-| `@musicno`       | —          | Numéro de morceau (pour compatibilité Portama)     |
-| `@chogen`        | `5`        | Accordage absolu (pour compatibilité Portama). Se déduit de `@base_note` et vice-et-versa. |
-| `@speed`         | —          | Tempo, en battements par minute (pour compatibilité Portama)                 |
-| `@rythm`         | —          | Rythme (pour compatibilité Portama)                |
-| `@rythm_mode`    | —          | Mode rythmique (pour compatibilité Portama)        |
+| `@musicno`       | —          | Numéro de morceau (champ Portama `musicno`, entier). Valeur stockée telle quelle ; affichée en layout `chindami` (tronquée mod 1000 si > 999) |
+| `@chogen`        | `5`        | Accordage absolu en demi-tons (champ Portama `chogen`, chaîne, ex. `"5"`). Valeur stockée telle quelle. Se déduit de `@base_note` et vice-et-versa. |
+| `@speed`         | —          | Tempo en bpm (champ Portama `speed`, chaîne, ex. `"68"`). Valeur stockée telle quelle |
+| `@rythm`         | —          | Rythme (champ Portama `rhythm`, chaîne). Valeur stockée telle quelle          |
+| `@rythm_mode`    | —          | Mode rythmique (champ Portama `rhythmMode`, chaîne). Valeur stockée telle quelle |
 
 Toutes les métadonnées sont optionnelles. L'ordre est sans importance. Les métadonnées peuvent être localisées à tout début de ligne, y compris après des sections. Toute métadonnée s'applique à l'ensemble du fichier.
 En cas de doublon, la première occurrence prime.
