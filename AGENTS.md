@@ -234,7 +234,7 @@ Les anciens noms de module (`NOMURA_*`, `CHINDAMI_*`, `MEGA_*`,
 réintroduire en dur. `render_svg` choisit `spec = LAYOUTS[layout]` et le
 passe à chaque renderer (paramètre `spec=None`). Vérifié : rendus SVG
 byte-identiques avant/après (114 échantillons × 6 layouts). Le générateur
-de figures `docs/make_svg_layout_figures.py` (PR #43) peut lire les specs.
+de figures `docs/svg/make_svg_layout_figures.py` (PR #43) peut lire les specs.
 
 ### CLI
 
