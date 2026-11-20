@@ -213,6 +213,29 @@ privés ne sont pas référencés ici.
 
 Python 3 autonome, ~4400 lignes (4403 au 2026-11-15). Ce dépôt est la source de vérité du code.
 
+### Constantes de mise en page : `LayoutSpec` (2026-11-20, PR #44)
+
+Toutes les constantes partagées des 6 layouts vivent dans un dataclass figé
+`LayoutSpec` (champs en **pt**, `PX = 0,75`), une instance par layout :
+`VERTICAL`, `HORIZONTAL`, `NOMURA`, `CHINDAMI`, `TUTO`, `MEGA` + dict
+`LAYOUTS`. `spec.u(v)` convertit en unité native du layout (`px = pt / PX`,
+exact pour nos valeurs). Champs : marges (`margin_t/b/l/r`), cadre
+(`frame_w/h`, 0 = pas de cadre, `frame_margin_x/y`), titre (`title_w`,
+`title_gap`, `title_spacing`, `tuning_spacing`, `title_fs`, `meta_fs`),
+`gap_header`, `header_h`/`header_h_title`, `cell_w/cell_h` (0 = dérivé de la
+page), `fs` (0 = `max(fs_min, fs_ratio × cell_h)`), `rows_per_col`,
+`cols_per_row`, `marker_ratio` (+ `marker_w` absolu si > 0, chindami),
+`pile_w`, `lyr_gap`, `lyrics_size`, ratios paroles (`lyr_fs_ratio`,
+`lyr_sp_ratio`, `lyr_col_w_ratio`, `lyr_verse_gap_ratio`), ratios syllabes
+(`syl_cell_ratio`, `syl_marker_ratio`, `syl_fs_ratio`), structure mega
+(`blocks`, `block_gap`, `dans_per_block`), `dan_gap`/`max_dans` (nomura).
+Les anciens noms de module (`NOMURA_*`, `CHINDAMI_*`, `MEGA_*`,
+`TUTO_DEFAULT_*`, `CM`) sont des ALIAS vers les specs — ne pas les
+réintroduire en dur. `render_svg` choisit `spec = LAYOUTS[layout]` et le
+passe à chaque renderer (paramètre `spec=None`). Vérifié : rendus SVG
+byte-identiques avant/après (114 échantillons × 6 layouts). Le générateur
+de figures `docs/make_svg_layout_figures.py` (PR #43) peut lire les specs.
+
 ### CLI
 
 ```bash
