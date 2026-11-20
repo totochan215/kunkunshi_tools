@@ -231,6 +231,12 @@ def dan_to_tokens(dan):
             # Noire (note principale seule)
             tokens.append(f"{prefix}{main_note}{suffix}{yubii}")
 
+    # Paires vides terminales (ni note ni marqueur de boucle) : retirées de
+    # la ligne ::tab (elles restent présentes dans ::vocal si elles portent
+    # des marqueurs vocaux).
+    while tokens and tokens[-1] == "-":
+        tokens.pop()
+
     return tokens
 
 
@@ -238,14 +244,13 @@ def dan_to_tokens(dan):
 # à la position de la paire dans la ligne ::vocal :
 # - cellule principale (index pair) : vocalStart → "(" , vocalEnd → ")"
 #   (marqueur nu ; la position top/mid/bottom de la cellule n'est pas encodée) ;
-# - cellule à cheval (index impair) en position mid :
-#   vocalStart → ".(" , vocalEnd → ".)" (le point = hauteur milieu de la case).
+# - cellule à cheval (index impair) en position mid, seule dans la paire :
+#   vocalStart → ".(" , vocalEnd → ".)" (le point = hauteur milieu de la case) ;
+#   si la cellule principale a aussi un marqueur, les deux se combinent en un
+#   seul token nu (ex. "()" = vocalStart principal + vocalEnd à cheval).
 # Les positions top/bottom d'une cellule à cheval ne sont pas supportées
 # (journalisées et ignorées).
 VOCAL_MAIN_MARKER_TOKEN = {"vocalStart": "(", "vocalEnd": ")"}
-VOCAL_POS_MARKER_TOKEN = {
-    "mid": {"vocalStart": ".(", "vocalEnd": ".)"},
-}
 
 
 def _info(msg):
@@ -254,27 +259,33 @@ def _info(msg):
 
 def dan_to_vocal(dan):
     """Ligne ::vocal associée à un dan : un token par paire (comme ::tab),
-    `-` par défaut. Voir VOCAL_MAIN_MARKER_TOKEN / VOCAL_POS_MARKER_TOKEN."""
+    `-` par défaut, marqueurs vocaux combinés par paire (voir commentaire
+    de VOCAL_MAIN_MARKER_TOKEN)."""
     line = []
     n = len(dan)
     for i in range(0, n, 2):
         main_cell = dan[i]
         small_cell = dan[i + 1] if i + 1 < n else {}
-        tok = "-"
+        main_tok = ""
         for kind in (main_cell.get("vocalPosMarkers") or {}).values():
             tok2 = VOCAL_MAIN_MARKER_TOKEN.get(kind, "")
             if tok2:
-                tok = tok2
+                main_tok = tok2
             elif kind:
                 _info(f"vocalPosMarkers kind={kind!r} sur cellule principale non supporté (ignoré)")
-        if tok == "-":
-            for pos, kind in (small_cell.get("vocalPosMarkers") or {}).items():
-                tok2 = VOCAL_POS_MARKER_TOKEN.get(pos, {}).get(kind, "")
-                if tok2:
-                    tok = tok2
-                elif kind:
+        small_tok = ""
+        for pos, kind in (small_cell.get("vocalPosMarkers") or {}).items():
+            tok2 = VOCAL_MAIN_MARKER_TOKEN.get(kind, "")
+            if pos != "mid":
+                if kind:
                     _info(f"vocalPosMarkers pos={pos!r} kind={kind!r} non supporté (ignoré)")
-        line.append(tok)
+                continue
+            if not tok2:
+                if kind:
+                    _info(f"vocalPosMarkers pos={pos!r} kind={kind!r} non supporté (ignoré)")
+                continue
+            small_tok = tok2 if main_tok else "." + tok2
+        line.append(main_tok + small_tok if (main_tok or small_tok) else "-")
     return line
 
 
