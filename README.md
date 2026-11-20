@@ -49,12 +49,11 @@ Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizon
 
 ### kkml2pdf.py
 
-Convertit un fichier KKML en **PDF multipage**, en appelant `kkml2svg` (chaîne
-`render_svg` → une page SVG autonome en cm → conversion page par page en PDF
-1 page → fusion en un seul PDF). Réservé à ce stade aux layouts dont le
-format de page est prédéfini en cm : `chindami` (23 × 15 cm), `nomura`
-(A4 portrait 21 × 29,7 cm), `mega` (A3 paysage 42 × 29,7 cm). Les layouts
-libres (page à taille variable) sont refusés : utiliser `kkml2svg.py` puis
+Convertit un fichier KKML en **PDF multipage**, en appelant `kkml2svg`.
+Réservé à ce stade aux layouts dont le format de page est prédéfini en cm :
+`chindami` (23 × 15 cm), `nomura` (A4 portrait 21 × 29,7 cm), `mega` 
+(A3 paysage 42 × 29,7 cm). 
+Les layouts libres (page à taille variable) sont refusés : utiliser `kkml2svg.py` puis
 l'export du logiciel d'édition.
 
     python3 kkml2pdf.py chanson.kkml -o chanson.pdf
