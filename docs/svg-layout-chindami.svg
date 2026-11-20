@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="830" height="600" viewBox="0 0 830 600">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a56db"/></marker></defs>
+<rect x="0" y="0" width="830" height="600" fill="#ffffff"/>
+<text x="220" y="142" text-anchor="start" font-family="sans-serif" font-size="13" fill="#333333" font-weight="bold">Mise en page Chindami-Kunkunshi — constantes (layout « chindami », pt, 23×15 cm paysage)</text>
+<text x="220" y="158" text-anchor="start" font-family="sans-serif" font-size="9.5" fill="#333333">gris foncé = éléments · bleu = cotes (flèches) et constantes</text>
+<rect x="110" y="120" width="651.969" height="425.197" fill="#fdfdfd" stroke="#333333" stroke-width="1.5"/>
+<rect x="159.551" y="150.521" width="552.867" height="356.912" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="643.891" y="150.521" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="643.891" y="180.323" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="643.891" y="210.126" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="643.891" y="239.928" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="667.23" y="150.521" width="11.4901" height="119.21" fill="#f3f3f3" stroke="#333333" stroke-width="0.6"/>
+<line x1="646.891" y1="281.731" x2="675.72" y2="271.731" stroke="#333333" stroke-width="0.6"/>
+<rect x="609.061" y="150.521" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="609.061" y="180.323" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="609.061" y="210.126" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="609.061" y="239.928" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="632.4" y="150.521" width="11.4901" height="119.21" fill="#f3f3f3" stroke="#333333" stroke-width="0.6"/>
+<line x1="612.061" y1="281.731" x2="640.891" y2="271.731" stroke="#333333" stroke-width="0.6"/>
+<rect x="574.232" y="150.521" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="574.232" y="180.323" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="574.232" y="210.126" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="574.232" y="239.928" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="597.571" y="150.521" width="11.4901" height="119.21" fill="#f3f3f3" stroke="#333333" stroke-width="0.6"/>
+<line x1="577.232" y1="281.731" x2="606.061" y2="271.731" stroke="#333333" stroke-width="0.6"/>
+<rect x="539.402" y="150.521" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="539.402" y="180.323" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="539.402" y="210.126" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="539.402" y="239.928" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="562.741" y="150.521" width="11.4901" height="119.21" fill="#f3f3f3" stroke="#333333" stroke-width="0.6"/>
+<line x1="542.402" y1="281.731" x2="571.232" y2="271.731" stroke="#333333" stroke-width="0.6"/>
+<rect x="504.573" y="150.521" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="504.573" y="180.323" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="504.573" y="210.126" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="504.573" y="239.928" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="527.912" y="150.521" width="11.4901" height="119.21" fill="#f3f3f3" stroke="#333333" stroke-width="0.6"/>
+<line x1="507.573" y1="281.731" x2="536.402" y2="271.731" stroke="#333333" stroke-width="0.6"/>
+<rect x="469.743" y="150.521" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="469.743" y="180.323" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="469.743" y="210.126" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="469.743" y="239.928" width="23.3393" height="29.8025" fill="none" stroke="#333333" stroke-width="0.6"/>
+<rect x="493.083" y="150.521" width="11.4901" height="119.21" fill="#f3f3f3" stroke="#333333" stroke-width="0.6"/>
+<line x1="472.743" y1="281.731" x2="501.573" y2="271.731" stroke="#333333" stroke-width="0.6"/>
+<text x="655.56" y="169.422" text-anchor="middle" font-family="monospace" font-size="12" fill="#333333" font-weight="bold">工</text>
+<text x="672.975" y="168.422" text-anchor="middle" font-family="monospace" font-size="10" fill="#333333">あ</text>
+<text x="487.158" y="143.521" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">piles (max 15/page, 12 cases)</text>
+<rect x="688.72" y="150.521" width="23.6984" height="119.21" fill="#f6f6f6" stroke="#333333" stroke-width="0.6"/>
+<text x="700.569" y="143.521" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">titre p.1</text>
+<rect x="159.551" y="150.521" width="26" height="119.21" fill="#f6f6f6" stroke="#333333" stroke-width="0.6"/>
+<text x="172.551" y="143.521" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">paroles</text>
+<line x1="159.551" y1="118" x2="159.551" y2="59" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="171.551" y1="118" x2="171.551" y2="59" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="159.551" y1="56" x2="171.551" y2="56" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="165.551" y="52" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">LYR_SEP = 12</text>
+<line x1="469.743" y1="118" x2="469.743" y2="75" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="504.573" y1="118" x2="504.573" y2="75" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="469.743" y1="72" x2="504.573" y2="72" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="487.158" y="68" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">pile_w = cell_w + marker_w = 34.8</text>
+<line x1="678.72" y1="118" x2="678.72" y2="91" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="688.72" y1="118" x2="688.72" y2="91" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="678.72" y1="88" x2="688.72" y2="88" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="683.72" y="84" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">TITLE_GAP = 10</text>
+<line x1="688.72" y1="118" x2="688.72" y2="107" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="712.418" y1="118" x2="712.418" y2="107" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="688.72" y1="104" x2="712.418" y2="104" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="700.569" y="100" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">TITLE_W = 23.7</text>
+<line x1="712.418" y1="118" x2="712.418" y2="123" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="761.969" y1="118" x2="761.969" y2="123" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="712.418" y1="120" x2="761.969" y2="120" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="737.194" y="116" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">marge = 49.6</text>
+<line x1="110" y1="118" x2="110" y2="139" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="761.969" y1="118" x2="761.969" y2="139" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="110" y1="136" x2="761.969" y2="136" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="435.985" y="132" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">page = 652.0 × 425.2 pt = 23 × 15 cm</text>
+<line x1="108" y1="120" x2="91" y2="120" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="108" y1="150.521" x2="91" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="94" y1="120" x2="94" y2="150.521" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="89" y="135.26" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 89 135.26)">GRID_TOP = 30.5</text>
+<line x1="108" y1="150.521" x2="75" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="108" y1="180.323" x2="75" y2="180.323" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="78" y1="150.521" x2="78" y2="180.323" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="73" y="165.422" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 73 165.422)">cell_h = 29.8</text>
+<line x1="108" y1="150.521" x2="59" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="108" y1="507.433" x2="59" y2="507.433" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="62" y1="150.521" x2="62" y2="507.433" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="57" y="328.977" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 57 328.977)">12 × cell_h = 357 pt (GRID_TOP→GRID_BOTTOM)</text>
+<line x1="763.969" y1="120" x2="780.969" y2="120" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="763.969" y1="545.197" x2="780.969" y2="545.197" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="777.969" y1="120" x2="777.969" y2="545.197" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="782.969" y="332.599" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(90 782.969 332.599)">page 425.2 pt</text>
+<line x1="469.743" y1="547.197" x2="469.743" y2="564.197" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="493.083" y1="547.197" x2="493.083" y2="564.197" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="504.573" y1="547.197" x2="504.573" y2="564.197" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="469.743" y1="561.197" x2="493.083" y2="561.197" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="481.413" y="573.197" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">cell_w = 23.3</text>
+<line x1="493.083" y1="561.197" x2="504.573" y2="561.197" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="487.158" y="573.197" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">marker_w = 11.5</text>
+<text x="110" y="577.197" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">CHINDAMI_FS = 12 · lyr_fs = 10 (×0.9) · lyr_sp = 12 · lyr_col_w = 13 · max_lyr_u = hauteur grille en unités · repli des paroles avec kinsoku (@kinsoku)</text>
+</svg>

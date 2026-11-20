@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="579" height="681" viewBox="0 0 579 681">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a56db"/></marker></defs>
+<rect x="0" y="0" width="579" height="681" fill="#ffffff"/>
+<text x="194.4" y="103.64" text-anchor="start" font-family="sans-serif" font-size="13" fill="#333333" font-weight="bold">Mise en page Nomura-ryu — constantes (layout « nomura », pt, A4 portrait 21×29,7 cm)</text>
+<text x="194.4" y="113.56" text-anchor="start" font-family="sans-serif" font-size="9.5" fill="#333333">gris foncé = éléments · bleu = cotes (flèches) et constantes · échelle 0.62</text>
+<rect x="120" y="90" width="369.071" height="521.972" fill="#fdfdfd" stroke="#333333" stroke-width="0.93"/>
+<rect x="131.153" y="119.757" width="346.766" height="462.458" fill="none" stroke="#333333" stroke-width="0.62"/>
+<rect x="429.665" y="128.747" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="429.665" y="165.787" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="429.665" y="202.827" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="449.297" y="128.747" width="19.6319" height="111.12" fill="#f3f3f3" stroke="#333333" stroke-width="0.372"/>
+<line x1="431.525" y1="248.547" x2="467.069" y2="241.107" stroke="#333333" stroke-width="0.372"/>
+<rect x="381.411" y="128.747" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="381.411" y="165.787" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="381.411" y="202.827" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="401.043" y="128.747" width="19.6319" height="111.12" fill="#f3f3f3" stroke="#333333" stroke-width="0.372"/>
+<line x1="383.271" y1="248.547" x2="418.815" y2="241.107" stroke="#333333" stroke-width="0.372"/>
+<rect x="333.158" y="128.747" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="333.158" y="165.787" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="333.158" y="202.827" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="352.789" y="128.747" width="19.6319" height="111.12" fill="#f3f3f3" stroke="#333333" stroke-width="0.372"/>
+<line x1="335.018" y1="248.547" x2="370.561" y2="241.107" stroke="#333333" stroke-width="0.372"/>
+<rect x="284.904" y="128.747" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="284.904" y="165.787" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="284.904" y="202.827" width="19.6319" height="37.0398" fill="none" stroke="#333333" stroke-width="0.372"/>
+<rect x="304.536" y="128.747" width="19.6319" height="111.12" fill="#f3f3f3" stroke="#333333" stroke-width="0.372"/>
+<line x1="286.764" y1="248.547" x2="322.308" y2="241.107" stroke="#333333" stroke-width="0.372"/>
+<text x="439.481" y="152.847" text-anchor="middle" font-family="monospace" font-size="16.12" fill="#333333" font-weight="bold">工</text>
+<text x="449.297" y="150.987" text-anchor="middle" font-family="monospace" font-size="9.3" fill="#333333">あ</text>
+<text x="304.536" y="123.787" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">dans (max 7/page, 12 cases)</text>
+<rect x="392.465" y="128.747" width="18.6" height="111.12" fill="#f6f6f6" stroke="#333333" stroke-width="0.372"/>
+<text x="401.765" y="123.787" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">titre p.1</text>
+<rect x="140.143" y="128.747" width="39.2637" height="111.12" fill="#f6f6f6" stroke="#333333" stroke-width="0.372"/>
+<text x="159.775" y="123.787" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">paroles (dernière page)</text>
+<line x1="131.153" y1="88.76" x2="131.153" y2="49.6" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="140.143" y1="88.76" x2="140.143" y2="49.6" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="131.153" y1="46.6" x2="140.143" y2="46.6" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="135.648" y="42.6" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">M = 14.5</text>
+<line x1="284.904" y1="88.76" x2="284.904" y2="63.24" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="324.168" y1="88.76" x2="324.168" y2="63.24" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="284.904" y1="60.24" x2="324.168" y2="60.24" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="304.536" y="56.24" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">group_w = cell_w + marker_w = 63.3</text>
+<line x1="324.168" y1="88.76" x2="324.168" y2="76.88" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="333.158" y1="88.76" x2="333.158" y2="76.88" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="324.168" y1="73.88" x2="333.158" y2="73.88" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="328.663" y="69.88" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">M = 14.5</text>
+<line x1="120" y1="88.76" x2="120" y2="90.52" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="489.071" y1="88.76" x2="489.071" y2="90.52" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="120" y1="87.52" x2="489.071" y2="87.52" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="304.536" y="83.52" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">page = 595.3 × 841.9 pt = 21 × 29,7 cm (A4)</text>
+<line x1="131.153" y1="88.76" x2="131.153" y2="76.88" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="477.919" y1="88.76" x2="477.919" y2="76.88" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="131.153" y1="73.88" x2="477.919" y2="73.88" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="304.536" y="69.88" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">cadre = 559.3 × 745.9 pt, marges 18.0 / 48.0 pt</text>
+<line x1="118.76" y1="90" x2="107.08" y2="90" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="118.76" y1="119.757" x2="107.08" y2="119.757" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="110.08" y1="90" x2="110.08" y2="119.757" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="105.08" y="104.879" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 105.08 104.879)">marge 48.0</text>
+<line x1="118.76" y1="119.757" x2="97.16" y2="119.757" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="118.76" y1="128.747" x2="97.16" y2="128.747" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="100.16" y1="119.757" x2="100.16" y2="128.747" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="95.16" y="124.252" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 95.16 124.252)">M = 14.5</text>
+<line x1="118.76" y1="128.747" x2="107.08" y2="128.747" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="118.76" y1="165.787" x2="107.08" y2="165.787" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="110.08" y1="128.747" x2="110.08" y2="165.787" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="105.08" y="147.267" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 105.08 147.267)">cell_h = 59.7</text>
+<line x1="118.76" y1="128.747" x2="87.24" y2="128.747" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="118.76" y1="573.225" x2="87.24" y2="573.225" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="90.24" y1="128.747" x2="90.24" y2="573.225" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="85.24" y="350.986" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 85.24 350.986)">rows = 12 × cell_h = 717 pt</text>
+<line x1="490.311" y1="90" x2="501.991" y2="90" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="490.311" y1="611.972" x2="501.991" y2="611.972" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="498.991" y1="90" x2="498.991" y2="611.972" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="503.991" y="350.986" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(90 503.991 350.986)">page 841.9 pt</text>
+<line x1="284.904" y1="613.212" x2="284.904" y2="623.752" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="304.536" y1="613.212" x2="304.536" y2="623.752" stroke="#1a56db" stroke-width="0.31"/>
+<line x1="284.904" y1="621.892" x2="304.536" y2="621.892" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="294.72" y="629.332" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">cell_w = 31.7</text>
+<line x1="304.536" y1="621.892" x2="324.168" y2="621.892" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="304.536" y="629.332" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">marker_w = cell_w</text>
+<text x="120" y="633.052" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">fs notes = 26 pt · LYRICS_COL_W = group_w/3 = 21.1 · LYRICS_FS = 0,7·LYRICS_COL_W = 14.8 · 7 dans max/page · titre + paroles = 1 dan chacun</text>
+</svg>
