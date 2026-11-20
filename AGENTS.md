@@ -165,12 +165,16 @@ Déjà conforme : rotation 90° de ー （）()「」『』 en vertical
 ruby mono/group/jukugo avec segments atomiques au repli (`_lyr_line_segments`) ;
 petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
 
-- ⬜ P0 Kinsoku au repli des colonnes : table de classes JLREQ + 行頭禁則 (cl-02 fermetures,
-  cl-06 ponctuation 。、…, cl-09 々〻, cl-10 ー, cl-11 petits kana, cl-29) et 行末禁則
-  (cl-01 ouvrantes) dans `_cap_lyr_column` (et `_h_lyrics_layout` si repli horizontal un jour
-  activé) ; kinsoku simple avec追い出し par défaut ; ぶら下げ limité aux ponctuations
-  cl-06 en fin de colonne (à relier à `@overflow`) ; méta proposée `@kinsoku simple|strict|off`
-  (défaut `simple` en vertical/chindami, `off` en nomura pour la fidélité grille).
+- 🚧 P0 Kinsoku au repli des paroles — `::lyrics` uniquement (2026-11-20, PR #42) : seul
+  `_cap_lyr_column` (chindami) coupe les lignes de paroles au caractère ; vertical/mega ne
+  repliquent qu'aux `|` explicites, horizontal ne replie pas (règle alignée). Tables JLREQ
+  annexe A (`KINSOKU_NO_LINE_START` / `_STRICT` / `KINSOKU_NO_LINE_END`) + `_kinsoku_adjust_cut`
+  : 行頭禁則 (cl-02/05/06/07/09/10/11/29) avec追い出し, 行末禁則 (cl-01) ; méta
+  `@kinsoku simple|strict|off` + CLI `--kinsoku` (défaut `simple`, `off` en nomura) ;
+  tests `tests/test_kinsoku.py`. Corrigé au passage : boucle infinie préexistante de
+  `_cap_lyr_column` quand un segment plaine coupé voyait son reste entièrement placé
+  (`u` non recalé sur `len(text)` après la coupe). Reste : lien ぶら下げ ↔ `@overflow`
+  (cl-06 seules en fin de colonne), repli horizontal si activé un jour.
 - ⬜ P0 Yakumono en vertical : 、。，． placés dans le quart supérieur droit de la chasse
   (formes verticales U+FE11/FE12) au lieu du centrage de `_vertical_char` ; étendre
   `VERTICAL_ROTATE_CHARS` avec ― – ‥ … ′ ″ et les formes U+FE30–FE4F.

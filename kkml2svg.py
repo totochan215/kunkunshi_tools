@@ -372,7 +372,7 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "shaku_circled", "shaku_sharp", "speed", "font_style",
-             "page_dans", "dans_per_page", "tuto_block",
+             "page_dans", "dans_per_page", "tuto_block", "kinsoku",
              # compatibilité Portama (valeurs stockées telles quelles dans song.meta)
              "musicno", "chogen", "base_note", "rythm", "rythm_mode"}
 class Song:
@@ -573,7 +573,7 @@ def parse_kkml(text):
 # 3. Rendu SVG
 # --------------------------------------------------------------------------- #
 def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
-               page_dans=None):
+               page_dans=None, kinsoku=None):
     if layout is None:
         layout = song.layout
     if page_dans is None:
@@ -650,11 +650,22 @@ def render_svg(song, cols=None, layout=None, cell_w=52, cell_h=58, font_size=22,
         header_h = 26 + 8
     marker = song.meta.get("marker", "on") == "on"
 
+    # Kinsoku JLREQ au repli des paroles (::lyrics) : CLI > méta @kinsoku >
+    # défaut ('simple', sauf nomura 'off' — ce layout ne replie pas les
+    # paroles au caractère, fidélité grille).
+    if kinsoku is None:
+        kinsoku = song.meta.get("kinsoku", "off" if layout == "nomura" else "simple")
+    if kinsoku not in ("simple", "strict", "off"):
+        print(f"AVERTISSEMENT : kinsoku inconnu {kinsoku!r} (simple|strict|off), "
+              f"défaut appliqué", file=sys.stderr)
+        kinsoku = "off" if layout == "nomura" else "simple"
+
     opts = {
         'shaku_circled': song.meta.get('shaku_circled', 'off') == 'on',
         'shaku_sharp': song.meta.get('shaku_sharp', 'off') == 'on',
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
+        'kinsoku': kinsoku,
         'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
@@ -1087,6 +1098,50 @@ CHINDAMI_LYR_SEP = 12              # marge ENCRE paroles → bord de pile (scans
 CHINDAMI_MAX_DANS = 15             # max mesuré : 15 piles sur p10 (morceau n°3, page pleine)
 
 
+# --------------------------------------------------------------------------- #
+# Kinsoku (禁則処理) — JLREQ (W3C, https://www.w3.org/TR/jlreq/), annexe A.
+# Appliqué UNIQUEMENT au repli des paroles (::lyrics) dans _cap_lyr_column :
+# ::tab et ::vocal ne sont jamais coupés au caractère.
+# --------------------------------------------------------------------------- #
+# 行頭禁則 (interdit en tête de ligne) : cl-02 fermetures, cl-05 ・：；,
+# cl-06 。．, cl-07 、，, cl-09 々〻, cl-10 ー, cl-11 petits kana, cl-29 ‥…〆
+# (+ variantes demi-chasse et ASCII usuelles).
+KINSOKU_NO_LINE_START = set(
+    "）｝］」』〕〉》】〗)]}"
+    "・：；。．、，:;.,"
+    "々〻〆‥…"
+    "ーｰ"
+    "ぁぃぅぇぉゃゅょっゎゕゖァィゥェォャュョッヮヵヶｧｨｩｪｫｬｭｮｯ"
+)
+# ！ ？ ne sont interdits en tête de ligne qu'en kinsoku strict.
+KINSOKU_NO_LINE_START_STRICT = set("！？!?")
+# 行末禁則 (interdit en fin de ligne) : cl-01 ouvrantes.
+KINSOKU_NO_LINE_END = set("（｛［「『〔〈《【〖([{")
+
+
+def _kinsoku_adjust_cut(text, cut, kinsoku):
+    """Ajuste un point de coupe entre deux sous-colonnes de paroles selon le
+    kinsoku JLREQ. `cut` = nombre de caractères placés sur la sous-colonne
+    courante ; le reste `text[cut:]` démarre la sous-colonne suivante.
+    - 行頭禁則 avec追い出し : un caractère interdit en tête de ligne remonte
+      en fin de sous-colonne courante (celle-ci déborde de la longueur du
+      bloc interdit — ぶら下げ des ponctuations) ;
+    - 行末禁則 : une ouvrante (cl-01) ne termine pas une ligne, elle passe à
+      la sous-colonne suivante.
+    `kinsoku` : 'simple' (défaut), 'strict' (ajoute ！？ en tête), 'off'.
+    """
+    if kinsoku == "off" or cut <= 0:
+        return cut
+    cut = min(cut, len(text))
+    strict = kinsoku == "strict"
+    while cut < len(text) and (text[cut] in KINSOKU_NO_LINE_START
+                               or (strict and text[cut] in KINSOKU_NO_LINE_START_STRICT)):
+        cut += 1
+    while cut > 1 and text[cut - 1] in KINSOKU_NO_LINE_END:
+        cut -= 1
+    return cut
+
+
 def _lyr_line_segments(s):
     """Découpe une ligne de paroles en segments insécables pour le repli :
     (texte, atomique, unités d'affichage). Un groupe ruby composite
@@ -1129,7 +1184,7 @@ def _lyr_line_segments(s):
     return segs
 
 
-def _cap_lyr_column(col_lines, indent, max_u):
+def _cap_lyr_column(col_lines, indent, max_u, kinsoku="simple"):
     """Replie une colonne de paroles en sous-colonnes de ≤ max_u unités
     (1 unité = 1 pas d'espacement lyr_sp = 1 glyphe de paroles, annotations
     ruby exclues). Layout chindami : la hauteur de page est IMPOSÉE, une
@@ -1137,6 +1192,11 @@ def _cap_lyr_column(col_lines, indent, max_u):
     en sous-colonnes ; une ligne trop longue est coupée au caractère,
     UNIQUEMENT entre segments atomiques (groupes ｛…｝《…》 et base+《…》
     jamais coupés : un crash _parse_ruby avait révélé le besoin).
+    Le point de coupe respecte le kinsoku JLREQ (`_kinsoku_adjust_cut`,
+    paramètre `kinsoku` = 'simple'|'strict'|'off', défaut 'simple') : un
+    caractère interdit en tête de sous-colonne (行頭禁則) remonte en fin de
+    sous-colonne précédente (追い出し), une ouvrante (行末禁則) passe à la
+    sous-colonne suivante ; 'off' = coupe au caractère (historique).
     Indentation des sous-colonnes : la première sous-colonne garde l'indent
     de la colonne (marqueur en haut = 0) ; les sous-colonnes de CONTINUATION
     issues du découpage d'une colonne MARQUEUR s'alignent au niveau
@@ -1190,9 +1250,11 @@ def _cap_lyr_column(col_lines, indent, max_u):
                     li += text
                     break
                 if not atomic:
-                    if allowed > 0:
-                        li += text[:allowed]
-                        text = text[allowed:]
+                    cut = _kinsoku_adjust_cut(text, allowed, kinsoku) if allowed > 0 else 0
+                    if cut > 0:
+                        li += text[:cut]
+                        text = text[cut:]
+                        u = len(text)  # le reste est du texte plaine : u = len
                     close_sub()
                     continue  # reste du texte plaine : sous-colonne neuve
                 close_sub()
@@ -1279,7 +1341,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None):
         base_indent = _verse_indent_target(d)
         for verse in _split_verses(d):
             for col_lines, indent in _lyrics_columns_layout(verse, base_indent):
-                lyr_cols.extend(_cap_lyr_column(col_lines, indent, max_lyr_u))
+                lyr_cols.extend(_cap_lyr_column(col_lines, indent, max_lyr_u,
+                                                kinsoku=(opts or {}).get("kinsoku", "simple")))
     # Marge grille ↔ paroles : CHINDAMI_LYR_SEP (12 pt, calibrée sur les
     # scans) GARANTIE entre le bord DROIT de l'encre des paroles (demi-em +
     # ruby, qui va vers la droite, vers la grille) et le bord gauche de la
@@ -4431,6 +4494,8 @@ def main():
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--dans-per-page", "--page-dans", type=int, dest="page_dans",
                     help="nombre max de dans par page (pagination multipage, surcharge @dans_per_page)")
+    ap.add_argument("--kinsoku", choices=["simple", "strict", "off"], default=None,
+                    help="kinsoku JLREQ au repli des paroles ::lyrics (surcharge @kinsoku)")
     args = ap.parse_args()
 
     if args.input == "-":
@@ -4443,7 +4508,7 @@ def main():
 
     song = parse_kkml(text)
     svgs = render_svg(song, cols=args.cols, layout=args.layout,
-                       page_dans=args.page_dans)
+                       page_dans=args.page_dans, kinsoku=args.kinsoku)
     if len(svgs) == 1:
         with open(out_path, "w", encoding="utf-8") as f:
             f.write(svgs[0])
