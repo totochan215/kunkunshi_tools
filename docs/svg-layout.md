@@ -23,6 +23,8 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - `header_h = 40` — en-tête réduit en mode vertical avec titre (le titre n'est pas dans l'en-tête mais rendu verticalement à droite). 70 en mode horizontal ou sans titre. En vertical avec titre, `header_h = 10` : l'en-tête haut-gauche est vide, toutes les métadonnées secondaires (`@lyricist`, `@composer`, `@origin`) étant rendues verticalement dans la colonne titre.
 - `marker_w = cell_w // 2` (= 26) quand `@marker on`, sinon 0
 
+Schéma coté de ces constantes (style figures du [JLREQ](https://www.w3.org/TR/jlreq/) : éléments en gris foncé, cotes et flèches en bleu) : [svg-layout-vertical.svg](svg-layout-vertical.svg), généré par `python3 docs/make_svg_layout_figure.py`.
+
 #### Titre vertical (à droite de la grille)
 
 - `TITLE_W = 36` — largeur de la colonne titre
