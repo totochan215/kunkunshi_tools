@@ -176,7 +176,7 @@ droite à gauche.
 
 ### Mise en page Chindami-Kunkunshi (`@layout chindami`)
 
-Le layout `chindami` émule le format des deux recueils Chindami Kunkunshi (ちんだみ工工四百選集), ouvrages connus de nombreux musiciens. La mise en page est au format vertical, avec une section de titre vertical à droite, un section de tablatures verticales au centre, puis une section de paroles.
+Le layout `chindami` émule le format des deux recueils Chindami Kunkunshi (ちんだみ工工四百選集), ouvrages connus de nombreux musiciens. La mise en page est au format vertical, avec une section de titre vertical à droite, un section de tablatures verticales au centre, puis une section de paroles verticales.
 
 Les recueils font 23 x 15 cm, en paysage. Les piles comprennent 12 cases, et la colonne marker fait une demi-case en largeur. Les tablatures peuvent déborder sur plusieurs pages au besoin. Le titre est surplombé d'un numéro de morceau.
 
