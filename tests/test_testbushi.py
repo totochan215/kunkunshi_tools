@@ -195,4 +195,24 @@ for layout in ("vertical", "horizontal", "mega"):
 print("OK テスト節-2 : ::tab sans paires vides terminales, ::vocal avec () .( ), "
       "rendu sans avertissement (convertisseur et correction)")
 
+# --- 10. テスト節-3 : positions top/bot des cellules à cheval -----------------
+JSON3 = ROOT / "samples" / "portama-json" / "テスト節-3.json"
+data3 = json.load(open(JSON3, encoding="utf-8"))
+with contextlib.redirect_stderr(io.StringIO()):
+    kkml3 = p2k.convert_portama_to_kkml(data3)
+tab3 = tab_lines(k.parse_kkml(kkml3))
+assert tab3[4] == ["イ工", "イ五", REST], tab3[4]
+voc3 = vocal_lines(k.parse_kkml(kkml3))
+# dan 5 (16 cellules) : ( ) combinés, .( mid seul, )( main mid + bot, ) top seul
+assert voc3[4] == ["-", "-", "-", "()", ".(", ")(", "-", ")"], voc3[4]
+# unités : top → nu, mid → 1 point, bot → 2 points (cellule à cheval seule)
+v = p2k.dan_to_vocal([{"note": ""}, {"note": "", "isSmall": True, "vocalPosMarkers": {"top": "vocalStart"}},
+                      {"note": ""}, {"note": "", "isSmall": True, "vocalPosMarkers": {"mid": "vocalEnd"}},
+                      {"note": ""}, {"note": "", "isSmall": True, "vocalPosMarkers": {"bot": "vocalStart"}}])
+assert v == ["(", ".)", "..("], v
+for layout in ("vertical", "horizontal", "mega"):
+    _, e = render(kkml3, layout)
+    assert "AVERTISSEMENT" not in e, (layout, e)
+print("OK テスト節-3 : top → ( ), mid → .( .), bot → ..( ..), combinaison )( , rendu sans avertissement")
+
 print("\nTous les tests testbushi passent.")

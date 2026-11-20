@@ -244,14 +244,19 @@ def dan_to_tokens(dan):
 # à la position de la paire dans la ligne ::vocal :
 # - cellule principale (index pair) : vocalStart → "(" , vocalEnd → ")"
 #   (marqueur nu ; la position top/mid/bottom de la cellule n'est pas encodée) ;
-# - cellule à cheval (index impair) en position mid, seule dans la paire :
-#   vocalStart → ".(" , vocalEnd → ".)" (le point = hauteur milieu de la case) ;
-#   si la cellule principale a aussi un marqueur, les deux se combinent en un
+# - cellule à cheval (index impair), seule dans la paire : le nombre de points
+#   encode la hauteur — top → "(" / ")" (nu), mid → ".(" / ".)" (1 point),
+#   bot → "..(" / "..)" (2 points). Clés observées : "top", "mid", "bot"
+#   ("bot", pas "bottom" — テスト節-3.json dan 5).
+# - si la cellule principale a aussi un marqueur, les deux se combinent en un
 #   seul token nu (ex. "()" = vocalStart principal + vocalEnd à cheval).
-# Les positions top/bottom d'une cellule à cheval ne sont pas supportées
-# (journalisées et ignorées) — jamais générées par l'éditeur Portama à ce jour,
-# qui ne produit que "mid" (observation utilisateur 2026-11-19).
+# Position inconnue : journalisée et ignorée.
 VOCAL_MAIN_MARKER_TOKEN = {"vocalStart": "(", "vocalEnd": ")"}
+VOCAL_POS_MARKER_TOKEN = {
+    "top": {"vocalStart": "(", "vocalEnd": ")"},
+    "mid": {"vocalStart": ".(", "vocalEnd": ".)"},
+    "bot": {"vocalStart": "..(", "vocalEnd": "..)"},
+}
 
 
 def _info(msg):
@@ -261,7 +266,7 @@ def _info(msg):
 def dan_to_vocal(dan):
     """Ligne ::vocal associée à un dan : un token par paire (comme ::tab),
     `-` par défaut, marqueurs vocaux combinés par paire (voir commentaire
-    de VOCAL_MAIN_MARKER_TOKEN)."""
+    de VOCAL_POS_MARKER_TOKEN)."""
     line = []
     n = len(dan)
     for i in range(0, n, 2):
@@ -276,16 +281,13 @@ def dan_to_vocal(dan):
                 _info(f"vocalPosMarkers kind={kind!r} sur cellule principale non supporté (ignoré)")
         small_tok = ""
         for pos, kind in (small_cell.get("vocalPosMarkers") or {}).items():
-            tok2 = VOCAL_MAIN_MARKER_TOKEN.get(kind, "")
-            if pos != "mid":
-                if kind:
-                    _info(f"vocalPosMarkers pos={pos!r} kind={kind!r} non supporté (ignoré)")
-                continue
+            tok2 = VOCAL_POS_MARKER_TOKEN.get(pos, {}).get(kind, "")
             if not tok2:
                 if kind:
                     _info(f"vocalPosMarkers pos={pos!r} kind={kind!r} non supporté (ignoré)")
                 continue
-            small_tok = tok2 if main_tok else "." + tok2
+            bare = VOCAL_MAIN_MARKER_TOKEN.get(kind, "")
+            small_tok = bare if main_tok else tok2
         line.append(main_tok + small_tok if (main_tok or small_tok) else "-")
     return line
 
