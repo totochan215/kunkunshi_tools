@@ -19,16 +19,31 @@ PUA_TO_KANJI = {
     0xE000: "合",
     0xE001: "乙",
     0xE002: "老",
+    0xE003: "下老",      # 下老 (composite)
+    0xE004: "ロ上",      # ロ上 (composite)
+    0xE005: "ロ中",      # ロ中 (composite)
+    0xE006: "ロ尺",      # ロ尺 (composite)
+    0xE007: "イ合",      # イ合 (composite)
+    0xE008: "イ乙",      # イ乙 (composite)
     0xE010: "四",
     0xE011: "上",
     0xE012: "中",
     0xE013: "尺",
+    0xE014: "下尺",      # 下尺 (composite, encerclé au rendu)
+    0xE015: "ロ五",      # ロ五 (composite)
+    0xE016: "イ老",      # イ老 (composite)
+    0xE017: "イ四",      # イ四 (composite)
+    0xE018: "イ上",      # イ上 (composite)
     0xE020: "工",
     0xE021: "五",
     0xE022: "六",
     0xE023: "七",
     0xE024: "八",
-    0xE030: "○",
+    0xE025: "九",
+    0xE026: "イ尺",      # イ尺 (composite)
+    0xE027: "イ工",      # イ工 (composite)
+    0xE028: "イ五",      # イ五 (composite)
+    0xE030: "○",            # silence (repos) — normalisé en ◯ par kkml2svg
 }
 
 # Accordages Portama → KKML
@@ -142,13 +157,18 @@ def cell_to_note(cell, is_main):
     if not kanji:
         return None, yubii
 
-    # Dièse (accidental sharp) → 尺♯ (seulement pour 尺)
-    if cell.get("acc") == "sharp" and kanji == "尺":
+    # Altération (acc) : sharp sur 尺 → 尺♯ (cas spécial @shaku_sharp) ;
+    # sinon ♯/♭ en suffixe sur n'importe quelle note (ex. 合♯, 合♭).
+    acc = cell.get("acc", "")
+    if acc == "sharp" and kanji == "尺":
         kanji = "尺♯"
+    acc_suffix = ""
+    if acc in ("sharp", "flat") and kanji != "尺♯":
+        acc_suffix = "♯" if acc == "sharp" else "♭"
 
     # Ornements (souhou)
     orn = cell.get("orn", "")
-    suffix = ORN_TO_SUFFIX.get(orn, "")
+    suffix = acc_suffix + ORN_TO_SUFFIX.get(orn, "")
 
     # isSmall sur la note principale → kuubanchi (suffixe s)
     if is_main and cell.get("isSmall", False):
@@ -158,17 +178,22 @@ def cell_to_note(cell, is_main):
 
 
 def dan_to_tokens(dan):
-    """Convertit un dan (tableau de 24 cellules) en liste de tokens KKML.
+    """Convertit un dan (tableau de cellules) en liste de tokens KKML.
 
-    Structure : 12 paires (main, straddle).
+    Structure : paires (main, straddle) — index pair = note principale,
+    index impair = note à cheval. Une cellule terminale isolée (dan de
+    longueur impaire) est traitée comme une note principale seule.
     - Main seule → noire : A
     - Main + straddle → croche : A/B  (si main isSmall=false)
     - Main + straddle, main isSmall → shuffle : A:B  (si main isSmall=true)
-    - RepeatStart → préfixe |: sur le token
-    - RepeatEnd → suffixe :| sur le token
+    - Main vide + straddle → note à cheval seule : -/B
+    - Main vide + straddle vide → case vide : -
+    - repeatStart → préfixe |: ; repeatEnd → suffixe :|
+    - vocalRepStart → préfixe (: ; vocalRepEnd → suffixe :)
     """
     tokens = []
-    pairs = [(dan[i], dan[i + 1]) for i in range(0, len(dan) - 1, 2)]
+    n = len(dan)
+    pairs = [(dan[i], dan[i + 1] if i + 1 < n else {}) for i in range(0, n, 2)]
 
     for main_cell, straddle_cell in pairs:
         main_note, main_yubii = cell_to_note(main_cell, is_main=True)
@@ -176,37 +201,95 @@ def dan_to_tokens(dan):
         # Un seul doigté par case KKML : priorité à la note principale.
         yubii = main_yubii or straddle_yubii
 
+        # `(:` doit précéder `|:` (désambiguation au parsing de ::tab).
         prefix = ""
+        if main_cell.get("vocalRepStart") or straddle_cell.get("vocalRepStart"):
+            prefix += "(:"
+        if main_cell.get("repeatStart") or straddle_cell.get("repeatStart"):
+            prefix += "|:"
         suffix = ""
-
-        if main_cell.get("repeatStart"):
-            prefix = "|:"
+        if main_cell.get("vocalRepEnd") or straddle_cell.get("vocalRepEnd"):
+            suffix += ":)"
         if main_cell.get("repeatEnd") or straddle_cell.get("repeatEnd"):
-            suffix = ":|"
+            suffix += ":|"
 
-        if main_note is None:
-            # Pas de note principale : case vide (ou juste repeat marker)
-            if prefix or suffix:
-                tokens.append(prefix + "-" + suffix + yubii)
-            else:
-                tokens.append("-" + yubii)
-            continue
-
-        if straddle_note is not None:
+        if main_note is None and straddle_note is None:
+            # Case vide (éventuellement avec marqueurs de boucle)
+            tokens.append(f"{prefix}-{suffix}{yubii}")
+        elif main_note is None:
+            # Note à cheval seule (main vide) : -/B
+            tokens.append(f"{prefix}-/{straddle_note}{suffix}{yubii}")
+        elif straddle_note is not None:
             # Deux notes dans la paire
             if main_cell.get("isSmall", False):
                 # Shuffle 早弾き (deux notes égales, petites)
-                token = f"{prefix}{main_note}:{straddle_note}{suffix}{yubii}"
+                tokens.append(f"{prefix}{main_note}:{straddle_note}{suffix}{yubii}")
             else:
                 # Croche (main pleine taille + straddle petite)
-                token = f"{prefix}{main_note}/{straddle_note}{suffix}{yubii}"
+                tokens.append(f"{prefix}{main_note}/{straddle_note}{suffix}{yubii}")
         else:
             # Noire (note principale seule)
-            token = f"{prefix}{main_note}{suffix}{yubii}"
+            tokens.append(f"{prefix}{main_note}{suffix}{yubii}")
 
-        tokens.append(token)
+    # Paires vides terminales (ni note ni marqueur de boucle) : retirées de
+    # la ligne ::tab (elles restent présentes dans ::vocal si elles portent
+    # des marqueurs vocaux).
+    while tokens and tokens[-1] == "-":
+        tokens.pop()
 
     return tokens
+
+
+# Marqueurs vocaux Portama (vocalPosMarkers) → tokens de la section ::vocal,
+# à la position de la paire dans la ligne ::vocal :
+# - cellule principale (index pair) : vocalStart → "(" , vocalEnd → ")"
+#   (marqueur nu ; la position top/mid/bottom de la cellule n'est pas encodée) ;
+# - cellule à cheval (index impair), seule dans la paire : le nombre de points
+#   encode la hauteur — top → "(" / ")" (nu), mid → ".(" / ".)" (1 point),
+#   bot → "..(" / "..)" (2 points). Clés observées : "top", "mid", "bot"
+#   ("bot", pas "bottom" — テスト節-3.json dan 5).
+# - si la cellule principale a aussi un marqueur, les deux se combinent en un
+#   seul token nu (ex. "()" = vocalStart principal + vocalEnd à cheval).
+# Position inconnue : journalisée et ignorée.
+VOCAL_MAIN_MARKER_TOKEN = {"vocalStart": "(", "vocalEnd": ")"}
+VOCAL_POS_MARKER_TOKEN = {
+    "top": {"vocalStart": "(", "vocalEnd": ")"},
+    "mid": {"vocalStart": ".(", "vocalEnd": ".)"},
+    "bot": {"vocalStart": "..(", "vocalEnd": "..)"},
+}
+
+
+def _info(msg):
+    print(f"portama2kkml: {msg}", file=sys.stderr)
+
+
+def dan_to_vocal(dan):
+    """Ligne ::vocal associée à un dan : un token par paire (comme ::tab),
+    `-` par défaut, marqueurs vocaux combinés par paire (voir commentaire
+    de VOCAL_POS_MARKER_TOKEN)."""
+    line = []
+    n = len(dan)
+    for i in range(0, n, 2):
+        main_cell = dan[i]
+        small_cell = dan[i + 1] if i + 1 < n else {}
+        main_tok = ""
+        for kind in (main_cell.get("vocalPosMarkers") or {}).values():
+            tok2 = VOCAL_MAIN_MARKER_TOKEN.get(kind, "")
+            if tok2:
+                main_tok = tok2
+            elif kind:
+                _info(f"vocalPosMarkers kind={kind!r} sur cellule principale non supporté (ignoré)")
+        small_tok = ""
+        for pos, kind in (small_cell.get("vocalPosMarkers") or {}).items():
+            tok2 = VOCAL_POS_MARKER_TOKEN.get(pos, {}).get(kind, "")
+            if not tok2:
+                if kind:
+                    _info(f"vocalPosMarkers pos={pos!r} kind={kind!r} non supporté (ignoré)")
+                continue
+            bare = VOCAL_MAIN_MARKER_TOKEN.get(kind, "")
+            small_tok = bare if main_tok else tok2
+        line.append(main_tok + small_tok if (main_tok or small_tok) else "-")
+    return line
 
 
 # Métadonnées de compatibilité Portama : clé KKML -> champ JSON Portama.
@@ -278,6 +361,16 @@ def convert_portama_to_kkml(data):
         lines.append(" ".join(tokens))
 
     lines.append("::")
+
+    # Section ::vocal : une ligne par dan, un token par paire (comme ::tab),
+    # émise dès qu'un marqueur vocal est présent.
+    vocal_lines = [dan_to_vocal(dan) for dan in score]
+    if any(any(t != "-" for t in line) for line in vocal_lines):
+        lines.append("")
+        lines.append("::vocal")
+        for line in vocal_lines:
+            lines.append(" ".join(line))
+        lines.append("::")
 
     # Paroles (si présentes et non vide)
     lyrics_data = data.get("allLyricsData", {})

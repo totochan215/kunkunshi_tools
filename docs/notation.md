@@ -316,6 +316,10 @@ Rendu (calibrage Inkscape nov. 2026) : chaque marque a sa **propre position** (p
 | `<`     | kachi-utu (掻音)       | ⌞ (U+231E, «coin bas-gauche») en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s`     | kuubanchi (小弾)       | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
 
+### Altérations en suffixe (Portama `acc`)
+
+`♯` (U+266F) et `♭` (U+266D) accolés à n'importe quelle note (ex. `合♯`, `合♭`) : altération (dièse/bémol) rendue en haut-droite de la note, taille ≈ 48 % de la note (calibrage PDF Portama テスト節.pdf : fs ≈ 0,53 × fs note, dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs). Variantes de saisie : `#` (ASCII) → `♯`, `b` → `♭`. Cas spécial : `尺♯` (U+5C3A U+266F) reste un token indivisible, rendu selon l'option `@shaku_sharp` (jamais décomposé en suffixe).
+
 ## Contrôle du chant
 
 | Suffixe       | Nom               | Rendu SVG | Description |
