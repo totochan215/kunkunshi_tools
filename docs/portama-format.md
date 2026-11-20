@@ -78,7 +78,7 @@ Chaque cellule est un objet avec :
 | `repeatEnd`       | bool   | Indique si la cellule correspond à une fin de répétition. `true` = oui, non renseigné = non. Défaut : non renseigné |
 | `vocalRepStart`   | bool   | Indique si la cellule correspond à un début de boucle vocale. `true` = oui, non renseigné = non. Défaut : non renseigné |
 | `vocalRepEnd`     | bool   | Indique si la cellule correspond à une fin de boucle vocale. `true` = oui, non renseigné = non. Défaut : non renseigné |
-| `vocalPosMarkers` | array  | 1D : vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : haut de cellule; pos = "mid" : milieu de cellule, pos = ?? : bas de cellule |
+| `vocalPosMarkers` | array  | 1D : vocalStart = ○ (声だし), vocalEnd = □ (声切り), pos = ?? : haut de cellule; pos = "mid" : milieu de cellule, pos = ?? : bas de cellule. **En pratique, l'éditeur Portama ne génère que `"mid"`** (observation utilisateur 2026-11-19 : impossible de placer le marqueur en haut/bas, toujours `mid`) |
 | `note2`           | string | Deuxième note par case        |
 | `acc2`            | string | Deuxième altération par case  |
 | `orn2`            | string | Deuxième ornement par case    |
@@ -148,7 +148,7 @@ La combinaison d'une cellule paire et d'une cellule impaire donne les figures ry
 
 NB: une cellule de KKML correspond donc à **deux** cellules de Portama : une cellule paire et une cellule impaire. Une cellule terminale impaire isolée (dan de longueur impaire) est convertie comme une note principale seule. Les paires vides terminales d'un dan (ni note ni marqueur de boucle) ne figurent pas dans la ligne `::tab` (mais restent dans `::vocal` si elles portent des marqueurs vocaux).
 
-Codage KKML (portama2kkml.py) des champs de boucle/marqueurs : `repeatStart`/`repeatEnd` → `|:B` / `B:|`, `vocalRepStart`/`vocalRepEnd` → `(:B` / `B:)` dans `::tab` ; `vocalPosMarkers` → ligne `::vocal` de même index (une ligne par dan, complétée par des `-`), à la position de la paire : cellule **principale** → `(` (vocalStart) / `)` (vocalEnd), marqueur nu ; cellule **à cheval** (`isSmall`) en position `mid`, seule dans la paire → `.(` / `.)` (le point = hauteur milieu), sinon (paire avec aussi un marqueur principal) les deux se combinent en un token nu (ex. `()`) ; positions `top`/`bottom` d'une cellule à cheval non encodées (info stderr).
+Codage KKML (portama2kkml.py) des champs de boucle/marqueurs : `repeatStart`/`repeatEnd` → `|:B` / `B:|`, `vocalRepStart`/`vocalRepEnd` → `(:B` / `B:)` dans `::tab` ; `vocalPosMarkers` → ligne `::vocal` de même index (une ligne par dan, complétée par des `-`), à la position de la paire : cellule **principale** → `(` (vocalStart) / `)` (vocalEnd), marqueur nu ; cellule **à cheval** (`isSmall`) en position `mid`, seule dans la paire → `.(` / `.)` (le point = hauteur milieu), sinon (paire avec aussi un marqueur principal) les deux se combinent en un token nu (ex. `()`) ; positions `top`/`bottom` d'une cellule à cheval non encodées (info stderr) — jamais générées par l'éditeur Portama à ce jour, qui ne produit que `mid`.
 
 ## Correspondance PUA → symboles
 

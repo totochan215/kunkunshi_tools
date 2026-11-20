@@ -249,7 +249,8 @@ def dan_to_tokens(dan):
 #   si la cellule principale a aussi un marqueur, les deux se combinent en un
 #   seul token nu (ex. "()" = vocalStart principal + vocalEnd à cheval).
 # Les positions top/bottom d'une cellule à cheval ne sont pas supportées
-# (journalisées et ignorées).
+# (journalisées et ignorées) — jamais générées par l'éditeur Portama à ce jour,
+# qui ne produit que "mid" (observation utilisateur 2026-11-19).
 VOCAL_MAIN_MARKER_TOKEN = {"vocalStart": "(", "vocalEnd": ")"}
 
 
