@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="690" height="580" viewBox="0 0 690 580">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a56db"/></marker></defs>
+<rect x="0" y="0" width="690" height="580" fill="#ffffff"/>
+<text x="300" y="192" text-anchor="start" font-family="sans-serif" font-size="13" fill="#333333" font-weight="bold">Mise en page horizontale — constantes (layout « horizontal », px, page à taille variable)</text>
+<text x="300" y="208" text-anchor="start" font-family="sans-serif" font-size="9.5" fill="#333333">gris foncé = éléments · bleu = cotes (flèches) et constantes</text>
+<rect x="150" y="170" width="482" height="326" fill="#fdfdfd" stroke="#333333" stroke-width="1.5"/>
+<text x="166" y="190" text-anchor="start" font-family="monospace" font-size="26" fill="#333333" font-weight="bold">音楽</text>
+<text x="256" y="190" text-anchor="start" font-family="sans-serif" font-size="12" fill="#777">@author @composer … (flux, sans repli)</text>
+<rect x="166" y="233" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="218" y="233" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="270" y="233" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="322" y="233" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="374" y="233" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="426" y="233" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="478" y="233" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="530" y="233" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="582" y="233" width="24" height="58" fill="none" stroke="#333333" stroke-width="0.5"/>
+<line x1="586" y1="291" x2="602" y2="235" stroke="#333333" stroke-width="0.5"/>
+<rect x="166" y="291" width="440" height="29" fill="#f3f3f3" stroke="#333333" stroke-width="0.75"/>
+<rect x="166" y="320" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="218" y="320" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="270" y="320" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="322" y="320" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="374" y="320" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="426" y="320" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="478" y="320" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="530" y="320" width="52" height="58" fill="none" stroke="#333333" stroke-width="0.75"/>
+<rect x="582" y="320" width="24" height="58" fill="none" stroke="#333333" stroke-width="0.5"/>
+<line x1="586" y1="378" x2="602" y2="322" stroke="#333333" stroke-width="0.5"/>
+<rect x="166" y="378" width="440" height="29" fill="#f3f3f3" stroke="#333333" stroke-width="0.75"/>
+<text x="186" y="269" text-anchor="middle" font-family="monospace" font-size="22" fill="#333333" font-weight="bold">工</text>
+<text x="186" y="309.5" text-anchor="middle" font-family="monospace" font-size="13" fill="#333333">あ</text>
+<text x="386" y="228" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">grille ::tab (12 cases/dan défaut, -c)</text>
+<text x="386" y="317.5" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#333333">ligne marker</text>
+<text x="166" y="448" text-anchor="start" font-family="monospace" font-size="16" fill="#333333">あいうえおかきくけこ</text>
+<text x="166" y="467" text-anchor="start" font-family="monospace" font-size="16" fill="#333333">さしすせそたちつてと</text>
+<text x="386" y="440" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">paroles ::lyrics (1 colonne verticale = 1 ligne, pas de repli)</text>
+<line x1="150" y1="168" x2="150" y2="73" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="166" y1="168" x2="166" y2="73" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="150" y1="70" x2="166" y2="70" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="158" y="66" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">ml = 16</text>
+<line x1="166" y1="168" x2="166" y2="89" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="606" y1="168" x2="606" y2="89" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="166" y1="86" x2="606" y2="86" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="386" y="82" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">cols·cell_w (cols = 12 défaut)</text>
+<line x1="606" y1="168" x2="606" y2="105" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="632" y1="168" x2="632" y2="105" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="606" y1="102" x2="632" y2="102" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="619" y="98" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">mr = max(16, cell_w//2) = 26</text>
+<line x1="150" y1="168" x2="150" y2="121" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="632" y1="168" x2="632" y2="121" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="150" y1="118" x2="632" y2="118" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="391" y="114" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">total_w = contenu (règle alignée, pas de largeur imposée)</text>
+<line x1="148" y1="170" x2="129" y2="170" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="148" y1="186" x2="129" y2="186" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="132" y1="170" x2="132" y2="186" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="127" y="178" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 127 178)">mt = 16</text>
+<line x1="148" y1="186" x2="113" y2="186" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="148" y1="233" x2="113" y2="233" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="116" y1="186" x2="116" y2="233" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="111" y="209.5" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 111 209.5)">header_h = 26+6+15 = 47 (titre fs 26 ; 26 sans titre)</text>
+<line x1="148" y1="233" x2="129" y2="233" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="148" y1="291" x2="129" y2="291" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="132" y1="233" x2="132" y2="291" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="127" y="262" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 127 262)">cell_h = 58</text>
+<line x1="148" y1="291" x2="113" y2="291" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="148" y1="320" x2="113" y2="320" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="116" y1="291" x2="116" y2="320" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="111" y="305.5" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 111 305.5)">marker_h = cell_h//2 = 29</text>
+<line x1="148" y1="407" x2="129" y2="407" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="148" y1="448" x2="129" y2="448" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="132" y1="407" x2="132" y2="448" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="127" y="427.5" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 127 427.5)">GAP_TAB_LYRICS = 12+21+…−6 = 41</text>
+<line x1="148" y1="448" x2="113" y2="448" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="148" y1="467" x2="113" y2="467" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="116" y1="448" x2="116" y2="467" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="111" y="457.5" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 111 457.5)">h_lyrics_sp = 19</text>
+<line x1="634" y1="170" x2="653" y2="170" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="634" y1="496" x2="653" y2="496" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="650" y1="170" x2="650" y2="496" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="655" y="333" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(90 655 333)">total_h = 326 (exemple, contenu)</text>
+<line x1="166" y1="498" x2="166" y2="517" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="218" y1="498" x2="218" y2="517" stroke="#1a56db" stroke-width="0.5"/>
+<line x1="166" y1="514" x2="218" y2="514" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
+<text x="192" y="527" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">cell_w = 52</text>
+<text x="150" y="536" text-anchor="start" font-family="monospace" font-size="9.5" fill="#1a56db">GAP_HEADER = 0 · h_lyrics_fs = 16 (medium) · H_LYRICS_COL_W = 21 · h_syl_fs = 13 · syllabes en ligne marker sous la rangée</text>
+</svg>
