@@ -24,7 +24,7 @@ Convertit un fichier JSON [Portama](https://portama.com/) en KKML.
 
 Options CLI : `-o/--output`
 
-Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence, note à cheval seule `-/B`), positions composites PUA (下老, ロ上, イ合, 下尺, イ五…), marqueurs vocaux `vocalPosMarkers` → section `::vocal`, styles rythmiques (standard, hayabichi), repères de répétition (instrumental, chant), repères de respiration (koedashi, koekiri), doigtés (yubii ㊀㊁㊂㊃), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), numéro de morceau (`musicno`), accordage absolu (`chogen`), tempo (`speed`), rythme (`rhythm`/`rhythmMode`), hauteur de base, autres métadonnées, paroles, etc. — les champs de compatibilité Portama sont émis en métadonnées KKML (`@musicno`, `@chogen`, `@speed`, `@rythm`, `@rythm_mode`) telles quelles, pour le round-trip
+Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence, demi silence + croche, croche + demi-silence), positions composites (下老, ロ上, イ合, 下尺, イ五...), marqueurs vocaux `vocalPosMarkers` → section `::vocal`, styles rythmiques (standard, hayabichi), repères de répétition (instrumental, chant), repères de respiration (koedashi, koekiri), yubii (㊀㊁㊂㊃), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), numéro de morceau (`musicno`), accordage absolu (`chogen`), tempo (`speed`), rythme (`rhythm`/`rhythmMode`), hauteur de base, autres métadonnées (`@musicno`, `@chogen`, `@speed`, `@rythm`, `@rythm_mode`), paroles, etc.
 
 ### kkml2svg.py
 
