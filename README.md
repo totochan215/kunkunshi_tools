@@ -26,16 +26,6 @@ Options CLI : `-o/--output`
 
 Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence, demi silence + croche, croche + demi-silence), positions composites (下老, ロ上, イ合, 下尺, イ五...), styles rythmiques (standard, hayabichi), repères de répétition (instrumental, chant), repères de respiration (koedashi, koekiri), yubii (㊀㊁㊂㊃), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), numéro de morceau (`musicno`), accordage absolu (`chogen`), tempo (`speed`), rythme (`rhythm`/`rhythmMode`), hauteur de base, autres métadonnées (`@musicno`, `@chogen`, `@speed`, `@rythm`, `@rythm_mode`), paroles, etc.
 
-### kkml2svg.py
-
-Rend un fichier KKML sous forme de mise en page SVG, en appliquant les options de mise en page stockées dans les métadonnées ou forcées en ligne de commande.
-
-    python3 kkml2svg.py chanson.kkml -o chanson.svg
-    python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
-    cat chanson.kkml | python3 kkml2svg.py -          # stdin -> stdout
-
-Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page`, `--kinsoku simple|strict|off`.
-
 ### kkml_cleaner.py
 
 Normalise un fichier KKML sous sa forme canonique. 
@@ -46,6 +36,16 @@ Normalise un fichier KKML sous sa forme canonique.
     python3 kkml_cleaner.py -n -o clean.kkml dirty.kkml # écrit dans un autre morceau
 
 Options CLI : `-n/--dry-run`, `-o/--output`
+
+### kkml2svg.py
+
+Rend un fichier KKML sous forme de mise en page SVG, en appliquant les options de mise en page stockées dans les métadonnées ou forcées en ligne de commande.
+
+    python3 kkml2svg.py chanson.kkml -o chanson.svg
+    python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
+    cat chanson.kkml | python3 kkml2svg.py -          # stdin -> stdout
+
+Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page`, `--kinsoku simple|strict|off`.
 
 ### kkml2pdf.py
 
