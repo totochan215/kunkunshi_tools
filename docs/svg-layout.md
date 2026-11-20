@@ -23,7 +23,7 @@ Le mode vertical reproduit la disposition traditionnelle des kunkunshi : les cas
 - `header_h = 40` — en-tête réduit en mode vertical avec titre (le titre n'est pas dans l'en-tête mais rendu verticalement à droite). 70 en mode horizontal ou sans titre. En vertical avec titre, `header_h = 10` : l'en-tête haut-gauche est vide, toutes les métadonnées secondaires (`@lyricist`, `@composer`, `@origin`) étant rendues verticalement dans la colonne titre.
 - `marker_w = cell_w // 2` (= 26) quand `@marker on`, sinon 0
 
-Schéma coté de ces constantes (style figures du [JLREQ](https://www.w3.org/TR/jlreq/) : éléments en gris foncé, cotes et flèches en bleu) : [svg-layout-vertical.svg](svg-layout-vertical.svg). Les 6 mises en page ont leur schéma (`svg-layout-<layout>.svg`), générés par `python3 docs/make_svg_layout_figures.py`.
+Schéma coté de ces constantes (style figures du [JLREQ](https://www.w3.org/TR/jlreq/) : éléments en gris foncé, cotes et flèches en bleu) : [svg-layout-vertical.svg](svg/svg-layout-vertical.svg). Les 6 mises en page ont leur schéma (`svg/svg-layout-<layout>.svg`), générés par `python3 docs/svg/make_svg_layout_figures.py`.
 
 #### Titre vertical (à droite de la grille)
 
@@ -149,7 +149,7 @@ Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sorti
 
 ### Mise en page horizontale standard
 
-Schéma coté : [svg-layout-horizontal.svg](svg-layout-horizontal.svg).
+Schéma coté : [svg-layout-horizontal.svg](svg/svg-layout-horizontal.svg).
 
 Lecture gauche→droite, haut→bas. Depuis la PR tuto, le layout `horizontal` partage avec `tuto` le straddle des croches chevauche la **bordure droite** des cases (`render_cell(..., orient="h")`). Les syllabes `::vocal`, les flèches de répétition et les symboles de répétition du chant sont en revanche dans une **LIGNE marker sous chaque rangée de cases** (transposée de la colonne marker verticale), pas dans les cases : hauteur `marker_h = cell_h // 2`, bordure comme la grille (`#999`, 0,75 pt), **arrêtée à droite de la dernière case de la rangée** (le dernier dan d'une section peut être incomplet) ; forcée si `::vocal` est présent, sinon pilotée par `@marker` (défaut `on`). Marge droite du layout horizontal élargie à **une demi-case** (`mr = max(MARGIN_R, cell_w // 2)`) : le straddle sur la bordure droite, les ornements et les syllabes vocales peuvent déborder du bloc de tablature à droite, c'est normal.
 
@@ -165,7 +165,7 @@ En-tête horizontal : voir les paragraphes « Écartement générique des groupe
 
 ### Mise en page Nomura-ryu (`@layout nomura`)
 
-Schéma coté : [svg-layout-nomura.svg](svg-layout-nomura.svg).
+Schéma coté : [svg-layout-nomura.svg](svg/svg-layout-nomura.svg).
 
 Le layout `nomura` émule le format des recueils Nomura-ryu Kunkunshi (野村流工工四) : une page A4 **portrait** encadrée par un filet (seul le
 numéro de page est à l'extérieur), jusqu'à **7 colonnes (dans)** par page,
@@ -182,7 +182,7 @@ droite à gauche.
 
 ### Mise en page Chindami-Kunkunshi (`@layout chindami`)
 
-Schéma coté : [svg-layout-chindami.svg](svg-layout-chindami.svg).
+Schéma coté : [svg-layout-chindami.svg](svg/svg-layout-chindami.svg).
 
 Le layout `chindami` émule le format des deux recueils Chindami Kunkunshi (ちんだみ工工四百選集), ouvrages connus de nombreux musiciens. La mise en page est au format vertical, avec une section de titre vertical à droite, un section de tablatures verticales au centre, puis une section de paroles verticales.
 
@@ -199,7 +199,7 @@ Les recueils font 23 x 15 cm, en paysage. Les piles comprennent 12 cases, et la 
 
 ### Mise en page pour tutoriel vidéo (`@layout tuto`)
 
-Schéma coté : [svg-layout-tuto.svg](svg-layout-tuto.svg).
+Schéma coté : [svg-layout-tuto.svg](svg/svg-layout-tuto.svg).
 
 Le layout `tuto` produit des tablatures destinées aux vidéos tutorielles, sur l'exemple de
 https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases par dan**, **7 dans par page**).
@@ -221,7 +221,7 @@ https://www.youtube.com/watch?v=GvcZoeCbIPQ (calibré sur la vidéo : **8 cases 
 
 ### Mise en page mega (`@layout mega`)
 
-Schéma coté : [svg-layout-mega.svg](svg-layout-mega.svg).
+Schéma coté : [svg-layout-mega.svg](svg/svg-layout-mega.svg).
 
 Le layout `mega` produit une page **A3 paysage (42 × 29,7 cm)** contenant **deux blocs horizontaux empilés**, chacun tenant jusqu'à **32 blocs verticaux (dans) de 12 cases** — soit **64 dans (768 cases) par page**. **Ordre de lecture** : bloc horizontal du haut d'abord, de haut en bas et de droite à gauche dans chaque dan, puis bloc horizontal du bas idem.
 

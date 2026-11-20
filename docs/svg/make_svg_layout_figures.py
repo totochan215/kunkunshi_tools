@@ -10,15 +10,15 @@ flèches et noms de constantes en BLEU (#1a56db). Les constantes de page
 (source de vérité) ; les autres sont les valeurs par défaut du code.
 
 Usage :
-    python3 docs/make_svg_layout_figures.py     # réécrit les 6 SVG dans docs/
+    python3 docs/svg/make_svg_layout_figures.py  # réécrit les 6 SVG dans docs/svg/
 """
 import os
 import sys
 import xml.dom.minidom
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, ROOT)
-DOCS = os.path.join(ROOT, "docs")
+DOCS = os.path.dirname(os.path.abspath(__file__))   # docs/svg/
 
 import kkml2svg as k   # constantes de page (NOMURA_*, CHINDAMI_*, MEGA_*...)
 
