@@ -212,7 +212,7 @@ Au sein des sections `::tab` et `::vocal`, les équivalents UTF-8 des signes ASC
 | UTF-8           | ASCII | Usage (pour mémoire) |
 |-----------------|-------|----------------------|
 | `♯` (U+266F)    | `#`   | Dièse                |
-| `♭` (U+266D)    | `b`   | Bémol (lettre b)     |
+| `♭` (U+266D)    | `b`   | Bémol                |
 
 #### Caractères graphiquement similaires
 
