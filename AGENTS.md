@@ -123,6 +123,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ⬜ Recenser les autres accordages (`choshi` : ni, san…) et leur mapping PUA.
 - ⬜ Round-trip Portama : variante « raw » de `::ruby` (ligne allRubyData littérale, sans perte).
 - ⬜ Contrepartie `::vocal` : règle note = floor(unités/3), validée sans collision sur かぎやで風節.
+- ❓ (2026-11-19) Granularité `::vocal` vs round-trip Portama (remontée utilisateur) : une case KKML = paire Portama = 2 cellules × 3 positions vocales (top/mid/bot) = **6 sous-positions** ; idem côté ruby (`allRubyData` = 3 unités/cellule Portama = 6/case KKML). Encodage actuel (1 token `::vocal` par paire) : cellule principale → `(`/`)` nu (**position perdue**), cellule à cheval seule → points de tête (top = nu, mid = 1, bot = 2 — position OK), les deux combinés → token nu (`()` / `)(`, **positions perdues**). Pour un réexport Portama fidèle, il faudra soit coder la position des deux côtés dans le même token (ex. principale = parenthèse + points de queue, à cheval = points de tête + parenthèse), soit diviser chaque case en 6 sous-positions. À trancher avant d'écrire `kkml2portama.py`.
 
 ## 4. Long terme
 
