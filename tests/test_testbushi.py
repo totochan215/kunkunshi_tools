@@ -160,4 +160,39 @@ v = p2k.dan_to_vocal([{"note": chr(0xE000), "vocalPosMarkers": {"mid": "vocalSta
 assert v == ["(", ".)"], v
 print("OK dan_to_vocal : cellule principale -> ( / ), cellule à cheval mid -> .( / .)")
 
+# combinaison des deux marqueurs dans une même paire : token nu (ex. "()")
+v = p2k.dan_to_vocal([{"note": "", "vocalPosMarkers": {"mid": "vocalStart"}},
+                      {"note": "", "isSmall": True, "vocalPosMarkers": {"mid": "vocalEnd"}}])
+assert v == ["()"], v
+print("OK dan_to_vocal : marqueurs principal + à cheval combinés en ()")
+
+# paires vides terminales retirées de ::tab
+dan = [{"note": chr(0xE000)}, {}, {"note": ""}, {"note": "", "isSmall": True},
+        {"note": ""}, {}]
+assert p2k.dan_to_tokens(dan) == ["合"], p2k.dan_to_tokens(dan)
+print("OK paires vides terminales retirées de la ligne ::tab")
+
+# --- 9. テスト節-2 : dan 5 à 11 cellules, marqueurs vocaux sur cases vides -----
+JSON2 = ROOT / "samples" / "portama-json" / "テスト節-2.json"
+KKML2 = ROOT / "samples" / "kkml" / "テスト節-2.kkml"
+data2 = json.load(open(JSON2, encoding="utf-8"))
+with contextlib.redirect_stderr(io.StringIO()):
+    kkml2 = p2k.convert_portama_to_kkml(data2)
+tab2 = tab_lines(k.parse_kkml(kkml2))
+assert tab2[4] == ["イ工", "イ五", REST], tab2[4]  # 3 paires vides terminales retirées
+voc2 = vocal_lines(k.parse_kkml(kkml2))
+assert voc2[4] == ["-", "-", "-", "()", ".(", ")"], voc2[4]
+u2 = open(KKML2, encoding="utf-8").read()
+assert tab_lines(k.parse_kkml(u2)) == tab2
+uv = vocal_lines(k.parse_kkml(u2))
+# seul écart connu : dernier token `).` (tenuto ajouté à la main) vs `)` du convertisseur
+assert uv[:4] == voc2[:4] and uv[4] == voc2[4][:5] + [")."], (uv[4], voc2[4])
+for layout in ("vertical", "horizontal", "mega"):
+    _, e = render(kkml2, layout)
+    assert "AVERTISSEMENT" not in e, (layout, e)
+    _, e = render(u2, layout)
+    assert "AVERTISSEMENT" not in e, (layout, e)
+print("OK テスト節-2 : ::tab sans paires vides terminales, ::vocal avec () .( ), "
+      "rendu sans avertissement (convertisseur et correction)")
+
 print("\nTous les tests testbushi passent.")
