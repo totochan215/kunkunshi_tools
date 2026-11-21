@@ -1,5 +1,6 @@
 import subprocess, sys, os, tempfile
-os.chdir('/workspace/github__totochan215__kunkunshi_tools')
+from pathlib import Path
+os.chdir(Path(__file__).resolve().parent.parent)
 
 def run_clean(text):
     with tempfile.NamedTemporaryFile('w', suffix='.kkml', delete=False, encoding='utf-8') as f:
@@ -436,15 +437,16 @@ for lay in ("nomura", "chindami"):
     assert chr(0x300a) not in s40.split("</metadata>")[0].split("<dc:title>")[1], "ruby dans dc:title"
 print("OK métadonnées Inkscape : dc:title sans ruby + dc:creator=kunkunshi_tools (nomura, chindami)")
 
-# 41. indentation uniforme : sous le plus long marqueur de la section + 1 espace
+# 41. indentation uniforme : en-têtes de couplets TOUJOURS 3 caractères pleine
+# chasse -> indent cible = max(3, plus long marqueur) (règle 8dcd87c)
 NY, MN, MNMN = chr(0x5973)+chr(0x3001), chr(0x7537)+chr(0x3001), chr(0x7537)+chr(0x5973)+chr(0x3001)
 lines41 = [NY + "aaa|suite1", "", MN + "bbb|suite2", "", MNMN + "ccc|suite3"]
 base41 = _k._verse_indent_target(lines41)
-assert base41 == 4, base41   # max(2,2,3) + 1
+assert base41 == 3, base41   # max(3, max(2,2,3)) : marqueur 男女、 = 3 caractères
 for v in _k._split_verses(lines41):
     for col, ind in _k._lyrics_columns_layout(v, base41):
         if col[0].startswith((NY, MN, MNMN)):
             assert ind == 0, (col[0], ind)          # colonne marqueur : en haut
         else:
-            assert ind == 4, (col[0], ind)          # continuation : indent uniforme 4
-print("OK indentation uniforme : max marqueur (男女、=3) + 1 -> indent 4 partout")
+            assert ind == 3, (col[0], ind)          # continuation : indent uniforme 3
+print("OK indentation uniforme : en-têtes 3 caractères pleine chasse -> indent 3 partout")
