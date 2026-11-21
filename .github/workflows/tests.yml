@@ -22,3 +22,5 @@ jobs:
         run: python3 tests/test_portama_meta.py
       - name: Lancer les tests testbushi
         run: python3 tests/test_testbushi.py
+      - name: Lancer les tests d'échappement ruby
+        run: python3 tests/test_escape.py
