@@ -101,7 +101,7 @@ Exemple :
 
 - Métadonnées : `@title`, `@tuning`, `@cells_per_dan`, `@layout`, `@marker`, `@author`,
   `@source`, `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc. (`@source` : source de la
-  version du morceau, texte libre avec ruby et liens `[texte](url)`)
+  version du morceau, texte libre, non affiché dans le SVG — information KKML uniquement)
 - Sections :
     - `::tab` — tablature, 1 figure par temps. `A` = 1 noire, `A/B` = 2 croches, `A:B` = 1 croche pointée + 1 double croche,
       `|:` `:|` = boucle instrumentale, `(:` `:)` = boucle vocale, `' " ^ v < s` = ornements (technique de jeu),
