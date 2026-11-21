@@ -79,7 +79,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@kinsoku`       | `simple`   | Kinsoku (禁則処理, [JLREQ W3C](https://www.w3.org/TR/jlreq/)) au repli des paroles `::lyrics` quand une ligne est coupée au caractère (layout `chindami`) : `simple` = 行頭禁則 avec追い出し (fermetures, ponctuation 、。，・：；, 々〻, ー, petits kana) + 行末禁則 (ouvrantes), `strict` = ajoute ！？ en tête de ligne, `off` = coupe au caractère (comportement historique). Défaut `simple`, sauf `nomura` (`off` : pas de repli des paroles au caractère). `--kinsoku` en CLI. |
 | `@text_color`    | `#000000`    | Couleur de **tout le texte**, format HTML (`#rgb`, `#rrggbb` ou nom CSS, ex. `red`). Surcharge le défaut du design de la mise en page |
 | `@frame_color`   | défaut du layout | Couleur du filet de cadre de page (layout `nomura` seul à ce jour), format HTML. Défaut `nomura` : `#333333` |
-| `@frame_width`   | défaut du layout | Épaisseur du filet de cadre, en pt (nombre positif, ex. `1.5`). Défaut `nomura` : `1.5` |
+| `@frame_width`   | défaut du layout | Épaisseur du filet de cadre, en pt (nombre positif ou nul). **`0` = cadre non affiché** (le cadre virtuel se confond alors avec le hanmen). Défaut `nomura` : `1.5`, autres layouts : `0` |
 | `@cell_color`    | défaut du layout | Couleur des cases et de la bande marker, format HTML. Défauts : `#bbbbbb` (vertical, chindami, mega), `#999999` (horizontal, tuto), `#333333` (nomura) |
 | `@cell_width`    | défaut du layout | Épaisseur des filets de cases, en pt. Défauts : `0.75` (vertical, horizontal, tuto, mega), `0.6` (nomura, chindami) |
 | `@arrow_color`   | défaut du layout | Couleur des flèches de répétition `|: :|` et des symboles vocaux ⚪⚫, format HTML. Mêmes défauts que `@cell_color` |

@@ -323,16 +323,16 @@ def fig_horizontal():
 
 
 # --------------------------------------------------------------------------- #
-# nomura (A4 portrait, pt) — spec k.NOMURA (champs page_w, frame_w, dan_gap...)
+# nomura (A4 portrait, pt) — spec k.NOMURA (champs page_w, marges, pad_*, dan_gap...)
 # --------------------------------------------------------------------------- #
 def fig_nomura():
     PW, PH = k.NOMURA.page_w, k.NOMURA.page_h               # 595.28 x 841.89 pt
-    FW, FH = k.NOMURA.frame_w, k.NOMURA.frame_h             # 559.3 x 745.9
-    FMX, FM = k.NOMURA.frame_margin_x, k.NOMURA.frame_margin_y
-    GAP = k.NOMURA.dan_gap                                  # 14.5
+    FMX, FM, FX1, FY1 = k.NOMURA.frame_rect()               # cadre = marges depuis le bord
+    FW, FH = FX1 - FMX, FY1 - FM                          # ~559.3 x ~745.9
+    GAP = k.NOMURA.dan_gap                                  # 14.5 (= pad_* : padding du cadre)
     ROWS = k.NOMURA.cells_per_dan                                    # 12
     MAX_DANS = k.NOMURA.max_dans                            # 7
-    CELL_W, CELL_H = ((k.NOMURA.frame_w - 8 * k.NOMURA.dan_gap) / 14.0), ((k.NOMURA.frame_h - 2 * k.NOMURA.dan_gap) / k.NOMURA.cells_per_dan)       # 31.7 x 60.6
+    CELL_W, CELL_H = ((FW - 8 * GAP) / 14.0), ((FH - 2 * GAP) / ROWS)       # ~31.7 x ~60.7
     MARKER_W = CELL_W                                       # marker = pleine case
     GROUP_W = CELL_W + MARKER_W
     FS = 26.0
@@ -375,10 +375,10 @@ def fig_nomura():
         f.dim_h(x1, x2, y, label, ext_y=-2)
         y += 22
     f.dim_h(0, PW, y, f"page = {PW:.1f} × {PH:.1f} pt = 21 × 29,7 cm (A4)", ext_y=-2)
-    f.dim_h(FMX, FMX + FW, y - 22, f"cadre = {FW:.1f} × {FH:.1f} pt, marges {FMX:.1f} / {FM:.1f} pt", ext_y=-2)
+    f.dim_h(FMX, FMX + FW, y - 22, f"cadre = {FW:.1f} × {FH:.1f} pt (frame_rect), marges {FMX:.1f} / {FM:.1f} pt", ext_y=-2)
 
-    f.dim_v(0, FM, -16, f"marge {FM:.1f}", ext_x=-2)
-    f.dim_v(FM, grid_y0, -32, f"dan_gap = {GAP:g}", ext_x=-2)
+    f.dim_v(0, FM, -16, f"margin_t = {FM:.1f}", ext_x=-2)
+    f.dim_v(FM, grid_y0, -32, f"pad_t = dan_gap = {GAP:g}", ext_x=-2)
     f.dim_v(grid_y0, grid_y0 + CELL_H, -16, f"cell_h = {CELL_H:.1f}", ext_x=-2)
     f.dim_v(grid_y0, grid_y0 + ROWS * CELL_H, -48,
             f"rows = {ROWS} × cell_h = {ROWS * CELL_H:.0f} pt", ext_x=-2)
@@ -401,12 +401,11 @@ def fig_nomura():
 # --------------------------------------------------------------------------- #
 def fig_chindami():
     PW, PH = k.CHINDAMI.page_w, k.CHINDAMI.page_h     # 651.96 x 425.16 pt
-    GT, GB = k.CHINDAMI.grid_top, k.CHINDAMI.grid_bottom
+    FMX, GT, FX1, GB = k.CHINDAMI.frame_rect()         # cadre virtuel = hanmen (pad 0, non tracé)
     CELL_H = k.CHINDAMI.cell_h                        # ~29.8
     CELL_W, MARKER_W, PILE_W = k.CHINDAMI.cell_w, k.CHINDAMI.marker_w, k.CHINDAMI.pile_w
     ROWS = k.CHINDAMI.cells_per_dan                            # 12
     TITLE_W, TITLE_GAP = k.CHINDAMI.title_w, k.CHINDAMI.title_gap
-    FMX = k.CHINDAMI.frame_margin_x                   # ~49.6
     FS = k.CHINDAMI.fs                                # 12
     LYR_FS = int(k.CHINDAMI.lyr_fs)                    # 10 (10,8 -> int)
     LYR_COL_W = int(LYR_FS * 1.33)
@@ -420,7 +419,7 @@ def fig_chindami():
     f = Fig("chindami", W, H, sc=sc, ox=ox, oy=oy,
             title="Mise en page Chindami-Kunkunshi — constantes (layout « chindami », pt, 23×15 cm paysage)")
     f.rect(0, 0, PW, PH, fill=PAGE_FILL, stroke=GRAY, sw=1.5)
-    f.rect(FMX, GT, PW - 2 * FMX, GB - GT, fill="none", stroke=GRAY, sw=0.75)
+    f.rect(FMX, GT, FX1 - FMX, GB - GT, fill="none", stroke=GRAY, sw=0.75)   # hanmen (= cadre, pad 0)
     title_offset = TITLE_W + TITLE_GAP
     pile_x = []
     for ci in range(DRAWN):
@@ -452,9 +451,9 @@ def fig_chindami():
         y += 16
     f.dim_h(0, PW, y, f"page = {PW:.1f} × {PH:.1f} pt = 23 × 15 cm", ext_y=-2)
 
-    f.dim_v(0, GT, -16, f"grid_top = {GT:.1f}", ext_x=-2)
+    f.dim_v(0, GT, -16, f"margin_t = {GT:.1f}", ext_x=-2)
     f.dim_v(GT, GT + CELL_H, -32, f"cell_h = {CELL_H:.1f}", ext_x=-2)
-    f.dim_v(GT, GB, -48, f"{ROWS} × cell_h = {GB - GT:.0f} pt (grid_top→grid_bottom)", ext_x=-2)
+    f.dim_v(GT, GB, -48, f"{ROWS} × cell_h = {GB - GT:.0f} pt (hanmen haut→bas)", ext_x=-2)
     f.dim_v(0, PH, PW + 16, f"page {PH:.1f} pt", side="right", ext_x=PW + 2)
     yb = PH + 16
     for x in (pile_x[-1], pile_x[-1] + CELL_W, pile_x[-1] + PILE_W):

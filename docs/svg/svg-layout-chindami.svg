@@ -75,7 +75,7 @@
 <line x1="108" y1="120" x2="91" y2="120" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="108" y1="150.521" x2="91" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="94" y1="120" x2="94" y2="150.521" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="89" y="135.26" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 89 135.26)">grid_top = 30.5</text>
+<text x="89" y="135.26" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 89 135.26)">margin_t = 30.5</text>
 <line x1="108" y1="150.521" x2="75" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="108" y1="180.323" x2="75" y2="180.323" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="78" y1="150.521" x2="78" y2="180.323" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -83,7 +83,7 @@
 <line x1="108" y1="150.521" x2="59" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="108" y1="507.433" x2="59" y2="507.433" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="62" y1="150.521" x2="62" y2="507.433" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="57" y="328.977" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 57 328.977)">12 × cell_h = 357 pt (grid_top→grid_bottom)</text>
+<text x="57" y="328.977" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 57 328.977)">12 × cell_h = 357 pt (hanmen haut→bas)</text>
 <line x1="763.969" y1="120" x2="780.969" y2="120" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="763.969" y1="545.197" x2="780.969" y2="545.197" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="777.969" y1="120" x2="777.969" y2="545.197" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
