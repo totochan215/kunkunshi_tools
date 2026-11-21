@@ -68,6 +68,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@layout`        | `vertical` | Modèle de rendu : `vertical`, `horizontal`, `nomura`, `chindami`, `tuto` ou `mega` (voir [svg-layout.md](svg-layout.md)) |
 | `@dans_per_page` | —          | Nombre max de *dans* par page avant un saut de page forcé |
 | `@tuto_block`    | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
+| `@mega_cols`     | `32`       | Layout `mega` uniquement : nombre de colonnes (*dans*) par bloc horizontal (2 blocs/page A3, donc 64 dans/page par défaut). La largeur des cases s'adapte |
 | `@cells_per_dan` | —          | Nombre de cellules par *dan*. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal` (défaut `12`) et `tuto` (défaut `8`), mais pas par `chindami`, `nomura` et `mega`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
 | `@marker`        | `on`       | Active/désactive les colonnes/lignes de marker : `on` : activé, `off`, désactivé. Certaines mises en pages surchargent cette valeur. |
 | `@end_circle`    | —          | **Déprécié** |
@@ -91,6 +92,9 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 
 ### Section nommée
 `::section nom` — titre de section (s'applique au bloc suivant ; utile en layout `mega` pour un medley : le nom de chaque chanson est imprimé au-dessus de ses colonnes). `::song nom` est un alias accepté de `::section nom` (renommé avec une info stderr).
+
+### Sauts de mise en page (layout `mega` uniquement)
+`::block` — ferme le bloc horizontal courant et passe au bloc suivant, même si les colonnes prévues ne sont pas remplies. `::page` — ferme la page courante et passe à la page suivante, même non pleine. Sans contenu ; ignorés par les autres layouts.
 
 ### Tab
 `::tab` — section de tablature, organisée en temps (figures), séparés par des espaces.
