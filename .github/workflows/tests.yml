@@ -36,3 +36,5 @@ jobs:
         run: python3 tests/test_mega_breaks.py
       - name: Lancer les tests du straddle de tête /B (rang -1)
         run: python3 tests/test_lead_straddle.py
+      - name: Lancer les tests des groupes SVG de répétition
+        run: python3 tests/test_svg_groups.py
