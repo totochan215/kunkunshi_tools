@@ -95,10 +95,10 @@ texts = "".join(re.findall(r"<text[^>]*>([^<]*)</text>", svg))
 assert "<a " not in svg and "[a](http://x)" in texts
 print("OK pas de lien dans ::lyrics (texte littéral)")
 
-# 9. Cleaner : @source conservé, ordre canonique (après @origin)
+# 9. Cleaner : @source conservé ; @title en premier, puis ordre du fichier
 out = c.clean("@title t\n@source S\n@origin O\n::tab\n合 工\n::\n")
 assert "@origin O" in out and "@source S" in out
-assert out.index("@origin O") < out.index("@source S"), out
-print("OK cleaner : @source conservé, ordre canonique après @origin")
+assert out.index("@title t") < out.index("@source S") < out.index("@origin O"), out
+print("OK cleaner : @source conservé, @title en tête puis ordre d'apparition dans le fichier")
 
 print("\nTous les tests @source/liens passent.")
