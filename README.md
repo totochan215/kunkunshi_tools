@@ -37,6 +37,16 @@ Normalise un fichier KKML sous sa forme canonique.
 
 Options CLI : `-n/--dry-run`, `-o/--output`
 
+### kkml_beautify.py
+
+Beautifie un fichier KKML pour l'édition en chasse fixe : dans les sections `::tab` et `::vocal`, les tokens sont normalisés (comme `kkml_cleaner.py`) puis complétés d'espaces simples pour que les débuts de chaque cellule soient alignés en colonnes (les caractères CJK pleine chasse comptent double). Le reste du fichier est inchangé. Idempotent, et le rendu SVG est inchangé.
+
+    python3 kkml_beautify.py morceau.kkml                  # réécrit le fichier en place
+    python3 kkml_beautify.py -n morceau.kkml               # mode test (dry run)
+    python3 kkml_beautify.py -n -o beau.kkml m.kkml
+
+Options CLI : `-n/--dry-run`, `-o/--output`
+
 ### kkml2svg.py
 
 Rend un fichier KKML sous forme de mise en page SVG, en appliquant les options de mise en page stockées dans les métadonnées ou forcées en ligne de commande.
