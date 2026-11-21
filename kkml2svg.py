@@ -2495,6 +2495,7 @@ def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
     horizontal dans le sens de lecture, un seul path, triangle creux au
     bout. 'start' (|:) pointe vers la droite (sens de lecture), 'end' (:|)
     vers la gauche."""
+    out.append(f'<g class="repeat-arrow" fill="none" stroke="{stroke}" stroke-width="{sw:g}">')
     v_len = marker_h * 0.66   # trait vertical depuis le haut de la ligne
     h_len = v_len             # trait horizontal dans le sens de lecture
     tri_size = marker_h * 0.22
@@ -2504,22 +2505,17 @@ def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
         vx = x_left + cell_w * 0.20
         hx = vx + h_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}" fill="none" '
-                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+                   f'L {hx:g} {vy:g}"/>')
         out.append(f'<polygon points="{hx:g},{vy - tri_size:g} '
-                   f'{hx:g},{vy + tri_size:g} {hx + tri_w:g},{vy:g}" '
-                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
+                   f'{hx:g},{vy + tri_size:g} {hx + tri_w:g},{vy:g}"/>')
     else:
         vx = x_left + cell_w * 0.80
         hx = vx - h_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}" fill="none" '
-                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+                   f'L {hx:g} {vy:g}"/>')
         out.append(f'<polygon points="{hx:g},{vy - tri_size:g} '
-                   f'{hx:g},{vy + tri_size:g} {hx - tri_w:g},{vy:g}" '
-                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
-
-
+                   f'{hx:g},{vy + tri_size:g} {hx - tri_w:g},{vy:g}"/>')
+    out.append('</g>')
 def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
                    stroke="#999", sw=0.75):
     """Symbole de répétition du chant dans la ligne marker horizontale —
@@ -2527,6 +2523,7 @@ def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
     disque creux. 'end' ( )| ) : barre à ~80% de la case, montant vers la
     gauche, disque à gauche ; 'start' ( |( ) : miroir à ~20%, montant et
     disque vers la droite."""
+    out.append(f'<g class="vocal-rep" fill="none" stroke="{stroke}" stroke-width="{sw:g}">')
     v_len = marker_h * 0.66
     r = marker_h * 0.22
     vy = y_top + v_len
@@ -2534,20 +2531,15 @@ def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
         vx = x_left + cell_w * 0.80
         hx = vx - v_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}" fill="none" '
-                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
-        out.append(f'<circle cx="{hx - r:g}" cy="{vy:g}" r="{r:g}" '
-                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
+                   f'L {hx:g} {vy:g}"/>')
+        out.append(f'<circle cx="{hx - r:g}" cy="{vy:g}" r="{r:g}"/>')
     else:
         vx = x_left + cell_w * 0.20
         hx = vx + v_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}" fill="none" '
-                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
-        out.append(f'<circle cx="{hx + r:g}" cy="{vy:g}" r="{r:g}" '
-                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
-
-
+                   f'L {hx:g} {vy:g}"/>')
+        out.append(f'<circle cx="{hx + r:g}" cy="{vy:g}" r="{r:g}"/>')
+    out.append('</g>')
 def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
                             syl_fs):
     """Syllabes ::vocal dans la ligne marker horizontale (sous la rangée de
@@ -3737,6 +3729,7 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
 
     arrow_type: 'start' = flèche descendante (~80% haut), 'end' = flèche montante (~80% bas).
     x_left = bordure gauche de la colonne marker. cy = position verticale du haut de la case."""
+    out.append(f'<g class="repeat-arrow" fill="none" stroke="{stroke}" stroke-width="{sw:g}">')
     h_len = marker_w * 0.66  # longueur du trait horizontal
     v_len = h_len  # trait vertical au moins aussi long que l'horizontal
     tri_size = marker_w * 0.22  # demi-largeur du triangle
@@ -3749,13 +3742,11 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
         hx = x_left + h_len
         vy = hy + v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}" fill="none" '
-                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+                   f'L {hx:g} {vy:g}"/>')
         # Triangle creux pointant vers le bas, sommet à (hx, vy + tri_h)
         tip_y = vy + tri_h
         out.append(f'<polygon points="{hx - tri_size:g},{vy:g} '
-                   f'{hx + tri_size:g},{vy:g} {hx:g},{tip_y:g}" '
-                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
+                   f'{hx + tri_size:g},{vy:g} {hx:g},{tip_y:g}"/>')
     else:
         # Part à ~80% du bas : trait horizontal à cell_h * 0.80
         hy = cy + cell_h * 0.80
@@ -3763,15 +3754,12 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
         # Coude propre : horizontal puis vertical montant, un seul path
         vy = hy - v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}" fill="none" '
-                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
+                   f'L {hx:g} {vy:g}"/>')
         # Triangle creux pointant vers le haut, sommet à (hx, vy - tri_h)
         tip_y = vy - tri_h
         out.append(f'<polygon points="{hx - tri_size:g},{vy:g} '
-                   f'{hx + tri_size:g},{vy:g} {hx:g},{tip_y:g}" '
-                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
-
-
+                   f'{hx + tri_size:g},{vy:g} {hx:g},{tip_y:g}"/>')
+    out.append('</g>')
 def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
                         stroke="#bbb", sw=0.75):
     """Symbole de répétition du chant dans la colonne marker — même
@@ -3787,6 +3775,7 @@ def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
     à l'axe HORIZONTAL : barre à ~20% du haut, montant vers le bas,
     disque en dessous.
     x_left = bordure gauche de la colonne marker. cy = haut de la case."""
+    out.append(f'<g class="vocal-rep" fill="none" stroke="{stroke}" stroke-width="{sw:g}">')
     h_len = marker_w * 0.66
     v_len = h_len
     r = marker_w * 0.22
@@ -3797,20 +3786,15 @@ def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
         # Coude propre : barre horizontale puis montant vers le haut
         vy = hy - v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}" fill="none" '
-                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
-        out.append(f'<circle cx="{hx:g}" cy="{vy - r:g}" r="{r:g}" '
-                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
+                   f'L {hx:g} {vy:g}"/>')
+        out.append(f'<circle cx="{hx:g}" cy="{vy - r:g}" r="{r:g}"/>')
     else:  # 'start' : miroir horizontal — barre en haut, montant descendant
         hy = cy + cell_h * 0.20
         vy = hy + v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}" fill="none" '
-                   f'stroke="{stroke}" stroke-width="{sw:g}"/>')
-        out.append(f'<circle cx="{hx:g}" cy="{vy + r:g}" r="{r:g}" '
-                   f'fill="none" stroke="{stroke}" stroke-width="{sw:g}"/>')
-
-
+                   f'L {hx:g} {vy:g}"/>')
+        out.append(f'<circle cx="{hx:g}" cy="{vy + r:g}" r="{r:g}"/>')
+    out.append('</g>')
 def _render_end_circle(out, x_left, cy, cell_h, marker_w):
     """Dessine un marqueur de fin de chanson : même géométrie que la flèche
     montante ('end'), mais avec un cercle creux au lieu d'un triangle.
