@@ -628,8 +628,11 @@ def parse_kkml(text):
 # stockées en POINTS (pt), quelle que soit l'unité native de sortie SVG du
 # layout : "pt" pour les pages à format fixe (nomura, chindami, mega), "px"
 # pour les layouts libres (vertical, horizontal, tuto). Conversion px = pt/PX
-# (exacte pour nos valeurs : ce sont des px entiers). frame_w/frame_h = 0 ->
-# pas de cadre. cell_w/cell_h = 0 -> dérivés de la page (tuto). marker_w > 0
+# (exacte pour nos valeurs : ce sont des px entiers). Modèle de cadre générique :
+# le cadre est écarté du bord de la feuille par les marges (margin_*) ; à
+# l'intérieur, le padding (pad_*) définit le hanmen réel. frame_width = 0 ->
+# cadre non tracé : le cadre virtuel se confond avec le hanmen (padding = 0).
+# cell_w/cell_h = 0 -> dérivés de la page (tuto). marker_w > 0
 # -> largeur marker absolue (chindami), sinon marker_ratio x cell.
 # --------------------------------------------------------------------------- #
 PX = 0.75          # 1 px (96 dpi) = 0,75 pt
@@ -643,17 +646,15 @@ class LayoutSpec:
     page_w: float = 0                # 0 = taille libre (contenu)
     page_h: float = 0
     page_cm: tuple = ()              # (w_cm, h_cm) pour _svg_open_print
-    margin_t: float = 0
+    margin_t: float = 0              # marges = écart bord de feuille -> cadre
     margin_b: float = 0
     margin_l: float = 0
     margin_r: float = 0
-    frame_w: float = 0               # 0 = pas de cadre
-    frame_h: float = 0
-    frame_margin_x: float = 0
-    frame_margin_y: float = 0
-    grid_top: float = 0              # chindami : haut de grille
-    grid_bottom: float = 0           # chindami : bas de grille
-    dan_gap: float = 0               # nomura : marge de dan M (unique)
+    pad_t: float = 0                 # padding à l'intérieur du cadre -> hanmen
+    pad_b: float = 0
+    pad_l: float = 0
+    pad_r: float = 0
+    dan_gap: float = 0               # nomura : marge de dan M entre les dans
     max_dans: int = 0                # dans max par page = dans_per_block hors mega (nomura 7, chindami 15, tuto 7)
     title_w: float = 0               # colonne titre verticale
     title_gap: float = 0
@@ -689,8 +690,8 @@ class LayoutSpec:
     # Attributs de design (surchargeables par métadonnées @*_color/@*_width/@arrow_fill) :
     # couleurs au format HTML (#rgb, #rrggbb ou nom), épaisseurs en pt
     text_color: str = "#000000"      # couleur de tout le texte (fill racine SVG)
-    frame_color: str = "#333333"     # filet de cadre de page (nomura)
-    frame_width: float = 1.5         # épaisseur du filet de cadre
+    frame_color: str = "#333333"     # filet de cadre de page
+    frame_width: float = 0           # épaisseur du filet de cadre ; 0 = non tracé
     cell_color: str = "#bbbbbb"      # grille des cases (et bande marker)
     cell_width: float = 0.75         # épaisseur des filets de cases
     arrow_color: str = "#bbbbbb"     # flèches de répétition (et symboles vocaux ⚪⚫)
@@ -701,6 +702,18 @@ class LayoutSpec:
         """valeur en pt -> unité native du layout (int si valeur entière exacte)."""
         v = v_pt / PX if self.unit == "px" else v_pt
         return int(v) if isinstance(v, float) and v.is_integer() else v
+
+    def frame_rect(self):
+        """Cadre en pt (x0, y0, x1, y1) : écarté du bord de la feuille par les
+        marges. Page libre (page_w = 0) : cadre virtuel = hanmen."""
+        return (self.margin_l, self.margin_t,
+                self.page_w - self.margin_r, self.page_h - self.margin_b)
+
+    def hanmen_rect(self):
+        """Hanmen en pt (x0, y0, x1, y1) : à l'intérieur du cadre, diminué du
+        padding. Si frame_width = 0 et padding = 0, le hanmen = le cadre."""
+        x0, y0, x1, y1 = self.frame_rect()
+        return (x0 + self.pad_l, y0 + self.pad_t, x1 - self.pad_r, y1 - self.pad_b)
 
 
 VERTICAL = LayoutSpec(
@@ -726,12 +739,15 @@ HORIZONTAL = LayoutSpec(
 NOMURA = LayoutSpec(
     name="nomura", unit="pt",
     page_w=21 * CM, page_h=29.7 * CM, page_cm=(21, 29.7),
-    # Constantes primaires mesurées (scans) : cadre de page et marge de dans
-    # M = dan_gap (unique : cadre<->dans et entre dans). Le reste est dérivé
-    # dans _render_nomura : 7 dans = 14 sous-colonnes (notes+marker) dans
-    # frame_w - 8*M ; 12 cases dans frame_h - 2*M.
-    frame_w=559.3, frame_h=745.9,
-    frame_margin_x=(21 * CM - 559.3) / 2.0, frame_margin_y=(29.7 * CM - 745.9) / 2.0,
+    # Constantes primaires mesurées (scans) : cadre 559.3 x 745.9, centré sur
+    # la page -> les marges en sont dérivées ; M = dan_gap = padding du cadre
+    # (cadre<->dans, unique : aussi entre les dans). Le reste est dérivé dans
+    # _render_nomura : 7 dans = 14 sous-colonnes (notes+marker) dans le hanmen
+    # moins 6*M ; 12 cases dans la hauteur du hanmen.
+    margin_l=(21 * CM - 559.3) / 2.0, margin_r=(21 * CM - 559.3) / 2.0,
+    margin_t=(29.7 * CM - 745.9) / 2.0, margin_b=(29.7 * CM - 745.9) / 2.0,
+    pad_l=14.5, pad_r=14.5, pad_t=14.5, pad_b=14.5,
+    frame_width=1.5,              # filet de cadre tracé (frame_color #333333)
     dan_gap=14.5, max_dans=7, cells_per_dan=12, dans_per_block=7,
     marker_ratio=1.0,             # sous-colonne marker = pleine case
     fs=26.0,
@@ -740,9 +756,11 @@ NOMURA = LayoutSpec(
 CHINDAMI = LayoutSpec(
     name="chindami", unit="pt",
     page_w=23 * CM, page_h=15 * CM, page_cm=(23, 15),
-    # mesures sur samples/chindami-pdf p8-p11 (1816x1181 px, 2,785 px/pt)
-    frame_margin_x=138 / 2.785, grid_top=85 / 2.785, grid_bottom=1079 / 2.785,
-    frame_w=23 * CM - 2 * (138 / 2.785), frame_h=1079 / 2.785 - 85 / 2.785,
+    # mesures sur samples/chindami-pdf p8-p11 (1816x1181 px, 2,785 px/pt) :
+    # marges = position du cadre (non tracé : frame_width = 0, sans liseré de
+    # page) ; la grille occupe tout le hanmen (padding 0)
+    margin_l=138 / 2.785, margin_r=138 / 2.785,
+    margin_t=85 / 2.785, margin_b=15 * CM - 1079 / 2.785,
     cell_w=65 / 2.785, cell_h=83 / 2.785, pile_w=97 / 2.785, marker_w=32 / 2.785,
     dan_gap=0, max_dans=15, cells_per_dan=12, dans_per_block=15, fs=12,
     title_w=(1816 - 1750) / 2.785, title_gap=10,
@@ -789,8 +807,9 @@ def _meta_color(meta, key):
     return None
 
 
-def _meta_pt(meta, key):
-    """Métadonnée épaisseur en pt (float > 0) ; None si absente,
+def _meta_pt(meta, key, zero_ok=False):
+    """Métadonnée épaisseur en pt (float > 0, ou >= 0 si zero_ok — ex.
+    @frame_width 0 = cadre non tracé) ; None si absente,
     AVERTISSEMENT + None si invalide."""
     v = meta.get(key, "").strip()
     if not v:
@@ -799,8 +818,9 @@ def _meta_pt(meta, key):
         f = float(v)
     except ValueError:
         f = -1.0
-    if f <= 0:
-        print(f"AVERTISSEMENT : @{key} {v!r} doit être un nombre positif (pt), "
+    if f < 0 or (f == 0 and not zero_ok):
+        print(f"AVERTISSEMENT : @{key} {v!r} doit être un nombre "
+              f"{'positif ou nul' if zero_ok else 'strictement positif'} (pt), "
               f"valeur de la mise en page conservée", file=sys.stderr)
         return None
     return f
@@ -811,6 +831,24 @@ def _apply_text_color(svg, color):
     des <text> (ils héritent alors de la racine)."""
     svg = re.sub(r'(<text\b[^>]*?) fill="[^"]*"', lambda m: m.group(1), svg)
     return svg.replace("<svg ", f'<svg fill="{color}" ', 1)
+
+
+def _draw_frame(out, spec, opts=None):
+    """Trace le filet de cadre de page (layouts à page imposée) : écarté du bord
+    de la feuille par les marges. Tracé seulement si frame_width > 0 (méta
+    @frame_width ou défaut du layout) ; sinon le cadre reste virtuel et se
+    confond avec le hanmen."""
+    o = opts or {}
+    fsw = o.get('frame_width')
+    if fsw is None:
+        fsw = spec.frame_width
+    if not fsw or fsw <= 0:
+        return
+    fcol = o.get('frame_color') or spec.frame_color
+    x0, y0, x1, y1 = spec.frame_rect()
+    out.append(f'<rect x="{spec.u(x0)}" y="{spec.u(y0)}" '
+               f'width="{spec.u(x1 - x0)}" height="{spec.u(y1 - y0)}" '
+               f'fill="none" stroke="{fcol}" stroke-width="{spec.u(fsw):g}"/>')
 
 
 def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size=None,
@@ -887,9 +925,11 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
             cur_title = None
 
     # --- Pré-calcul des dimensions (constantes du spec, en unité native) --- #
-    MARGIN_L = spec.u(spec.margin_l)
-    MARGIN_R = spec.u(spec.margin_r)
-    MARGIN_T = spec.u(spec.margin_t)
+    # Page libre (vertical/horizontal) : le hanmen = marges + padding
+    # (padding 0 -> hanmen = marges, comportement historique).
+    MARGIN_L = spec.u(spec.margin_l + spec.pad_l)
+    MARGIN_R = spec.u(spec.margin_r + spec.pad_r)
+    MARGIN_T = spec.u(spec.margin_t + spec.pad_t)
     header_h = spec.u(spec.header_h)  # vertical sans titre
     if layout == "vertical" and (song.meta.get("title") or song.meta.get("tuning", "本調子")):
         # Titre/accordage/parolier/compositeur/origine rendus verticalement
@@ -927,7 +967,8 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     # (champs LayoutSpec) ; les valeurs invalides sont ignorées avec un warning.
     opts['text_color'] = _meta_color(song.meta, 'text_color') or spec.text_color
     opts['frame_color'] = _meta_color(song.meta, 'frame_color') or spec.frame_color
-    opts['frame_width'] = _meta_pt(song.meta, 'frame_width') or spec.frame_width
+    _fw = _meta_pt(song.meta, 'frame_width', zero_ok=True)   # 0 = cadre non tracé
+    opts['frame_width'] = spec.frame_width if _fw is None else _fw
     opts['cell_color'] = _meta_color(song.meta, 'cell_color') or spec.cell_color
     opts['cell_width'] = _meta_pt(song.meta, 'cell_width') or spec.cell_width
     opts['arrow_color'] = _meta_color(song.meta, 'arrow_color') or spec.arrow_color
@@ -1545,9 +1586,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     group_w = spec.pile_w
     rows = spec.cells_per_dan
     fs = spec.fs
-    frame_x0, frame_y0 = spec.frame_margin_x, spec.grid_top
-    frame_x1 = spec.page_w - spec.frame_margin_x
-    frame_y1 = spec.grid_bottom
+    fx0, fy0, fx1, fy1 = spec.frame_rect()   # cadre = marges depuis le bord (non tracé ici)
     title_offset = (spec.title_w + spec.title_gap) if (title or musicno) else 0
     syllable_fs = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else 0
 
@@ -1589,7 +1628,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     # en sous-colonnes ; l'excédent de colonnes passe sur des pages dédiées.
     # haut d'encre de la première glyphe = haut de grille (baseline =
     # GRID_TOP + 0,88·fs) ; bas d'encre de la dernière ≤ bas de grille
-    max_lyr_u = int((spec.grid_bottom - spec.grid_top - lyr_fs0)
+    max_lyr_u = int((fy1 - fy0 - lyr_fs0)
                     // lyr_sp0) + 1
     lyr_cols = []
     for _, d in lyrics_sections:
@@ -1614,9 +1653,9 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                                          _ruby_needs_extra_width(seg, lyr_fs0))
     # pagination conservatrice : sep0 couvre la marge G + demi-em + ruby
     # global + demi-colonne (l'ancre droite laisse la place de la colonne
-    # la plus à gauche dans la fenêtre frame_x0..anchor)
+    # la plus à gauche dans la fenêtre fx0..anchor)
     lyr_sep0 = spec.lyr_gap + lyr_fs0 / 2 + max_ruby_w + lyr_col_w0 / 2
-    frame_w = spec.page_w - 2 * spec.frame_margin_x
+    frame_w = fx1 - fx0
     per_lyr_page = max(1, int(frame_w // (lyr_col_w0 + lyr_gap0)))
 
     pages = []  # (c0, c1, is_first, lyr_slice)
@@ -1675,6 +1714,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         total_w = spec.page_w
         total_h = spec.page_h
         out = _svg_open_print(total_w, total_h, 23, 15, title=title)  # page 23 x 15 cm, 600 dpi
+        _draw_frame(out, spec, o)   # tracé seulement si frame_width > 0 (défaut 0 : aucun)
 
         # Titre vertical à droite de la page 1, surmonté du n° de morceau
         # en écriture HORIZONTALE. Règle (cf. scans chindami) : si le n°
@@ -1692,17 +1732,17 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         except ValueError:
             pass  # n° non numérique : rendu tel quel, pousse le titre pareil
         if is_first and (title or mno):
-            tx = frame_x1 - spec.title_w / 2
-            title_top = frame_y0
+            tx = fx1 - spec.title_w / 2
+            title_top = fy0
             if mno:
                 MNO_FS = 11
                 MNO_GAP = 8   # scans (p078) : bas d'encre du n° → haut
                              # d'encre du titre ≈ 23 px = 8 pt ; dégage
                              # aussi le ruby de la 1re glyphe du titre
-                out.append(f'<text x="{tx}" y="{frame_y0 + MNO_FS * 0.88:.2f}" '
+                out.append(f'<text x="{tx}" y="{fy0 + MNO_FS * 0.88:.2f}" '
                            f'text-anchor="middle" font-family="serif" '
                            f'font-size="{MNO_FS}" fill="#333">{escape(mno)}</text>')
-                title_top = frame_y0 + MNO_FS + MNO_GAP
+                title_top = fy0 + MNO_FS + MNO_GAP
             if title:
                 # Blocs <text> groupés (même règle que le vertical) : base
                 # en un seul élément, rubys indépendants, pivotés à part
@@ -1710,15 +1750,15 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                                       title_top + 18 * 0.88, 18, "#000", 22, font_family,
                                       links=True)
             if tuning:
-                _vertical_grouped_text(out, tuning, tx, frame_y1 - 4 - len(tuning) * 16,
+                _vertical_grouped_text(out, tuning, tx, fy1 - 4 - len(tuning) * 16,
                                        11, "#555", 16, font_family)
 
         # Piles de droite à gauche (jamais décalées par les paroles : celles-ci
         # occupent l'espace libre à GAUCHE, réservé par la pagination)
-        x_right = frame_x1 - title_offset if is_first else frame_x1
+        x_right = fx1 - title_offset if is_first else fx1
         for ci in range(n_cols):
             x = x_right - (ci + 1) * group_w
-            y0 = frame_y0
+            y0 = fy0
             # rectangles
             for ri in range(rows):
                 cy = y0 + ri * cell_h
@@ -1761,7 +1801,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                 # _draw_vertical_vocal positionne via total_w/mr ; on lui passe
                 # un mr fictif pour que la colonne tombe sur le x de la pile.
                 fake_mr = total_w - (x + group_w)
-                _draw_vertical_vocal(out, [vcol], rows, frame_x0, y0, cell_w, cell_h, fs,
+                _draw_vertical_vocal(out, [vcol], rows, fx0, y0, cell_w, cell_h, fs,
                                      total_w, fake_mr, marker_w, 0, opts, syllable_fs)
         # Paroles verticales à gauche de la dernière page
         if lyrics_here:
@@ -1771,11 +1811,11 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
             # garantit la marge spec.lyr_gap entre son encre droite
             # (demi-em + ruby) et la grille ; pages dédiées paroles :
             # ancre = bord droit du cadre
-            lyr_anchor = (x_right - n_cols * group_w) if n_cols > 0 else frame_x1
+            lyr_anchor = (x_right - n_cols * group_w) if n_cols > 0 else fx1
             vx = lyr_anchor - lyr_sep
             for col_lines, indent in lyrics_here:
                 # haut d'encre de la première glyphe = haut de grille
-                cy = frame_y0 + lyr_fs * 0.88
+                cy = fy0 + lyr_fs * 0.88
                 cy += indent * lyr_sp
                 for ln in col_lines:
                     # _render_vertical_text retourne la position après le
@@ -1814,14 +1854,17 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     spec = spec or NOMURA
     o = opts or {}
     fcol = o.get('frame_color') or spec.frame_color
-    fsw = o.get('frame_width') or spec.frame_width
+    _fsw = o.get('frame_width')
+    fsw = spec.frame_width if _fsw is None else _fsw   # 0 = cadre non tracé
     cs = o.get('cell_color') or spec.cell_color
     csw = o.get('cell_width') or spec.cell_width
     acol = o.get('arrow_color') or spec.arrow_color
     asw = o.get('arrow_width') or spec.arrow_width
     afill = bool(o.get('arrow_fill', spec.arrow_fill))
-    cell_h = (spec.frame_h - 2 * spec.dan_gap) / spec.cells_per_dan
-    cell_w = (spec.frame_w - 8 * spec.dan_gap) / 14.0
+    fx0, fy0, fx1, fy1 = spec.frame_rect()      # cadre = marges depuis le bord
+    hx0, hy0, hx1, hy1 = spec.hanmen_rect()     # hanmen = cadre - padding
+    cell_h = (fy1 - fy0 - 2 * spec.dan_gap) / spec.cells_per_dan
+    cell_w = (fx1 - fx0 - 8 * spec.dan_gap) / 14.0
     marker_w = cell_w * spec.marker_ratio if marker else 0.0
     group_w = cell_w + marker_w
     rows = spec.cells_per_dan
@@ -1922,13 +1965,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
         lyr_col_offset += here * LYRICS_MAX_COLS
 
     # --- Géométrie page --- #
-    frame_x0 = spec.frame_margin_x
-    frame_y0 = spec.frame_margin_y
-    frame_x1 = spec.page_w - spec.frame_margin_x
-    frame_y1 = spec.page_h - spec.frame_margin_y
     grid_h = rows * cell_h
-    # la grille commence à une marge de dans M sous le haut du cadre
-    grid_y0 = frame_y0 + spec.dan_gap
+    # la grille occupe le hanmen (cadre - padding = marge de dan M)
+    grid_y0 = hy0
 
     # 3 colonnes de couplets = 1 dan virtuel exactement
     LYRICS_COL_W = group_w / 3.0
@@ -1949,21 +1988,19 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
         out.append('<?xml version="1.0" encoding="UTF-8"?>')
         out.extend(_svg_open_print(spec.page_w, spec.page_h, 21, 29.7, title=title)[1:])  # A4, 600 dpi
 
-        # filet de cadre (origine du placement relatif)
-        out.append(f'<rect x="{frame_x0}" y="{frame_y0}" '
-                   f'width="{frame_x1 - frame_x0}" height="{frame_y1 - frame_y0}" '
-                   f'fill="none" stroke="{fcol}" stroke-width="{fsw:g}"/>')
+        # filet de cadre (origine du placement relatif) ; tracé si frame_width > 0
+        _draw_frame(out, spec, o)
 
         # numéro de page à l'extérieur du filet (bas)
-        out.append(f'<text x="{spec.page_w / 2}" y="{frame_y1 + 24}" '
+        out.append(f'<text x="{spec.page_w / 2}" y="{fy1 + 24}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="11" fill="#555">{pi + 1}</text>')
 
         # --- placement des groupes, droite -> gauche --- #
-        # positions x (bord droit de chaque groupe), depuis le filet droit ;
-        # le premier groupe (titre ou dan) est décalé d'une marge de dan
-        # du filet, comme sur les planches
-        x_right = frame_x1 - spec.dan_gap
+        # positions x (bord droit de chaque groupe), depuis le bord droit du
+        # hanmen ; le premier groupe (titre ou dan) est décalé d'une marge de
+        # dan du filet, comme sur les planches
+        x_right = hx1
         # 1. colonne titre
         if has_title_col:
             # le bloc titre consomme un dan complet (cases + marker).
@@ -3087,9 +3124,10 @@ def _tuto_text_width(segs, fs):
     return w
 
 
-def _tuto_title_page(song, W, H):
+def _tuto_title_page(song, W, H, opts=None, spec=None):
     # Page a part : titre, accordage et autres infos, centres.
     out = _tuto_svg_open(W, H)
+    _draw_frame(out, spec, opts)   # tracé seulement si frame_width > 0 (défaut 0)
     cx = W / 2
     y = H * 0.40
     title = song.meta.get("title", "")
@@ -3125,7 +3163,8 @@ def _tuto_title_page(song, W, H):
     return "\n".join(out)
 
 
-def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, sec_title):
+def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, sec_title,
+                   spec=None):
     # Une page = jusqu'à page_dans rows (dans) de cols cases, pleine largeur.
     # Pas de bande marker en tuto : les flèches de répétition ne sont pas
     # rendues (décision en attente sur la boucle vocale) ; les syllabes ::vocal
@@ -3133,6 +3172,7 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
     # de la bordure inférieure, sans chevaucher la note).
     out = _tuto_svg_open(W, H)
     o = opts or {}
+    _draw_frame(out, spec, o)   # tracé seulement si frame_width > 0 (défaut 0)
     cs = o.get('cell_color') or '#999999'
     csw = o.get('cell_width') or 0.75
     y0 = mt
@@ -3186,7 +3226,7 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts, spec=None):
     cell_h = (H - mt - mb) / page_dans
     fs = max(spec.fs_min, int(cell_h * spec.fs_ratio))  # ratio fs/case ~0,38 (calibrage Portama)
 
-    pages = [_tuto_title_page(song, W, H)]
+    pages = [_tuto_title_page(song, W, H, opts, spec)]
     for sec_title, content, kind, vocal, lead in sections:
         if kind != "tab":
             continue
@@ -3196,7 +3236,7 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts, spec=None):
             pages.append(_tuto_tab_page(rows[start:start + page_dans],
                                         vrows[start:start + page_dans],
                                         W, H, ml, mt, cols, cell_w, cell_h,
-                                        fs, opts, sec_title))
+                                        fs, opts, sec_title, spec))
     return pages
 
 
@@ -3444,6 +3484,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     result = []
     for pi, page_blocks in enumerate(pages):
         out = _svg_open_print(spec.page_w, spec.page_h, 42, 29.7, title=title)  # A3, 600 dpi
+        _draw_frame(out, spec, opts)   # tracé seulement si frame_width > 0 (défaut 0)
         y0 = spec.margin_l
         for bdan in page_blocks:
             if not bdan:
@@ -3600,6 +3641,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                     for i in range(0, len(ly_cols), per_page)] or [[]]
         for page_cols in ly_pages:
             out = _svg_open_print(spec.page_w, spec.page_h, 42, 29.7, title=title)
+            _draw_frame(out, spec, opts)   # tracé seulement si frame_width > 0 (défaut 0)
             for b in range(spec.blocks):
                 bcols = page_cols[b * max_cols:(b + 1) * max_cols]
                 if not bcols:
