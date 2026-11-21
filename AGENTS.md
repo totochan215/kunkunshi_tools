@@ -17,6 +17,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 ## 0. Syntaxe KKML — points à trancher (personne n'utilise encore KKML, il y a le temps)
 
+- ✅ (2026-11-20) Délimiteurs ruby `《》` / `｛｝` conservés définitivement (TODO de `docs/kkml-format.md` fermé, pas de passage aux yamakakko `〈〉`) ; échappement par antislash `\《 \》 \｛ \｝` implémenté dans `kkml2svg.py` (`_parse_ruby` et `_lyr_line_segments` échappement-conscients, `_cap_lyr_column` ne coupe jamais une paire `\X`, `_h_lyrics_atoms` ré-échappe à la ré-émission KKML) — tests `tests/test_escape.py`.
 - ✅ (2026-11-01) `|( )|` DÉPRÉCIÉ dans `::tab` (AVERTISSEMENT, encore accepté) ; boucle vocale = `(: ... :)` dans `::tab` (jamais dans `::vocal`).
 - ❓ Marqueurs de boucle dans `::tab` : `|: :|` actuels (boucle vocale `(: :)` dans `::tab`) entrent en conflit avec
   le shuffle `A:B` (double point) et `|` est aussi saut de ligne de couplet / séparateur
