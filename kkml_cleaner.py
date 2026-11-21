@@ -11,6 +11,9 @@ Règles (voir AGENTS.md, section « Long terme ») :
   kanji kandokoro, kanji composites → katakana+kanji, repos → ◯,
   `::tab-lyrics`/`::tab-vocals` → `::vocal` ;
 - ordre des sections : `::tab` `::vocal` `::lyrics` ;
+- métadonnées : toutes regroupées en haut du fichier ; `@format` `@version`
+  `@title` toujours en premier (si présents), puis les autres métadonnées
+  présentes dans leur ordre d'apparition dans le fichier ;
 - complétion structurelle : `::vocal` manquante créée (cases vides alignées),
   `::vocal` désalignée réalignée si le total boucle (sinon avertissement),
   `::lyrics` manquante créée vide, `::tab` implicite rendue explicite,
@@ -84,16 +87,35 @@ def clean(text):
     except Exception as e:
         die(f"KKML malformé, illisible par le parser : {e}")
 
-    # --- métadonnées : ordre canonique, dédup (première occurrence prime) ---
-    meta_order = ["format", "version", "title", "genre", "author", "composer",
-                  "lyricist", "origin", "source", "comment", "tuning", "base_note",
-                  "layout", "cells_per_dan", "cols", "marker", "end_circle", "font_style",
-                  "shaku_circled", "shaku_sharp", "lyrics_size", "ruby_size",
-                  "musicno", "chogen", "speed", "rythm", "rythm_mode"]
+    # --- métadonnées : toutes regroupées en haut ; @format/@version/@title
+    # toujours en premier (si présents), puis les autres présentes dans leur
+    # ordre d'apparition dans le fichier. Dédup : première occurrence prime. ---
     meta = {}
     for key, val in song.meta.items():
         if key not in meta:
             meta[key] = val
+    # ordre d'apparition des clés @ dans le fichier (mêmes normalisations que
+    # le parser : préfixe connu collé, @cols/@page_dans renommés)
+    file_keys = []
+    for line in text.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#") or s.startswith("::"):
+            continue
+        m = re.match(r"@(\S+)\s*(.*)", s)
+        if not m:
+            continue
+        key = m.group(1)
+        if key not in k.META_KEYS and len(key) > 1:
+            for mk in sorted(k.META_KEYS, key=len, reverse=True):
+                if key.startswith(mk) and len(key) > len(mk):
+                    key = mk
+                    break
+        if key == "cols":
+            key = "cells_per_dan"
+        elif key == "page_dans":
+            key = "dans_per_page"
+        if key not in file_keys:
+            file_keys.append(key)
     # @cells_per_dan est ignoré par le parser de kkml2svg (indication de mise
     # en page) : le relire dans le texte source (@cols = ancien nom, renommé).
     mcols = re.search(r"^\s*@(cells_per_dan|cols)\s+(\S+)", text, re.M)
@@ -106,6 +128,8 @@ def clean(text):
     # @layout / @dans_per_page lus hors song.meta (@page_dans = ancien nom)
     if getattr(song, "page_dans", None) is not None:
         meta.setdefault("dans_per_page", str(song.page_dans))
+    if "layout" in file_keys:
+        meta.setdefault("layout", song.layout)
 
     # --- sections : normalisation + complétion structurelle ---
     blocks = song.blocks
@@ -188,11 +212,14 @@ def clean(text):
             ordered.append(b)
 
     out = []
-    for key in meta_order:
+    head_keys = ("format", "version", "title")
+    ordered_keys = ([kk for kk in head_keys if kk in file_keys]
+                    + [kk for kk in file_keys if kk not in head_keys])
+    for key in ordered_keys:
         if key in meta:
             out.append(f"@{key} {meta[key]}")
-    for key, val in meta.items():
-        if key not in meta_order:
+    for key, val in meta.items():  # sécurité : clés non vues au scan raw
+        if key not in file_keys:
             out.append(f"@{key} {val}")
     out.append("")
     for b in ordered:
