@@ -95,4 +95,16 @@ for f in ("samples/kkml/medley-samples.kkml", "samples/kkml/十九の春.kkml"):
         assert a == c, (f, layout)
 print("OK rendu SVG identique raw vs beautifié (vertical + mega)")
 
+
+# 7. Straddle de tête '/B' (1er token de la 1re ligne de ::tab) : sorti de la
+#    grille d'alignement — émis tel quel + 1 espace, colonnes calculées sur la
+#    note suivante (et non sur le '/B')
+src = "::tab\n/六 合/尺 工\n中 合\n::\n"
+out = b.beautify(src)
+ls = out.splitlines()
+assert ls[1] == "/六 合/尺 工", repr(ls[1])     # col0 = max(合/尺=5, 中=2) = 5 -> 合/尺 + 1 espace
+assert ls[2] == "中    合", repr(ls[2])          # 中 + 4 espaces -> 合 à la colonne 6
+assert b.beautify(out) == out
+print("OK straddle de tête /B : hors grille, alignement sur la note suivante")
+
 print("Tous les tests de test_beautify.py passent.")
