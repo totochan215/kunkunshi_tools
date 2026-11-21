@@ -6,7 +6,7 @@ nomura, chindami, tuto, mega.
 
 Convention graphique : éléments de la page en GRIS FONCÉ (#333), cotes,
 flèches et noms de constantes en BLEU (#1a56db). Les constantes de page
-(NOMURA_*, CHINDAMI_*, MEGA_*, CM, TUTO_*) sont importées de `kkml2svg`
+les instances LayoutSpec (NOMURA, CHINDAMI, MEGA, TUTO, CM, PX) sont importées de `kkml2svg`
 (source de vérité) ; les autres sont les valeurs par défaut du code.
 
 Usage :
@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 sys.path.insert(0, ROOT)
 DOCS = os.path.dirname(os.path.abspath(__file__))   # docs/svg/
 
-import kkml2svg as k   # constantes de page (NOMURA_*, CHINDAMI_*, MEGA_*...)
+import kkml2svg as k   # specs de mise en page (k.NOMURA.page_w, k.CHINDAMI.cell_h, k.MEGA.block_gap...)
 
 GRAY, BLUE, PAGE_FILL = "#333333", "#1a56db", "#fdfdfd"
 CM = k.CM
@@ -323,16 +323,16 @@ def fig_horizontal():
 
 
 # --------------------------------------------------------------------------- #
-# nomura (A4 portrait, pt) — constantes NOMURA_* importées de kkml2svg
+# nomura (A4 portrait, pt) — spec k.NOMURA (champs page_w, frame_w, dan_gap...)
 # --------------------------------------------------------------------------- #
 def fig_nomura():
-    PW, PH = k.NOMURA_PAGE_W, k.NOMURA_PAGE_H               # 595.28 x 841.89 pt
-    FW, FH = k.NOMURA_FRAME_W, k.NOMURA_FRAME_H             # 559.3 x 745.9
-    FMX, FM = k.NOMURA_FRAME_MARGIN_X, k.NOMURA_FRAME_MARGIN
-    GAP = k.NOMURA_DAN_GAP                                  # 14.5
-    ROWS = k.NOMURA_ROWS                                    # 12
-    MAX_DANS = k.NOMURA_MAX_DANS                            # 7
-    CELL_W, CELL_H = k.NOMURA_CELL_W, k.NOMURA_CELL_H       # 31.7 x 60.6
+    PW, PH = k.NOMURA.page_w, k.NOMURA.page_h               # 595.28 x 841.89 pt
+    FW, FH = k.NOMURA.frame_w, k.NOMURA.frame_h             # 559.3 x 745.9
+    FMX, FM = k.NOMURA.frame_margin_x, k.NOMURA.frame_margin_y
+    GAP = k.NOMURA.dan_gap                                  # 14.5
+    ROWS = k.NOMURA.rows_per_col                                    # 12
+    MAX_DANS = k.NOMURA.max_dans                            # 7
+    CELL_W, CELL_H = ((k.NOMURA.frame_w - 8 * k.NOMURA.dan_gap) / 14.0), ((k.NOMURA.frame_h - 2 * k.NOMURA.dan_gap) / k.NOMURA.rows_per_col)       # 31.7 x 60.6
     MARKER_W = CELL_W                                       # marker = pleine case
     GROUP_W = CELL_W + MARKER_W
     FS = 26.0
@@ -397,22 +397,22 @@ def fig_nomura():
 
 
 # --------------------------------------------------------------------------- #
-# chindami (23 x 15 cm paysage, pt) — constantes CHINDAMI_* importées
+# chindami (23 x 15 cm paysage, pt) — spec k.CHINDAMI
 # --------------------------------------------------------------------------- #
 def fig_chindami():
-    PW, PH = k.CHINDAMI_PAGE_W, k.CHINDAMI_PAGE_H     # 651.96 x 425.16 pt
-    GT, GB = k.CHINDAMI_GRID_TOP, k.CHINDAMI_GRID_BOTTOM
-    CELL_H = k.CHINDAMI_CELL_H                        # ~29.8
-    CELL_W, MARKER_W, PILE_W = k.CHINDAMI_CELL_W, k.CHINDAMI_MARKER_W, k.CHINDAMI_PILE_W
-    ROWS = k.CHINDAMI_ROWS                            # 12
-    TITLE_W, TITLE_GAP = k.CHINDAMI_TITLE_W, k.CHINDAMI_TITLE_GAP
-    FMX = k.CHINDAMI_FRAME_MARGIN_X                   # ~49.6
-    FS = k.CHINDAMI_FS                                # 12
-    LYR_FS = int(FS * k.CHINDAMI_LYR_FS_RATIO)        # 10
+    PW, PH = k.CHINDAMI.page_w, k.CHINDAMI.page_h     # 651.96 x 425.16 pt
+    GT, GB = k.CHINDAMI.grid_top, k.CHINDAMI.grid_bottom
+    CELL_H = k.CHINDAMI.cell_h                        # ~29.8
+    CELL_W, MARKER_W, PILE_W = k.CHINDAMI.cell_w, k.CHINDAMI.marker_w, k.CHINDAMI.pile_w
+    ROWS = k.CHINDAMI.rows_per_col                            # 12
+    TITLE_W, TITLE_GAP = k.CHINDAMI.title_w, k.CHINDAMI.title_gap
+    FMX = k.CHINDAMI.frame_margin_x                   # ~49.6
+    FS = k.CHINDAMI.fs                                # 12
+    LYR_FS = int(FS * k.CHINDAMI.lyr_fs_ratio)        # 10
     LYR_COL_W = int(LYR_FS * 1.33)
     LYR_SP = int(LYR_FS * 1.2)
-    LYR_SEP = k.CHINDAMI_LYR_SEP                      # 12
-    MAX_DANS = k.CHINDAMI_MAX_DANS                    # 15
+    LYR_SEP = k.CHINDAMI.lyr_gap                      # 12
+    MAX_DANS = k.CHINDAMI.max_dans                    # 15
     DRAWN = 6
     sc = 1.0
     ox, oy = 110, 120
@@ -463,7 +463,7 @@ def fig_chindami():
     f.text(pile_x[-1] + CELL_W / 2, yb + 12, f"cell_w = {CELL_W:.1f}", fill=BLUE, fs=9)
     f.line(pile_x[-1] + CELL_W, yb, pile_x[-1] + PILE_W, yb, stroke=BLUE, sw=1.0, marker="arr")
     f.text(pile_x[-1] + PILE_W / 2, yb + 12, f"marker_w = {MARKER_W:.1f}", fill=BLUE, fs=9)
-    f.text(0, PH + 32, f"CHINDAMI_FS = {FS:g} · lyr_fs = {LYR_FS} (×{k.CHINDAMI_LYR_FS_RATIO}) · "
+    f.text(0, PH + 32, f"CHINDAMI_FS = {FS:g} · lyr_fs = {LYR_FS} (×{k.CHINDAMI.lyr_fs_ratio}) · "
            f"lyr_sp = {LYR_SP} · lyr_col_w = {LYR_COL_W} · max_lyr_u = hauteur grille en unités · "
            f"repli des paroles avec kinsoku (@kinsoku)", fill=BLUE, fs=9, anchor="start")
     return f
@@ -473,9 +473,9 @@ def fig_chindami():
 # tuto (bloc WxH fixe en px, @tuto_block 1280x720 défaut)
 # --------------------------------------------------------------------------- #
 def fig_tuto():
-    W0, H0 = k.TUTO_DEFAULT_BLOCK          # 1280 x 720
-    COLS = k.TUTO_DEFAULT_COLS             # 8
-    DANS = k.TUTO_DEFAULT_DANS             # 7
+    W0, H0 = (int(k.TUTO.page_w / k.PX), int(k.TUTO.page_h / k.PX))          # 1280 x 720
+    COLS = k.TUTO.cols_per_row             # 8
+    DANS = k.TUTO.rows_per_col             # 7
     ML = MT = MB = 16
     CELL_W = (W0 - ML - 16) / (COLS + 0.25)
     MR = 16 + CELL_W / 4
@@ -528,13 +528,13 @@ def fig_tuto():
 
 
 # --------------------------------------------------------------------------- #
-# mega (A3 paysage 42 x 29,7 cm, pt) — constantes MEGA_* importées
+# mega (A3 paysage 42 x 29,7 cm, pt) — spec k.MEGA
 # --------------------------------------------------------------------------- #
 def fig_mega():
-    PW, PH = k.MEGA_PAGE_W, k.MEGA_PAGE_H      # 1190.55 x 841.89
-    MARGIN, BLOCKS, BLOCK_GAP = k.MEGA_MARGIN, k.MEGA_BLOCKS, k.MEGA_BLOCK_GAP
-    ROWS = k.MEGA_ROWS                          # 12
-    DANS_PER_BLOCK = k.MEGA_DANS_PER_BLOCK      # 32
+    PW, PH = k.MEGA.page_w, k.MEGA.page_h      # 1190.55 x 841.89
+    MARGIN, BLOCKS, BLOCK_GAP = k.MEGA.margin_l, k.MEGA.blocks, k.MEGA.block_gap
+    ROWS = k.MEGA.rows_per_col                          # 12
+    DANS_PER_BLOCK = k.MEGA.dans_per_block      # 32
     CELL_H = (PH - 2 * MARGIN - (BLOCKS - 1) * BLOCK_GAP) / (BLOCKS * ROWS)
     FS = max(8, int(CELL_H * 0.38))
     TITLE_W, TITLE_GAP = 36, 10
@@ -596,7 +596,7 @@ def fig_mega():
     f.text(x0 + GROUP_W / 2, yb + 12, f"marker_w = cell_w/2 = {MARKER_W:.1f}", fill=BLUE, fs=9)
     f.text(0, PH + 32, f"MEGA_BLOCKS = {BLOCKS} · MEGA_DANS_PER_BLOCK = {DANS_PER_BLOCK} → "
            f"{BLOCKS * DANS_PER_BLOCK} dans/page · fs = {FS} · paroles en pages A3 dédiées "
-           f"(inline si ≤ {k.MEGA_LYRICS_INLINE_MAX_RATIO:.0%} de la largeur utile) · cell_w = "
+           f"(inline si ≤ {k.MEGA.lyr_inline_max_ratio:.0%} de la largeur utile) · cell_w = "
            f"(page−2·marge−title_offset)/({DANS_PER_BLOCK}×1,5)", fill=BLUE, fs=9, anchor="start")
     return f
 
