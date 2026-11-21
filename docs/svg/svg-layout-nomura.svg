@@ -35,7 +35,7 @@
 <line x1="131.153" y1="88.76" x2="131.153" y2="49.6" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="140.143" y1="88.76" x2="140.143" y2="49.6" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="131.153" y1="46.6" x2="140.143" y2="46.6" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="135.648" y="42.6" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">M = 14.5</text>
+<text x="135.648" y="42.6" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">dan_gap = 14.5</text>
 <line x1="284.904" y1="88.76" x2="284.904" y2="63.24" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="324.168" y1="88.76" x2="324.168" y2="63.24" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="284.904" y1="60.24" x2="324.168" y2="60.24" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -43,7 +43,7 @@
 <line x1="324.168" y1="88.76" x2="324.168" y2="76.88" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="333.158" y1="88.76" x2="333.158" y2="76.88" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="324.168" y1="73.88" x2="333.158" y2="73.88" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="328.663" y="69.88" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">M = 14.5</text>
+<text x="328.663" y="69.88" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">dan_gap = 14.5</text>
 <line x1="120" y1="88.76" x2="120" y2="90.52" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="489.071" y1="88.76" x2="489.071" y2="90.52" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="120" y1="87.52" x2="489.071" y2="87.52" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -59,7 +59,7 @@
 <line x1="118.76" y1="119.757" x2="97.16" y2="119.757" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="118.76" y1="128.747" x2="97.16" y2="128.747" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="100.16" y1="119.757" x2="100.16" y2="128.747" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="95.16" y="124.252" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 95.16 124.252)">M = 14.5</text>
+<text x="95.16" y="124.252" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 95.16 124.252)">dan_gap = 14.5</text>
 <line x1="118.76" y1="128.747" x2="107.08" y2="128.747" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="118.76" y1="165.787" x2="107.08" y2="165.787" stroke="#1a56db" stroke-width="0.31"/>
 <line x1="110.08" y1="128.747" x2="110.08" y2="165.787" stroke="#1a56db" stroke-width="0.62" marker-start="url(#arr)" marker-end="url(#arr)"/>

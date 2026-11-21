@@ -83,5 +83,5 @@
 <line x1="218" y1="498" x2="218" y2="517" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="166" y1="514" x2="218" y2="514" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
 <text x="192" y="527" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">cell_w = 52</text>
-<text x="150" y="536" text-anchor="start" font-family="monospace" font-size="9.5" fill="#1a56db">GAP_HEADER = 0 · h_lyrics_fs = 16 (medium) · H_LYRICS_COL_W = 21 · h_syl_fs = 13 · syllabes en ligne marker sous la rangée</text>
+<text x="150" y="536" text-anchor="start" font-family="monospace" font-size="9.5" fill="#1a56db">gap_header = 0 · h_lyrics_fs = 16 (medium) · H_LYRICS_COL_W = 21 · h_syl_fs = 13 · syllabes en ligne marker sous la rangée</text>
 </svg>

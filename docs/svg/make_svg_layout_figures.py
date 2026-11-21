@@ -198,26 +198,26 @@ def fig_vertical():
 
     y = -132                              # cotes empilées au-dessus (coords négatives = au-dessus de la page)
     for x1, x2, label in [
-        (0, ML, f"MARGIN_L = {ML}"),
+        (0, ML, f"margin_l = {ML}"),
         (ML, ML + LYRICS_TOTAL_W, f"{N_VERSES}×LYRICS_COL_W={LYRICS_COL_W} + LYRICS_VERSE_GAP={LYRICS_VERSE_GAP}"),
         (ML + LYRICS_TOTAL_W, ML + LYRICS_OFFSET, f"gap paroles = {LYR_GAP}"),
         (dan_x[1], dan_x[1] + N_DANS * GROUP_W, f"{N_DANS}×group_w = cell_w+marker_w = {GROUP_W}"),
-        (dan_x[0] + GROUP_W, dan_x[0] + GROUP_W + TITLE_GAP, f"TITLE_GAP = {TITLE_GAP}"),
-        (TX, TX + TITLE_W, f"TITLE_W = {TITLE_W}"),
-        (TOTAL_W - MR, TOTAL_W, f"MARGIN_R = {MR}"),
+        (dan_x[0] + GROUP_W, dan_x[0] + GROUP_W + TITLE_GAP, f"title_gap = {TITLE_GAP}"),
+        (TX, TX + TITLE_W, f"title_w = {TITLE_W}"),
+        (TOTAL_W - MR, TOTAL_W, f"margin_r = {MR}"),
     ]:
         f.dim_h(x1, x2, y, label, ext_y=-2)
         y += 16
     f.dim_h(0, TOTAL_W, y, f"total_w = max_cols·group_w + ml + mr + title_offset + lyrics_offset = {TOTAL_W} (ex. {N_DANS} dans)", ext_y=-2)
 
-    f.dim_v(0, MT, -18, f"MARGIN_T = {MT}", ext_x=-2)
+    f.dim_v(0, MT, -18, f"margin_t = {MT}", ext_x=-2)
     f.dim_v(MT, MT + HEADER_H, -34, f"header_h = {HEADER_H} (70 sans titre)", ext_x=-2)
-    f.dim_v(MT + HEADER_H, Y0, -18, f"GAP_HEADER = {GAP_HEADER}", ext_x=-2)
+    f.dim_v(MT + HEADER_H, Y0, -18, f"gap_header = {GAP_HEADER}", ext_x=-2)
     f.dim_v(Y0, Y0 + CELL_H, -34, f"cell_h = {CELL_H}", ext_x=-2)
     f.dim_v(Y0, Y0 + GRID_H, -50,
             f"cells_per_dan·cell_h = {ROWS_DEFAULT}·{CELL_H} = {ROWS_DEFAULT * CELL_H} px "
             f"({ROWS_DRAWN} cases + rupture dessinées, -c)", ext_x=-2)
-    f.dim_v(PAGE_H - MT, PAGE_H, -18, f"MARGIN_T = {MT}", ext_x=-2)
+    f.dim_v(PAGE_H - MT, PAGE_H, -18, f"margin_t = {MT}", ext_x=-2)
     f.dim_v(0, PAGE_H, TOTAL_W + 18, f"total_h = {PAGE_H} (exemple)", side="right",
             ext_x=TOTAL_W + 2)
 
@@ -232,11 +232,11 @@ def fig_vertical():
 
     ly = PAGE_H + 40
     f.text(0, ly, "espacements/tailles : "
-           f"TITLE_SPACING = {TITLE_SPACING} · TUNING_SPACING = {TUNING_SPACING} · "
+           f"title_spacing = {TITLE_SPACING} · tuning_spacing = {TUNING_SPACING} · "
            f"LYRICS_SP = {LYRICS_SP} · LYRICS_FS = {LYRICS_FS} (medium) · "
            f"SYLLABLE_FS = {SYLLABLE_FS} · SYLLABLE_SP = {int(SYLLABLE_FS * 0.9)} · fs notes = {FS}",
            fill=BLUE, fs=9.5, anchor="start")
-    f.text(0, ly + 14, f"title_offset = TITLE_W + TITLE_GAP = {TITLE_OFFSET} · "
+    f.text(0, ly + 14, f"title_offset = title_w + title_gap = {TITLE_OFFSET} · "
            f"lyrics_offset = lyrics_total_w + {LYR_GAP} = {LYRICS_OFFSET} · "
            f"group_w = {GROUP_W} · marker_w = cell_w//2 si @marker on, sinon 0",
            fill=BLUE, fs=9.5, anchor="start")
@@ -316,7 +316,7 @@ def fig_horizontal():
     f.line(ML + CELL_W, PAGE_H + 2, ML + CELL_W, yb + 3, stroke=BLUE, sw=0.5)
     f.line(ML, yb, ML + CELL_W, yb, stroke=BLUE, sw=1.0, marker="arr")
     f.text(ML + CELL_W / 2, yb + 13, f"cell_w = {CELL_W}", fill=BLUE, fs=10)
-    f.text(0, PAGE_H + 40, "GAP_HEADER = 0 · h_lyrics_fs = 16 (medium) · H_LYRICS_COL_W = 21 · "
+    f.text(0, PAGE_H + 40, "gap_header = 0 · h_lyrics_fs = 16 (medium) · H_LYRICS_COL_W = 21 · "
            f"h_syl_fs = {H_SYL_FS} · syllabes en ligne marker sous la rangée",
            fill=BLUE, fs=9.5, anchor="start")
     return f
@@ -368,9 +368,9 @@ def fig_nomura():
 
     y = -70
     for x1, x2, label in [
-        (FMX, FMX + GAP, f"M = {GAP:g}"),
+        (FMX, FMX + GAP, f"dan_gap = {GAP:g}"),
         (dan_x[-1], dan_x[-1] + GROUP_W, f"group_w = cell_w + marker_w = {GROUP_W:.1f}"),
-        (dan_x[-1] + GROUP_W, dan_x[-1] + GROUP_W + GAP, f"M = {GAP:g}"),
+        (dan_x[-1] + GROUP_W, dan_x[-1] + GROUP_W + GAP, f"dan_gap = {GAP:g}"),
     ]:
         f.dim_h(x1, x2, y, label, ext_y=-2)
         y += 22
@@ -378,7 +378,7 @@ def fig_nomura():
     f.dim_h(FMX, FMX + FW, y - 22, f"cadre = {FW:.1f} × {FH:.1f} pt, marges {FMX:.1f} / {FM:.1f} pt", ext_y=-2)
 
     f.dim_v(0, FM, -16, f"marge {FM:.1f}", ext_x=-2)
-    f.dim_v(FM, grid_y0, -32, f"M = {GAP:g}", ext_x=-2)
+    f.dim_v(FM, grid_y0, -32, f"dan_gap = {GAP:g}", ext_x=-2)
     f.dim_v(grid_y0, grid_y0 + CELL_H, -16, f"cell_h = {CELL_H:.1f}", ext_x=-2)
     f.dim_v(grid_y0, grid_y0 + ROWS * CELL_H, -48,
             f"rows = {ROWS} × cell_h = {ROWS * CELL_H:.0f} pt", ext_x=-2)
@@ -442,19 +442,19 @@ def fig_chindami():
 
     y = -64
     for x1, x2, label in [
-        (FMX, FMX + LYR_SEP, f"LYR_SEP = {LYR_SEP:g}"),
+        (FMX, FMX + LYR_SEP, f"lyr_gap = {LYR_SEP:g}"),
         (pile_x[-1], pile_x[-1] + PILE_W, f"pile_w = cell_w + marker_w = {PILE_W:.1f}"),
-        (pile_x[0] + PILE_W, pile_x[0] + PILE_W + TITLE_GAP, f"TITLE_GAP = {TITLE_GAP:g}"),
-        (tx, tx + TITLE_W, f"TITLE_W = {TITLE_W:.1f}"),
+        (pile_x[0] + PILE_W, pile_x[0] + PILE_W + TITLE_GAP, f"title_gap = {TITLE_GAP:g}"),
+        (tx, tx + TITLE_W, f"title_w = {TITLE_W:.1f}"),
         (PW - FMX, PW, f"marge = {FMX:.1f}"),
     ]:
         f.dim_h(x1, x2, y, label, ext_y=-2)
         y += 16
     f.dim_h(0, PW, y, f"page = {PW:.1f} × {PH:.1f} pt = 23 × 15 cm", ext_y=-2)
 
-    f.dim_v(0, GT, -16, f"GRID_TOP = {GT:.1f}", ext_x=-2)
+    f.dim_v(0, GT, -16, f"grid_top = {GT:.1f}", ext_x=-2)
     f.dim_v(GT, GT + CELL_H, -32, f"cell_h = {CELL_H:.1f}", ext_x=-2)
-    f.dim_v(GT, GB, -48, f"{ROWS} × cell_h = {GB - GT:.0f} pt (GRID_TOP→GRID_BOTTOM)", ext_x=-2)
+    f.dim_v(GT, GB, -48, f"{ROWS} × cell_h = {GB - GT:.0f} pt (grid_top→grid_bottom)", ext_x=-2)
     f.dim_v(0, PH, PW + 16, f"page {PH:.1f} pt", side="right", ext_x=PW + 2)
     yb = PH + 16
     for x in (pile_x[-1], pile_x[-1] + CELL_W, pile_x[-1] + PILE_W):
@@ -463,7 +463,7 @@ def fig_chindami():
     f.text(pile_x[-1] + CELL_W / 2, yb + 12, f"cell_w = {CELL_W:.1f}", fill=BLUE, fs=9)
     f.line(pile_x[-1] + CELL_W, yb, pile_x[-1] + PILE_W, yb, stroke=BLUE, sw=1.0, marker="arr")
     f.text(pile_x[-1] + PILE_W / 2, yb + 12, f"marker_w = {MARKER_W:.1f}", fill=BLUE, fs=9)
-    f.text(0, PH + 32, f"CHINDAMI_FS = {FS:g} · lyr_fs = {LYR_FS} (spec.lyr_fs = {k.CHINDAMI.lyr_fs:g} pt) · "
+    f.text(0, PH + 32, f"spec.fs = {FS:g} · lyr_fs = {LYR_FS} (spec.lyr_fs = {k.CHINDAMI.lyr_fs:g} pt) · "
            f"lyr_sp = {LYR_SP} · lyr_col_w = {LYR_COL_W} · max_lyr_u = hauteur grille en unités · "
            f"repli des paroles avec kinsoku (@kinsoku)", fill=BLUE, fs=9, anchor="start")
     return f
@@ -570,21 +570,21 @@ def fig_mega():
 
     y = -64
     for x1, x2, label in [
-        (0, MARGIN, f"MEGA_MARGIN = {MARGIN:g}"),
+        (0, MARGIN, f"margin_l = {MARGIN:g}"),
         (PW - MARGIN - TITLE_OFFSET - DRAWN * GROUP_W, PW - MARGIN - TITLE_OFFSET,
          f"{DRAWN}×group_w = 1,5·cell_w = {GROUP_W:.1f}"),
-        (PW - MARGIN - TITLE_OFFSET, PW - MARGIN - TITLE_GAP, f"TITLE_GAP = {TITLE_GAP:g}"),
-        (tx, tx + TITLE_W, f"TITLE_W = {TITLE_W:g}"),
+        (PW - MARGIN - TITLE_OFFSET, PW - MARGIN - TITLE_GAP, f"title_gap = {TITLE_GAP:g}"),
+        (tx, tx + TITLE_W, f"title_w = {TITLE_W:g}"),
     ]:
         f.dim_h(x1, x2, y, label, ext_y=-2)
         y += 18
     f.dim_h(0, PW, y, f"page A3 = {PW:.1f} × {PH:.1f} pt = 42 × 29,7 cm", ext_y=-2)
 
-    f.dim_v(0, MARGIN, -16, f"MEGA_MARGIN = {MARGIN:g}", ext_x=-2)
+    f.dim_v(0, MARGIN, -16, f"margin_l = {MARGIN:g}", ext_x=-2)
     f.dim_v(MARGIN, MARGIN + CELL_H, -32, f"cell_h = {CELL_H:.1f}", ext_x=-2)
     f.dim_v(MARGIN, MARGIN + blk_h, -48, f"bloc = {ROWS}×cell_h = {blk_h:.0f} pt", ext_x=-2)
     f.dim_v(MARGIN + blk_h, MARGIN + blk_h + BLOCK_GAP, -16,
-            f"MEGA_BLOCK_GAP = {BLOCK_GAP:g}", ext_x=-2)
+            f"block_gap = {BLOCK_GAP:g}", ext_x=-2)
     f.dim_v(0, PH, PW + 16, f"page {PH:.1f} pt", side="right", ext_x=PW + 2)
     yb = PH + 16
     x0 = PW - MARGIN - TITLE_OFFSET - GROUP_W
@@ -594,7 +594,7 @@ def fig_mega():
     f.text(x0 + CELL_W / 2, yb + 12, f"cell_w = {CELL_W:.1f}", fill=BLUE, fs=9)
     f.line(x0 + CELL_W, yb, x0 + GROUP_W, yb, stroke=BLUE, sw=1.0, marker="arr")
     f.text(x0 + GROUP_W / 2, yb + 12, f"marker_w = cell_w/2 = {MARKER_W:.1f}", fill=BLUE, fs=9)
-    f.text(0, PH + 32, f"MEGA_BLOCKS = {BLOCKS} · MEGA_DANS_PER_BLOCK = {DANS_PER_BLOCK} → "
+    f.text(0, PH + 32, f"blocks = {BLOCKS} · dans_per_block = {DANS_PER_BLOCK} → "
            f"{BLOCKS * DANS_PER_BLOCK} dans/page · fs = {FS} · paroles en pages A3 dédiées "
            f"(inline si ≤ {k.MEGA.lyr_inline_max_ratio:.0%} de la largeur utile) · cell_w = "
            f"(page−2·marge−title_offset)/({DANS_PER_BLOCK}×1,5)", fill=BLUE, fs=9, anchor="start")
