@@ -77,7 +77,17 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@shaku_sharp`   | `off`      | Rend les 尺♯ accompagnés du symbole ♯ : `on` : activé, `off` : désactivé |
 | `@lyrics_size`   | `medium`   | Taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
 | `@kinsoku`       | `simple`   | Kinsoku (禁則処理, [JLREQ W3C](https://www.w3.org/TR/jlreq/)) au repli des paroles `::lyrics` quand une ligne est coupée au caractère (layout `chindami`) : `simple` = 行頭禁則 avec追い出し (fermetures, ponctuation 、。，・：；, 々〻, ー, petits kana) + 行末禁則 (ouvrantes), `strict` = ajoute ！？ en tête de ligne, `off` = coupe au caractère (comportement historique). Défaut `simple`, sauf `nomura` (`off` : pas de repli des paroles au caractère). `--kinsoku` en CLI. |
+| `@text_color`    | `#000000`    | Couleur de **tout le texte**, format HTML (`#rgb`, `#rrggbb` ou nom CSS, ex. `red`). Surcharge le défaut du design de la mise en page |
+| `@frame_color`   | défaut du layout | Couleur du filet de cadre de page (layout `nomura` seul à ce jour), format HTML. Défaut `nomura` : `#333333` |
+| `@frame_width`   | défaut du layout | Épaisseur du filet de cadre, en pt (nombre positif, ex. `1.5`). Défaut `nomura` : `1.5` |
+| `@cell_color`    | défaut du layout | Couleur des cases et de la bande marker, format HTML. Défauts : `#bbbbbb` (vertical, chindami, mega), `#999999` (horizontal, tuto), `#333333` (nomura) |
+| `@cell_width`    | défaut du layout | Épaisseur des filets de cases, en pt. Défauts : `0.75` (vertical, horizontal, tuto, mega), `0.6` (nomura, chindami) |
+| `@arrow_color`   | défaut du layout | Couleur des flèches de répétition `|: :|` et des symboles vocaux ⚪⚫, format HTML. Mêmes défauts que `@cell_color` |
+| `@arrow_width`   | défaut du layout | Épaisseur des flèches de boucles, en pt. Mêmes défauts que `@cell_width` |
+| `@arrow_fill`    | `off`      | Têtes des flèches de répétition : `on` = remplies (couleur `@arrow_color`), `off` = creuses (défaut) |
 | `@ruby_size`     | `50`       | Taille de police du ruby, en % de la taille de base. **Non utilisé à ce jour** |
+
+Ces 8 attributs de design sont définis dans chaque mise en page (champs `text_color`, `frame_color`, `frame_width`, `cell_color`, `cell_width`, `arrow_color`, `arrow_width`, `arrow_fill` du `LayoutSpec` de `kkml2svg.py`) ; la métadonnée KKML correspondante surcharge le défaut du layout. Une valeur invalide (couleur non HTML, épaisseur non positive, `arrow_fill` autre que `on`/`off`) est ignorée avec un `AVERTISSEMENT` et le défaut du layout s'applique.
 | `@musicno`       | —          | Numéro de morceau (champ Portama `musicno`, entier). Valeur stockée telle quelle ; affichée en layout `chindami` (tronquée mod 1000 si > 999) |
 | `@chogen`        | `5`        | Accordage absolu en demi-tons (champ Portama `chogen`, chaîne, ex. `"5"`). Valeur stockée telle quelle. Se déduit de `@base_note` et vice-et-versa. |
 | `@speed`         | —          | Tempo en bpm (champ Portama `speed`, chaîne, ex. `"68"`). Valeur stockée telle quelle |

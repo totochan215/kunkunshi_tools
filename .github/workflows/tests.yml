@@ -38,3 +38,5 @@ jobs:
         run: python3 tests/test_lead_straddle.py
       - name: Lancer les tests des groupes SVG de répétition
         run: python3 tests/test_svg_groups.py
+      - name: Lancer les tests des attributs de design (@text_color, @frame_*, @cell_*, @arrow_*)
+        run: python3 tests/test_layout_attrs.py
