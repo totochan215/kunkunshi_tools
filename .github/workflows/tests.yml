@@ -32,5 +32,7 @@ jobs:
         run: python3 tests/test_verse_markers.py
       - name: Lancer les tests de ::song (nom de chanson ; ::section = alias)
         run: python3 tests/test_song.py
-      - name: Lancer les tests mega (@mega_cols, ::block/::page)
+      - name: Lancer les tests mega (@mega_dans, ::block/::page)
         run: python3 tests/test_mega_breaks.py
+      - name: Lancer les tests du straddle de tête /B (rang -1)
+        run: python3 tests/test_lead_straddle.py

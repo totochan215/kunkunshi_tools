@@ -165,6 +165,7 @@ Séparateurs à l'intérieur d'une figure (dans une cellule) :
 | `/` `//`     | Une croche et deux double croches       | `合/工//中`           |
 | `//` `/`     | Deux double croches et une croche       | `合//工/中`           |
 | `/` avec `-` à gauche | Note à cheval seule (pas de note principale — Portama : cellule principale vide + straddle) | `-/合` |
+| `/` en tête de bloc | **Straddle de tête** (rang -1) : note à cheval sur le bord *précédent* de la 1re case (haut en vertical, gauche en horizontal) — token `/B` en tout premier token du bloc `::tab` ; ne consomme pas de case ; hors tête de bloc : avertissement + ignoré. Rendu : vertical, horizontal, mega | `/六` |
 | `:`          | Une croche pointée et une double croche | `合:工`               |
 | `::`         | Une double croche et une croche pointée | `合::工`              |
 | `+` `=` `-`  | Accord (notes simultanées, max 3) — `+` canonique, `=` et `-` variantes acceptées | `四+工`, `四=工` ou `合+四+工` |
