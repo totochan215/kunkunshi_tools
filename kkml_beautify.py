@@ -11,8 +11,11 @@ Dans les sections `::tab` et `::vocal`, les tokens sont d'abord normalisés
 de chaque cellule soient alignés en colonnes — à condition que l'éditeur
 ouvre le fichier avec une police à chasse fixe (les caractères CJK pleine
 chasse comptent double, les combinants comptent 0). Le dernier token d'une
-ligne n'est pas complété (pas d'espace en fin de ligne). Partout ailleurs,
-le fichier est inchangé. Idempotent : `beautify(beautify(x)) == beautify(x)`.
+ligne n'est pas complété (pas d'espace en fin de ligne). Un straddle de tête
+`/B` (1er token de la 1re ligne de `::tab`) sort de la grille d'alignement :
+émis tel quel + 1 espace, les colonnes sont calculées sur la note suivante.
+Partout ailleurs, le fichier est inchangé.
+Idempotent : `beautify(beautify(x)) == beautify(x)`.
 """
 
 import argparse
@@ -35,12 +38,18 @@ def disp_width(s):
                for ch in s)
 
 
-def beautify_body(body, normalize):
+def beautify_body(body, normalize, is_tab=False):
     """Normalise puis aligne les tokens d'un bloc ::tab/::vocal (lignes brutes)."""
     norm = []
     with contextlib.redirect_stderr(io.StringIO()):   # normalisation silencieuse
         for ln in body:
             norm.append(normalize(ln.split()) if ln.strip() else [])
+    # Straddle de tête '/B' (1er token de la 1re ligne d'un bloc ::tab) : sorti
+    # de la grille d'alignement et émis tel quel + 1 espace — les colonnes sont
+    # calculées sur les notes (le token suivant), pas sur le '/B'.
+    lead = None
+    if is_tab and norm and norm[0] and norm[0][0].startswith("/"):
+        lead = norm[0].pop(0)
     col_w = []
     for toks in norm:
         for j, tk in enumerate(toks):
@@ -50,7 +59,7 @@ def beautify_body(body, normalize):
             elif w > col_w[j]:
                 col_w[j] = w
     out = []
-    for toks in norm:
+    for idx, toks in enumerate(norm):
         if not toks:
             out.append("")
             continue
@@ -61,7 +70,10 @@ def beautify_body(body, normalize):
                 parts.append(tk + " " * (col_w[j] - disp_width(tk) + 1))
             else:
                 parts.append(tk)          # pas d'espace en fin de ligne
-        out.append("".join(parts))
+        line = "".join(parts)
+        if idx == 0 and lead is not None:
+            line = lead + " " + line
+        out.append(line)
     return out
 
 
@@ -84,7 +96,7 @@ def beautify(text):
                 body.append(lines[i])
                 i += 1
             normalize = c.normalize_tab_line if kind == "tab" else c.normalize_vocal_line
-            out.extend(beautify_body(body, normalize))
+            out.extend(beautify_body(body, normalize, is_tab=(kind == "tab")))
         else:
             out.append(ln)
             i += 1
