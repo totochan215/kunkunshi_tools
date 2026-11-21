@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Tests du layout mega : @mega_cols (colonnes par bloc) et sauts ::block/::page.
+"""Tests du layout mega : @mega_dans (dans par bloc) et sauts ::block/::page.
 
 Implémenté le 2026-11-21 :
-- `@mega_cols N` = nombre de colonnes (dans) par bloc horizontal en mega
+- `@mega_dans N` = nombre de colonnes (dans) par bloc horizontal en mega
   (défaut 32, spec MEGA) ; la géométrie (cell_w, pagination) s'adapte ;
 - `::block` ferme le bloc courant et `::page` ferme la page courante, même
   si les colonnes prévues ne sont pas remplies (marqueurs sans contenu,
@@ -32,36 +32,38 @@ print("OK _mega_paginate : sans marqueur, blocs de 32 / pages de 64 (inchangé)"
 # 2. ::block ferme le bloc courant même non plein
 s2 = [("c%d" % i,) for i in range(10)] + [("__block__",)] + [("c%d" % i,) for i in range(10, 70)]
 pages = k._mega_paginate(s2, 32, 2, 64)
-assert [[len(b) for b in p] for p in pages] == [[10, 32], [28]], pages
-print("OK ::block : saut au bloc suivant (bloc de 10 puis 32)")
+assert [[len(b) for b in p] for p in pages] == [[32, 32], [28]], pages
+# les colonnes ajoutées sont bien des dans vides (cases vides, pas de titre)
+assert pages[0][0][10] == ([k.EMPTY_TOKEN] * 12, None, None, -1), pages[0][0][10]
+print("OK ::block : bloc sauté rempli de dans vides (32, 32) puis page suivante")
 
 # 3. ::page ferme la page courante même non pleine
 s3 = [("c%d" % i,) for i in range(10)] + [("__page__",)] + [("c%d" % i,) for i in range(10, 70)]
 pages = k._mega_paginate(s3, 32, 2, 64)
-assert [[len(b) for b in p] for p in pages] == [[10], [32, 28]], pages
-print("OK ::page : saut à la page suivante (page de 10 colonnes)")
+assert [[len(b) for b in p] for p in pages] == [[32, 32], [32, 28]], pages
+print("OK ::page : page complétée de blocs vides (32, 32) puis page suivante")
 
-# 4. @mega_cols change la pagination (33 colonnes/bloc -> 66/page)
+# 4. @mega_dans change la pagination (33 colonnes/bloc -> 66/page)
 pages = k._mega_paginate([("c%d" % i,) for i in range(130)], 33, 2, 66)
 assert [[len(b) for b in p] for p in pages] == [[33, 33], [33, 31]], pages
-print("OK _mega_paginate : 33 colonnes/bloc -> pages de 66")
+print("OK _mega_paginate : 33 dans/bloc -> pages de 66")
 
 # 5. Parsing : ::block / ::page = blocs marqueurs (sans contenu)
 song = k.parse_kkml("::tab\n合\n::\n::block\n::tab\n工\n::\n::page\n::tab\n合\n::\n")
 assert [b.kind for b in song.blocks] == ["tab", "block", "tab", "page", "tab"]
 print("OK parse ::block / ::page")
 
-# 6. E2E mega : @mega_cols 33 (130 dans -> 2 pages au lieu de 3) et ::block
+# 6. E2E mega : @mega_dans 33 (130 dans -> 2 pages au lieu de 3) et ::block
 tab130 = " ".join(["合"] * 12 * 130)
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     p_def = k.render_svg(k.parse_kkml("@title t\n@layout mega\n::tab\n" + tab130 + "\n::\n"),
                          layout="mega")
     p_33 = k.render_svg(k.parse_kkml(
-        "@title t\n@layout mega\n@mega_cols 33\n::tab\n" + tab130 + "\n::\n"), layout="mega")
+        "@title t\n@layout mega\n@mega_dans 33\n::tab\n" + tab130 + "\n::\n"), layout="mega")
 assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
 assert len(p_def) == 3 and len(p_33) == 2, (len(p_def), len(p_33))
-print("OK e2e @mega_cols 33 : 130 dans -> 2 pages (3 par défaut)")
+print("OK e2e @mega_dans 33 : 130 dans -> 2 pages (3 par défaut)")
 
 kkml_b = ("@title t\n@layout mega\n::tab\n" + " ".join(["合"] * 480) + "\n::\n::block\n"
           "::tab\n" + " ".join(["工"] * 480) + "\n::\n")
@@ -72,12 +74,12 @@ assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
 assert len(pages_b) == 2
 print("OK e2e ::block : rendu mega 2 pages sans avertissement")
 
-# 7. @mega_cols invalide -> AVERTISSEMENT + défaut
+# 7. @mega_dans invalide -> AVERTISSEMENT + défaut
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
-    k.render_svg(k.parse_kkml("@title t\n@layout mega\n@mega_cols abc\n::tab\n合\n::\n"),
+    k.render_svg(k.parse_kkml("@title t\n@layout mega\n@mega_dans abc\n::tab\n合\n::\n"),
                  layout="mega")
-assert "AVERTISSEMENT" in err.getvalue() and "@mega_cols" in err.getvalue()
-print("OK @mega_cols invalide : AVERTISSEMENT + défaut 32")
+assert "AVERTISSEMENT" in err.getvalue() and "@mega_dans" in err.getvalue()
+print("OK @mega_dans invalide : AVERTISSEMENT + défaut 32")
 
-print("\nTous les tests mega (@mega_cols, ::block/::page) passent.")
+print("\nTous les tests mega (@mega_dans, ::block/::page) passent.")
