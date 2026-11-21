@@ -89,6 +89,9 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 
 ## Sections
 
+### Section nommée
+`::section nom` — titre de section (s'applique au bloc suivant ; utile en layout `mega` pour un medley : le nom de chaque chanson est imprimé au-dessus de ses colonnes). `::song nom` est un alias accepté de `::section nom` (renommé avec une info stderr).
+
 ### Tab
 `::tab` — section de tablature, organisée en temps (figures), séparés par des espaces.
 **Boucle vocale** : `(:` en début de token, `:)` en fin (ex. `(:合`, `中:)`), rendue comme marqueur de boucle dans la colonne marker. **Désambiguation** : les marqueurs de boucle (`|:`, `:|`, `(:`, `:)`) ne figurent QUE dans `::tab` ; les koedashi/koekiri (`(`, `)`) ne figurent QUE dans `::vocal`. Un `( )` dans `::tab` est ignoré avec un avertissement ; une boucle dans `::vocal` est ignorée avec un avertissement. Les sauts de lignes sont interprétés comme des espaces, ainsi les lignes ne correspondent pas obligatoirement aux dans de la mise en page.
