@@ -28,3 +28,5 @@ jobs:
         run: python3 tests/test_source.py
       - name: Lancer les tests d'ordre des métadonnées du cleaner
         run: python3 tests/test_cleaner_meta.py
+      - name: Lancer les tests des marqueurs de couplet ①-⑳
+        run: python3 tests/test_verse_markers.py
