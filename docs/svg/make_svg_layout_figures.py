@@ -215,7 +215,7 @@ def fig_vertical():
     f.dim_v(MT + HEADER_H, Y0, -18, f"GAP_HEADER = {GAP_HEADER}", ext_x=-2)
     f.dim_v(Y0, Y0 + CELL_H, -34, f"cell_h = {CELL_H}", ext_x=-2)
     f.dim_v(Y0, Y0 + GRID_H, -50,
-            f"rows_per_col·cell_h = {ROWS_DEFAULT}·{CELL_H} = {ROWS_DEFAULT * CELL_H} px "
+            f"cells_per_dan·cell_h = {ROWS_DEFAULT}·{CELL_H} = {ROWS_DEFAULT * CELL_H} px "
             f"({ROWS_DRAWN} cases + rupture dessinées, -c)", ext_x=-2)
     f.dim_v(PAGE_H - MT, PAGE_H, -18, f"MARGIN_T = {MT}", ext_x=-2)
     f.dim_v(0, PAGE_H, TOTAL_W + 18, f"total_h = {PAGE_H} (exemple)", side="right",
@@ -330,9 +330,9 @@ def fig_nomura():
     FW, FH = k.NOMURA.frame_w, k.NOMURA.frame_h             # 559.3 x 745.9
     FMX, FM = k.NOMURA.frame_margin_x, k.NOMURA.frame_margin_y
     GAP = k.NOMURA.dan_gap                                  # 14.5
-    ROWS = k.NOMURA.rows_per_col                                    # 12
+    ROWS = k.NOMURA.cells_per_dan                                    # 12
     MAX_DANS = k.NOMURA.max_dans                            # 7
-    CELL_W, CELL_H = ((k.NOMURA.frame_w - 8 * k.NOMURA.dan_gap) / 14.0), ((k.NOMURA.frame_h - 2 * k.NOMURA.dan_gap) / k.NOMURA.rows_per_col)       # 31.7 x 60.6
+    CELL_W, CELL_H = ((k.NOMURA.frame_w - 8 * k.NOMURA.dan_gap) / 14.0), ((k.NOMURA.frame_h - 2 * k.NOMURA.dan_gap) / k.NOMURA.cells_per_dan)       # 31.7 x 60.6
     MARKER_W = CELL_W                                       # marker = pleine case
     GROUP_W = CELL_W + MARKER_W
     FS = 26.0
@@ -404,11 +404,11 @@ def fig_chindami():
     GT, GB = k.CHINDAMI.grid_top, k.CHINDAMI.grid_bottom
     CELL_H = k.CHINDAMI.cell_h                        # ~29.8
     CELL_W, MARKER_W, PILE_W = k.CHINDAMI.cell_w, k.CHINDAMI.marker_w, k.CHINDAMI.pile_w
-    ROWS = k.CHINDAMI.rows_per_col                            # 12
+    ROWS = k.CHINDAMI.cells_per_dan                            # 12
     TITLE_W, TITLE_GAP = k.CHINDAMI.title_w, k.CHINDAMI.title_gap
     FMX = k.CHINDAMI.frame_margin_x                   # ~49.6
     FS = k.CHINDAMI.fs                                # 12
-    LYR_FS = int(FS * k.CHINDAMI.lyr_fs_ratio)        # 10
+    LYR_FS = int(k.CHINDAMI.lyr_fs)                    # 10 (10,8 -> int)
     LYR_COL_W = int(LYR_FS * 1.33)
     LYR_SP = int(LYR_FS * 1.2)
     LYR_SEP = k.CHINDAMI.lyr_gap                      # 12
@@ -463,7 +463,7 @@ def fig_chindami():
     f.text(pile_x[-1] + CELL_W / 2, yb + 12, f"cell_w = {CELL_W:.1f}", fill=BLUE, fs=9)
     f.line(pile_x[-1] + CELL_W, yb, pile_x[-1] + PILE_W, yb, stroke=BLUE, sw=1.0, marker="arr")
     f.text(pile_x[-1] + PILE_W / 2, yb + 12, f"marker_w = {MARKER_W:.1f}", fill=BLUE, fs=9)
-    f.text(0, PH + 32, f"CHINDAMI_FS = {FS:g} · lyr_fs = {LYR_FS} (×{k.CHINDAMI.lyr_fs_ratio}) · "
+    f.text(0, PH + 32, f"CHINDAMI_FS = {FS:g} · lyr_fs = {LYR_FS} (spec.lyr_fs = {k.CHINDAMI.lyr_fs:g} pt) · "
            f"lyr_sp = {LYR_SP} · lyr_col_w = {LYR_COL_W} · max_lyr_u = hauteur grille en unités · "
            f"repli des paroles avec kinsoku (@kinsoku)", fill=BLUE, fs=9, anchor="start")
     return f
@@ -474,8 +474,8 @@ def fig_chindami():
 # --------------------------------------------------------------------------- #
 def fig_tuto():
     W0, H0 = (int(k.TUTO.page_w / k.PX), int(k.TUTO.page_h / k.PX))          # 1280 x 720
-    COLS = k.TUTO.cols_per_row             # 8
-    DANS = k.TUTO.rows_per_col             # 7
+    COLS = k.TUTO.cells_per_dan             # 8
+    DANS = k.TUTO.dans_per_block             # 7
     ML = MT = MB = 16
     CELL_W = (W0 - ML - 16) / (COLS + 0.25)
     MR = 16 + CELL_W / 4
@@ -533,7 +533,7 @@ def fig_tuto():
 def fig_mega():
     PW, PH = k.MEGA.page_w, k.MEGA.page_h      # 1190.55 x 841.89
     MARGIN, BLOCKS, BLOCK_GAP = k.MEGA.margin_l, k.MEGA.blocks, k.MEGA.block_gap
-    ROWS = k.MEGA.rows_per_col                          # 12
+    ROWS = k.MEGA.cells_per_dan                          # 12
     DANS_PER_BLOCK = k.MEGA.dans_per_block      # 32
     CELL_H = (PH - 2 * MARGIN - (BLOCKS - 1) * BLOCK_GAP) / (BLOCKS * ROWS)
     FS = max(8, int(CELL_H * 0.38))

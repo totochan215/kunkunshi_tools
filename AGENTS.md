@@ -229,13 +229,25 @@ exact pour nos valeurs). Champs : marges (`margin_t/b/l/r`), cadre
 (`frame_w/h`, 0 = pas de cadre, `frame_margin_x/y`), titre (`title_w`,
 `title_gap`, `title_spacing`, `tuning_spacing`, `title_fs`, `meta_fs`),
 `gap_header`, `header_h`/`header_h_title`, `cell_w/cell_h` (0 = dérivé de la
-page), `fs` (0 = `max(fs_min, fs_ratio × cell_h)`), `rows_per_col`,
-`cols_per_row`, `marker_ratio` (+ `marker_w` absolu si > 0, chindami),
-`pile_w`, `lyr_gap`, `lyrics_size`, ratios paroles (`lyr_fs_ratio`,
-`lyr_sp_ratio`, `lyr_col_w_ratio`, `lyr_verse_gap_ratio`), ratios syllabes
-(`syl_cell_ratio`, `syl_marker_ratio`, `syl_fs_ratio`), structure mega
-(`blocks`, `block_gap`, `dans_per_block`, `lyr_inline_max_ratio` = seuil
-paroles inline 1re page), `dan_gap`/`max_dans` (nomura).
+page), `fs` (0 = `max(fs_min, fs_ratio × cell_h)`), `cells_per_dan`
+(ex-`rows_per_col`/`cols_per_row`), `marker_ratio` (+ `marker_w` absolu si
+> 0, chindami), `pile_w`, `lyr_gap`, `lyr_size` (ex-`lyrics_size`),
+`lyr_fs` (fs paroles ABSOLUE en pt, 0 = dérivée de `lyr_size` × `fs` ;
+chindami 10,8), ratios paroles (`lyr_sp_ratio`, `lyr_col_w_ratio`,
+`lyr_verse_gap_ratio`), ratios syllabes
+(`syl_cell_ratio`, `syl_marker_ratio`, `syl_fs_ratio`), structure de blocs
+(`blocks` = 1 partout sauf mega 2, `block_gap` = 0 sauf mega 30,
+`dans_per_block` = `max_dans` hors mega — nomura 7, chindami 15, tuto 7 —
+0 = illimité en vertical/horizontal, 32 en mega ; `lyr_inline_max_ratio` =
+seuil paroles inline 1re page, mega), `dan_gap`/`max_dans` (nomura, chindami,
+tuto).
+✅ (2026-11-21) unification des champs de bloc : `blocks`/`block_gap`/
+`dans_per_block` présents dans TOUS les layouts (hors mega : bloc unique,
+`dans_per_block = max_dans`) ; `rows_per_col`+`cols_per_row` fondus en
+`cells_per_dan` (le « 7 dans/page » de tuto, ex-`rows_per_col`, est porté
+par `dans_per_block`) ; `lyrics_size` → `lyr_size` ; `lyr_fs_ratio` →
+`lyr_fs` (valeur absolue). Vérifié : rendus SVG byte-identiques
+(114 échantillons × 6 layouts).
 ✅ (2026-11-21) les alias de module `NOMURA_*`/`CHINDAMI_*`/`MEGA_*`/
 `TUTO_DEFAULT_*` ont été SUPPRIMÉS : les renderers lisent `spec.*`
 directement (`spec` passé en paramètre, y compris à `_mega_meta_column` ;

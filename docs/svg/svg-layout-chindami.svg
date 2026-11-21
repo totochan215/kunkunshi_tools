@@ -95,5 +95,5 @@
 <text x="481.413" y="573.197" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">cell_w = 23.3</text>
 <line x1="493.083" y1="561.197" x2="504.573" y2="561.197" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
 <text x="487.158" y="573.197" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">marker_w = 11.5</text>
-<text x="110" y="577.197" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">CHINDAMI_FS = 12 · lyr_fs = 10 (×0.9) · lyr_sp = 12 · lyr_col_w = 13 · max_lyr_u = hauteur grille en unités · repli des paroles avec kinsoku (@kinsoku)</text>
+<text x="110" y="577.197" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">CHINDAMI_FS = 12 · lyr_fs = 10 (spec.lyr_fs = 10.8 pt) · lyr_sp = 12 · lyr_col_w = 13 · max_lyr_u = hauteur grille en unités · repli des paroles avec kinsoku (@kinsoku)</text>
 </svg>
