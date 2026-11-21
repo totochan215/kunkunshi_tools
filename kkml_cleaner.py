@@ -13,7 +13,8 @@ Règles (voir AGENTS.md, section « Long terme ») :
 - ordre des sections : `::tab` `::vocal` `::lyrics` ;
 - métadonnées : toutes regroupées en haut du fichier ; `@format` `@version`
   `@title` toujours en premier (si présents), puis les autres métadonnées
-  présentes dans leur ordre d'apparition dans le fichier ;
+  présentes dans leur ordre d'apparition dans le fichier ; `@format KKML`
+  est ajouté s'il est absent ;
 - séparateurs : une et une seule ligne vide entre le bloc des métadonnées et
   la première section, et entre chaque section (aucune ligne vide en tête
   si pas de métadonnées, aucune en fin de fichier) ;
@@ -133,6 +134,12 @@ def clean(text):
         meta.setdefault("dans_per_page", str(song.page_dans))
     if "layout" in file_keys:
         meta.setdefault("layout", song.layout)
+    # @format KKML ajouté s'il est absent (épinglé en première ligne ensuite)
+    if "format" not in meta:
+        info("@format KKML ajouté (absent du fichier)")
+        meta["format"] = "KKML"
+        if "format" not in file_keys:
+            file_keys.insert(0, "format")
 
     # --- sections : normalisation + complétion structurelle ---
     blocks = song.blocks
