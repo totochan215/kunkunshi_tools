@@ -633,7 +633,7 @@ class LayoutSpec:
     grid_top: float = 0              # chindami : haut de grille
     grid_bottom: float = 0           # chindami : bas de grille
     dan_gap: float = 0               # nomura : marge de dan M (unique)
-    max_dans: int = 0                # dans max par page (nomura, chindami)
+    max_dans: int = 0                # dans max par page = dans_per_block hors mega (nomura 7, chindami 15, tuto 7)
     title_w: float = 0               # colonne titre verticale
     title_gap: float = 0
     title_spacing: float = 0
@@ -648,20 +648,20 @@ class LayoutSpec:
     fs: float = 0                    # 0 = max(fs_min, fs_ratio x cell_h)
     fs_ratio: float = 0
     fs_min: int = 8
-    rows_per_col: int = 12           # cases par dan (tuto : dans par page)
-    cols_per_row: int = 0            # horizontal/tuto : cases par rangée
-    blocks: int = 1                  # mega : blocs horizontaux par page
-    block_gap: float = 0             # mega
-    dans_per_block: int = 0          # mega
+    cells_per_dan: int = 12          # cases par dan (ex-cells_per_dan / cells_per_dan)
+    blocks: int = 1                  # blocs horizontaux par page (mega : 2 ; sinon bloc unique)
+    block_gap: float = 0             # gap entre blocs (mega)
+    dans_per_block: int = 0          # dans par bloc, 0 = illimité (hors mega = max_dans)
     marker_ratio: float = 0.5        # marker = ratio x cell (0 = pas de marker)
     marker_w: float = 0              # absolu (pt) si > 0 (chindami)
     pile_w: float = 0                # chindami : pas de pile absolu si > 0
     lyr_gap: float = 0               # gap paroles <-> grille
-    lyrics_size: dict = field(default_factory=lambda: {"small": 0.5, "medium": 0.75, "big": 1.0})
-    lyr_fs_ratio: float = 0          # lyr_fs = ratio x fs (chindami : 0,9)
+    lyr_size: dict = field(default_factory=lambda: {"small": 0.5, "medium": 0.75, "big": 1.0})
+    lyr_fs: float = 0                # fs paroles ABSOLUE en pt (0 = dérivée : lyr_size x fs ; chindami : 10,8)
     lyr_sp_ratio: float = 1.2
     lyr_col_w_ratio: float = 1.33
     lyr_verse_gap_ratio: float = 0.8
+    lyr_inline_max_ratio: float = 0   # mega : seuil paroles inline 1re page (ratio largeur utile)
     syl_cell_ratio: float = 0.26     # syllabe marker : min(ratio x cell_h, ...)
     syl_marker_ratio: float = 0.8
     syl_fs_ratio: float = 0.6        # repli si pas de marker (horizontal/tuto)
@@ -676,7 +676,7 @@ VERTICAL = LayoutSpec(
     name="vertical", unit="px",
     margin_t=16 * PX, margin_b=16 * PX, margin_l=16 * PX, margin_r=16 * PX,
     header_h=70 * PX, header_h_title=10 * PX, gap_header=30 * PX,
-    cell_w=52 * PX, cell_h=58 * PX, fs=22 * PX, rows_per_col=12,
+    cell_w=52 * PX, cell_h=58 * PX, fs=22 * PX, cells_per_dan=12,
     marker_ratio=0.5,
     title_w=36 * PX, title_gap=10 * PX, title_spacing=30 * PX, tuning_spacing=22 * PX,
     title_fs=26 * PX, meta_fs=15 * PX,
@@ -686,7 +686,7 @@ HORIZONTAL = LayoutSpec(
     name="horizontal", unit="px",
     margin_t=16 * PX, margin_b=16 * PX, margin_l=16 * PX, margin_r=16 * PX,
     header_h=26 * PX, header_h_title=47 * PX, gap_header=0,   # 47 = 26 + 6 + 15 (H_TITLE_AIR)
-    cell_w=52 * PX, cell_h=58 * PX, fs=22 * PX, cols_per_row=12,
+    cell_w=52 * PX, cell_h=58 * PX, fs=22 * PX, cells_per_dan=12,
     marker_ratio=0.5,             # marker_h = cell_h // 2 (bande sous la rangée)
     title_fs=26 * PX, meta_fs=12 * PX,
     lyr_gap=12 * PX)
@@ -694,39 +694,44 @@ HORIZONTAL = LayoutSpec(
 NOMURA = LayoutSpec(
     name="nomura", unit="pt",
     page_w=21 * CM, page_h=29.7 * CM, page_cm=(21, 29.7),
+    # Constantes primaires mesurées (scans) : cadre de page et marge de dans
+    # M = dan_gap (unique : cadre<->dans et entre dans). Le reste est dérivé
+    # dans _render_nomura : 7 dans = 14 sous-colonnes (notes+marker) dans
+    # frame_w - 8*M ; 12 cases dans frame_h - 2*M.
     frame_w=559.3, frame_h=745.9,
     frame_margin_x=(21 * CM - 559.3) / 2.0, frame_margin_y=(29.7 * CM - 745.9) / 2.0,
-    dan_gap=14.5, max_dans=7, rows_per_col=12,
+    dan_gap=14.5, max_dans=7, cells_per_dan=12, dans_per_block=7,
     marker_ratio=1.0,             # sous-colonne marker = pleine case
     fs=26.0)
 
 CHINDAMI = LayoutSpec(
     name="chindami", unit="pt",
     page_w=23 * CM, page_h=15 * CM, page_cm=(23, 15),
+    # mesures sur samples/chindami-pdf p8-p11 (1816x1181 px, 2,785 px/pt)
     frame_margin_x=138 / 2.785, grid_top=85 / 2.785, grid_bottom=1079 / 2.785,
     frame_w=23 * CM - 2 * (138 / 2.785), frame_h=1079 / 2.785 - 85 / 2.785,
     cell_w=65 / 2.785, cell_h=83 / 2.785, pile_w=97 / 2.785, marker_w=32 / 2.785,
-    dan_gap=0, max_dans=15, rows_per_col=12, fs=12,
+    dan_gap=0, max_dans=15, cells_per_dan=12, dans_per_block=15, fs=12,
     title_w=(1816 - 1750) / 2.785, title_gap=10,
-    lyr_gap=12, lyr_fs_ratio=0.9)
+    lyr_gap=12, lyr_fs=10.8)   # 0,9 x fs=12, int() -> 10
 
 TUTO = LayoutSpec(
     name="tuto", unit="px",
     page_w=1280 * PX, page_h=720 * PX,          # @tuto_block, défaut 1280x720
     margin_t=16 * PX, margin_b=16 * PX, margin_l=16 * PX, margin_r=16 * PX,
     cell_w=0, cell_h=0, fs=0, fs_ratio=0.38,    # dérivés du bloc (voir _render_tuto)
-    rows_per_col=7, cols_per_row=8,              # 7 dans/page, 8 cases/dan
+    cells_per_dan=8, max_dans=7, dans_per_block=7,  # 8 cases/dan, 7 dans/page
     marker_ratio=0)                              # pas de bande marker en tuto
 
 MEGA = LayoutSpec(
     name="mega", unit="pt",
     page_w=42 * CM, page_h=29.7 * CM, page_cm=(42, 29.7),
     margin_t=40, margin_b=40, margin_l=40, margin_r=40,
-    blocks=2, block_gap=30, rows_per_col=12, dans_per_block=32,
+    blocks=2, block_gap=30, cells_per_dan=12, dans_per_block=32,
     fs_ratio=0.38, marker_ratio=0.5,
     title_w=36, title_gap=10, title_spacing=30, tuning_spacing=22,
     title_fs=26, meta_fs=15,
-    lyr_gap=12)
+    lyr_gap=12, lyr_inline_max_ratio=0.15)
 
 LAYOUTS = {"vertical": VERTICAL, "horizontal": HORIZONTAL, "nomura": NOMURA,
            "chindami": CHINDAMI, "tuto": TUTO, "mega": MEGA}
@@ -750,7 +755,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     # (vertical/horizontal : 12, chindami/nomura : imposé par la page), et
     # -c ne s'applique qu'aux layouts libres (vertical/horizontal).
     if cols is None:
-        cols = spec.cols_per_row if layout == "tuto" else 12
+        cols = spec.cells_per_dan if layout == "tuto" else 12
     if layout in ("chindami", "nomura", "mega"):
         cols = None  # ignoré : le layout fixe ses propres cases/dan
 
@@ -870,7 +875,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
 # --------------------------------------------------------------------------- #
 # 3a. Rendu vertical (haut→bas, droite→gauche)
 # --------------------------------------------------------------------------- #
-def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
+def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
                      fs, ml, mr, mt, header_h, marker=False, opts=None,
                      page_dans=None, spec=None):
     title = song.meta.get("title", "")
@@ -934,7 +939,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
     # --- Paroles verticales (à gauche de la grille) --- #
     # Taille des couplets selon @lyrics_size : small=50%, medium=75%, big=100% de fs
     lyrics_size = opts.get('lyrics_size', 'medium') if opts else 'medium'
-    LYRICS_FS = int(fs * spec.lyrics_size.get(lyrics_size, 0.75))
+    LYRICS_FS = int(fs * spec.lyr_size.get(lyrics_size, 0.75))
     LYRICS_SP = int(LYRICS_FS * spec.lyr_sp_ratio)      # espacement vertical entre caractères
     LYRICS_COL_W = int(LYRICS_FS * spec.lyr_col_w_ratio)  # largeur d'une colonne de couplet
     LYRICS_VERSE_GAP = int(LYRICS_COL_W * spec.lyr_verse_gap_ratio)  # gap horizontal entre colonnes
@@ -947,12 +952,12 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
         vocal_lines = items[3] if len(items) > 3 else None
         
         if kind == "tab":
-            columns = _wrap_vertical(content, rows_per_col)
-            vocal_data = _wrap_vertical(vocal_lines, rows_per_col) if vocal_lines else None
+            columns = _wrap_vertical(content, cells_per_dan)
+            vocal_data = _wrap_vertical(vocal_lines, cells_per_dan) if vocal_lines else None
             prepared.append((sec_title, columns, kind, vocal_data))
         elif kind == "vocal":
             # Standalone vocal without tab - wrap and store
-            vocal_data = _wrap_vertical(vocal_lines, rows_per_col) if vocal_lines else None
+            vocal_data = _wrap_vertical(vocal_lines, cells_per_dan) if vocal_lines else None
             prepared.append((sec_title, [], kind, vocal_data))
         else:  # lyrics
             prepared.append((sec_title, content, kind, None))
@@ -1017,7 +1022,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
     # Nombre max de colonnes d'une page (toutes pages : rendu à largeur
     # constante, la page la plus large gouverne total_w)
     max_cols = 1
-    max_col_height = rows_per_col
+    max_col_height = cells_per_dan
     for page_secs in pages:
         for items in page_secs:
             kind = items[2]
@@ -1152,7 +1157,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             ec = do_end_circle and is_last_tab
 
             if kind == "tab":
-                y = _draw_vertical_tab(out, data, rows_per_col, ml, y,
+                y = _draw_vertical_tab(out, data, cells_per_dan, ml, y,
                                        cell_w, cell_h, fs, total_w, mr, marker_w,
                                        title_offset, opts, end_circle=ec,
                                        vocal_data=vocal_data, syllable_fs=SYLLABLE_FS)
@@ -1219,56 +1224,6 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
 #     colonne de la dernière page) consomment chacun l'équivalent d'un dan
 
 # CM est défini avec les LayoutSpec (haut du fichier).
-NOMURA_PAGE_W = NOMURA.page_w      # A4 portrait = 21 x 29,7 cm = 595,28 pt (mesuré)
-NOMURA_PAGE_H = NOMURA.page_h      # = 841,89 pt (mesuré)
-# Constantes primaires de la mise en page : largeur et hauteur du cadre
-# de page, et la marge de dans M (unique) :
-#   - entre le haut du cadre et le sommet des dans
-#   - entre la droite du cadre et la droite du premier dan (marker inclus)
-#   - horizontale entre chaque dan
-#   - entre la gauche du 7ème dan et la gauche du cadre
-#   - entre le bas des dans et le bas du cadre
-# Tout le reste est dérivé : 7 dans = 14 sous-colonnes (notes + marker)
-# dans la largeur du cadre moins 8 marges ; 12 cases dans la hauteur du
-# cadre moins 2 marges.
-NOMURA_FRAME_W = NOMURA.frame_w          # largeur du cadre de page (mesurée, médiane 12 pages)
-NOMURA_FRAME_H = NOMURA.frame_h          # hauteur du cadre de page
-NOMURA_DAN_GAP = NOMURA.dan_gap           # marge de dans M (unique)
-NOMURA_ROWS = NOMURA.rows_per_col                # cases par dan
-NOMURA_MAX_DANS = NOMURA.max_dans             # dans par page (pleine)
-# dérivés
-NOMURA_FRAME_MARGIN_X = NOMURA.frame_margin_x
-NOMURA_FRAME_MARGIN = NOMURA.frame_margin_y
-NOMURA_CELL_W = (NOMURA.frame_w - 8 * NOMURA.dan_gap) / 14.0
-NOMURA_CELL_H = (NOMURA.frame_h - 2 * NOMURA.dan_gap) / NOMURA.rows_per_col
-
-# --------------------------------------------------------------------------- #
-# Layout Chindami-Kunkunshi (recueils ちんだみ工工四百選集, 23 x 15 cm paysage)
-# Constantes v1 d'après docs/svg-layout.md ; à recalibrer sur samples PDF.
-# --------------------------------------------------------------------------- #
-CHINDAMI_PAGE_W = CHINDAMI.page_w          # 651,96 pt mesurée (MediaBox), paysage
-CHINDAMI_PAGE_H = CHINDAMI.page_h          # 425,16 pt mesurée
-CHINDAMI_ROWS = CHINDAMI.rows_per_col                 # cases par pile (spec utilisateur, confirmé visuellement ~10-12)
-# Mesures sur samples/chindami-pdf p8/p9/p10-11 (1816x1181 px, 2,785 px/pt) :
-CHINDAMI_GRID_TOP = CHINDAMI.grid_top       # ~30,5 pt : haut de grille (p10)
-CHINDAMI_GRID_BOTTOM = CHINDAMI.grid_bottom  # ~387,4 pt : bas de grille (p10)
-CHINDAMI_CELL_H = CHINDAMI.cell_h         # ~29,8 pt par case, 12 cases/pile confirmé (p10)
-CHINDAMI_ROWS = CHINDAMI.rows_per_col
-CHINDAMI_PILE_W = CHINDAMI.pile_w         # ~34,8 pt : pas entre bords de piles (p10, constant)
-CHINDAMI_CELL_W = CHINDAMI.cell_w         # ~23,3 pt : sous-colonne notes (p10 : bord pile -> filet interne)
-CHINDAMI_MARKER_W = CHINDAMI.marker_w       # ~11,5 pt : sous-colonne marker (~1/3 de la pile)
-CHINDAMI_DAN_GAP = CHINDAMI.dan_gap                 # le pas de 97 px inclut déjà case+marker
-CHINDAMI_TITLE_W = CHINDAMI.title_w  # ~23,7 pt : colonne titre (droite)
-CHINDAMI_TITLE_GAP = CHINDAMI.title_gap               # TITLE_GAP vertical recyclé (règle : mêmes marges que la mise en page verticale)
-CHINDAMI_FRAME_MARGIN_X = CHINDAMI.frame_margin_x  # ~49,6 pt : bord gauche 1re pile
-CHINDAMI_FS = CHINDAMI.fs                   # kanji kandokoro/notes : encre ≈ 31 px = 11,1 pt
-                                   # sur les scans 工工四百選集 (p078-080) → em ≈ 12 ;
-                                   # 2 kanji en straddle = 24 pt ≤ cell_w 23,3+ε
-CHINDAMI_LYR_FS_RATIO = CHINDAMI.lyr_fs_ratio        # paroles : encre ≈ 28 px = 10,0 pt sur scans
-                                   # → lyr_fs = 0,9 × CHINDAMI_FS ≈ 10,8 pt
-CHINDAMI_LYR_SEP = CHINDAMI.lyr_gap              # marge ENCRE paroles → bord de pile (scans :
-                                   # droite d'encre 637 px → pile 656-670 px ≈ 12 pt)
-CHINDAMI_MAX_DANS = CHINDAMI.max_dans             # max mesuré : 15 piles sur p10 (morceau n°3, page pleine)
 
 
 # --------------------------------------------------------------------------- #
@@ -1469,16 +1424,16 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     musicno = song.meta.get("musicno", "")
     font_family = (opts or {}).get('font_family', 'serif')
 
-    cell_w = CHINDAMI_CELL_W
-    cell_h = CHINDAMI_CELL_H
     spec = spec or CHINDAMI
+    cell_w = spec.cell_w
+    cell_h = spec.cell_h
     marker_w = spec.marker_w if marker else 0.0
-    group_w = CHINDAMI_PILE_W
-    rows = CHINDAMI_ROWS
-    fs = CHINDAMI_FS
-    frame_x0, frame_y0 = CHINDAMI_FRAME_MARGIN_X, CHINDAMI_GRID_TOP
-    frame_x1 = CHINDAMI_PAGE_W - CHINDAMI_FRAME_MARGIN_X
-    frame_y1 = CHINDAMI_GRID_BOTTOM
+    group_w = spec.pile_w
+    rows = spec.cells_per_dan
+    fs = spec.fs
+    frame_x0, frame_y0 = spec.frame_margin_x, spec.grid_top
+    frame_x1 = spec.page_w - spec.frame_margin_x
+    frame_y1 = spec.grid_bottom
     title_offset = (spec.title_w + spec.title_gap) if (title or musicno) else 0
     syllable_fs = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else 0
 
@@ -1510,8 +1465,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     # à gauche de la dernière page de musique ; si la largeur restante ne suffit
     # pas, les colonnes de paroles passent sur des pages dédiées (per_page
     # colonnes par page). Jamais de débordement hors page, jamais de pile perdue.
-    max_dans = CHINDAMI_MAX_DANS
-    lyr_fs0 = int(CHINDAMI_FS * CHINDAMI_LYR_FS_RATIO)
+    max_dans = spec.max_dans
+    lyr_fs0 = int(spec.lyr_fs) if spec.lyr_fs else int(spec.fs * spec.lyr_size.get("medium", 0.75))
     lyr_col_w0 = int(lyr_fs0 * 1.33)
     lyr_gap0 = int(lyr_col_w0 * 0.8)
     lyr_sp0 = int(lyr_fs0 * 1.2)
@@ -1520,7 +1475,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     # en sous-colonnes ; l'excédent de colonnes passe sur des pages dédiées.
     # haut d'encre de la première glyphe = haut de grille (baseline =
     # GRID_TOP + 0,88·fs) ; bas d'encre de la dernière ≤ bas de grille
-    max_lyr_u = int((CHINDAMI_GRID_BOTTOM - CHINDAMI_GRID_TOP - lyr_fs0)
+    max_lyr_u = int((spec.grid_bottom - spec.grid_top - lyr_fs0)
                     // lyr_sp0) + 1
     lyr_cols = []
     for _, d in lyrics_sections:
@@ -1529,7 +1484,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
             for col_lines, indent in _lyrics_columns_layout(verse, base_indent):
                 lyr_cols.extend(_cap_lyr_column(col_lines, indent, max_lyr_u,
                                                 kinsoku=(opts or {}).get("kinsoku", "simple")))
-    # Marge grille ↔ paroles : CHINDAMI_LYR_SEP (12 pt, calibrée sur les
+    # Marge grille ↔ paroles : spec.lyr_gap (12 pt, calibrée sur les
     # scans) GARANTIE entre le bord DROIT de l'encre des paroles (demi-em +
     # ruby, qui va vers la droite, vers la grille) et le bord gauche de la
     # pile la plus à gauche. La pagination réserve sep0 = G + fs/2 +
@@ -1546,8 +1501,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     # pagination conservatrice : sep0 couvre la marge G + demi-em + ruby
     # global + demi-colonne (l'ancre droite laisse la place de la colonne
     # la plus à gauche dans la fenêtre frame_x0..anchor)
-    lyr_sep0 = CHINDAMI_LYR_SEP + lyr_fs0 / 2 + max_ruby_w + lyr_col_w0 / 2
-    frame_w = CHINDAMI_PAGE_W - 2 * CHINDAMI_FRAME_MARGIN_X
+    lyr_sep0 = spec.lyr_gap + lyr_fs0 / 2 + max_ruby_w + lyr_col_w0 / 2
+    frame_w = spec.page_w - 2 * spec.frame_margin_x
     per_lyr_page = max(1, int(frame_w // (lyr_col_w0 + lyr_gap0)))
 
     pages = []  # (c0, c1, is_first, lyr_slice)
@@ -1564,7 +1519,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         lyr_slice = None
         if i + take >= len(tab_columns) and lyr_next < len(lyr_cols):
             avail_w = (frame_w - title_offset * (1 if first else 0)
-                       - take * CHINDAMI_PILE_W)
+                       - take * spec.pile_w)
             n_fit = 0
             while (lyr_next + n_fit < len(lyr_cols) and
                    (n_fit + 1) * lyr_col_w0 + n_fit * lyr_gap0 + lyr_sep0 <= avail_w):
@@ -1586,7 +1541,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     svgs = []
     for pno, (c0, c1, is_first, lyr_slice) in enumerate(pages, 1):
         n_cols = c1 - c0
-        lyr_fs = int(fs * CHINDAMI_LYR_FS_RATIO)
+        lyr_fs = int(spec.lyr_fs) if spec.lyr_fs else int(fs * spec.lyr_size.get("medium", 0.75))
         lyr_col_w = int(lyr_fs * 1.33)
         lyrics_here = lyr_cols[lyr_slice[0]:lyr_slice[1]] if lyr_slice else []
         # marge grille↔paroles recyclée du vertical (12 + LYRICS_COL_W +
@@ -1599,12 +1554,12 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                         if seg:
                             page_ruby_w = max(page_ruby_w,
                                               _ruby_needs_extra_width(seg, lyr_fs))
-        # marge grille↔paroles : CHINDAMI_LYR_SEP garantie entre l'encre
+        # marge grille↔paroles : spec.lyr_gap garantie entre l'encre
         # droite des paroles (demi-em + ruby page-local, ruby vers la grille)
         # et le bord gauche de la pile la plus à gauche
-        lyr_sep = CHINDAMI_LYR_SEP + lyr_fs / 2 + page_ruby_w
-        total_w = CHINDAMI_PAGE_W
-        total_h = CHINDAMI_PAGE_H
+        lyr_sep = spec.lyr_gap + lyr_fs / 2 + page_ruby_w
+        total_w = spec.page_w
+        total_h = spec.page_h
         out = _svg_open_print(total_w, total_h, 23, 15, title=title)  # page 23 x 15 cm, 600 dpi
 
         # Titre vertical à droite de la page 1, surmonté du n° de morceau
@@ -1623,7 +1578,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         except ValueError:
             pass  # n° non numérique : rendu tel quel, pousse le titre pareil
         if is_first and (title or mno):
-            tx = frame_x1 - CHINDAMI_TITLE_W / 2
+            tx = frame_x1 - spec.title_w / 2
             title_top = frame_y0
             if mno:
                 MNO_FS = 11
@@ -1699,7 +1654,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
             lyr_sp = int(lyr_fs * 1.2)
             # ancre DROITE : la colonne la plus à droite est posée à
             # (bord gauche de la pile la plus à gauche) - lyr_sep, ce qui
-            # garantit la marge CHINDAMI_LYR_SEP entre son encre droite
+            # garantit la marge spec.lyr_gap entre son encre droite
             # (demi-em + ruby) et la grille ; pages dédiées paroles :
             # ancre = bord droit du cadre
             lyr_anchor = (x_right - n_cols * group_w) if n_cols > 0 else frame_x1
@@ -1742,12 +1697,12 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
         opts['shaku_sharp'] = False
         opts['shaku_circled'] = False
 
-    cell_h = NOMURA_CELL_H
-    cell_w = NOMURA_CELL_W
     spec = spec or NOMURA
+    cell_h = (spec.frame_h - 2 * spec.dan_gap) / spec.cells_per_dan
+    cell_w = (spec.frame_w - 8 * spec.dan_gap) / 14.0
     marker_w = cell_w * spec.marker_ratio if marker else 0.0
     group_w = cell_w + marker_w
-    rows = NOMURA_ROWS
+    rows = spec.cells_per_dan
     # Taille des notes ajustée visuellement ~26 pt (planches : encre ≈ 0,43 ×
     # case ; mincho moderne plus condensé que le pinceau d'origine).
     fs = 26.0
@@ -1796,7 +1751,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     LYRICS_MAX_COLS = 3
     lyrics_dans = (lyrics_col_count + LYRICS_MAX_COLS - 1) // LYRICS_MAX_COLS
 
-    first_cap = NOMURA_MAX_DANS - (1 if (title or tuning) else 0)
+    first_cap = spec.max_dans - (1 if (title or tuning) else 0)
     # La musique remplit les pages normalement (p.1 : 7 - 1 si titre,
     # puis 7 dans). Les couplets occupent les dans LIBRES de la dernière
     # page de musique ; l'excédent de dans virtuels passe sur des pages
@@ -1807,7 +1762,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     remaining_vocal = list(vocal_columns)
     pi = 0
     while remaining:
-        cap = first_cap if pi == 0 else NOMURA_MAX_DANS
+        cap = first_cap if pi == 0 else spec.max_dans
         take = remaining[:cap]
         take_v = remaining_vocal[:cap] if remaining_vocal else [None] * len(take)
         remaining = remaining[cap:]
@@ -1819,7 +1774,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     # dans virtuels de couplets acceptés sur la dernière page de musique
     if music_pages:
         last_cols = music_pages[-1][0]
-        last_cap = first_cap if len(music_pages) == 1 else NOMURA_MAX_DANS
+        last_cap = first_cap if len(music_pages) == 1 else spec.max_dans
         free = last_cap - len(last_cols)
     else:
         free = first_cap
@@ -1839,19 +1794,19 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
         pages.append(([], [], is_last, lyr_here, 0))
         lyr_col_offset += lyr_here * LYRICS_MAX_COLS
     while lyr_left > 0:
-        here = min(lyr_left, NOMURA_MAX_DANS)
+        here = min(lyr_left, spec.max_dans)
         lyr_left -= here
         pages.append(([], [], lyr_left == 0, here, lyr_col_offset))
         lyr_col_offset += here * LYRICS_MAX_COLS
 
     # --- Géométrie page --- #
-    frame_x0 = NOMURA_FRAME_MARGIN_X
-    frame_y0 = NOMURA_FRAME_MARGIN
-    frame_x1 = NOMURA_PAGE_W - NOMURA_FRAME_MARGIN_X
-    frame_y1 = NOMURA_PAGE_H - NOMURA_FRAME_MARGIN
+    frame_x0 = spec.frame_margin_x
+    frame_y0 = spec.frame_margin_y
+    frame_x1 = spec.page_w - spec.frame_margin_x
+    frame_y1 = spec.page_h - spec.frame_margin_y
     grid_h = rows * cell_h
     # la grille commence à une marge de dans M sous le haut du cadre
-    grid_y0 = frame_y0 + NOMURA_DAN_GAP
+    grid_y0 = frame_y0 + spec.dan_gap
 
     # 3 colonnes de couplets = 1 dan virtuel exactement
     LYRICS_COL_W = group_w / 3.0
@@ -1870,7 +1825,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
 
         out = []
         out.append('<?xml version="1.0" encoding="UTF-8"?>')
-        out.extend(_svg_open_print(NOMURA_PAGE_W, NOMURA_PAGE_H, 21, 29.7, title=title)[1:])  # A4, 600 dpi
+        out.extend(_svg_open_print(spec.page_w, spec.page_h, 21, 29.7, title=title)[1:])  # A4, 600 dpi
 
         # filet de cadre (origine du placement relatif)
         out.append(f'<rect x="{frame_x0}" y="{frame_y0}" '
@@ -1878,7 +1833,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                    f'fill="none" stroke="#333" stroke-width="1.5"/>')
 
         # numéro de page à l'extérieur du filet (bas)
-        out.append(f'<text x="{NOMURA_PAGE_W / 2}" y="{frame_y1 + 24}" '
+        out.append(f'<text x="{spec.page_w / 2}" y="{frame_y1 + 24}" '
                    f'text-anchor="middle" font-family="serif" '
                    f'font-size="11" fill="#555">{pi + 1}</text>')
 
@@ -1886,7 +1841,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
         # positions x (bord droit de chaque groupe), depuis le filet droit ;
         # le premier groupe (titre ou dan) est décalé d'une marge de dan
         # du filet, comme sur les planches
-        x_right = frame_x1 - NOMURA_DAN_GAP
+        x_right = frame_x1 - spec.dan_gap
         # 1. colonne titre
         if has_title_col:
             # le bloc titre consomme un dan complet (cases + marker).
@@ -1903,7 +1858,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                 ty_end = ty
             for i, ch in enumerate(tuning):
                 _vertical_char(out, ch, tx, ty_end + i * 20.0 + 14, 13.0, "#555")
-            x_right -= (group_w + NOMURA_DAN_GAP)
+            x_right -= (group_w + spec.dan_gap)
 
         # 2. dans (cases + marker)
         for ci, col in enumerate(cols):
@@ -1996,7 +1951,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                                     out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
                                                f'font-family="serif" font-size="{syl_fs}" '
                                                f'fill="#333">{escape(ch)}</text>')
-            x_right -= (group_w + NOMURA_DAN_GAP)
+            x_right -= (group_w + spec.dan_gap)
 
         # 3. paroles : colonnes verticales à gauche (dans virtuels de CETTE page)
         if lyr_here > 0:
@@ -2007,7 +1962,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                 dan_i = vi // LYRICS_MAX_COLS
                 col_i = vi % LYRICS_MAX_COLS
                 vx = (x_right - LYRICS_COL_W / 2
-                      - dan_i * (group_w + NOMURA_DAN_GAP)
+                      - dan_i * (group_w + spec.dan_gap)
                       - col_i * LYRICS_COL_W)
                 cy = grid_y0 + LYRICS_FS
                 if verse_indent > 0:
@@ -2023,11 +1978,11 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     return result
 
 
-def _wrap_vertical(items, rows_per_col):
-    """Découpe une liste plate en colonnes verticales de rows_per_col éléments."""
+def _wrap_vertical(items, cells_per_dan):
+    """Découpe une liste plate en colonnes verticales de cells_per_dan éléments."""
     columns = []
-    for i in range(0, len(items), rows_per_col):
-        columns.append(items[i : i + rows_per_col])
+    for i in range(0, len(items), cells_per_dan):
+        columns.append(items[i : i + cells_per_dan])
     return columns
 
 
@@ -2317,7 +2272,7 @@ VARIATION_SELECTORS = {chr(c) for c in range(0xFE00, 0xFE10)}
 SMALL_KANA = set("ぁぃぅぇぉゃゅょゎァィゥェォャュョヮ")
 
 
-def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
+def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
                            cell_w, cell_h, fs, total_w, mr, marker_w=0,
                            title_offset=0, opts=None, syllable_fs=None):
     """Rend des syllabes vocales dans la colonne marker.
@@ -2358,7 +2313,7 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
     for ci, vocal_col in enumerate(vocal_lines):
         x = total_w - mr - title_offset - (ci + 1) * group_w
         for ri, token in enumerate(vocal_col):
-            if ri >= rows_per_col:
+            if ri >= cells_per_dan:
                 break
             cy = y0 + ri * cell_h
             # Position dans la colonne marker (à droite de la case)
@@ -2385,7 +2340,7 @@ def _draw_vertical_vocal(out, vocal_lines, rows_per_col, ml, y0,
                         _emit(sx, sy + k * step, ch)
 
 
-def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
+def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
                        cell_w, cell_h, fs, total_w, mr, marker_w=0,
                        title_offset=0, opts=None, end_circle=False,
                        vocal_data=None, syllable_fs=None):
@@ -2399,14 +2354,14 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
     if n_cols == 0:
         return y0
     group_w = cell_w + marker_w
-    col_h = rows_per_col * cell_h
+    col_h = cells_per_dan * cell_h
 
     # Passe 1 : tous les rectangles de la grille
     col_positions = []
     for ci, col in enumerate(columns):
         x = total_w - mr - title_offset - (ci + 1) * group_w
         col_positions.append((x, col))
-        for ri in range(rows_per_col):
+        for ri in range(cells_per_dan):
             cy = y0 + ri * cell_h
             out.append(f'<rect x="{x}" y="{cy}" width="{cell_w}" '
                        f'height="{cell_h}" fill="none" stroke="#bbb" '
@@ -2420,7 +2375,7 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
     # Passe 2 : SYMBOLES de contrôle (flèches, répétitions du chant) — sous
     # le texte (les kandokoro et syllabes restent au-dessus de tout trait)
     for x, col in col_positions:
-        for ri in range(rows_per_col):
+        for ri in range(cells_per_dan):
             cy = y0 + ri * cell_h
             tok = col[ri] if ri < len(col) else ""
             rs, _bt, re_, vs, ve, _koe = _strip_repeat_marks(tok)
@@ -2441,7 +2396,7 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
         last_x, last_col = col_positions[-1]
         # Trouver la dernière case remplie (token non vide et non "-")
         last_filled_cy = None
-        for ri in range(rows_per_col - 1, -1, -1):
+        for ri in range(cells_per_dan - 1, -1, -1):
             tok = last_col[ri] if ri < len(last_col) else ""
             if tok and tok != "-":
                 last_filled_cy = y0 + ri * cell_h
@@ -2452,7 +2407,7 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
 
     # Passe 3 : toutes les NOTES par-dessus grille et symboles
     for x, col in col_positions:
-        for ri in range(rows_per_col):
+        for ri in range(cells_per_dan):
             cy = y0 + ri * cell_h
             tok = col[ri] if ri < len(col) else ""
             rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
@@ -2463,7 +2418,7 @@ def _draw_vertical_tab(out, columns, rows_per_col, ml, y0,
 
     # Passe 4 : rendre les syllabes vocales dans la colonne marker
     if vocal_data is not None and marker_w > 0 and syllable_fs is not None:
-        _draw_vertical_vocal(out, vocal_data, rows_per_col, ml, y0,
+        _draw_vertical_vocal(out, vocal_data, cells_per_dan, ml, y0,
                              cell_w, cell_h, fs, total_w, mr, marker_w,
                              title_offset, opts, syllable_fs)
 
@@ -2604,7 +2559,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     mr = max(mr, cell_w // 2)
     # Taille des couplets selon @lyrics_size
     lyrics_size = opts.get('lyrics_size', 'medium') if opts else 'medium'
-    h_lyrics_fs = int(fs * spec.lyrics_size.get(lyrics_size, 0.75))
+    h_lyrics_fs = int(fs * spec.lyr_size.get(lyrics_size, 0.75))
     h_lyrics_sp = int(h_lyrics_fs * spec.lyr_sp_ratio)  # espacement vertical entre lignes de couplets
     H_LYRICS_COL_W = int(h_lyrics_fs * spec.lyr_col_w_ratio)  # = LYRICS_COL_W vertical
     # avancée y pour l'air recyclé (12 + H_LYRICS_COL_W d'air d'encre)
@@ -2828,9 +2783,6 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
 # 8 cases/dan, 7 dans/page. Page 1 = titre/accordage/infos seuls ; pages
 # suivantes = tablature horizontale (gauche->droite, haut->bas), canvas
 # exactement WxH (@tuto_block, defaut 1280x720).
-TUTO_DEFAULT_BLOCK = (int(TUTO.page_w / PX), int(TUTO.page_h / PX))
-TUTO_DEFAULT_COLS = TUTO.cols_per_row    # cases par dan (video exemple)
-TUTO_DEFAULT_DANS = TUTO.rows_per_col    # dans par page (video exemple)
 
 
 def _draw_vocal_cell(out, elements, x, y, cell_w, cell_h, syl_fs, syl_pad):
@@ -2899,8 +2851,8 @@ def _tuto_block_size(song):
                     return w, h
             except ValueError:
                 pass
-        _warn_once("@tuto_block '%s' illisible, defaut %dx%d" % (raw, *TUTO_DEFAULT_BLOCK))
-    return TUTO_DEFAULT_BLOCK
+        _warn_once("@tuto_block '%s' illisible, defaut %dx%d" % (raw, *(int(TUTO.page_w / PX), int(TUTO.page_h / PX))))
+    return (int(TUTO.page_w / PX), int(TUTO.page_h / PX))
 
 
 TARGET_DPI = 600  # résolution cible d'impression, déclarée dans le SVG (Inkscape la détecte)
@@ -3051,9 +3003,9 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts, spec=None):
     W, H = _tuto_block_size(song)
     spec = spec or TUTO
     if cols is None:
-        cols = spec.cols_per_row
+        cols = spec.cells_per_dan
     if page_dans is None:
-        page_dans = spec.rows_per_col
+        page_dans = spec.dans_per_block
     ml = mt = mb = spec.u(spec.margin_l)
     # Marge droite renforée (16 + 1/4 de case) : les vocals placés sous le
     # straddle de la dernière colonne ne doivent pas toucher la bordure droite
@@ -3097,23 +3049,10 @@ def _wrap_horizontal(tokens, cols):
 # droite, à droite de tous les blocs (dans la marge), répété sur chaque page.
 # Paroles : la 1re page est RÉSERVÉE aux deux blocs de tablature, pleine
 # largeur ; les paroles n'y restent que si elles sont très compactes
-# (largeur réservée ≤ MEGA_LYRICS_INLINE_MAX_RATIO de la largeur utile),
+# (largeur réservée ≤ spec.lyr_inline_max_ratio de la largeur utile),
 # sinon elles sont paginées sur des pages A3 dédiées APRÈS les pages de
 # tablature, en colonnes verticales de droite à gauche. Pagination
 # automatique : 64 dans par page A3 (@dans_per_page / -p peut réduire ce plafond).
-MEGA_PAGE_W = MEGA.page_w      # A3 paysage = 42 x 29,7 cm = 1190,55 pt
-MEGA_PAGE_H = MEGA.page_h    # = 841,89 pt
-MEGA_ROWS = MEGA.rows_per_col             # cases par dan (hauteur d'un bloc vertical)
-MEGA_DANS_PER_BLOCK = MEGA.dans_per_block   # blocs verticaux (dans) par bloc horizontal
-MEGA_BLOCKS = MEGA.blocks            # blocs horizontaux empilés par page A3
-MEGA_MARGIN = MEGA.margin_l           # marge extérieure (pt) ~5% page (calage PJ mega)
-MEGA_BLOCK_GAP = MEGA.block_gap        # gap vertical entre les blocs ~1 case (calage PJ)
-MEGA_DANS_PER_PAGE = MEGA.blocks * MEGA.dans_per_block  # 64 dans / page A3
-# Les paroles ne restent dans la marge gauche de la 1re page que si elles sont
-# très compactes (largeur réservée ≤ ce ratio de la largeur utile de la grille).
-# Sinon : page 1 réservée aux deux blocs de tablature pleine largeur, paroles
-# paginées sur des pages A3 dédiées après les pages de tablature.
-MEGA_LYRICS_INLINE_MAX_RATIO = 0.15
 
 
 def _mega_title_halfw(text, fs):
@@ -3231,7 +3170,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     has_vocal = any(s[3] or s[2] == "vocal" for s in sections)
     marker = marker or has_vocal
 
-    # Géométrie verticale : MEGA_BLOCKS blocs de MEGA_ROWS cases + gaps, marges
+    # Géométrie verticale : spec.blocks blocs de spec.cells_per_dan cases + gaps, marges
     spec = spec or MEGA
     # @mega_dans N : colonnes (dans) par bloc horizontal en mega (défaut : spec)
     dans_per_block = spec.dans_per_block
@@ -3241,9 +3180,9 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         except ValueError:
             print(f"AVERTISSEMENT : @mega_dans non entier ({song.meta['mega_dans']!r}), "
                   f"défaut {spec.dans_per_block} utilisé", file=sys.stderr)
-    dans_per_page = MEGA_BLOCKS * dans_per_block
+    dans_per_page = spec.blocks * dans_per_block
     cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
-              / (spec.blocks * spec.rows_per_col))
+              / (spec.blocks * spec.cells_per_dan))
     fs = max(spec.fs_min, int(cell_h * spec.fs_ratio))  # ratio fs/case ~0,38 (calibrage Portama)
 
     # --- Colonne titre verticale (à droite de la grille, comme vertical) --- #
@@ -3256,7 +3195,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
     # --- Paroles verticales (à gauche de la 1re page) --- #
     lyrics_size = opts.get('lyrics_size', 'medium') if opts else 'medium'
-    LYRICS_FS = int(fs * spec.lyrics_size.get(lyrics_size, 0.75))
+    LYRICS_FS = int(fs * spec.lyr_size.get(lyrics_size, 0.75))
     LYRICS_SP = int(LYRICS_FS * spec.lyr_sp_ratio)
     LYRICS_COL_W = int(LYRICS_FS * spec.lyr_col_w_ratio)
     LYRICS_VERSE_GAP = int(LYRICS_COL_W * spec.lyr_verse_gap_ratio)
@@ -3279,15 +3218,15 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     # Page 1 réservée aux deux blocs de tablature, pleine largeur : les
     # paroles n'y restent que très compactes, sinon elles comprimeraient
     # cell_w. Elles passent alors sur des pages dédiées (voir plus bas).
-    tab_avail_w = MEGA_PAGE_W - 2 * MEGA_MARGIN - title_offset
+    tab_avail_w = spec.page_w - 2 * spec.margin_l - title_offset
     inline_lyrics = (n_verses > 0
-                     and lyrics_offset <= MEGA_LYRICS_INLINE_MAX_RATIO * tab_avail_w)
+                     and lyrics_offset <= spec.lyr_inline_max_ratio * tab_avail_w)
     if not inline_lyrics:
         lyrics_offset = 0
 
     # Géométrie horizontale : la largeur restante est répartie sur
     # dans_per_block dans (cell_w + marker_w = 1,5 cell_w avec marker)
-    avail_w = MEGA_PAGE_W - 2 * MEGA_MARGIN - title_offset - lyrics_offset
+    avail_w = spec.page_w - 2 * spec.margin_l - title_offset - lyrics_offset
     if marker:
         cell_w = avail_w / (dans_per_block * 1.5)
         marker_w = cell_w * spec.marker_ratio   # PJ mega : marker ~11,5 pt pour case ~22 pt
@@ -3298,7 +3237,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     SYLLABLE_FS = (min(int(cell_h * spec.syl_cell_ratio), int(marker_w * spec.syl_marker_ratio))
                    if marker_w > 0 else int(fs * spec.syl_fs_ratio))
 
-    # --- Flux de dans (colonnes de MEGA_ROWS cases), vocal synchronisé --- #
+    # --- Flux de dans (colonnes de spec.cells_per_dan cases), vocal synchronisé --- #
     # Entrées : (col, vocal_col|None, sec_title|None, sec_id) ou marqueur
     # ("__block__",) / ("__page__",) pour les sauts ::block / ::page
     stream = []
@@ -3310,13 +3249,13 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         if kind != "tab":
             continue
         sec_id += 1
-        cols = _wrap_vertical(list(content), MEGA_ROWS)
-        vcols = _wrap_vertical(list(vocal), MEGA_ROWS) if vocal else None
+        cols = _wrap_vertical(list(content), spec.cells_per_dan)
+        vcols = _wrap_vertical(list(vocal), spec.cells_per_dan) if vocal else None
         # Fin de chanson : compléter la dernière colonne par des cases VIDES
         # (pas de tenuto) pour que la chanson suivante commence sur une
         # colonne suivante
-        if cols and len(cols[-1]) < MEGA_ROWS:
-            pad = MEGA_ROWS - len(cols[-1])
+        if cols and len(cols[-1]) < spec.cells_per_dan:
+            pad = spec.cells_per_dan - len(cols[-1])
             # Case vide (pas de tenuto) : la chanson suivante commence sur
             # une colonne suivante, sans point ・ dans les cases de fin.
             cols[-1] = list(cols[-1]) + [EMPTY_TOKEN] * pad
@@ -3329,17 +3268,17 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     per_page = dans_per_page
     if page_dans:
         per_page = max(1, min(page_dans, dans_per_page))
-    pages = _mega_paginate(stream, dans_per_block, MEGA_BLOCKS, per_page, MEGA_ROWS)
+    pages = _mega_paginate(stream, dans_per_block, spec.blocks, per_page, spec.cells_per_dan)
 
     result = []
     for pi, page_blocks in enumerate(pages):
-        out = _svg_open_print(MEGA_PAGE_W, MEGA_PAGE_H, 42, 29.7, title=title)  # A3, 600 dpi
-        y0 = MEGA_MARGIN
+        out = _svg_open_print(spec.page_w, spec.page_h, 42, 29.7, title=title)  # A3, 600 dpi
+        y0 = spec.margin_l
         for bdan in page_blocks:
             if not bdan:
                 continue
             cols = [d[0] for d in bdan]
-            vcols = [d[1] if d[1] is not None else ["-"] * MEGA_ROWS for d in bdan]
+            vcols = [d[1] if d[1] is not None else ["-"] * spec.cells_per_dan for d in bdan]
             # Nom de chaque chanson (section) centré au-dessus de ses colonnes
             # dans ce bloc (runs contigus de même section)
             li = 0
@@ -3348,8 +3287,8 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                 while lj + 1 < len(bdan) and bdan[lj + 1][3] == bdan[li][3]:
                     lj += 1
                 if bdan[li][2]:
-                    x_right = MEGA_PAGE_W - MEGA_MARGIN - title_offset - li * group_w
-                    x_left = MEGA_PAGE_W - MEGA_MARGIN - title_offset - (lj + 1) * group_w
+                    x_right = spec.page_w - spec.margin_l - title_offset - li * group_w
+                    x_left = spec.page_w - spec.margin_l - title_offset - (lj + 1) * group_w
                     xc = (x_right + x_left) / 2
                     ty = y0 - 6
                     # Nom de chanson, ruby éventuel compris
@@ -3367,24 +3306,24 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                     if x_to_last < xc - hw - pad - 8:
                         _mega_span_arrow(out, xc - hw - pad, x_to_last, ay)
                 li = lj + 1
-            _draw_vertical_tab(out, cols, MEGA_ROWS, MEGA_MARGIN, y0,
-                               cell_w, cell_h, fs, MEGA_PAGE_W, MEGA_MARGIN,
+            _draw_vertical_tab(out, cols, spec.cells_per_dan, spec.margin_l, y0,
+                               cell_w, cell_h, fs, spec.page_w, spec.margin_l,
                                marker_w, title_offset, opts, end_circle=False,
                                vocal_data=vcols if has_vocal else None,
                                syllable_fs=SYLLABLE_FS)
-            y0 += MEGA_ROWS * cell_h + MEGA_BLOCK_GAP
+            y0 += spec.cells_per_dan * cell_h + spec.block_gap
 
         # Paroles verticales à gauche (1re page seulement, et uniquement si
         # assez compactes pour ne pas comprimer la grille ; la largeur est
         # réservée sur toutes les pages pour garder une géométrie constante)
         if pi == 0 and inline_lyrics:
-            ly0 = MEGA_MARGIN
+            ly0 = spec.margin_l
             vi = 0
             for _, data in lyrics_sections:
                 for verse in _split_verses(data):
                     layout = _lyrics_columns_layout(verse, _verse_indent_target(data))
                     for col_lines, verse_indent in layout:
-                        vx = (MEGA_MARGIN + lyrics_total_w
+                        vx = (spec.margin_l + lyrics_total_w
                               - vi * (LYRICS_COL_W + LYRICS_VERSE_GAP)
                               - LYRICS_COL_W / 2)
                         cy = ly0 + LYRICS_FS
@@ -3399,22 +3338,22 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
         # --- Titre vertical à droite de la grille (répété sur chaque page) --- #
         _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
-                          TUNING_SPACING)
+                          TUNING_SPACING, spec)
 
         out.append("</svg>")
         result.append("\n".join(out))
 
     # --- Pages dédiées aux paroles (si trop larges pour la 1re page) :
     # mêmes pages A3, même structure que la tablature : DEUX blocs
-    # horizontaux empilés de hauteur MEGA_ROWS*cell_h, colonnes verticales
+    # horizontaux empilés de hauteur spec.cells_per_dan*cell_h, colonnes verticales
     # de droite à gauche, repli impératif à la hauteur du bloc, saut d'une
     # colonne entre deux chansons, TITRE de chaque chanson en colonne
     # verticale 「…」 en gras DEVANT ses paroles (remplace le chapeau
     # horizontal) ; bloc du haut consommé → bloc du bas ; les deux consommés →
     # page suivante ; colonne titre verticale répétée --- #
     if lyrics_sections and not inline_lyrics:
-        blk_h = MEGA_ROWS * cell_h
-        usable_w = MEGA_PAGE_W - 2 * MEGA_MARGIN - title_offset
+        blk_h = spec.cells_per_dan * cell_h
+        usable_w = spec.page_w - 2 * spec.margin_l - title_offset
         col_step = LYRICS_COL_W + LYRICS_VERSE_GAP
         max_cols = max(1, int((usable_w + LYRICS_VERSE_GAP) / col_step))
         # Association chanson → paroles : remonter les blocs bruts (le
@@ -3480,16 +3419,16 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                 if song_title:   # paroles sans ::song : pas de titre
                     ly_cols.append(("T", song_title, si))
                 ly_cols.extend(scols)
-        per_page = MEGA_BLOCKS * max_cols
+        per_page = spec.blocks * max_cols
         ly_pages = [ly_cols[i:i + per_page]
                     for i in range(0, len(ly_cols), per_page)] or [[]]
         for page_cols in ly_pages:
-            out = _svg_open_print(MEGA_PAGE_W, MEGA_PAGE_H, 42, 29.7, title=title)
-            for b in range(MEGA_BLOCKS):
+            out = _svg_open_print(spec.page_w, spec.page_h, 42, 29.7, title=title)
+            for b in range(spec.blocks):
                 bcols = page_cols[b * max_cols:(b + 1) * max_cols]
                 if not bcols:
                     break
-                y0 = MEGA_MARGIN + b * (blk_h + MEGA_BLOCK_GAP)
+                y0 = spec.margin_l + b * (blk_h + spec.block_gap)
                 # (Plus de chapeau horizontal : le titre de chaque chanson
                 # est rendu en colonne verticale 「…」 en gras, devant ses
                 # paroles — cf. slot «T» ci-dessous.)
@@ -3497,7 +3436,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                 for vi, col in enumerate(bcols):
                     if col is None:
                         continue
-                    vx = (MEGA_PAGE_W - MEGA_MARGIN - title_offset
+                    vx = (spec.page_w - spec.margin_l - title_offset
                           - LYRICS_COL_W / 2 - vi * col_step)
                     if col[0] == "T":
                         # Titre vertical en gras, PLUS GRAND que le texte
@@ -3536,19 +3475,19 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                         cy = _render_vertical_text(out, line, vx, cy,
                                                    LYRICS_FS, "#333", LYRICS_SP)
             _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
-                              TUNING_SPACING)
+                              TUNING_SPACING, spec)
             out.append("</svg>")
             result.append("\n".join(out))
     return result
 
 
 def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
-                      TUNING_SPACING):
+                      TUNING_SPACING, spec):
     """Colonne titre vertical à droite de la page mega (titre, accordage,
     genre, auteur) — répétée sur chaque page, tablature comme paroles."""
     if title or tuning:
-        tx = MEGA_PAGE_W - MEGA_MARGIN - TITLE_W / 2
-        ty = MEGA_MARGIN
+        tx = spec.page_w - spec.margin_l - TITLE_W / 2
+        ty = spec.margin_l
         if title:
             ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
                                           TITLE_SPACING, links=True)
@@ -3667,7 +3606,6 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
                 out.append(f'<text x="{tx}" y="{ty}" text-anchor="{anchor}" '
                            f'font-family="serif" font-size="{tech_fs}" '
                            f'fill="black">{escape(sym)}</text>')
-
 
 
 def _strip_repeat_marks(tok):
