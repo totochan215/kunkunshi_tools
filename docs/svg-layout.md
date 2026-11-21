@@ -57,7 +57,7 @@ En-tête horizontal : titre à gauche (26 pt, ruby au-dessus), puis les blocs de
 - Espacement vertical entre caractères : `LYRICS_SP = int(LYRICS_FS * 1.2)` (19 par défaut)
 - Largeur d'une colonne de couplet : `LYRICS_COL_W = int(LYRICS_FS * 1.33)` (21 par défaut)
 - Gap horizontal entre colonnes de couplets : `LYRICS_VERSE_GAP = int(LYRICS_COL_W * 0.8)` (16 par défaut)
-- Couleur : `#333`
+- Couleur : `#333333`
 - Markup de saut de ligne : `|` dans une ligne de paroles force un saut de ligne (la ligne est éclatée à chaque `|`)
 - Numéros de couplet : les lignes commençant par `一、`, `二、`, etc. (numéraux CJK + 、) sont détectées via `VERSE_NUM_RE`. La longueur du numéro (ex : 2 pour `一、`) est utilisée comme indent : chaque ligne suivante du couplet reçoit un décalage vertical supplémentaire de `verse_indent * adjusted_sp` pour s'aligner sous le numéro.
 - Hayashi （…） : une ligne ENTIÈREMENT entre parenthèses (pleine ou demi-chasse, annotations ruby autorisées, ex. `（いめのかじありよ船《ふに》）` dans だんじゅかりゆし) est une INTERJECTION entre deux couplets (`_is_hayashi`) : elle ferme le couplet courant (`_split_verses`), forme une unité à part et n'est PAS un couplet — pas de marqueur, ne compte pas dans la numérotation ni dans l'indentation cible de la section (`_verse_indent_target`). Règle typo japonaise du rendu (dans `_lyrics_columns_layout`) : la parenthèse OUVRANTE pend juste AU-DESSUS du premier caractère du texte (une position) et le texte s'aligne sur le niveau des continuations indentées de la section (`base_indent`) — réalisé au niveau des données par `base_indent - 1` espaces pleine chasse en tête de ligne.
@@ -88,7 +88,7 @@ Rendu en mode vertical : les flèches sont placées dans la colonne marker (à d
 - ↑ (fin) : part de 85% du bas de la case (`cy + cell_h * 0.85`)
 - Taille : `fs` (même taille que les notes), police serif, couleur noire
 - Les flèches ne s'affichent que si `@marker on` (sinon `marker_w = 0`)
-- Style vectoriel commun aux layouts (flèches `|:`/`:|` et boucles vocales `(:`/`:)`) : coude horizontal/vertical tracé en un seul `<path>` (pas deux segments superposés), trait de même largeur et couleur que la grille du layout appelant (vertical/mega `#bbb` 0,75 pt ou 0,6 pt selon la variante de grille, horizontal `#999` 0,75 pt, tuto `#333` 0,6 pt)
+- Style vectoriel commun aux layouts (flèches `|:`/`:|` et boucles vocales `(:`/`:)`) : coude horizontal/vertical tracé en un seul `<path>` (pas deux segments superposés), trait de même largeur et couleur que la grille du layout appelant (vertical/mega `#bbbbbb` 0,75 pt ou 0,6 pt selon la variante de grille, horizontal `#999999` 0,75 pt, tuto `#333333` 0,6 pt)
 - **Ordre des couches (z-order)** : dans tous les layouts, le TEXTE (kandokoro, syllabes vocales, paroles, titres) est systématiquement au-dessus des traits — bordures de cases, filets de lignes/colonnes marker, symboles de boucles (flèches de répétition, répétitions du chant, marqueur de fin). Chaque grille est rendue en passes : 1) bordures (cases + bande marker), 2) symboles de contrôle, 3) notes, 4) vocaux. Exemple : une note à cheval (straddle) sur la bordure droite d'une case n'est jamais recouverte par le filet de la case suivante.
 
 Rendu en mode horizontal : les flèches sont placées dans la LIGNE marker sous la rangée de cases (`_h_repeat_arrow`, transposée) ; voir « Mise en page horizontale standard ».
@@ -110,7 +110,7 @@ Les syllabes vocales sont rendues dans la colonne marker (largeur `marker_w`) à
 - Taille de police : SYLLABLE_FS = min(int(cell_h * 0.26), int(marker_w * 0.8)) ≈ 15px avec les valeurs par défaut
 - Position x : centre de la colonne marker = `x + cell_w + marker_w / 2`
 - Position y : même que la position verticale de la note correspondante dans la case
-- Couleur : noire (#000) ou gris foncé (#333)
+- Couleur : noire (#000) ou gris foncé (#333333)
 - Police : serif (même que les notes) ou police japonaise si configuré
 
 Les syllabes peuvent chevaucher la bordure inférieure de la case. Jusqu'à 4 syllabes ou plus peuvent être empilées verticalement dans une seule case, espacées de `SYLLABLE_FS * 0.9` pour éviter le chevauchement visuel.
@@ -151,9 +151,9 @@ Par défaut, le rendu vertical produit un seul SVG non contraint. Pour une sorti
 
 Schéma coté : [svg-layout-horizontal.svg](svg/svg-layout-horizontal.svg).
 
-Lecture gauche→droite, haut→bas. Depuis la PR tuto, le layout `horizontal` partage avec `tuto` le straddle des croches chevauche la **bordure droite** des cases (`render_cell(..., orient="h")`). Les syllabes `::vocal`, les flèches de répétition et les symboles de répétition du chant sont en revanche dans une **LIGNE marker sous chaque rangée de cases** (transposée de la colonne marker verticale), pas dans les cases : hauteur `marker_h = cell_h // 2`, bordure comme la grille (`#999`, 0,75 pt), **arrêtée à droite de la dernière case de la rangée** (le dernier dan d'une section peut être incomplet) ; forcée si `::vocal` est présent, sinon pilotée par `@marker` (défaut `on`). Marge droite du layout horizontal élargie à **une demi-case** (`mr = max(margin_r, cell_w // 2)`) : le straddle sur la bordure droite, les ornements et les syllabes vocales peuvent déborder du bloc de tablature à droite, c'est normal.
+Lecture gauche→droite, haut→bas. Depuis la PR tuto, le layout `horizontal` partage avec `tuto` le straddle des croches chevauche la **bordure droite** des cases (`render_cell(..., orient="h")`). Les syllabes `::vocal`, les flèches de répétition et les symboles de répétition du chant sont en revanche dans une **LIGNE marker sous chaque rangée de cases** (transposée de la colonne marker verticale), pas dans les cases : hauteur `marker_h = cell_h // 2`, bordure comme la grille (`#999999`, 0,75 pt), **arrêtée à droite de la dernière case de la rangée** (le dernier dan d'une section peut être incomplet) ; forcée si `::vocal` est présent, sinon pilotée par `@marker` (défaut `on`). Marge droite du layout horizontal élargie à **une demi-case** (`mr = max(margin_r, cell_w // 2)`) : le straddle sur la bordure droite, les ornements et les syllabes vocales peuvent déborder du bloc de tablature à droite, c'est normal.
 
-- Syllabes vocales (`_draw_marker_line_vocal`, transposée de `_draw_vertical_vocal`) : taille `min(26% de cell_w, 80% de marker_h)` ; éléments d'un temps répartis le long de la case (`x_i = cx + cell_w·i/n`, i=0 sous la note principale) ; caractères combinants enfilés vers la droite (`step = 1,15·fs`) ; `ー` non pivoté ; points `・` et texte en #333 (couleur du texte vocal) ; parenthèses koedashi/koekiri ignorées (positions déjà rendues dans les cases).
+- Syllabes vocales (`_draw_marker_line_vocal`, transposée de `_draw_vertical_vocal`) : taille `min(26% de cell_w, 80% de marker_h)` ; éléments d'un temps répartis le long de la case (`x_i = cx + cell_w·i/n`, i=0 sous la note principale) ; caractères combinants enfilés vers la droite (`step = 1,15·fs`) ; `ー` non pivoté ; points `・` et texte en #333333 (couleur du texte vocal) ; parenthèses koedashi/koekiri ignorées (positions déjà rendues dans les cases).
 - Flèches de répétition (`_h_repeat_arrow`, transposée de `_render_repeat_arrow`) : trait vertical depuis le haut de la ligne (66% de `marker_h`), coude horizontal dans le sens de lecture, un seul `<path>`, triangle creux au bout ; `start` (|:) à 20% de la case pointe vers la droite, `end` (:|) à 80% pointe vers la gauche.
 - Répétitions du chant (`_h_vrep_marker`, transposée de `_render_vrep_marker`) : barre verticale, montant horizontal, disque creux (rayon 22% de `marker_h`) ; `end` ( )| ) à 80% de la case vers la gauche, `start` ( |( ) miroir à 20% vers la droite.
 
