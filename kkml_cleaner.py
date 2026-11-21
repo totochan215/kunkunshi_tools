@@ -20,6 +20,8 @@ Règles (voir AGENTS.md, section « Long terme ») :
 - séparateurs : une et une seule ligne vide entre le bloc des métadonnées et
   la première section, et entre chaque section (aucune ligne vide en tête
   si pas de métadonnées, aucune en fin de fichier) ;
+- fins de lignes : espaces simples/doubles (et tabulations) supprimés (trim)
+  sur toutes les lignes émises ;
 - complétion structurelle : `::vocal` manquante créée (cases vides alignées),
   `::vocal` désalignée réalignée si le total boucle (sinon avertissement),
   `::lyrics` manquante créée vide, `::tab` implicite rendue explicite,
@@ -292,7 +294,8 @@ def clean(text):
                 out.append(ln)
         out.append("::")
         out.append("")
-    return "\n".join(out).rstrip("\n") + "\n"
+    # trim des fins de lignes (espaces/tabulations) sur toute ligne émise
+    return "\n".join(ln.rstrip(" \t") for ln in out).rstrip("\n") + "\n"
 
 
 def main():
