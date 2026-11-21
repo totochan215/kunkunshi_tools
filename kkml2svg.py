@@ -33,6 +33,8 @@ Ruby (guide phonétique) dans @title et ::lyrics :
     Group-ruby : ｛安里屋｝《あさとや》 — ｛｝ délimite le groupe de base
     Jukugo     : ｛安《あ》里《さ》｝  — groupe avec annotations individuelles
     Taille ruby = 50% de la base. À droite en vertical, au-dessus en horizontal.
+    Échappement : \《 \》 \｛ \｝ = caractère littéral (l'antislash n'est retiré
+    que devant ces 4 délimiteurs ; ailleurs il reste littéral).
 """
 import sys
 import re
@@ -1112,7 +1114,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             vocal_data = items[3] if len(items) > 3 else None
             if sec_title:
                 out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                           f'font-size="14" fill="#333">{escape(sec_title)}</text>')
+                           f'font-size="14" fill="#333">{escape(_unescape(sec_title))}</text>')
                 y += 20
 
             is_last_tab = (si == last_tab_idx)
@@ -1287,31 +1289,40 @@ def _lyr_line_segments(s):
     (texte, atomique, unités d'affichage). Un groupe ruby composite
     ｛base｝《ruby》 ou une base suivie de son 《ruby》 forment UN segment
     atomique (le parseur ne doit jamais voir le groupe coupé en deux) ;
-    les annotations 《…》 ne comptent pas dans les unités d'affichage."""
+    les annotations 《…》 ne comptent pas dans les unités d'affichage.
+    Les délimiteurs échappés (\《 \》 \｛ \｝) restent dans le texte du segment
+    (la paire est conservée pour le re-parse) mais ne comptent que pour 1
+    unité affichée."""
     segs, buf, i = [], '', 0
     def flush():
         nonlocal buf
         if buf:
-            segs.append((buf, False, len(buf)))
+            segs.append((buf, False, len(_unescape(buf))))
             buf = ''
     while i < len(s):
         c = s[i]
-        if c == '｛':
-            j = s.find('｝', i + 1)
+        if c == ESCAPE and i + 1 < len(s) and s[i + 1] in ESCAPABLE:
+            buf += s[i:i + 2]  # paire échappée : conservée telle quelle, 1 unité affichée
+            i += 2
+        elif c == RUBY_OPEN:
+            j = _find_unescaped(s, RUBY_CLOSE, i + 1)
             end = len(s) if j == -1 else j + 1
-            if j != -1 and end < len(s) and s[end] == '《':
-                k = s.find('》', end + 1)
+            if j != -1 and end < len(s) and s[end] == ANNOT_OPEN:
+                k = _find_unescaped(s, ANNOT_CLOSE, end + 1)
                 end = len(s) if k == -1 else k + 1
             flush()
-            units = max(1, j - i - 1) if j != -1 else max(1, end - i)
+            base_raw = s[i + 1:j] if j != -1 else s[i + 1:end]
+            units = max(1, len(_unescape(base_raw)))
             segs.append((s[i:end], True, units))
             i = end
-        elif c == '《':
-            k = s.find('》', i + 1)
+        elif c == ANNOT_OPEN:
+            k = _find_unescaped(s, ANNOT_CLOSE, i + 1)
             end = len(s) if k == -1 else k + 1
             if buf:
-                prev = buf[-1]
-                buf = buf[:-1]
+                if len(buf) >= 2 and buf[-2] == ESCAPE and buf[-1] in ESCAPABLE:
+                    prev, buf = buf[-2:], buf[:-2]  # base échappée : l'antislash va avec
+                else:
+                    prev, buf = buf[-1], buf[:-1]
                 flush()
                 segs.append((prev + s[i:end], True, 1))
             else:
@@ -1391,12 +1402,15 @@ def _cap_lyr_column(col_lines, indent, max_u, kinsoku="simple"):
                     break
                 if not atomic:
                     cut = _kinsoku_adjust_cut(text, allowed, kinsoku) if allowed > 0 else 0
+                    if (cut > 0 and cut < len(text) and text[cut - 1] == ESCAPE
+                            and text[cut] in ESCAPABLE):
+                        cut -= 1  # ne jamais couper entre un antislash et le délimiteur échappé
                     if cut > 0:
                         li += text[:cut]
                         text = text[cut:]
-                        u = len(text)  # le reste est du texte plaine : u = len
+                        u = len(_unescape(text))  # le reste est du texte clair : unités affichées
                     close_sub()
-                    continue  # reste du texte plaine : sous-colonne neuve
+                    continue  # reste du texte clair : sous-colonne neuve
                 close_sub()
                 if u > max_u - cur_ind:
                     # segment insécable plus grand qu'une sous-colonne :
@@ -2153,12 +2167,12 @@ def _h_lyrics_atoms(segment, fs):
                 # petit kana / chōonpu : insécable du caractère précédent
                 if ch in combine and atoms:
                     prev_s, prev_w = atoms[-1]
-                    atoms[-1] = (prev_s + ch, prev_w + _char_w(ch, fs))
+                    atoms[-1] = (prev_s + _escape(ch), prev_w + _char_w(ch, fs))
                 else:
-                    atoms.append((ch, _char_w(ch, fs)))
+                    atoms.append((_escape(ch), _char_w(ch, fs)))
         elif seg["type"] == "mono":
             base, ruby = seg["base"], seg["ruby"] or ""
-            atoms.append((f"{base}《{ruby}》" if ruby else base,
+            atoms.append((f"{_escape(base)}{ANNOT_OPEN}{_escape(ruby)}{ANNOT_CLOSE}" if ruby else _escape(base),
                           _char_w(base, fs)))
         elif seg["type"] == "group":
             base, ruby = seg["base"], seg["ruby"] or ""
@@ -2167,13 +2181,13 @@ def _h_lyrics_atoms(segment, fs):
                 if ruby:
                     r = ruby[round(len(ruby) * j / n):
                              round(len(ruby) * (j + 1) / n)]
-                    atoms.append((f"｛{ch}｝《{r}》" if r else ch,
+                    atoms.append((f"{RUBY_OPEN}{_escape(ch)}{RUBY_CLOSE}{ANNOT_OPEN}{_escape(r)}{ANNOT_CLOSE}" if r else _escape(ch),
                                   _char_w(ch, fs)))
                 else:
-                    atoms.append((ch, _char_w(ch, fs)))
+                    atoms.append((_escape(ch), _char_w(ch, fs)))
         elif seg["type"] == "jukugo":
             for base, ruby in seg["items"]:
-                atoms.append((f"{base}《{ruby}》" if ruby else base,
+                atoms.append((f"{_escape(base)}{ANNOT_OPEN}{_escape(ruby)}{ANNOT_CLOSE}" if ruby else _escape(base),
                               sum(_char_w(c, fs) for c in base)))
     return atoms
 
@@ -2637,8 +2651,8 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
         end_x = _render_horizontal_text(out, title, ml, ty0, 26, "black")
     elif title:
         out.append(f'<text x="{ml}" y="{ty0}" font-family="serif" '
-                   f'font-size="26" fill="black">{escape(title)}</text>')
-        end_x = ml + sum(_char_w(c, 26) for c in title)
+                   f'font-size="26" fill="black">{escape(_unescape(title))}</text>')
+        end_x = ml + sum(_char_w(c, 26) for c in _unescape(title))
     else:
         end_x = ml
     # Métadonnées dans l'ordre commun (_meta_blocks) : toutes à la suite du
@@ -2671,7 +2685,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
             y += GAP_TAB_LYRICS
         if sec_title:
             out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                       f'font-size="14" fill="#333">{escape(sec_title)}</text>')
+                       f'font-size="14" fill="#333">{escape(_unescape(sec_title))}</text>')
             y += 20
         if kind == "tab":
             for ri, row in enumerate(data):
@@ -2750,7 +2764,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                             _render_horizontal_text(out, ln, ml, y, h_lyrics_fs, "#444")
                         else:
                             out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
-                                       f'font-size="{h_lyrics_fs}" fill="#444">{escape(ln)}</text>')
+                                       f'font-size="{h_lyrics_fs}" fill="#444">{escape(_unescape(ln))}</text>')
                         y += h_lyrics_sp
             y += 6
         prev_kind = kind
@@ -2919,7 +2933,7 @@ def _tuto_title_page(song, W, H):
             _render_horizontal_text(out, title, cx - est / 2, y, fs_t, "black")
         else:
             out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
-                       f'font-size="{fs_t}" fill="black">{escape(title)}</text>')
+                       f'font-size="{fs_t}" fill="black">{escape(_unescape(title))}</text>')
         y += fs_t * 1.6
     tuning = song.meta.get("tuning", "")
     if tuning:
@@ -2939,7 +2953,7 @@ def _tuto_title_page(song, W, H):
             lines.append(v)
     for ln in lines:
         out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
-                   f'font-size="{max(9, int(H * 0.028))}" fill="#777">{escape(ln)}</text>')
+                   f'font-size="{max(9, int(H * 0.028))}" fill="#777">{escape(_unescape(ln))}</text>')
         y += H * 0.05
     out.append("</svg>")
     return "\n".join(out)
@@ -2955,7 +2969,7 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
     y0 = mt
     if sec_title:
         out.append(f'<text x="{W - 16:g}" y="14" text-anchor="end" font-family="serif" '
-                   f'font-size="12" fill="#999">{escape(sec_title)}</text>')
+                   f'font-size="12" fill="#999">{escape(_unescape(sec_title))}</text>')
         y0 += 10
     syl_fs = int(fs * 0.6)
     syl_pad = max(2, int(syl_fs * 0.28))  # marge sous la baseline (ne touche pas la bordure)
@@ -3063,7 +3077,7 @@ def _mega_title_halfw(text, fs):
     if _has_ruby(segments):
         return _plan_horizontal_ruby(segments, fs)[1] / 2
     w = 0.0
-    for ch in text:
+    for ch in _unescape(text):
         w += fs if ord(ch) > 0x2E80 else fs * 0.55
     return w / 2
 
@@ -3091,7 +3105,7 @@ def _mega_song_header(out, text, xc, ty):
     else:
         out.append(f'<text x="{xc:g}" y="{ty:g}" text-anchor="middle" '
                    f'font-family="serif" font-size="11" fill="#555">'
-                   f'{escape(text)}</text>')
+                   f'{escape(_unescape(text))}</text>')
 
 
 def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=None):
@@ -4210,30 +4224,74 @@ def _vertical_char(out, ch, x, y, fs, fill, family="serif"):
 # Le ruby est rendu à droite de la base en mode vertical, au-dessus en
 # mode horizontal. Taille = 50% de la base. Contact cadre-à-cadre (pas
 # d'interstice). Le bloc ruby est centré sur le bloc base.
+# Échappement : \《 \》 \｛ \｝ = délimiteur littéral (antislash retiré).
 
 RUBY_OPEN  = "｛"   # U+FF5B
 RUBY_CLOSE = "｝"   # U+FF5D
 ANNOT_OPEN = "《"   # U+300A
 ANNOT_CLOSE = "》"  # U+300B
+ESCAPE = "\\"
+ESCAPABLE = RUBY_OPEN + RUBY_CLOSE + ANNOT_OPEN + ANNOT_CLOSE  # ｛｝《》
+
+
+def _unescape(s):
+    """Retire l'antislash des délimiteurs échappés (\《 \》 \｛ \｝ -> 《 》 ｛ ｝).
+    Un antislash devant tout autre caractère reste littéral."""
+    if ESCAPE not in s:
+        return s
+    out = []
+    i = 0
+    while i < len(s):
+        if s[i] == ESCAPE and i + 1 < len(s) and s[i + 1] in ESCAPABLE:
+            out.append(s[i + 1])
+            i += 2
+        else:
+            out.append(s[i])
+            i += 1
+    return "".join(out)
+
+
+def _escape(s):
+    """Échappe les délimiteurs ruby — ré-émission en syntaxe KKML depuis du
+    texte déjà analysé (ex. _h_lyrics_atoms)."""
+    if not any(c in ESCAPABLE for c in s):
+        return s
+    return "".join(ESCAPE + c if c in ESCAPABLE else c for c in s)
+
+
+def _find_unescaped(s, ch, start):
+    """Prochaine occurrence de ch non échappée (non précédée d'un antislash)."""
+    j = s.find(ch, start)
+    while j > 0 and s[j - 1] == ESCAPE:
+        j = s.find(ch, j + 1)
+    return j
 
 
 def _parse_ruby(text):
     """Découpe une chaîne en segments avec ou sans ruby.
-    Retourne une liste de dicts : plain, mono, group, jukugo."""
+    Retourne une liste de dicts : plain, mono, group, jukugo.
+    Les délimiteurs échappés (\《 \》 \｛ \｝) sont des caractères littéraux :
+    l'antislash est retiré et ils ne structurent pas le texte."""
     segments = []
     i = 0
     n = len(text)
     plain_start = i
 
     while i < n:
+        if text[i] == ESCAPE and i + 1 < n and text[i + 1] in ESCAPABLE:
+            i += 2  # délimiteur échappé : caractère littéral du texte clair
+            continue
         # Groupe ｛...｝
         if text[i] == RUBY_OPEN:
             if i > plain_start:
-                segments.append({"type": "plain", "text": text[plain_start:i]})
+                segments.append({"type": "plain", "text": _unescape(text[plain_start:i])})
             i += 1  # skip ｛
             group_start = i
             depth = 1
             while i < n and depth > 0:
+                if text[i] == ESCAPE and i + 1 < n and text[i + 1] in ESCAPABLE:
+                    i += 2
+                    continue
                 if text[i] == RUBY_OPEN:
                     depth += 1
                 elif text[i] == RUBY_CLOSE:
@@ -4244,48 +4302,61 @@ def _parse_ruby(text):
             i += 1  # skip ｝
             plain_start = i
 
-            if ANNOT_OPEN in group_content:
+            if _find_unescaped(group_content, ANNOT_OPEN, 0) != -1:
                 # Jukugo-ruby : annotations individuelles dans le groupe
                 items = []
                 ji = 0
                 base_start = ji
                 while ji < len(group_content):
+                    if (group_content[ji] == ESCAPE and ji + 1 < len(group_content)
+                            and group_content[ji + 1] in ESCAPABLE):
+                        ji += 2
+                        continue
                     if group_content[ji] == ANNOT_OPEN:
+                        close_idx = _find_unescaped(group_content, ANNOT_CLOSE, ji)
+                        if close_idx == -1:
+                            raise ValueError(f"annotation ruby sans {ANNOT_CLOSE} : {group_content!r}")
                         if ji > base_start:
-                            base_chars = group_content[base_start:ji]
-                            close_idx = group_content.index(ANNOT_CLOSE, ji)
-                            ruby_text = group_content[ji+1:close_idx]
+                            base_chars = _unescape(group_content[base_start:ji])
+                            ruby_text = _unescape(group_content[ji+1:close_idx])
                             items.append((base_chars, ruby_text))
-                            ji = close_idx + 1
-                            base_start = ji
-                        else:
-                            close_idx = group_content.index(ANNOT_CLOSE, ji)
-                            ji = close_idx + 1
-                            base_start = ji
+                        ji = close_idx + 1
+                        base_start = ji
                     else:
                         ji += 1
                 if base_start < len(group_content):
-                    for ch in group_content[base_start:]:
-                        items.append((ch, None))
+                    rest = group_content[base_start:]
+                    ri = 0
+                    while ri < len(rest):
+                        if rest[ri] == ESCAPE and ri + 1 < len(rest) and rest[ri + 1] in ESCAPABLE:
+                            items.append((rest[ri + 1], None))
+                            ri += 2
+                        else:
+                            items.append((rest[ri], None))
+                            ri += 1
                 segments.append({"type": "jukugo", "items": items})
             else:
                 # Group-ruby simple : ｛base｝《ruby》
                 if i < n and text[i:i+1] == ANNOT_OPEN:
-                    close_idx = text.index(ANNOT_CLOSE, i)
-                    ruby_text = text[i+1:close_idx]
+                    close_idx = _find_unescaped(text, ANNOT_CLOSE, i)
+                    if close_idx == -1:
+                        raise ValueError(f"annotation ruby sans {ANNOT_CLOSE} : {text!r}")
+                    ruby_text = _unescape(text[i+1:close_idx])
                     segments.append({"type": "group",
-                                     "base": group_content, "ruby": ruby_text})
+                                     "base": _unescape(group_content), "ruby": ruby_text})
                     i = close_idx + 1
                     plain_start = i
                 else:
                     # Groupe sans annotation -> plain
-                    segments.append({"type": "plain", "text": group_content})
+                    segments.append({"type": "plain", "text": _unescape(group_content)})
 
         elif text[i:i+1] == ANNOT_OPEN:
             # Mono-ruby : base = dernier caractère du texte précédent
-            base_text = text[plain_start:i]
-            close_idx = text.index(ANNOT_CLOSE, i)
-            ruby_text = text[i+1:close_idx]
+            base_text = _unescape(text[plain_start:i])
+            close_idx = _find_unescaped(text, ANNOT_CLOSE, i)
+            if close_idx == -1:
+                raise ValueError(f"annotation ruby sans {ANNOT_CLOSE} : {text!r}")
+            ruby_text = _unescape(text[i+1:close_idx])
             if len(base_text) > 0:
                 if len(base_text) > 1:
                     segments.append({"type": "plain", "text": base_text[:-1]})
@@ -4297,7 +4368,7 @@ def _parse_ruby(text):
             i += 1
 
     if plain_start < n:
-        segments.append({"type": "plain", "text": text[plain_start:]})
+        segments.append({"type": "plain", "text": _unescape(text[plain_start:])})
 
     return segments
 
@@ -4480,7 +4551,7 @@ def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif"):
     Avec ruby : utilise _render_vertical_ruby."""
     segments = _parse_ruby(text)
     if not _has_ruby(segments):
-        for ch in text:
+        for ch in _unescape(text):
             if ch.isspace():
                 y += sp
                 continue
@@ -4502,7 +4573,7 @@ def _vertical_text_height(text, fs, sp):
     if _has_ruby(segments):
         return _plan_vertical_ruby(segments, fs, sp)[1]
     h = 0.0
-    for ch in text:
+    for ch in _unescape(text):
         if ch.isspace():
             h += sp
             continue
@@ -4612,7 +4683,7 @@ def _h_text_w(text, fs):
     segments = _parse_ruby(text)
     if _has_ruby(segments):
         return _plan_horizontal_ruby(segments, fs)[1]
-    return sum(_char_w(c, fs) for c in text)
+    return sum(_char_w(c, fs) for c in _unescape(text))
 
 
 def _render_horizontal_text(out, text, x, y, fs, fill, family="serif"):
@@ -4622,8 +4693,8 @@ def _render_horizontal_text(out, text, x, y, fs, fill, family="serif"):
     segments = _parse_ruby(text)
     if not _has_ruby(segments):
         out.append(f'<text x="{x:g}" y="{y:g}" font-family="{family}" '
-                   f'font-size="{fs:g}" fill="{fill}">{escape(text)}</text>')
-        return x + sum(_char_w(ch, fs) for ch in text)
+                   f'font-size="{fs:g}" fill="{fill}">{escape(_unescape(text))}</text>')
+        return x + sum(_char_w(ch, fs) for ch in _unescape(text))
     return _render_horizontal_ruby(out, segments, x, y, fs, fill, family)
 
 

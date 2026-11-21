@@ -131,9 +131,10 @@ Détails :
 - `《》` (U+300A / U+300B) = chevrons japonais pleine largeur, délimitent l'annotation
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
+- Échappement : `\《` `\》` `\｛` `\｝` (antislash + délimiteur) produisent le caractère littéral, non interprété comme ruby/groupe (ex. `x\《y》` affiche `x《y》` sans ruby). L'antislash n'est retiré que devant ces 4 caractères ; ailleurs il reste littéral. Valable dans les métadonnées et les paroles.
 - En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les sections `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et sections. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::vocal` est par construction déjà écrit en phonétique.
 
-TODO: considérer l'usage de `〈〉` (yamakakko) plutôt que `《》` (nijuyamakakko).
+- ✅ (2026-11-20) Décision : les délimiteurs restent `《》` / `｛｝` (pas de passage aux yamakakko `〈〉`) ; le besoin de caractères littéraux est couvert par l'échappement par antislash ci-dessus.
 
 ## Cellules de tablature
 
