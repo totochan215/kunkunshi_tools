@@ -61,6 +61,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@composer`      | —          | Compositeur (ruby supporté)       |
 | `@lyricist`      | —          | Parolier (ruby supporté)          |
 | `@origin`        | —          | Origine (ruby supporté)           |
+| `@source`        | —          | Source de la version du morceau (chindami, nomura, site web, production perso…) — texte libre (ruby supporté, liens `[texte](url)`, voir ci-dessous) |
 | `@comment`       | —          | Commentaire                       |
 | `@tuning`        | `本調子`   | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
 | `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ). Stockée telle quelle, sans effet sur le rendu SVG à ce jour |
@@ -132,7 +133,13 @@ Détails :
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
 - Échappement : `\《` `\》` `\｛` `\｝` (antislash + délimiteur) produisent le caractère littéral, non interprété comme ruby/groupe (ex. `x\《y》` affiche `x《y》` sans ruby). L'antislash n'est retiré que devant ces 4 caractères ; ailleurs il reste littéral. Valable dans les métadonnées et les paroles.
-- En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@genre` ainsi que dans les sections `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et sections. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::vocal` est par construction déjà écrit en phonétique.
+
+### Liens hypertexte (métadonnées uniquement)
+- Syntaxe Markdown dans les valeurs de métadonnées (`@title`, `@author`, `@composer`, `@lyricist`, `@origin`, `@source`, `@genre`) : `[label](url)` — seul le `label` est affiché, rendu cliquable (`<a xlink:href="url">`) dans le SVG. Ex. `@source [Portama](https://exemple.jp/)`.
+- Le `label` peut contenir du ruby (`《》` `｛｝`) ; l'`url` ne doit pas contenir de parenthèses et n'est jamais affichée.
+- `\[` et `\]` produisent un crochet littéral (pour écrire `[x](y)` en clair).
+- Les liens ne sont pas interprétés dans les paroles (`::lyrics`) ni dans `::tab`/`::vocal`.
+- En KKML, le ruby peut être utilisé dans les métadonnées `@title` `@author`, `@composer`, `@lyricist`, `@origin`, `@source`, `@genre` ainsi que dans les sections `::lyrics` (et ses variantes `::lyrics-kanji` `::lyrics-ruby` `::lyrics-kana` et `::lyrics-romaji`). Il n'est pas utilisable pour les autres métadonnées et sections. En particulier, `::tab` est basé sur une syntaxe qui ne doit pas être altérée par un ruby,  et `::vocal` est par construction déjà écrit en phonétique.
 
 - ✅ (2026-11-20) Décision : les délimiteurs restent `《》` / `｛｝` (pas de passage aux yamakakko `〈〉`) ; le besoin de caractères littéraux est couvert par l'échappement par antislash ci-dessus.
 

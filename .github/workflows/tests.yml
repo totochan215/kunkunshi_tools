@@ -24,3 +24,5 @@ jobs:
         run: python3 tests/test_testbushi.py
       - name: Lancer les tests d'échappement ruby
         run: python3 tests/test_escape.py
+      - name: Lancer les tests @source et liens
+        run: python3 tests/test_source.py
