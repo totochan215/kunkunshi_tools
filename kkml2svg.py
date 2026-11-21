@@ -406,6 +406,7 @@ class Block:
         self.label = label
         self.lines = []
         self.variant = None  # variante phonétique des sections lyrics-*
+        self.leading_straddle = None  # token '/B' en tête de bloc ::tab : straddle sur le bord précédent de la 1re case
 
 
 def parse_kkml(text):
@@ -557,9 +558,26 @@ def parse_kkml(text):
                     if changed:
                         _info_input_variant(tk, tk2)
                     norm.append(tk2)
-                current.lines.append(
-                    [REST_TOKEN if tk in REST_VARIANTS else tk for tk in norm]
-                )
+                norm = [REST_TOKEN if tk in REST_VARIANTS else tk for tk in norm]
+                # Token de tête "/B" d'un bloc ::tab : note à cheval sur le bord
+                # PRÉCÉDENT de la première case (rang -1 ; haut en vertical, gauche en
+                # horizontal) — ne consomme PAS de case.
+                if not current.lines and norm and norm[0].startswith("/"):
+                    lead = norm[0][1:]
+                    while len(lead) > 1 and lead[-1] in TECHNIQUE_CHARS:
+                        _warn_once(f"techniques ignorées sur le straddle de tête '{norm[0]}'")
+                        lead = lead[:-1]
+                    if lead:
+                        current.leading_straddle = lead
+                    else:
+                        _warn_once("'/' seul en tête de ::tab : ignoré")
+                    norm = norm[1:]
+                stray = [tk for tk in norm if tk.startswith("/")]
+                if stray:
+                    _warn_once(f"tokens {stray} commençant par '/' hors tête de bloc ::tab : ignorés "
+                               f"(straddle de tête = '/B' en tout premier token du bloc)")
+                    norm = [tk for tk in norm if not tk.startswith("/")]
+                current.lines.append(norm)
             elif current.kind == "lyrics":
                 # Tolérance IME : ｜ (U+FF5C, barre pleine chasse) = |.
                 # Normalisé au parsing pour que la construction des colonnes
@@ -763,7 +781,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     tuning = song.meta.get("tuning", "本調子")
 
     # Regrouper les sections en 4-uplets
-    sections = []   # (section_title, content, kind, vocal_flat=None)
+    sections = []   # (section_title, content, kind, vocal_flat=None, lead_straddle=None)
     cur_title = None
     last_tab_index = -1
     last_tab_blk = None
@@ -773,18 +791,18 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
             continue
         if blk.kind in ("block", "page"):
             # Marqueur de saut mega : conservé dans l'ordre du flux
-            sections.append((cur_title, [], blk.kind, None))
+            sections.append((cur_title, [], blk.kind, None, None))
             continue
         if blk.kind == "tab":
             flat = []
             for toks in blk.lines:
                 flat.extend(toks)
-            sections.append((cur_title, flat, "tab", None))
+            sections.append((cur_title, flat, "tab", None, getattr(blk, "leading_straddle", None)))
             last_tab_index = len(sections) - 1
             last_tab_blk = blk
             cur_title = None
         elif blk.kind == "lyrics":
-            sections.append((cur_title, blk.lines, "lyrics", None))
+            sections.append((cur_title, blk.lines, "lyrics", None, None))
             cur_title = None
         elif blk.kind == "vocal":
             # Syllabes vocales : 1 token (séparé par espaces) = 1 syllabe.
@@ -800,14 +818,14 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
                     n = len(tab_toks)
                     padded = list(syls[:n]) + ["-"] * max(0, n - len(syls))
                     vocal_flat.extend(padded)
-                sec_title, tab_content, tab_kind, _ = sections[last_tab_index]
-                sections[last_tab_index] = (sec_title, tab_content, tab_kind, vocal_flat)
+                sec_title, tab_content, tab_kind, _, lead0 = sections[last_tab_index]
+                sections[last_tab_index] = (sec_title, tab_content, tab_kind, vocal_flat, lead0)
             else:
                 # Pas de section ::tab précédente : aplatir tel quel (non rendu)
                 vocal_flat = []
                 for syls in blk.lines:
                     vocal_flat.extend(syls)
-                sections.append((cur_title, [], "vocal", vocal_flat))
+                sections.append((cur_title, [], "vocal", vocal_flat, None))
             cur_title = None
 
     # --- Pré-calcul des dimensions (constantes du spec, en unité native) --- #
@@ -848,6 +866,11 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     }
 
     font_family = opts.get('font_family', 'serif')
+    if layout not in ("vertical", "horizontal", "mega") and any(
+            len(s) > 4 and s[4] for s in sections):
+        print("AVERTISSEMENT : straddle de tête '/B' non supporté en layout "
+              f"{layout!r} (vertical/horizontal/mega seulement), ignoré",
+              file=sys.stderr)
     if layout == "chindami":
         svgs = _render_chindami(song, sections, font_size, marker, opts, spec=spec)
     elif layout == "nomura":
@@ -944,23 +967,24 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
     LYRICS_COL_W = int(LYRICS_FS * spec.lyr_col_w_ratio)  # largeur d'une colonne de couplet
     LYRICS_VERSE_GAP = int(LYRICS_COL_W * spec.lyr_verse_gap_ratio)  # gap horizontal entre colonnes
 
-    prepared = []  # (sec_title, data, kind, vocal_data=None)
+    prepared = []  # (sec_title, data, kind, vocal_data=None, lead=None)
     for items in sections:
         sec_title = items[0]
         content = items[1]
         kind = items[2]
         vocal_lines = items[3] if len(items) > 3 else None
+        lead = items[4] if len(items) > 4 else None
         
         if kind == "tab":
             columns = _wrap_vertical(content, cells_per_dan)
             vocal_data = _wrap_vertical(vocal_lines, cells_per_dan) if vocal_lines else None
-            prepared.append((sec_title, columns, kind, vocal_data))
+            prepared.append((sec_title, columns, kind, vocal_data, lead))
         elif kind == "vocal":
             # Standalone vocal without tab - wrap and store
             vocal_data = _wrap_vertical(vocal_lines, cells_per_dan) if vocal_lines else None
-            prepared.append((sec_title, [], kind, vocal_data))
+            prepared.append((sec_title, [], kind, vocal_data, None))
         else:  # lyrics
-            prepared.append((sec_title, content, kind, None))
+            prepared.append((sec_title, content, kind, None, None))
 
     # --- Pagination (SVG multipage) --- #
     # Découpe des sections tab en pages de page_dans dans max,
@@ -971,11 +995,13 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
         vocal = sec[3] if len(sec) > 3 else None
         if vocal is not None:
             vocal = vocal[start:end]
-        return (sec_title, data[start:end], kind, vocal)
+        lead = sec[4] if len(sec) > 4 and start == 0 else None
+        return (sec_title, data[start:end], kind, vocal, lead)
 
     def _page_slice_rest(sec, data):
         vocal = sec[3] if len(sec) > 3 else None
-        return (sec[0], data, sec[2], vocal)
+        lead = sec[4] if len(sec) > 4 else None
+        return (sec[0], data, sec[2], vocal, lead)
 
     pages = [prepared]
     if page_dans:
@@ -1148,6 +1174,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
             data = items[1]
             kind = items[2]
             vocal_data = items[3] if len(items) > 3 else None
+            lead = items[4] if len(items) > 4 else None
             if sec_title:
                 out.append(f'<text x="{ml}" y="{y}" font-family="serif" '
                            f'font-size="14" fill="#333">{escape(_unescape(sec_title))}</text>')
@@ -1160,7 +1187,8 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
                 y = _draw_vertical_tab(out, data, cells_per_dan, ml, y,
                                        cell_w, cell_h, fs, total_w, mr, marker_w,
                                        title_offset, opts, end_circle=ec,
-                                       vocal_data=vocal_data, syllable_fs=SYLLABLE_FS)
+                                       vocal_data=vocal_data, syllable_fs=SYLLABLE_FS,
+                                       lead=lead)
                 y += 6
             else:  # lyrics — rendu vertical après la grille, ignoré ici
                 pass
@@ -2340,10 +2368,32 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
                         _emit(sx, sy + k * step, ch)
 
 
+def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient="v"):
+    """Straddle de tête '/B' : note à cheval sur le bord PRÉCÉDENT de la
+    première case — supérieur en vertical, gauche en horizontal (miroir du
+    straddle A/B par rapport au centre de la case). cy_edge = bord concerné
+    (haut de la case en vertical, haut de la rangée en horizontal)."""
+    ss = int(fs * 0.713)
+    ss_pos = int(fs * 0.713)
+    if orient == "h":
+        x = cx - cell_w * 0.5
+        y = cy_edge + cell_h / 2 + ss * 0.318
+    else:
+        x = cx
+        y = cy_edge - ss_pos / 3
+    if note == "尖" and opts and opts.get('shaku_circled'):
+        r = ss * 0.713
+        ccy = (y + ss * 0.35) if orient == "v" else (cy_edge + cell_h / 2 + 2)
+        out.append(f'<circle cx="{x}" cy="{ccy}" r="{r}" '
+                   f'fill="none" stroke="black" stroke-width="0.8"/>')
+    out.append(f'<text x="{x}" y="{y}" text-anchor="middle" font-family="serif" '
+               f'font-size="{ss}" fill="black">{_note_svg(note, ss, opts)}</text>')
+
+
 def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
                        cell_w, cell_h, fs, total_w, mr, marker_w=0,
                        title_offset=0, opts=None, end_circle=False,
-                       vocal_data=None, syllable_fs=None):
+                       vocal_data=None, syllable_fs=None, lead=None):
     """Dessine des colonnes verticales, de droite à gauche.
     Deux passes : d'abord tous les rectangles (grille), puis toutes les notes
     par-dessus, pour que les notes à cheval ne soient pas masquées.
@@ -2415,6 +2465,12 @@ def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
                 base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
             render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                         cell_w, cell_h, opts)
+
+    # Straddle de tête (rang -1, token '/B') : au-dessus de la première case
+    # de la première colonne (bord supérieur)
+    if lead and col_positions:
+        x0 = col_positions[0][0]
+        _draw_lead_straddle(out, lead, x0 + cell_w / 2, y0, cell_w, cell_h, fs, opts)
 
     # Passe 4 : rendre les syllabes vocales dans la colonne marker
     if vocal_data is not None and marker_w > 0 and syllable_fs is not None:
@@ -2535,12 +2591,13 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     for items in sections:
         sec_title, content, kind = items[0], items[1], items[2]
         vocal = items[3] if len(items) > 3 else None
+        lead = items[4] if len(items) > 4 else None
         if kind == "tab":
             rows = _wrap_horizontal(content, cols)
             vrows = _wrap_horizontal(vocal, cols) if vocal else []
-            prepared.append((sec_title, rows, kind, vrows))
+            prepared.append((sec_title, rows, kind, vrows, lead))
         else:
-            prepared.append((sec_title, content, kind, []))
+            prepared.append((sec_title, content, kind, [], None))
 
     # Marges recyclées de la mise en page VERTICALE, transposées :
     # - titre → tablature : air d'encre = TITLE_GAP + demi-solde de la
@@ -2566,7 +2623,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     GAP_TAB_LYRICS = spec.u(spec.lyr_gap) + H_LYRICS_COL_W + int(h_lyrics_fs * 0.88) - 6
     # Ligne marker (transposée de la colonne marker verticale) : sous chaque
     # rangée de cases ; forcée si ::vocal est présent, sinon @marker (défaut on)
-    has_vocal = any(v for (_t, _d, k, v) in prepared if k == "tab" and v)
+    has_vocal = any(v for (_t, _d, k, v, *_r) in prepared if k == "tab" and v)
     marker_on = marker or has_vocal
     marker_h = int(cell_h * spec.marker_ratio) if marker_on else 0
     h_syl_fs = (min(int(cell_w * spec.syl_cell_ratio), int(marker_h * spec.syl_marker_ratio))
@@ -2588,7 +2645,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     # Largeur des paroles sans repli (usable_w infini) : mesurée avec le
     # même moteur de rendu de texte (_render_horizontal_text → end x).
     lyrics_flow_w = 0.0
-    for sec_title, data, kind, _v in prepared:
+    for sec_title, data, kind, _v, *_r in prepared:
         if kind == "lyrics":
             for indent, txt, _rub in _h_lyrics_layout(data, h_lyrics_fs, None):
                 w = (indent * h_lyrics_fs
@@ -2604,7 +2661,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                   int(lyrics_flow_w) + ml) + mr
     total_h = header_h + mt + GAP_HEADER
     prev_kind = None
-    for sec_title, data, kind, _v in prepared:
+    for sec_title, data, kind, _v, *_r in prepared:
         if sec_title:
             total_h += 22
         if kind in ("lyrics", "vocal") and prev_kind == "tab":
@@ -2672,7 +2729,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     y = header_h + mt + GAP_HEADER
     # Trouver la dernière section tab/tab-lyrics pour end_circle
     last_tab_idx = -1
-    for si, (_, _, kind, _v) in enumerate(prepared):
+    for si, (_, _, kind, _v, *_r) in enumerate(prepared):
         if kind == "tab":
             last_tab_idx = si
     # @end_circle déprécié/ignoré : le ┘● est désormais rendu par le token
@@ -2683,7 +2740,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     h_last_filled = None
 
     prev_kind = None
-    for si, (sec_title, data, kind, vrows0) in enumerate(prepared):
+    for si, (sec_title, data, kind, vrows0, lead) in enumerate(prepared):
         if kind in ("lyrics", "vocal") and prev_kind == "tab":
             y += GAP_TAB_LYRICS
         if sec_title:
@@ -2734,6 +2791,10 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                 for base_tok, x in row_notes:
                     render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
                                 cell_w, cell_h, opts, orient="h")
+                # Straddle de tête (rang -1) : bord GAUCHE de la 1re case de la 1re rangée
+                if ri == 0 and lead:
+                    _draw_lead_straddle(out, lead, ml + cell_w / 2, y,
+                                        cell_w, cell_h, fs, opts, orient="h")
                 # Syllabes vocales en dernier (texte)
                 if marker_h > 0 and vrows0 and ri < len(vrows0):
                     _draw_marker_line_vocal(out, vrows0[ri], row, ml,
@@ -3016,7 +3077,7 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts, spec=None):
     fs = max(spec.fs_min, int(cell_h * spec.fs_ratio))  # ratio fs/case ~0,38 (calibrage Portama)
 
     pages = [_tuto_title_page(song, W, H)]
-    for sec_title, content, kind, vocal in sections:
+    for sec_title, content, kind, vocal, lead in sections:
         if kind != "tab":
             continue
         rows = _wrap_horizontal(content, cols)
@@ -3238,11 +3299,11 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                    if marker_w > 0 else int(fs * spec.syl_fs_ratio))
 
     # --- Flux de dans (colonnes de spec.cells_per_dan cases), vocal synchronisé --- #
-    # Entrées : (col, vocal_col|None, sec_title|None, sec_id) ou marqueur
+    # Entrées : (col, vocal_col|None, sec_title|None, sec_id, lead|None) ou marqueur
     # ("__block__",) / ("__page__",) pour les sauts ::block / ::page
     stream = []
     sec_id = -1
-    for sec_title, content, kind, vocal in sections:
+    for sec_title, content, kind, vocal, lead in sections:
         if kind in ("block", "page"):
             stream.append(("__%s__" % kind,))
             continue
@@ -3263,7 +3324,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                 vcols[-1] = list(vcols[-1]) + ["-"] * pad
         for ci, col in enumerate(cols):
             stream.append((col, vcols[ci] if vcols and ci < len(vcols) else None,
-                           sec_title, sec_id))
+                           sec_title, sec_id, lead if ci == 0 else None))
 
     per_page = dans_per_page
     if page_dans:
@@ -3305,6 +3366,11 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                         _mega_span_arrow(out, xc + hw + pad, x_to_first, ay)
                     if x_to_last < xc - hw - pad - 8:
                         _mega_span_arrow(out, xc - hw - pad, x_to_last, ay)
+                lead = bdan[li][4] if len(bdan[li]) > 4 else None
+                if lead:
+                    x_first = spec.page_w - spec.margin_l - title_offset - (li + 1) * group_w
+                    _draw_lead_straddle(out, lead, x_first + cell_w / 2, y0,
+                                        cell_w, cell_h, fs, opts, orient="v")
                 li = lj + 1
             _draw_vertical_tab(out, cols, spec.cells_per_dan, spec.margin_l, y0,
                                cell_w, cell_h, fs, spec.page_w, spec.margin_l,
