@@ -149,7 +149,7 @@ def clean(text):
 
     # 1. ::tab implicite -> explicite : parse_kkml crée déjà un Block("tab")
     #    implicite ; rien à faire ici si saw_marker, sinon info.
-    if tab_blks and "::tab" not in text and "::section" not in text:
+    if tab_blks and "::tab" not in text and "::section" not in text and "::song" not in text:
         info("section ::tab implicite rendue explicite")
 
     # 2. ::tab manquante -> créée vide
