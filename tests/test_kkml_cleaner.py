@@ -450,3 +450,14 @@ for v in _k._split_verses(lines41):
         else:
             assert ind == 3, (col[0], ind)          # continuation : indent uniforme 3
 print("OK indentation uniforme : en-têtes 3 caractères pleine chasse -> indent 3 partout")
+
+# 42. trim des fins de lignes : espaces simples/doubles (et tabulations)
+#     supprimés sur toutes les lignes émises
+t42 = "@title t\n::tab\n" + chr(0x5408) + " " + chr(0x5de5) + "  \n::\n::lyrics\n" + chr(0x4e00) + chr(0x3001) + "a   \n\n::\n"
+out42, _err42, rc42 = run_clean(t42)
+assert rc42 == 0
+assert "  \n" not in out42 and "\t" not in out42, repr(out42)
+assert chr(0x5408) + " " + chr(0x5de5) + "\n" in out42          # ::tab re-joint, sans espace final
+assert chr(0x4e00) + chr(0x3001) + "a\n" in out42               # ::lyrics trimmé
+assert run_clean(out42)[0] == out42                              # idempotent
+print("OK trim des fins de lignes (espaces/tabulations)")
