@@ -688,12 +688,12 @@ class LayoutSpec:
     syl_fs_ratio: float = 0.6        # repli si pas de marker (horizontal/tuto)
     # Attributs de design (surchargeables par métadonnées @*_color/@*_width/@arrow_fill) :
     # couleurs au format HTML (#rgb, #rrggbb ou nom), épaisseurs en pt
-    text_color: str = "black"        # couleur de tout le texte (fill racine SVG)
-    frame_color: str = "#333"        # filet de cadre de page (nomura)
+    text_color: str = "#000000"      # couleur de tout le texte (fill racine SVG)
+    frame_color: str = "#333333"     # filet de cadre de page (nomura)
     frame_width: float = 1.5         # épaisseur du filet de cadre
-    cell_color: str = "#bbb"         # grille des cases (et bande marker)
+    cell_color: str = "#bbbbbb"      # grille des cases (et bande marker)
     cell_width: float = 0.75         # épaisseur des filets de cases
-    arrow_color: str = "#bbb"        # flèches de répétition (et symboles vocaux ⚪⚫)
+    arrow_color: str = "#bbbbbb"     # flèches de répétition (et symboles vocaux ⚪⚫)
     arrow_width: float = 0.75        # épaisseur des flèches de boucles
     arrow_fill: bool = False         # têtes de flèches remplies (on) ou creuses (off)
 
@@ -721,7 +721,7 @@ HORIZONTAL = LayoutSpec(
     marker_ratio=0.5,             # marker_h = cell_h // 2 (bande sous la rangée)
     title_fs=26 * PX, meta_fs=12 * PX,
     lyr_gap=12 * PX,
-    cell_color="#999", arrow_color="#999")
+    cell_color="#999999", arrow_color="#999999")
 
 NOMURA = LayoutSpec(
     name="nomura", unit="pt",
@@ -735,7 +735,7 @@ NOMURA = LayoutSpec(
     dan_gap=14.5, max_dans=7, cells_per_dan=12, dans_per_block=7,
     marker_ratio=1.0,             # sous-colonne marker = pleine case
     fs=26.0,
-    cell_color="#333", cell_width=0.6, arrow_color="#333", arrow_width=0.6)
+    cell_color="#333333", cell_width=0.6, arrow_color="#333333", arrow_width=0.6)
 
 CHINDAMI = LayoutSpec(
     name="chindami", unit="pt",
@@ -756,7 +756,7 @@ TUTO = LayoutSpec(
     cell_w=0, cell_h=0, fs=0, fs_ratio=0.38,    # dérivés du bloc (voir _render_tuto)
     cells_per_dan=8, max_dans=7, dans_per_block=7,  # 8 cases/dan, 7 dans/page
     marker_ratio=0,                              # pas de bande marker en tuto
-    cell_color="#999")
+    cell_color="#999999")
 
 MEGA = LayoutSpec(
     name="mega", unit="pt",
@@ -969,8 +969,8 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
         svgs = [s.replace('font-family="serif"', f'font-family="{font_family}"')
                 for s in svgs]
     # Post-traitement : couleur de texte (métadonnée @text_color ou défaut du
-    # layout ; 'black' = rendu historique, inchangé octet par octet)
-    if opts.get('text_color') and opts['text_color'] != 'black':
+    # layout ; noir = rendu historique, inchangé octet par octet)
+    if opts.get('text_color') and opts['text_color'].lower() not in ('black', '#000000'):
         svgs = [_apply_text_color(s, opts['text_color']) for s in svgs]
     return svgs
 
@@ -2503,9 +2503,9 @@ def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
     group_w = cell_w + marker_w
     col_h = cells_per_dan * cell_h
     o = opts or {}
-    cs = o.get('cell_color') or '#bbb'
+    cs = o.get('cell_color') or '#bbbbbb'
     csw = o.get('cell_width') or 0.75
-    acol = o.get('arrow_color') or '#bbb'
+    acol = o.get('arrow_color') or '#bbbbbb'
     asw = o.get('arrow_width') or 0.75
     afill = bool(o.get('arrow_fill', False))
 
@@ -2592,7 +2592,7 @@ def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
 # 3b. Rendu horizontal (gauche→droite, haut→bas) — mode songbook
 # --------------------------------------------------------------------------- #
 def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
-                    stroke="#999", sw=0.75, arrow_fill=False):
+                    stroke="#999999", sw=0.75, arrow_fill=False):
     """Flèche de répétition dans la LIGNE marker horizontale (sous la rangée
     de cases) — transposée de _render_repeat_arrow (colonne marker
     verticale) : trait vertical depuis le haut de la ligne, puis coude
@@ -2621,7 +2621,7 @@ def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
                    f'{hx:g},{vy + tri_size:g} {hx - tri_w:g},{vy:g}"/>')
     out.append('</g>')
 def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
-                   stroke="#999", sw=0.75, arrow_fill=False):
+                   stroke="#999999", sw=0.75, arrow_fill=False):
     """Symbole de répétition du chant dans la ligne marker horizontale —
     transposé de _render_vrep_marker : barre verticale, montant horizontal,
     disque creux. 'end' ( )| ) : barre à ~80% de la case, montant vers la
@@ -3133,7 +3133,7 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
     # de la bordure inférieure, sans chevaucher la note).
     out = _tuto_svg_open(W, H)
     o = opts or {}
-    cs = o.get('cell_color') or '#999'
+    cs = o.get('cell_color') or '#999999'
     csw = o.get('cell_width') or 0.75
     y0 = mt
     if sec_title:
@@ -3832,7 +3832,7 @@ def _strip_repeat_marks(tok):
 
 
 def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
-                         stroke="#bbb", sw=0.75, arrow_fill=False):
+                         stroke="#bbbbbb", sw=0.75, arrow_fill=False):
     """Dessine une flèche de répétition en graphiques vectoriels SVG.
 
     La flèche part de la bordure gauche de la colonne marker (x_left),
@@ -3876,7 +3876,7 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
                    f'{hx + tri_size:g},{vy:g} {hx:g},{tip_y:g}"/>')
     out.append('</g>')
 def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
-                        stroke="#bbb", sw=0.75, arrow_fill=False):
+                        stroke="#bbbbbb", sw=0.75, arrow_fill=False):
     """Symbole de répétition du chant dans la colonne marker — même
     géométrie et même taille que l'ancien marqueur @end_circle
     (_render_end_circle) : barre horizontale sur 66% de marker_w, montant

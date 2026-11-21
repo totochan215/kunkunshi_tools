@@ -37,28 +37,28 @@ def render(kkml, layout):
 
 
 # 1. Défauts du design de chaque mise en page (champs LayoutSpec)
-assert k.VERTICAL.cell_color == "#bbb" and k.VERTICAL.cell_width == 0.75
-assert k.VERTICAL.arrow_color == "#bbb" and k.VERTICAL.arrow_width == 0.75
-assert k.HORIZONTAL.cell_color == "#999" and k.HORIZONTAL.arrow_color == "#999"
-assert k.NOMURA.cell_color == "#333" and k.NOMURA.cell_width == 0.6
-assert k.NOMURA.frame_color == "#333" and k.NOMURA.frame_width == 1.5
-assert k.NOMURA.arrow_color == "#333" and k.NOMURA.arrow_width == 0.6
-assert k.CHINDAMI.cell_color == "#bbb" and k.CHINDAMI.cell_width == 0.6
-assert k.TUTO.cell_color == "#999" and k.TUTO.cell_width == 0.75
-assert k.MEGA.cell_color == "#bbb" and k.MEGA.cell_width == 0.75
-assert all(not s.arrow_fill and s.text_color == "black" for s in k.LAYOUTS.values())
+assert k.VERTICAL.cell_color == "#bbbbbb" and k.VERTICAL.cell_width == 0.75
+assert k.VERTICAL.arrow_color == "#bbbbbb" and k.VERTICAL.arrow_width == 0.75
+assert k.HORIZONTAL.cell_color == "#999999" and k.HORIZONTAL.arrow_color == "#999999"
+assert k.NOMURA.cell_color == "#333333" and k.NOMURA.cell_width == 0.6
+assert k.NOMURA.frame_color == "#333333" and k.NOMURA.frame_width == 1.5
+assert k.NOMURA.arrow_color == "#333333" and k.NOMURA.arrow_width == 0.6
+assert k.CHINDAMI.cell_color == "#bbbbbb" and k.CHINDAMI.cell_width == 0.6
+assert k.TUTO.cell_color == "#999999" and k.TUTO.cell_width == 0.75
+assert k.MEGA.cell_color == "#bbbbbb" and k.MEGA.cell_width == 0.75
+assert all(not s.arrow_fill and s.text_color == "#000000" for s in k.LAYOUTS.values())
 print("OK LayoutSpec : défauts de design des 6 mises en page")
 
 # 2. Sans métadonnée : rendu historique (couleurs/épaisseurs littérales du layout)
 svg, err = render("@title t\n" + TAB, "vertical")
-assert 'stroke="#bbb" stroke-width="0.75"' in svg          # grille
-assert 'fill="none" stroke="#bbb" stroke-width="0.75"' in svg  # tête de flèche creuse
+assert 'stroke="#bbbbbb" stroke-width="0.75"' in svg          # grille
+assert 'fill="none" stroke="#bbbbbb" stroke-width="0.75"' in svg  # tête de flèche creuse
 assert 'fill="black"' in svg and '<svg fill=' not in svg     # texte noir, pas de fill racine
 svg_h, _ = render("@title t\n" + TAB, "horizontal")
-assert 'stroke="#999" stroke-width="0.75"' in svg_h
+assert 'stroke="#999999" stroke-width="0.75"' in svg_h
 svg_n, _ = render("@title t\n" + TAB, "nomura")
-assert 'stroke="#333" stroke-width="1.5"' in svg_n           # cadre
-assert 'stroke="#333" stroke-width="0.6"' in svg_n           # grille
+assert 'stroke="#333333" stroke-width="1.5"' in svg_n           # cadre
+assert 'stroke="#333333" stroke-width="0.6"' in svg_n           # grille
 print("OK sans métadonnée : défauts du layout rendus tels quels")
 
 # 3. Les 8 métadonnées surchargent le layout (vertical)
@@ -88,11 +88,11 @@ print("OK nomura : @frame_* sur le filet de cadre, @cell_* sur la grille")
 
 # 6. @arrow_width ne touche que les flèches, pas la grille (et inversement)
 svg, _ = render("@title t\n@arrow_width 2\n" + TAB, "vertical")
-assert 'stroke="#bbb" stroke-width="0.75"' in svg
-assert 'stroke="#bbb" stroke-width="2"' in svg
+assert 'stroke="#bbbbbb" stroke-width="0.75"' in svg
+assert 'stroke="#bbbbbb" stroke-width="2"' in svg
 svg, _ = render("@title t\n@cell_width 2\n" + TAB, "vertical")
-assert 'stroke="#bbb" stroke-width="2"' in svg
-assert 'stroke="#bbb" stroke-width="0.75"' in svg   # flèches gardent leur épaisseur
+assert 'stroke="#bbbbbb" stroke-width="2"' in svg
+assert 'stroke="#bbbbbb" stroke-width="0.75"' in svg   # flèches gardent leur épaisseur
 print("OK @cell_width et @arrow_width indépendants")
 
 # 7. Valeurs invalides : AVERTISSEMENT + défaut du layout conservé
@@ -100,15 +100,15 @@ svg, err = render("@title t\n@text_color pas-une-couleur!\n@cell_width abc\n"
                   "@arrow_width -2\n@arrow_fill maybe\n" + TAB, "vertical")
 assert err.count("AVERTISSEMENT") == 4, err
 assert 'fill="black"' in svg and '<svg fill=' not in svg
-assert 'stroke="#bbb" stroke-width="0.75"' in svg
-assert 'fill="none" stroke="#bbb" stroke-width="0.75"' in svg
+assert 'stroke="#bbbbbb" stroke-width="0.75"' in svg
+assert 'fill="none" stroke="#bbbbbb" stroke-width="0.75"' in svg
 print("OK valeurs invalides : 4 AVERTISSEMENT, défauts du layout appliqués")
 
-# 8. Horizontal : défauts #999, surcharge par @cell_color (les flèches gardent
-#    @arrow_color, donc #999 tant que @arrow_color n'est pas renseigné)
+# 8. Horizontal : défauts #999999, surcharge par @cell_color (les flèches gardent
+#    @arrow_color, donc #999999 tant que @arrow_color n'est pas renseigné)
 svg, _ = render("@title t\n@cell_color teal\n" + TAB, "horizontal")
 assert 'fill="none" stroke="teal" stroke-width="0.75"' in svg   # grille
-assert 'fill="none" stroke="#999" stroke-width="0.75"' in svg   # flèches inchangées
+assert 'fill="none" stroke="#999999" stroke-width="0.75"' in svg   # flèches inchangées
 print("OK horizontal : surcharge @cell_color, flèches sur @arrow_color")
 
 # 9. Cleaner : les 8 métadonnées sont reconnues et conservées (idempotent)

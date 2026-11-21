@@ -77,10 +77,10 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@shaku_sharp`   | `off`      | Rend les 尺♯ accompagnés du symbole ♯ : `on` : activé, `off` : désactivé |
 | `@lyrics_size`   | `medium`   | Taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
 | `@kinsoku`       | `simple`   | Kinsoku (禁則処理, [JLREQ W3C](https://www.w3.org/TR/jlreq/)) au repli des paroles `::lyrics` quand une ligne est coupée au caractère (layout `chindami`) : `simple` = 行頭禁則 avec追い出し (fermetures, ponctuation 、。，・：；, 々〻, ー, petits kana) + 行末禁則 (ouvrantes), `strict` = ajoute ！？ en tête de ligne, `off` = coupe au caractère (comportement historique). Défaut `simple`, sauf `nomura` (`off` : pas de repli des paroles au caractère). `--kinsoku` en CLI. |
-| `@text_color`    | `black`    | Couleur de **tout le texte**, format HTML (`#rgb`, `#rrggbb` ou nom CSS, ex. `red`). Surcharge le défaut du design de la mise en page |
-| `@frame_color`   | défaut du layout | Couleur du filet de cadre de page (layout `nomura` seul à ce jour), format HTML. Défaut `nomura` : `#333` |
+| `@text_color`    | `#000000`    | Couleur de **tout le texte**, format HTML (`#rgb`, `#rrggbb` ou nom CSS, ex. `red`). Surcharge le défaut du design de la mise en page |
+| `@frame_color`   | défaut du layout | Couleur du filet de cadre de page (layout `nomura` seul à ce jour), format HTML. Défaut `nomura` : `#333333` |
 | `@frame_width`   | défaut du layout | Épaisseur du filet de cadre, en pt (nombre positif, ex. `1.5`). Défaut `nomura` : `1.5` |
-| `@cell_color`    | défaut du layout | Couleur des cases et de la bande marker, format HTML. Défauts : `#bbb` (vertical, chindami, mega), `#999` (horizontal, tuto), `#333` (nomura) |
+| `@cell_color`    | défaut du layout | Couleur des cases et de la bande marker, format HTML. Défauts : `#bbbbbb` (vertical, chindami, mega), `#999999` (horizontal, tuto), `#333333` (nomura) |
 | `@cell_width`    | défaut du layout | Épaisseur des filets de cases, en pt. Défauts : `0.75` (vertical, horizontal, tuto, mega), `0.6` (nomura, chindami) |
 | `@arrow_color`   | défaut du layout | Couleur des flèches de répétition `|: :|` et des symboles vocaux ⚪⚫, format HTML. Mêmes défauts que `@cell_color` |
 | `@arrow_width`   | défaut du layout | Épaisseur des flèches de boucles, en pt. Mêmes défauts que `@cell_width` |
