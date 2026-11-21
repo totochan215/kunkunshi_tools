@@ -54,9 +54,11 @@ ms = re.findall(r'<text x="([0-9.]+)" y="([0-9.]+)"[^>]*font-size="(\d+)"[^>]*>�
 assert ms, "straddle de tête 六 absent du SVG vertical"
 m = min(ms, key=lambda t: float(t[1]))  # le plus haut = le straddle de tête
 grid_top = float(re.search(r'<rect x="[0-9.]+" y="([0-9.]+)"[^>]*stroke="#bbb"', svg).group(1))
-assert float(m[1]) < grid_top, (m[1], grid_top)
-print("OK vertical : /六 rendu au-dessus de la 1re case (y=%s < grille y=%s), fs=%s"
-      % (m[1], grid_top, m[2]))
+# le glyphe (centre = baseline - 0,35*fs) doit être CENTRÉ sur le bord de case
+center = float(m[1]) - 0.35 * float(m[2])
+assert abs(center - grid_top) < 1.0, (center, grid_top, m)
+print("OK vertical : /六 pile à cheval sur le bord de la 1re case (centre=%s, bord=%s), fs=%s"
+      % (round(center, 2), grid_top, m[2]))
 
 # 4. Rendu horizontal : Six sur le bord GAUCHE de la 1re case de la 1re rangée
 err = io.StringIO()
