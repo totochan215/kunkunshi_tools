@@ -16,6 +16,7 @@ Usage :
 import contextlib
 import io
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -122,5 +123,46 @@ for key in ("@text_color #a00000", "@frame_color green", "@frame_width 3",
     assert key in out, (key, out)
 assert c.clean(out) == out
 print("OK cleaner : métadonnées d'attributs conservées, idempotent")
+
+# 10. Modèle cadre/hanmen générique : cadre = marges depuis le bord de feuille,
+#     hanmen = cadre - padding ; frame_width = 0 -> cadre non tracé
+fx0, fy0, fx1, fy1 = k.NOMURA.frame_rect()
+hx0, hy0, hx1, hy1 = k.NOMURA.hanmen_rect()
+assert abs(hx0 - fx0 - k.NOMURA.pad_l) < 1e-9 and abs(fy1 - hy1 - k.NOMURA.pad_b) < 1e-9
+assert k.NOMURA.frame_width == 1.5                      # seul layout avec filet tracé
+assert all(s.frame_width == 0 for n, s in k.LAYOUTS.items() if n != "nomura")
+assert k.CHINDAMI.frame_rect()[0] == k.CHINDAMI.margin_l  # chindami : cadre virtuel = hanmen
+print("OK LayoutSpec : frame_rect()/hanmen_rect(), pad_*, frame_width par défaut")
+
+# 11. nomura : cadre tracé par défaut (#333333 x 1.5) ; @frame_width 0 -> plus de filet
+svg, _ = render("@title t\n" + TAB, "nomura")
+assert 'stroke="#333333" stroke-width="1.5"' in svg
+svg, err = render("@title t\n@frame_width 0\n" + TAB, "nomura")
+assert "AVERTISSEMENT" not in err
+assert 'stroke="#333333" stroke-width="1.5"' not in svg   # filet parti
+assert 'stroke="#333333" stroke-width="0.6"' in svg       # grille intacte
+print("OK nomura : cadre tracé par défaut, @frame_width 0 = non tracé")
+
+# 12. chindami/mega/tuto : pas de cadre par défaut ; tracé si @frame_width > 0
+svg, _ = render("@title t\n" + TAB, "chindami")
+assert not re.search(r'<rect [^>]*stroke="#333333" stroke-width="1\.5"', svg)
+svg, _ = render("@title t\n@frame_width 2\n@frame_color red\n" + TAB, "chindami")
+assert re.search(r'<rect x="49\.55[^>]*stroke="red" stroke-width="2"/>', svg)
+svg, _ = render("@title t\n@frame_width 2\n" + TAB, "mega")
+assert re.search(r'<rect [^>]*stroke="#333333" stroke-width="2"/>', svg)
+svg, _ = render("@title t\n@frame_width 1.5\n" + TAB, "tuto")   # 1,5 pt = 2 px en tuto
+assert re.search(r'<rect x="16" y="16"[^>]*stroke="#333333" stroke-width="2"/>', svg)
+print("OK chindami/mega/tuto : cadre virtuel par défaut, tracé si @frame_width > 0")
+
+# 13. page libre (vertical/horizontal) : pas de cadre tracé, @frame_width sans effet
+assert render("@title t\n@frame_width 2\n" + TAB, "vertical")[0] == render("@title t\n" + TAB, "vertical")[0]
+print("OK vertical (page libre) : cadre non tracé, @frame_width ignoré")
+
+# 14. @frame_width invalide (négatif ou non numérique) : AVERTISSEMENT + défaut
+svg, err = render("@title t\n@frame_width -1\n" + TAB, "nomura")
+assert err.count("AVERTISSEMENT") == 1 and 'stroke="#333333" stroke-width="1.5"' in svg
+svg, err = render("@title t\n@frame_width abc\n" + TAB, "nomura")
+assert err.count("AVERTISSEMENT") == 1 and 'stroke="#333333" stroke-width="1.5"' in svg
+print("OK @frame_width invalide : AVERTISSEMENT + défaut du layout")
 
 print("Tous les tests de test_layout_attrs.py passent.")
