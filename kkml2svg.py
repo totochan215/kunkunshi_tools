@@ -387,6 +387,7 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "source", "shaku_circled", "shaku_sharp", "speed", "font_style",
+             "mega_cols",
              "page_dans", "dans_per_page", "tuto_block", "kinsoku",
              # compatibilité Portama (valeurs stockées telles quelles dans song.meta)
              "musicno", "chogen", "base_note", "rythm", "rythm_mode"}
@@ -494,6 +495,14 @@ def parse_kkml(text):
                 # Alias de ::section : nom de chanson dans un medley
                 _info_input_variant("::song", "::section")
                 kind = "section"
+            if kind in ("block", "page"):
+                # Marqueurs de saut (layout mega uniquement) : ::block ferme le
+                # bloc courant, ::page ferme la page courante, même non pleins.
+                # Sans contenu ; ignorés par les autres layouts.
+                if label:
+                    print(f"AVERTISSEMENT : ::{kind} n'a pas de contenu (label {label!r} ignoré)",
+                          file=sys.stderr)
+                label = None
             current = Block(kind, label)
             current.variant = variant
             song.blocks.append(current)
@@ -754,6 +763,10 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     for blk in song.blocks:
         if blk.kind == "section":
             cur_title = blk.label
+            continue
+        if blk.kind in ("block", "page"):
+            # Marqueur de saut mega : conservé dans l'ordre du flux
+            sections.append((cur_title, [], blk.kind, None))
             continue
         if blk.kind == "tab":
             flat = []
@@ -3139,6 +3152,59 @@ def _mega_song_header(out, text, xc, ty):
                    f'{escape(_unescape(text))}</text>')
 
 
+def _mega_paginate(stream, dans_per_block, blocks_per_page=2, per_page=None):
+    """Découpe le flux de dans en pages de `blocks_per_page` blocs de
+    `dans_per_block` colonnes. Retourne une liste de pages, chaque page étant
+    une liste de blocs (eux-mêmes des listes d'entrées du flux).
+
+    Marqueurs dans le flux : ("__block__",) ferme le bloc courant, ("__page__",)
+    ferme le bloc ET la page — même si le bloc/la page n'est pas plein
+    (sauts volontaires ::block / ::page). `per_page` = plafond de colonnes
+    par page (-p / @dans_per_page, défaut blocks_per_page * dans_per_block)."""
+    if per_page:
+        per_page = max(1, min(per_page, blocks_per_page * dans_per_block))
+    else:
+        per_page = blocks_per_page * dans_per_block
+    pages, cur_page, cur_blk = [], [], []
+
+    def page_cols():
+        return sum(len(b) for b in cur_page) + len(cur_blk)
+
+    def close_blk():
+        nonlocal cur_blk
+        if cur_blk:
+            cur_page.append(cur_blk)
+            cur_blk = []
+
+    def close_page():
+        nonlocal cur_page
+        close_blk()
+        if cur_page:
+            pages.append(cur_page)
+            cur_page = []
+
+    for entry in stream:
+        if entry[0] == "__block__":
+            close_blk()
+            if len(cur_page) >= blocks_per_page or page_cols() >= per_page:
+                close_page()
+            continue
+        if entry[0] == "__page__":
+            close_page()
+            continue
+        if page_cols() >= per_page:
+            close_page()
+        cur_blk.append(entry)
+        if len(cur_blk) >= dans_per_block:
+            close_blk()
+            if len(cur_page) >= blocks_per_page:
+                close_page()
+    close_page()
+    if not pages:
+        pages = [[[]]]
+    return pages
+
+
 def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=None):
     title = song.meta.get("title", "")
     tuning = song.meta.get("tuning", "本調子")
@@ -3149,6 +3215,15 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
     # Géométrie verticale : MEGA_BLOCKS blocs de MEGA_ROWS cases + gaps, marges
     spec = spec or MEGA
+    # @mega_cols N : colonnes (dans) par bloc horizontal en mega (défaut : spec)
+    dans_per_block = spec.dans_per_block
+    if song.meta.get("mega_cols"):
+        try:
+            dans_per_block = max(1, int(song.meta["mega_cols"]))
+        except ValueError:
+            print(f"AVERTISSEMENT : @mega_cols non entier ({song.meta['mega_cols']!r}), "
+                  f"défaut {spec.dans_per_block} utilisé", file=sys.stderr)
+    dans_per_page = MEGA_BLOCKS * dans_per_block
     cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
               / (spec.blocks * spec.rows_per_col))
     fs = max(spec.fs_min, int(cell_h * spec.fs_ratio))  # ratio fs/case ~0,38 (calibrage Portama)
@@ -3193,22 +3268,30 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         lyrics_offset = 0
 
     # Géométrie horizontale : la largeur restante est répartie sur
-    # MEGA_DANS_PER_BLOCK dans (cell_w + marker_w = 1,5 cell_w avec marker)
+    # dans_per_block dans (cell_w + marker_w = 1,5 cell_w avec marker)
     avail_w = MEGA_PAGE_W - 2 * MEGA_MARGIN - title_offset - lyrics_offset
     if marker:
-        cell_w = avail_w / (MEGA_DANS_PER_BLOCK * 1.5)
+        cell_w = avail_w / (dans_per_block * 1.5)
         marker_w = cell_w * spec.marker_ratio   # PJ mega : marker ~11,5 pt pour case ~22 pt
     else:
-        cell_w = avail_w / MEGA_DANS_PER_BLOCK
+        cell_w = avail_w / dans_per_block
         marker_w = 0
     group_w = cell_w + marker_w
     SYLLABLE_FS = (min(int(cell_h * spec.syl_cell_ratio), int(marker_w * spec.syl_marker_ratio))
                    if marker_w > 0 else int(fs * spec.syl_fs_ratio))
 
     # --- Flux de dans (colonnes de MEGA_ROWS cases), vocal synchronisé --- #
-    stream = []  # (col, vocal_col|None, sec_title|None, sec_id)
-    tab_sections = [s for s in sections if s[2] == "tab"]
-    for sec_id, (sec_title, content, kind, vocal) in enumerate(tab_sections):
+    # Entrées : (col, vocal_col|None, sec_title|None, sec_id) ou marqueur
+    # ("__block__",) / ("__page__",) pour les sauts ::block / ::page
+    stream = []
+    sec_id = -1
+    for sec_title, content, kind, vocal in sections:
+        if kind in ("block", "page"):
+            stream.append(("__%s__" % kind,))
+            continue
+        if kind != "tab":
+            continue
+        sec_id += 1
         cols = _wrap_vertical(list(content), MEGA_ROWS)
         vcols = _wrap_vertical(list(vocal), MEGA_ROWS) if vocal else None
         # Fin de chanson : compléter la dernière colonne par des cases VIDES
@@ -3225,19 +3308,18 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
             stream.append((col, vcols[ci] if vcols and ci < len(vcols) else None,
                            sec_title, sec_id))
 
-    per_page = MEGA_DANS_PER_PAGE
+    per_page = dans_per_page
     if page_dans:
-        per_page = max(1, min(page_dans, MEGA_DANS_PER_PAGE))
-    pages = [stream[i:i + per_page] for i in range(0, len(stream), per_page)] or [[]]
+        per_page = max(1, min(page_dans, dans_per_page))
+    pages = _mega_paginate(stream, dans_per_block, MEGA_BLOCKS, per_page)
 
     result = []
-    for pi, page_dans in enumerate(pages):
+    for pi, page_blocks in enumerate(pages):
         out = _svg_open_print(MEGA_PAGE_W, MEGA_PAGE_H, 42, 29.7, title=title)  # A3, 600 dpi
         y0 = MEGA_MARGIN
-        for b in range(MEGA_BLOCKS):
-            bdan = page_dans[b * MEGA_DANS_PER_BLOCK:(b + 1) * MEGA_DANS_PER_BLOCK]
+        for bdan in page_blocks:
             if not bdan:
-                break
+                continue
             cols = [d[0] for d in bdan]
             vcols = [d[1] if d[1] is not None else ["-"] * MEGA_ROWS for d in bdan]
             # Nom de chaque chanson (section) centré au-dessus de ses colonnes

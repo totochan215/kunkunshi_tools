@@ -32,3 +32,5 @@ jobs:
         run: python3 tests/test_verse_markers.py
       - name: Lancer les tests de l'alias ::song -> ::section
         run: python3 tests/test_song_section.py
+      - name: Lancer les tests mega (@mega_cols, ::block/::page)
+        run: python3 tests/test_mega_breaks.py
