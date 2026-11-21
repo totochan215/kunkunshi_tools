@@ -22,6 +22,8 @@ Options supplémentaires en-tête KKML (défauts : @layout vertical,
     @shaku_circled on     → 尺 entourés d'un cercle (défaut: off, sans cercle)
     @shaku_sharp on       → 尺♯ rendus avec le symbole ♯ (défaut: off, rendu en 尺 simple)
     @author Nom          → auteur (défaut: vide)
+    @source Texte        → source de la version du morceau (texte libre, ruby
+                           supporté, liens [texte](url) ; défaut: vide)
     @end_circle off      → désactive le marqueur de fin de chanson (cercle creux)
                            dans la colonne marker, au bas de la dernière case remplie
                            (défaut: on)
@@ -60,10 +62,10 @@ RUBY_SCALE = 0.5
 EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
 # Ordre commun des blocs de métadonnées après le titre (tous layouts) :
-# auteur, compositeur, parolier (personnes), puis genre et origine
+# auteur, compositeur, parolier (personnes), puis genre, origine et source
 # (classification), enfin l'accordage. tuning = @choushi (défaut 本調子) ;
 # genre n'est pas répété s'il égale author.
-META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "tuning")
+META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "source", "tuning")
 
 
 def _meta_blocks(song):
@@ -374,7 +376,7 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 # Clés de métadonnées reconnues (pour la tolérance @cléValeur collée)
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
-             "origin", "shaku_circled", "shaku_sharp", "speed", "font_style",
+             "origin", "source", "shaku_circled", "shaku_sharp", "speed", "font_style",
              "page_dans", "dans_per_page", "tuto_block", "kinsoku",
              # compatibilité Portama (valeurs stockées telles quelles dans song.meta)
              "musicno", "chogen", "base_note", "rythm", "rythm_mode"}
@@ -875,7 +877,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
     def _meta_block_h(text, mfs, msp):
         if not text:
             return 0
-        return _plan_vertical_ruby(_parse_ruby(text), mfs, msp)[1]
+        return _plan_vertical_ruby(_parse_ruby(_link_free(text)), mfs, msp)[1]
     # Blocs de la colonne titre : le titre, puis les métadonnées dans
     # l'ordre commun META_ORDER (accordage en dernier) —
     # (texte, fs, espacement, fill, avance verticale avant la baseline)
@@ -1167,7 +1169,7 @@ def _render_vertical(song, sections, rows_per_col, cell_w, cell_h,
             vcy = ty
             for text, mfs, msp, fill, lead in v_blocks:
                 vcy = _vertical_grouped_text(out, text, tx_cur, vcy + lead,
-                                             mfs, fill, msp)
+                                             mfs, fill, msp, links=True)
 
         out.append("</svg>")
         result.append("\n".join(out))
@@ -1607,7 +1609,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                 # Blocs <text> groupés (même règle que le vertical) : base
                 # en un seul élément, rubys indépendants, pivotés à part
                 _vertical_grouped_text(out, title, tx,
-                                      title_top + 18 * 0.88, 18, "#000", 22, font_family)
+                                      title_top + 18 * 0.88, 18, "#000", 22, font_family,
+                                      links=True)
             if tuning:
                 _vertical_grouped_text(out, tuning, tx, frame_y1 - 4 - len(tuning) * 16,
                                        11, "#555", 16, font_family)
@@ -1866,7 +1869,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
             if title:
                 ty_end = _render_vertical_text(out, title, tx, ty,
                                                cell_h * 0.43, "black",
-                                               cell_h * 0.5)
+                                               cell_h * 0.5, links=True)
             else:
                 ty_end = ty
             for i, ch in enumerate(tuning):
@@ -2591,12 +2594,12 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     # Largeur du flux de métadonnées (une seule ligne, même simulation
     # que le rendu, blocs jamais scindés).
     h_sep_w = 2 * _char_w(" ", 12)
-    meta_flow_w = _h_text_w(title, 26) + (20 if title else 0)
-    if title and _has_ruby(_parse_ruby(title)):
-        meta_flow_w = _render_horizontal_text([], title, ml, 0, 26, "black") - ml
+    meta_flow_w = _h_text_w(_link_free(title), 26) + (20 if title else 0)
+    if title and _has_ruby(_parse_ruby(_link_free(title))):
+        meta_flow_w = _render_horizontal_text([], _link_free(title), ml, 0, 26, "black") - ml
         meta_flow_w += 20
     for text, hfs, _fill in _meta_blocks(song):
-        meta_flow_w += _h_text_w(text, hfs) + h_sep_w
+        meta_flow_w += _h_text_w(_link_free(text), hfs) + h_sep_w
     # Largeur des paroles sans repli (usable_w infini) : mesurée avec le
     # même moteur de rendu de texte (_render_horizontal_text → end x).
     lyrics_flow_w = 0.0
@@ -2647,12 +2650,27 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
 
     ty0 = mt + 26
     # Titre (ruby au-dessus si besoin)
-    if title and _has_ruby(_parse_ruby(title)):
-        end_x = _render_horizontal_text(out, title, ml, ty0, 26, "black")
+    if title and _has_ruby(_parse_ruby(_link_free(title))):
+        end_x = _render_horizontal_text(out, title, ml, ty0, 26, "black", links=True)
     elif title:
-        out.append(f'<text x="{ml}" y="{ty0}" font-family="serif" '
-                   f'font-size="26" fill="black">{escape(_unescape(title))}</text>')
-        end_x = ml + sum(_char_w(c, 26) for c in _unescape(title))
+        segs = _split_links(title)
+        if len(segs) == 1 and segs[0][0] == "text":
+            out.append(f'<text x="{ml}" y="{ty0}" font-family="serif" '
+                       f'font-size="26" fill="black">{escape(_unescape(title))}</text>')
+            end_x = ml + sum(_char_w(c, 26) for c in _unescape(title))
+        else:
+            cx = ml
+            for seg in segs:
+                body = (f'<text x="{cx:g}" y="{ty0}" font-family="serif" '
+                        f'font-size="26" fill="black">{escape(_unescape(seg[1]))}</text>')
+                if seg[0] == "link":
+                    out.append(_link_open(seg[2]))
+                    out.append(body)
+                    out.append("</a>")
+                else:
+                    out.append(body)
+                cx += _h_text_w(seg[1], 26)
+            end_x = cx
     else:
         end_x = ml
     # Métadonnées dans l'ordre commun (_meta_blocks) : toutes à la suite du
@@ -2663,7 +2681,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     for text, hfs, fill in _meta_blocks(song):
         # centre d'encre du bloc sur celui du titre (26pt)
         by = ty0 - 0.38 * (26 - hfs)
-        hxe = _render_horizontal_text(out, text, hx, by, hfs, fill)
+        hxe = _render_horizontal_text(out, text, hx, by, hfs, fill, links=True)
         hx = hxe + h_sep_w
 
     y = header_h + mt + GAP_HEADER
@@ -2927,13 +2945,12 @@ def _tuto_title_page(song, W, H):
     title = song.meta.get("title", "")
     fs_t = max(12, int(H * 0.07))
     if title:
-        segs = _parse_ruby(title)
+        segs = _parse_ruby(_link_free(title))
         if _has_ruby(segs):
             est = _tuto_text_width(segs, fs_t)
-            _render_horizontal_text(out, title, cx - est / 2, y, fs_t, "black")
+            _render_horizontal_text(out, title, cx - est / 2, y, fs_t, "black", links=True)
         else:
-            out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
-                       f'font-size="{fs_t}" fill="black">{escape(_unescape(title))}</text>')
+            _emit_centered_text(out, title, cx, y, fs_t, "black", links=True)
         y += fs_t * 1.6
     tuning = song.meta.get("tuning", "")
     if tuning:
@@ -2947,13 +2964,12 @@ def _tuto_title_page(song, W, H):
         lines.append(genre)
     if author:
         lines.append(author)
-    for k in ("composer", "lyricist", "origin"):
+    for k in ("composer", "lyricist", "origin", "source"):
         v = song.meta.get(k, "")
         if v:
             lines.append(v)
     for ln in lines:
-        out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
-                   f'font-size="{max(9, int(H * 0.028))}" fill="#777">{escape(_unescape(ln))}</text>')
+        _emit_centered_text(out, ln, cx, y, max(9, int(H * 0.028)), "#777", links=True)
         y += H * 0.05
     out.append("</svg>")
     return "\n".join(out)
@@ -3420,7 +3436,7 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
         ty = MEGA_MARGIN
         if title:
             ty_end = _render_vertical_text(out, title, tx, ty + 20, 26, "black",
-                                          TITLE_SPACING)
+                                          TITLE_SPACING, links=True)
         else:
             ty_end = ty
         ty2 = ty_end
@@ -4267,6 +4283,79 @@ def _find_unescaped(s, ch, start):
     return j
 
 
+# --------------------------------------------------------------------------- #
+# Liens hypertexte dans les métadonnées : [label](url), style Markdown.
+# Le label peut contenir du ruby (syntaxe 《》 ｛｝) ; l'url n'est pas affichée.
+# Un antislash devant [ ou ] rend le crochet littéral (\(). Les paires ruby
+# échappées (\《 etc.) sont conservées telles quelles dans les segments.
+# --------------------------------------------------------------------------- #
+_LINK_RE = re.compile(r"\[([^\[\]]*)\]\(([^()]*)\)")
+
+
+def _split_links(text):
+    """Découpe en segments ('text', s) ou ('link', label, url)."""
+    segs, buf = [], []
+    i, n = 0, len(text)
+    def flush():
+        if buf:
+            segs.append(("text", "".join(buf)))
+            buf.clear()
+    while i < n:
+        c = text[i]
+        if c == ESCAPE and i + 1 < n and text[i + 1] in ESCAPABLE:
+            buf.append(text[i:i + 2])  # paire ruby échappée : gardée pour _parse_ruby
+            i += 2
+        elif c == ESCAPE and i + 1 < n and text[i + 1] in "[]":
+            buf.append(text[i + 1])     # crochet littéral
+            i += 2
+        elif c == "[":
+            m = _LINK_RE.match(text, i)
+            if m and m.group(2).strip():
+                flush()
+                segs.append(("link", m.group(1), m.group(2)))
+                i = m.end()
+            else:
+                buf.append(c)
+                i += 1
+        else:
+            buf.append(c)
+            i += 1
+    flush()
+    return segs
+
+
+def _link_free(text):
+    """Texte sans la syntaxe des liens (labels conservés) — pour les mesures."""
+    return "".join(seg[1] for seg in _split_links(text))
+
+
+def _link_open(url):
+    return (f'<a xmlns:xlink="http://www.w3.org/1999/xlink" '
+            f'xlink:href="{escape(url).replace(chr(34), "&quot;")}">')
+
+
+def _emit_centered_text(out, text, cx, y, fs, fill, family="serif", links=False):
+    """Émet un <text> centré en cx ; avec links=True, les [label](url) sont
+    enveloppés dans un <a xlink:href> (seul le label est affiché)."""
+    segs = _split_links(text) if links else [("text", text)]
+    if len(segs) == 1 and segs[0][0] == "text":
+        out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="{family}" '
+                   f'font-size="{fs}" fill="{fill}">{escape(_unescape(segs[0][1]))}</text>')
+        return
+    w = _h_text_w(_link_free(text), fs)
+    xcur = cx - w / 2
+    for seg in segs:
+        body = (f'<text x="{xcur:g}" y="{y:g}" font-family="{family}" '
+                f'font-size="{fs}" fill="{fill}">{escape(_unescape(seg[1]))}</text>')
+        if seg[0] == "link":
+            out.append(_link_open(seg[2]))
+            out.append(body)
+            out.append("</a>")
+        else:
+            out.append(body)
+        xcur += _h_text_w(seg[1], fs)
+
+
 def _parse_ruby(text):
     """Découpe une chaîne en segments avec ou sans ruby.
     Retourne une liste de dicts : plain, mono, group, jukugo.
@@ -4491,8 +4580,10 @@ def _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family="serif"):
     return y + h
 
 
-def _vertical_grouped_text(out, text, x, y, fs, fill, sp, family="serif"):
+def _vertical_grouped_text(out, text, x, y, fs, fill, sp, family="serif", links=False):
     """Rend un texte vertical en BLOCS <text> groupés (SVG 1.1, listes
+    links=True : les liens [label](url) des métadonnées sont enveloppés
+    dans un <a xlink:href> (label seul affiché).
     x/y par glyphe) :
       <text x="x x x …" y="y1 y2 …" …>caractères</text>
     (liste x répétée : indispensable, sinon chaque glyphe conserve l'avance
@@ -4509,6 +4600,18 @@ def _vertical_grouped_text(out, text, x, y, fs, fill, sp, family="serif"):
       étant dépendant du moteur de rendu).
     Retourne le y après le dernier caractère (comme _render_vertical_text).
     """
+    if links:
+        for seg in _split_links(text):
+            if seg[0] == "text":
+                y = _vertical_grouped_text(out, seg[1], x, y, fs, fill, sp, family)
+            else:
+                sub = []
+                y2 = _vertical_grouped_text(sub, seg[1], x, y, fs, fill, sp, family)
+                out.append(_link_open(seg[2]))
+                out.extend(sub)
+                out.append("</a>")
+                y = y2
+        return y
     def _emit_group(chars, ys, gfs, gx):
         # Les caractères pivotés (ー, parenthèses…) sortent du bloc : l'attribut
         # rotate par glyphe a une sémantique variable selon les moteurs de
@@ -4545,10 +4648,23 @@ def _vertical_grouped_text(out, text, x, y, fs, fill, sp, family="serif"):
     return y + h
 
 
-def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif"):
+def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif", links=False):
     """Rend un texte en mode vertical, avec ou sans ruby.
     Sans ruby : rendu caractère par caractère (compatibilité ascendante).
-    Avec ruby : utilise _render_vertical_ruby."""
+    Avec ruby : utilise _render_vertical_ruby.
+    links=True : liens [label](url) enveloppés dans un <a xlink:href>."""
+    if links:
+        for seg in _split_links(text):
+            if seg[0] == "text":
+                y = _render_vertical_text(out, seg[1], x, y, fs, fill, sp, family)
+            else:
+                sub = []
+                y2 = _render_vertical_text(sub, seg[1], x, y, fs, fill, sp, family)
+                out.append(_link_open(seg[2]))
+                out.extend(sub)
+                out.append("</a>")
+                y = y2
+        return y
     segments = _parse_ruby(text)
     if not _has_ruby(segments):
         for ch in _unescape(text):
@@ -4686,10 +4802,23 @@ def _h_text_w(text, fs):
     return sum(_char_w(c, fs) for c in _unescape(text))
 
 
-def _render_horizontal_text(out, text, x, y, fs, fill, family="serif"):
+def _render_horizontal_text(out, text, x, y, fs, fill, family="serif", links=False):
     """Rend un texte en mode horizontal, avec ou sans ruby.
     Sans ruby : un seul élément <text> (compatibilité ascendante).
-    Avec ruby : utilise _render_horizontal_ruby."""
+    Avec ruby : utilise _render_horizontal_ruby.
+    links=True : liens [label](url) enveloppés dans un <a xlink:href>."""
+    if links:
+        for seg in _split_links(text):
+            if seg[0] == "text":
+                x = _render_horizontal_text(out, seg[1], x, y, fs, fill, family)
+            else:
+                sub = []
+                x2 = _render_horizontal_text(sub, seg[1], x, y, fs, fill, family)
+                out.append(_link_open(seg[2]))
+                out.extend(sub)
+                out.append("</a>")
+                x = x2
+        return x
     segments = _parse_ruby(text)
     if not _has_ruby(segments):
         out.append(f'<text x="{x:g}" y="{y:g}" font-family="{family}" '

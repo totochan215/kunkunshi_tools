@@ -86,7 +86,7 @@ def clean(text):
 
     # --- métadonnées : ordre canonique, dédup (première occurrence prime) ---
     meta_order = ["format", "version", "title", "genre", "author", "composer",
-                  "lyricist", "origin", "comment", "tuning", "base_note",
+                  "lyricist", "origin", "source", "comment", "tuning", "base_note",
                   "layout", "cells_per_dan", "cols", "marker", "end_circle", "font_style",
                   "shaku_circled", "shaku_sharp", "lyrics_size", "ruby_size",
                   "musicno", "chogen", "speed", "rythm", "rythm_mode"]
