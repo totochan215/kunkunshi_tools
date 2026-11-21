@@ -21,7 +21,7 @@ KKML se base sur le format texte brut encodé en UTF-8, sans utilisation des ext
 @meta valeur
 @cells_per_dan 12
 
-::section
+::song
 contenu
 ::
 
@@ -90,8 +90,8 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 
 ## Sections
 
-### Section nommée
-`::section nom` — titre de section (s'applique au bloc suivant ; utile en layout `mega` pour un medley : le nom de chaque chanson est imprimé au-dessus de ses colonnes). `::song nom` est un alias accepté de `::section nom` (renommé avec une info stderr).
+### Chanson nommée
+`::song nom` — nom de chanson, s'applique au bloc suivant (utile en layout `mega` pour une compilation/medley : le nom de chaque chanson est imprimé au-dessus de ses colonnes). `::section nom` est un ancien nom accepté comme alias de `::song nom` (renommé avec une info stderr) — `::section` était trop générique, `::tab` étant déjà une section.
 
 ### Sauts de mise en page (layout `mega` uniquement)
 `::block` — ferme le bloc horizontal courant et passe au bloc suivant ; le bloc sauté est rempli de *dans* vides jusqu'à son nombre de colonnes prévues (`@mega_dans`). `::page` — idem, puis la page courante est complétée de blocs vides et on passe à la page suivante. Sans contenu ; ignorés par les autres layouts.
