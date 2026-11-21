@@ -40,3 +40,5 @@ jobs:
         run: python3 tests/test_svg_groups.py
       - name: Lancer les tests des attributs de design (@text_color, @frame_*, @cell_*, @arrow_*)
         run: python3 tests/test_layout_attrs.py
+      - name: Lancer les tests du cleaner sur medley (pas de vrac par ::song)
+        run: python3 tests/test_cleaner_medley.py
