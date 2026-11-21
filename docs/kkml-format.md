@@ -104,6 +104,7 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 `::lyrics` — section de paroles, divisé en couplets. Séparateurs de couplets : ligne vide, OU marqueur de couplet en début de ligne (voir ci-dessous) — un marqueur force le changement de couplet même sans ligne vide, et donc un saut de colonne en layout vertical. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `○` `●` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
+  - `①` `②` `③` … jusqu'à `⑳` (U+2460–U+2473) — numéro de couplet (virgule `、` facultative après, ex. `①、`). 
   - `女` `男` `男女` suivis de `、` (virgule pleine chasse, ex. `女、`) ou d'un espace (ex. `女　`) — couplet chanté par les femmes `女`, les hommes `男` ou les deux `男女`. 
     Plusieurs types de couplets peuvent être mélangés dans un même morceau.
 
@@ -179,7 +180,7 @@ L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi t
 
 Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de figures valides. Dans les sections `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Dans `::vocal`, un token `ー`/`ｰ`/`－` ISOLÉ est normalisé en `-` (case vide) ; collé à une syllabe, le ー reste une voyelle longue. Dans `::lyrics`, aucune normalisation (le ー y reste une voyelle longue).
 
-Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
+Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… ①②③… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
 
 ## Tolérances
 
