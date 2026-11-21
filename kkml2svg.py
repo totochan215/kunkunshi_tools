@@ -387,7 +387,7 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "source", "shaku_circled", "shaku_sharp", "speed", "font_style",
-             "mega_cols",
+             "mega_dans",
              "page_dans", "dans_per_page", "tuto_block", "kinsoku",
              # compatibilité Portama (valeurs stockées telles quelles dans song.meta)
              "musicno", "chogen", "base_note", "rythm", "rythm_mode"}
@@ -3152,20 +3152,26 @@ def _mega_song_header(out, text, xc, ty):
                    f'{escape(_unescape(text))}</text>')
 
 
-def _mega_paginate(stream, dans_per_block, blocks_per_page=2, per_page=None):
+def _mega_paginate(stream, dans_per_block, blocks_per_page=2, per_page=None, rows=12):
     """Découpe le flux de dans en pages de `blocks_per_page` blocs de
     `dans_per_block` colonnes. Retourne une liste de pages, chaque page étant
     une liste de blocs (eux-mêmes des listes d'entrées du flux).
 
-    Marqueurs dans le flux : ("__block__",) ferme le bloc courant, ("__page__",)
-    ferme le bloc ET la page — même si le bloc/la page n'est pas plein
-    (sauts volontaires ::block / ::page). `per_page` = plafond de colonnes
-    par page (-p / @dans_per_page, défaut blocks_per_page * dans_per_block)."""
+    Marqueurs dans le flux : ("__block__",) ferme le bloc courant en le
+    complétant de dans VIDES jusqu'à `dans_per_block` colonnes ; ("__page__",)
+    fait de même puis complète la page de blocs vides jusqu'à `blocks_per_page`
+    — même si bloc/page n'étaient pas pleins (sauts volontaires ::block /
+    ::page). `per_page` = plafond de colonnes par page (-p / @dans_per_page,
+    défaut blocks_per_page * dans_per_block). `rows` = cases par dan (pour
+    les dans vides)."""
     if per_page:
         per_page = max(1, min(per_page, blocks_per_page * dans_per_block))
     else:
         per_page = blocks_per_page * dans_per_block
     pages, cur_page, cur_blk = [], [], []
+
+    def empty_dan():
+        return ([EMPTY_TOKEN] * rows, None, None, -1)
 
     def page_cols():
         return sum(len(b) for b in cur_page) + len(cur_blk)
@@ -3185,11 +3191,21 @@ def _mega_paginate(stream, dans_per_block, blocks_per_page=2, per_page=None):
 
     for entry in stream:
         if entry[0] == "__block__":
+            # le bloc courant est rempli de dans vides jusqu'à son nombre de
+            # colonnes prévues, puis fermé
+            while cur_blk and len(cur_blk) < dans_per_block:
+                cur_blk.append(empty_dan())
             close_blk()
             if len(cur_page) >= blocks_per_page or page_cols() >= per_page:
                 close_page()
             continue
         if entry[0] == "__page__":
+            while cur_blk and len(cur_blk) < dans_per_block:
+                cur_blk.append(empty_dan())
+            close_blk()
+            # la page est complétée de blocs vides jusqu'à blocks_per_page
+            while 0 < len(cur_page) < blocks_per_page and page_cols() < per_page:
+                cur_page.append([empty_dan() for _ in range(dans_per_block)])
             close_page()
             continue
         if page_cols() >= per_page:
@@ -3215,13 +3231,13 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
     # Géométrie verticale : MEGA_BLOCKS blocs de MEGA_ROWS cases + gaps, marges
     spec = spec or MEGA
-    # @mega_cols N : colonnes (dans) par bloc horizontal en mega (défaut : spec)
+    # @mega_dans N : colonnes (dans) par bloc horizontal en mega (défaut : spec)
     dans_per_block = spec.dans_per_block
-    if song.meta.get("mega_cols"):
+    if song.meta.get("mega_dans"):
         try:
-            dans_per_block = max(1, int(song.meta["mega_cols"]))
+            dans_per_block = max(1, int(song.meta["mega_dans"]))
         except ValueError:
-            print(f"AVERTISSEMENT : @mega_cols non entier ({song.meta['mega_cols']!r}), "
+            print(f"AVERTISSEMENT : @mega_dans non entier ({song.meta['mega_dans']!r}), "
                   f"défaut {spec.dans_per_block} utilisé", file=sys.stderr)
     dans_per_page = MEGA_BLOCKS * dans_per_block
     cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
@@ -3311,7 +3327,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     per_page = dans_per_page
     if page_dans:
         per_page = max(1, min(page_dans, dans_per_page))
-    pages = _mega_paginate(stream, dans_per_block, MEGA_BLOCKS, per_page)
+    pages = _mega_paginate(stream, dans_per_block, MEGA_BLOCKS, per_page, MEGA_ROWS)
 
     result = []
     for pi, page_blocks in enumerate(pages):
