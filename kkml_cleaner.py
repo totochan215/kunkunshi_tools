@@ -10,7 +10,9 @@ Règles (voir AGENTS.md, section « Long terme ») :
 - normalisation des formes : pleine chasse → demi-largeur, romaji/chiffres →
   kanji kandokoro, kanji composites → katakana+kanji, repos → ◯,
   `::tab-lyrics`/`::tab-vocals` → `::vocal` ;
-- ordre des sections : `::tab` `::vocal` `::lyrics` ;
+- ordre des sections : `::tab` `::vocal` `::lyrics` **par groupe** (les blocs de
+  contenu entre deux marqueurs `::song`/`::block`/`::page`, qui restent à leur
+  place dans le flux) — un medley à plusieurs `::song` n'est pas mis en vrac ;
 - métadonnées : toutes regroupées en haut du fichier ; `@format` `@version`
   `@title` toujours en premier (si présents), puis les autres métadonnées
   présentes dans leur ordre d'apparition dans le fichier ; `@format KKML`
@@ -141,21 +143,46 @@ def clean(text):
         if "format" not in file_keys:
             file_keys.insert(0, "format")
 
-    # --- sections : normalisation + complétion structurelle ---
+    # --- sections : normalisation + complétion structurelle --- #
+    # Découpage en "runs" : un run = les blocs de contenu (::tab/::vocal/
+    # ::lyrics) qui se suivent, délimités par les marqueurs (::song, ::block,
+    # ::page, autres). À la réassemblage, chaque run est émis dans l'ordre
+    # canonique ::tab ::vocal ::lyrics et les marqueurs restent à leur place
+    # dans le flux — sinon un medley (plusieurs ::song) partait en vrac :
+    # tous les ::tab, puis tous les ::vocal, puis tous les ::lyrics, et les
+    # ::song à la fin.
     blocks = song.blocks
-    tab_blks = [b for b in blocks if b.kind == "tab"]
-    vocal_blks = [b for b in blocks if b.kind == "vocal"]
-    lyrics_blks = [b for b in blocks if b.kind == "lyrics"]
+    CONTENT_KINDS = ("tab", "vocal", "lyrics")
+    runs = []              # [(marqueur ou None, [blocs de contenu])]
+    cur = [None, []]
+    for b in blocks:
+        if b.kind in CONTENT_KINDS:
+            cur[1].append(b)
+        else:
+            runs.append(cur)
+            cur = [b, []]
+    runs.append(cur)
+    tab_blks = [b for _m, c in runs for b in c if b.kind == "tab"]
+    vocal_blks = [b for _m, c in runs for b in c if b.kind == "vocal"]
+    lyrics_blks = [b for _m, c in runs for b in c if b.kind == "lyrics"]
+
+    def run_of(block):
+        for r in runs:
+            if any(b is block for b in r[1]):
+                return r
+        return runs[0]
 
     # 1. ::tab implicite -> explicite : parse_kkml crée déjà un Block("tab")
     #    implicite ; rien à faire ici si saw_marker, sinon info.
     if tab_blks and "::tab" not in text and "::section" not in text and "::song" not in text:
         info("section ::tab implicite rendue explicite")
 
-    # 2. ::tab manquante -> créée vide
+    # 2. ::tab manquante -> créée vide (rattachée au premier run)
     if not tab_blks:
         info("section ::tab manquante, créée vide")
-        tab_blks = [k.Block("tab", None)]
+        tb = k.Block("tab", None)
+        runs[0][1].append(tb)
+        tab_blks = [tb]
 
     # normaliser le contenu de ::tab (lignes de tokens)
     for b in tab_blks:
@@ -188,38 +215,49 @@ def clean(text):
         v = k.Block("vocal", None)
         for b in tab_blks[:1]:
             v.lines = [[k.EMPTY_TOKEN] * len(ln) for ln in b.lines]
+        run_of(tab_blks[0])[1].append(v)
         vocal_blks = [v]
-    else:
-        v = vocal_blks[0]
-        v.lines = [normalize_vocal_line(ln) for ln in v.lines]
-        if tab_blks:
-            tab = tab_blks[0]
-            tab_shapes = [len(ln) for ln in tab.lines]
-            tab_total = sum(tab_shapes)
-            voc_total = len(vocal_flat(v.lines))
-            voc_shapes = [len(ln) for ln in v.lines]
-            if voc_total == tab_total and voc_shapes != tab_shapes:
-                flat = vocal_flat(v.lines)
-                v.lines = []
-                pos = 0
-                for n in tab_shapes:
-                    v.lines.append(flat[pos:pos + n])
-                    pos += n
-                info("::vocal réalignée ligne à ligne sur ::tab")
-            elif voc_total != tab_total:
-                warn(f"::vocal désalignée de ::tab ({voc_total} vs {tab_total} cellules) : PAS de réalignement")
+    # réalignement PAR RUN : dans un medley, chaque ::song a son propre
+    # ::tab/::vocal — comparer un ::vocal au premier ::tab global mélangeait
+    # les chansons.
+    for _m, content in runs:
+        tabs = [b for b in content if b.kind == "tab"]
+        vocs = [b for b in content if b.kind == "vocal"]
+        for v in vocs:
+            v.lines = [normalize_vocal_line(ln) for ln in v.lines]
+        if not vocs or not tabs:
+            continue
+        v = vocs[0]
+        tab = tabs[0]
+        tab_shapes = [len(ln) for ln in tab.lines]
+        tab_total = sum(tab_shapes)
+        voc_total = len(vocal_flat(v.lines))
+        voc_shapes = [len(ln) for ln in v.lines]
+        if voc_total == tab_total and voc_shapes != tab_shapes:
+            flat = vocal_flat(v.lines)
+            v.lines = []
+            pos = 0
+            for n in tab_shapes:
+                v.lines.append(flat[pos:pos + n])
+                pos += n
+            info("::vocal réaligné ligne à ligne sur ::tab")
+        elif voc_total != tab_total:
+            warn(f"::vocal désaligné de ::tab ({voc_total} vs {tab_total} cellules) : PAS de réalignement")
 
-    # 5. ::lyrics manquante -> créée vide
+    # 5. ::lyrics manquante -> créée vide (rattachée au run du premier ::tab)
     if not lyrics_blks:
         info("section ::lyrics manquante, créée vide")
-        lyrics_blks = [k.Block("lyrics", None)]
+        lb = k.Block("lyrics", None)
+        (run_of(tab_blks[0]) if tab_blks else runs[0])[1].append(lb)
+        lyrics_blks = [lb]
 
-    # --- réassemblage dans l'ordre canonique : tab, vocal, lyrics, puis le reste ---
-    ordered = tab_blks + vocal_blks + lyrics_blks
-    seen = {id(b) for b in ordered}
-    for b in blocks:
-        if id(b) not in seen:
-            ordered.append(b)
+    # --- réassemblage : marqueurs à leur place, contenu canonique par run ---
+    RANK = {"tab": 0, "vocal": 1, "lyrics": 2}
+    ordered = []
+    for marker, content in runs:
+        if marker is not None:
+            ordered.append(marker)
+        ordered.extend(sorted(content, key=lambda b: RANK.get(b.kind, 3)))
 
     out = []
     head_keys = ("format", "version", "title")
