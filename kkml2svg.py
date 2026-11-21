@@ -291,6 +291,8 @@ VERSE_NUM_RE = re.compile(r'^([一二三四五六七八九十]+)、')
 VERSE_MARK_RE = re.compile(r'^[⚫⚪○・●]')
 # 女/男 (+女) suivis d'une virgule pleine chasse 、 OU d'un espace (full-width ou non)
 VERSE_GENDER_RE = re.compile(r'^([男女]+[、　\s])')
+# ①-⑳ (U+2460-U+2473) : numéro de couplet, virgule pleine chasse 、 facultative après
+VERSE_CIRCLED_RE = re.compile(r'^([①-⑳]、?)')
 
 
 # Hayashi （…） : ligne ENTIÈREMENT parenthésée (pleine ou demi-chasse,
@@ -317,6 +319,9 @@ def _verse_indent_len(first_line):
     m = VERSE_GENDER_RE.match(first_line)
     if m:
         return len(m.group(0))
+    m = VERSE_CIRCLED_RE.match(first_line)
+    if m:
+        return len(m.group(0))
     m = VERSE_MARK_RE.match(first_line)
     if m:
         return 2   # indent SOUS le caractère suivant (1 cran plus bas)
@@ -340,6 +345,10 @@ def _verse_indent_target(lines):
             entries.append(len(m.group(0)))
             continue
         m = VERSE_GENDER_RE.match(ln)
+        if m:
+            entries.append(len(m.group(0)))
+            continue
+        m = VERSE_CIRCLED_RE.match(ln)
         if m:
             entries.append(len(m.group(0)))
             continue
@@ -2060,7 +2069,8 @@ def _pad_inline_marker(ln):
     historique validée : sauts de ligne), pas plus qu'un marqueur de
     3 caractères ou plus (aucun remplissage possible) ni une ligne sans
     marqueur."""
-    m = VERSE_NUM_RE.match(ln) or VERSE_GENDER_RE.match(ln)
+    m = (VERSE_NUM_RE.match(ln) or VERSE_GENDER_RE.match(ln)
+         or VERSE_CIRCLED_RE.match(ln))
     if m:
         L = len(m.group(0))
         rest = ln[L:].lstrip("\u3000 \t")
@@ -2126,7 +2136,7 @@ def _split_verses(lines):
 
     Séparateurs de couplet :
     - ligne vide (comportement historique) ;
-    - marqueur de couplet en début de ligne (一、二、…, 女　, 男　,
+    - marqueur de couplet en début de ligne (一、二、…, ①②③…, 女　, 男　,
       ⚫︎, ・, ○) : la ligne courante OUVRE un nouveau couplet,
       même sans ligne vide précédente (design flaw jukunoharu : couplets
       sans retour à la ligne).
