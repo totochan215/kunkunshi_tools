@@ -2379,11 +2379,14 @@ def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient
         x = cx - cell_w * 0.5
         y = cy_edge + cell_h / 2 + ss * 0.318
     else:
+        # le glyphe s'étend VERS LE HAUT depuis la baseline : pour centrer le
+        # glyphe sur le bord supérieur, la baseline est DANS la case
+        # (miroir exact du straddle normal : bord_inf + ss_pos/3)
         x = cx
-        y = cy_edge - ss_pos / 3
+        y = cy_edge + ss_pos / 3
     if note == "尖" and opts and opts.get('shaku_circled'):
         r = ss * 0.713
-        ccy = (y + ss * 0.35) if orient == "v" else (cy_edge + cell_h / 2 + 2)
+        ccy = y - ss * 0.35 if orient == "v" else cy_edge + cell_h / 2 + 2
         out.append(f'<circle cx="{x}" cy="{ccy}" r="{r}" '
                    f'fill="none" stroke="black" stroke-width="0.8"/>')
     out.append(f'<text x="{x}" y="{y}" text-anchor="middle" font-family="serif" '
