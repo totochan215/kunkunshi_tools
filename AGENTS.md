@@ -255,9 +255,14 @@ directement (`spec` passé en paramètre, y compris à `_mega_meta_column` ;
 `CM` restent des constantes de module (conversion d'unités).
 `render_svg` choisit `spec = LAYOUTS[layout]` et le passe à chaque renderer
 (paramètre `spec=None`). Vérifié : rendus SVG byte-identiques avant/après
-(114 échantillons × 6 layouts), figures `docs/svg/*.svg` inchangées après
-régénération. Le générateur de figures
-`docs/svg/make_svg_layout_figures.py` (PR #43) lit les specs (`k.MEGA.page_w`…).
+(114 échantillons × 6 layouts). Le générateur de figures
+`docs/svg/make_svg_layout_figures.py` (PR #43) lit les specs (`k.MEGA.page_w`…)
+et ses libellés utilisent les noms de champs du spec en minuscules
+(`margin_l`, `title_w`, `block_gap`, `dans_per_block`, `dan_gap`, `grid_top`,
+`lyr_gap`, `spec.fs`…) — figures `docs/svg/*.svg` régénérées (diff = libellés
+uniquement, 2026-11-21). Les noms en MAJUSCULES restants dans les libellés
+(`LYRICS_FS`, `SYLLABLE_SP`…) sont des variables locales des renderers, pas des
+paramètres de mise en page.
 
 ### CLI
 

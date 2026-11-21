@@ -43,7 +43,7 @@
 <line x1="170" y1="188" x2="170" y2="61" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="186" y1="188" x2="186" y2="61" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="170" y1="58" x2="186" y2="58" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="178" y="54" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">MARGIN_L = 16</text>
+<text x="178" y="54" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">margin_l = 16</text>
 <line x1="186" y1="188" x2="186" y2="77" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="244" y1="188" x2="244" y2="77" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="186" y1="74" x2="244" y2="74" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -59,15 +59,15 @@
 <line x1="412" y1="188" x2="412" y2="125" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="422" y1="188" x2="422" y2="125" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="412" y1="122" x2="422" y2="122" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="417" y="118" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">TITLE_GAP = 10</text>
+<text x="417" y="118" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">title_gap = 10</text>
 <line x1="422" y1="188" x2="422" y2="141" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="458" y1="188" x2="458" y2="141" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="422" y1="138" x2="458" y2="138" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="440" y="134" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">TITLE_W = 36</text>
+<text x="440" y="134" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">title_w = 36</text>
 <line x1="458" y1="188" x2="458" y2="157" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="474" y1="188" x2="474" y2="157" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="458" y1="154" x2="474" y2="154" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="466" y="150" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">MARGIN_R = 16</text>
+<text x="466" y="150" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">margin_r = 16</text>
 <line x1="170" y1="188" x2="170" y2="173" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="474" y1="188" x2="474" y2="173" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="170" y1="170" x2="474" y2="170" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -75,7 +75,7 @@
 <line x1="168" y1="190" x2="149" y2="190" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="168" y1="206" x2="149" y2="206" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="152" y1="190" x2="152" y2="206" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="147" y="198" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 147 198)">MARGIN_T = 16</text>
+<text x="147" y="198" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 147 198)">margin_t = 16</text>
 <line x1="168" y1="206" x2="133" y2="206" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="168" y1="216" x2="133" y2="216" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="136" y1="206" x2="136" y2="216" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -83,7 +83,7 @@
 <line x1="168" y1="216" x2="149" y2="216" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="168" y1="246" x2="149" y2="246" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="152" y1="216" x2="152" y2="246" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="147" y="231" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 147 231)">GAP_HEADER = 30</text>
+<text x="147" y="231" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 147 231)">gap_header = 30</text>
 <line x1="168" y1="246" x2="133" y2="246" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="168" y1="304" x2="133" y2="304" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="136" y1="246" x2="136" y2="304" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -95,7 +95,7 @@
 <line x1="168" y1="498" x2="149" y2="498" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="168" y1="514" x2="149" y2="514" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="152" y1="498" x2="152" y2="514" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="147" y="506" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 147 506)">MARGIN_T = 16</text>
+<text x="147" y="506" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 147 506)">margin_t = 16</text>
 <line x1="476" y1="190" x2="495" y2="190" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="476" y1="514" x2="495" y2="514" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="492" y1="190" x2="492" y2="514" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -107,6 +107,6 @@
 <text x="282" y="545" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">cell_w = 52</text>
 <line x1="308" y1="532" x2="334" y2="532" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
 <text x="321" y="545" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">marker_w = 26</text>
-<text x="170" y="554" text-anchor="start" font-family="monospace" font-size="9.5" fill="#1a56db">espacements/tailles : TITLE_SPACING = 30 · TUNING_SPACING = 22 · LYRICS_SP = 19 · LYRICS_FS = 16 (medium) · SYLLABLE_FS = 15 · SYLLABLE_SP = 13 · fs notes = 22</text>
-<text x="170" y="568" text-anchor="start" font-family="monospace" font-size="9.5" fill="#1a56db">title_offset = TITLE_W + TITLE_GAP = 46 · lyrics_offset = lyrics_total_w + 12 = 70 · group_w = 78 · marker_w = cell_w//2 si @marker on, sinon 0</text>
+<text x="170" y="554" text-anchor="start" font-family="monospace" font-size="9.5" fill="#1a56db">espacements/tailles : title_spacing = 30 · tuning_spacing = 22 · LYRICS_SP = 19 · LYRICS_FS = 16 (medium) · SYLLABLE_FS = 15 · SYLLABLE_SP = 13 · fs notes = 22</text>
+<text x="170" y="568" text-anchor="start" font-family="monospace" font-size="9.5" fill="#1a56db">title_offset = title_w + title_gap = 46 · lyrics_offset = lyrics_total_w + 12 = 70 · group_w = 78 · marker_w = cell_w//2 si @marker on, sinon 0</text>
 </svg>
