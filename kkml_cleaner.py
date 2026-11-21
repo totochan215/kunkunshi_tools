@@ -239,7 +239,15 @@ def clean(text):
     for b in ordered:
         head = "::" + b.kind + (f" {b.label}" if b.label else "")
         out.append(head)
-        for ln in b.lines:
+        lines = b.lines
+        if getattr(b, "leading_straddle", None):
+            # straddle de tête '/B' : réémis en tout premier token du bloc
+            lead_tok = "/" + b.leading_straddle
+            if lines:
+                lines = [[lead_tok] + list(lines[0])] + list(lines[1:])
+            else:
+                lines = [[lead_tok]]
+        for ln in lines:
             if isinstance(ln, list):
                 out.append(" ".join(ln))
             else:
