@@ -490,6 +490,10 @@ def parse_kkml(text):
             if kind in LYRICS_VARIANTS:
                 variant = kind[len("lyrics-"):]
                 kind = "lyrics"
+            if kind == "song":
+                # Alias de ::section : nom de chanson dans un medley
+                _info_input_variant("::song", "::section")
+                kind = "section"
             current = Block(kind, label)
             current.variant = variant
             song.blocks.append(current)
