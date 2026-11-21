@@ -234,13 +234,18 @@ page), `fs` (0 = `max(fs_min, fs_ratio × cell_h)`), `rows_per_col`,
 `pile_w`, `lyr_gap`, `lyrics_size`, ratios paroles (`lyr_fs_ratio`,
 `lyr_sp_ratio`, `lyr_col_w_ratio`, `lyr_verse_gap_ratio`), ratios syllabes
 (`syl_cell_ratio`, `syl_marker_ratio`, `syl_fs_ratio`), structure mega
-(`blocks`, `block_gap`, `dans_per_block`), `dan_gap`/`max_dans` (nomura).
-Les anciens noms de module (`NOMURA_*`, `CHINDAMI_*`, `MEGA_*`,
-`TUTO_DEFAULT_*`, `CM`) sont des ALIAS vers les specs — ne pas les
-réintroduire en dur. `render_svg` choisit `spec = LAYOUTS[layout]` et le
-passe à chaque renderer (paramètre `spec=None`). Vérifié : rendus SVG
-byte-identiques avant/après (114 échantillons × 6 layouts). Le générateur
-de figures `docs/svg/make_svg_layout_figures.py` (PR #43) peut lire les specs.
+(`blocks`, `block_gap`, `dans_per_block`, `lyr_inline_max_ratio` = seuil
+paroles inline 1re page), `dan_gap`/`max_dans` (nomura).
+✅ (2026-11-21) les alias de module `NOMURA_*`/`CHINDAMI_*`/`MEGA_*`/
+`TUTO_DEFAULT_*` ont été SUPPRIMÉS : les renderers lisent `spec.*`
+directement (`spec` passé en paramètre, y compris à `_mega_meta_column` ;
+`cell_w/h` nomura dérivés du spec dans `_render_nomura`). Seuls `PX` et
+`CM` restent des constantes de module (conversion d'unités).
+`render_svg` choisit `spec = LAYOUTS[layout]` et le passe à chaque renderer
+(paramètre `spec=None`). Vérifié : rendus SVG byte-identiques avant/après
+(114 échantillons × 6 layouts), figures `docs/svg/*.svg` inchangées après
+régénération. Le générateur de figures
+`docs/svg/make_svg_layout_figures.py` (PR #43) lit les specs (`k.MEGA.page_w`…).
 
 ### CLI
 
