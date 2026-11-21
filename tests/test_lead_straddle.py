@@ -53,7 +53,7 @@ assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
 ms = re.findall(r'<text x="([0-9.]+)" y="([0-9.]+)"[^>]*font-size="(\d+)"[^>]*>六</text>', svg)
 assert ms, "straddle de tête 六 absent du SVG vertical"
 m = min(ms, key=lambda t: float(t[1]))  # le plus haut = le straddle de tête
-grid_top = float(re.search(r'<rect x="[0-9.]+" y="([0-9.]+)"[^>]*stroke="#bbb"', svg).group(1))
+grid_top = float(re.search(r'<rect x="[0-9.]+" y="([0-9.]+)"[^>]*stroke="#bbbbbb"', svg).group(1))
 # le glyphe (centre = baseline - 0,35*fs) doit être CENTRÉ sur le bord de case
 center = float(m[1]) - 0.35 * float(m[2])
 assert abs(center - grid_top) < 1.0, (center, grid_top, m)
@@ -68,7 +68,7 @@ assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
 mhs = re.findall(r'<text x="([0-9.]+)" y="([0-9.]+)"[^>]*font-size="(\d+)"[^>]*>六</text>', svgh)
 assert mhs, "straddle de tête 六 absent du SVG horizontal"
 mh = min(mhs, key=lambda t: float(t[0]))  # le plus à gauche = le straddle de tête
-first_cell_x = float(re.search(r'<rect x="([0-9.]+)" y="[0-9.]+"[^>]*stroke="#999"', svgh).group(1))
+first_cell_x = float(re.search(r'<rect x="([0-9.]+)" y="[0-9.]+"[^>]*stroke="#999999"', svgh).group(1))
 assert float(mh[0]) <= first_cell_x + 0.01, (mh[0], first_cell_x)
 print("OK horizontal : /六 sur le bord gauche de la 1re case (x=%s, case x=%s)"
       % (mh[0], first_cell_x))
