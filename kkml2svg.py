@@ -491,10 +491,12 @@ def parse_kkml(text):
             if kind in LYRICS_VARIANTS:
                 variant = kind[len("lyrics-"):]
                 kind = "lyrics"
-            if kind == "song":
-                # Alias de ::section : nom de chanson dans un medley
-                _info_input_variant("::song", "::section")
-                kind = "section"
+            if kind == "section":
+                # Ancien nom de ::song : nom de chanson dans une compilation
+                # (medley) — ::section était trop générique (::tab est déjà
+                # une section)
+                _info_input_variant("::section", "::song")
+                kind = "song"
             if kind in ("block", "page"):
                 # Marqueurs de saut (layout mega uniquement) : ::block ferme le
                 # bloc courant, ::page ferme la page courante, même non pleins.
@@ -761,7 +763,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     last_tab_index = -1
     last_tab_blk = None
     for blk in song.blocks:
-        if blk.kind == "section":
+        if blk.kind == "song":
             cur_title = blk.label
             continue
         if blk.kind in ("block", "page"):
@@ -3087,7 +3089,7 @@ def _wrap_horizontal(tokens, cols):
 # contient jusqu'à 32 blocs verticaux (dans) de 12 cases. Ordre de lecture :
 # bloc du haut d'abord, de haut en bas et de droite à gauche dans chaque dan,
 # puis bloc du bas idem. Colonne marker d'une DEMI-CASE à droite de chaque dan
-# (comme en vertical). Medley : chaque chanson = une section (::section nom
+# (comme en vertical). Medley : chaque chanson = une section (::song nom
 # + ::tab) ; le nom de la chanson est imprimé au-dessus des colonnes concernées
 # et la dernière colonne de chaque chanson est complétée par des cases VIDES
 # (pas de tenuto, pas de cercle de repos) pour que la chanson suivante commence
@@ -3421,7 +3423,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         lyr_by_song = []
         cur_song = None
         for blk in song.blocks:
-            if blk.kind == "section":
+            if blk.kind == "song":
                 cur_song = blk.label
             elif blk.kind == "lyrics":
                 lyr_by_song.append((cur_song, blk.lines))
@@ -3475,7 +3477,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
             if scols:
                 if ly_cols:
                     ly_cols.append(None)   # saut de colonne entre chansons
-                if song_title:   # paroles sans ::section : pas de titre
+                if song_title:   # paroles sans ::song : pas de titre
                     ly_cols.append(("T", song_title, si))
                 ly_cols.extend(scols)
         per_page = MEGA_BLOCKS * max_cols
