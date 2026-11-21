@@ -22,8 +22,8 @@ Options supplémentaires en-tête KKML (défauts : @layout vertical,
     @shaku_circled on     → 尺 entourés d'un cercle (défaut: off, sans cercle)
     @shaku_sharp on       → 尺♯ rendus avec le symbole ♯ (défaut: off, rendu en 尺 simple)
     @author Nom          → auteur (défaut: vide)
-    @source Texte        → source de la version du morceau (texte libre, ruby
-                           supporté, liens [texte](url) ; défaut: vide)
+    @source Texte        → source de la version du morceau (texte libre ;
+                           NON affiché dans le SVG, information KKML ; défaut: vide)
     @end_circle off      → désactive le marqueur de fin de chanson (cercle creux)
                            dans la colonne marker, au bas de la dernière case remplie
                            (défaut: on)
@@ -62,10 +62,11 @@ RUBY_SCALE = 0.5
 EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
 # Ordre commun des blocs de métadonnées après le titre (tous layouts) :
-# auteur, compositeur, parolier (personnes), puis genre, origine et source
+# auteur, compositeur, parolier (personnes), puis genre et origine
 # (classification), enfin l'accordage. tuning = @choushi (défaut 本調子) ;
-# genre n'est pas répété s'il égale author.
-META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "source", "tuning")
+# genre n'est pas répété s'il égale author. @source et @comment ne sont PAS
+# affichés : information stockée dans le KKML uniquement.
+META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "tuning")
 
 
 def _meta_blocks(song):
@@ -2964,7 +2965,7 @@ def _tuto_title_page(song, W, H):
         lines.append(genre)
     if author:
         lines.append(author)
-    for k in ("composer", "lyricist", "origin", "source"):
+    for k in ("composer", "lyricist", "origin"):
         v = song.meta.get(k, "")
         if v:
             lines.append(v)
