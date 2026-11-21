@@ -51,7 +51,7 @@
 <line x1="159.551" y1="118" x2="159.551" y2="59" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="171.551" y1="118" x2="171.551" y2="59" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="159.551" y1="56" x2="171.551" y2="56" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="165.551" y="52" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">LYR_SEP = 12</text>
+<text x="165.551" y="52" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">lyr_gap = 12</text>
 <line x1="469.743" y1="118" x2="469.743" y2="75" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="504.573" y1="118" x2="504.573" y2="75" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="469.743" y1="72" x2="504.573" y2="72" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -59,11 +59,11 @@
 <line x1="678.72" y1="118" x2="678.72" y2="91" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="688.72" y1="118" x2="688.72" y2="91" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="678.72" y1="88" x2="688.72" y2="88" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="683.72" y="84" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">TITLE_GAP = 10</text>
+<text x="683.72" y="84" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">title_gap = 10</text>
 <line x1="688.72" y1="118" x2="688.72" y2="107" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="712.418" y1="118" x2="712.418" y2="107" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="688.72" y1="104" x2="712.418" y2="104" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="700.569" y="100" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">TITLE_W = 23.7</text>
+<text x="700.569" y="100" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db">title_w = 23.7</text>
 <line x1="712.418" y1="118" x2="712.418" y2="123" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="761.969" y1="118" x2="761.969" y2="123" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="712.418" y1="120" x2="761.969" y2="120" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -75,7 +75,7 @@
 <line x1="108" y1="120" x2="91" y2="120" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="108" y1="150.521" x2="91" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="94" y1="120" x2="94" y2="150.521" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="89" y="135.26" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 89 135.26)">GRID_TOP = 30.5</text>
+<text x="89" y="135.26" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 89 135.26)">grid_top = 30.5</text>
 <line x1="108" y1="150.521" x2="75" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="108" y1="180.323" x2="75" y2="180.323" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="78" y1="150.521" x2="78" y2="180.323" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -83,7 +83,7 @@
 <line x1="108" y1="150.521" x2="59" y2="150.521" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="108" y1="507.433" x2="59" y2="507.433" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="62" y1="150.521" x2="62" y2="507.433" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="57" y="328.977" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 57 328.977)">12 × cell_h = 357 pt (GRID_TOP→GRID_BOTTOM)</text>
+<text x="57" y="328.977" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 57 328.977)">12 × cell_h = 357 pt (grid_top→grid_bottom)</text>
 <line x1="763.969" y1="120" x2="780.969" y2="120" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="763.969" y1="545.197" x2="780.969" y2="545.197" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="777.969" y1="120" x2="777.969" y2="545.197" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -95,5 +95,5 @@
 <text x="481.413" y="573.197" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">cell_w = 23.3</text>
 <line x1="493.083" y1="561.197" x2="504.573" y2="561.197" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
 <text x="487.158" y="573.197" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">marker_w = 11.5</text>
-<text x="110" y="577.197" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">CHINDAMI_FS = 12 · lyr_fs = 10 (spec.lyr_fs = 10.8 pt) · lyr_sp = 12 · lyr_col_w = 13 · max_lyr_u = hauteur grille en unités · repli des paroles avec kinsoku (@kinsoku)</text>
+<text x="110" y="577.197" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">spec.fs = 12 · lyr_fs = 10 (spec.lyr_fs = 10.8 pt) · lyr_sp = 12 · lyr_col_w = 13 · max_lyr_u = hauteur grille en unités · repli des paroles avec kinsoku (@kinsoku)</text>
 </svg>
