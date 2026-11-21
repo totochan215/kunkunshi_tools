@@ -42,3 +42,5 @@ jobs:
         run: python3 tests/test_layout_attrs.py
       - name: Lancer les tests du cleaner sur medley (pas de vrac par ::song)
         run: python3 tests/test_cleaner_medley.py
+      - name: Lancer les tests complets du cleaner (kkml_cleaner)
+        run: python3 tests/test_kkml_cleaner.py
