@@ -26,3 +26,5 @@ jobs:
         run: python3 tests/test_escape.py
       - name: Lancer les tests @source et liens
         run: python3 tests/test_source.py
+      - name: Lancer les tests d'ordre des métadonnées du cleaner
+        run: python3 tests/test_cleaner_meta.py
