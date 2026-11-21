@@ -73,4 +73,19 @@ for src in ("@tuning 本調子\n@title t\n@source S\n@version 0.1\n@format KKML\
     assert c.clean(o1) == o1, f"non idempotent:\n{o1}\n---\n{c.clean(o1)}"
 print("OK idempotence cleaner(cleaner(x)) == cleaner(x)")
 
+# 8. séparateurs : une et une seule ligne vide entre le bloc métadonnées et la
+# première section, et entre chaque section ; aucune en tête si pas de
+# métadonnées, aucune en fin de fichier
+src = "@title t\n::tab\n合 工\n::\n::lyrics\n一、x\n\n二、y\n::\n"
+out = c.clean(src)
+assert out.startswith("@title t\n\n::tab\n"), repr(out)
+assert "\n\n\n" not in out, repr(out)          # jamais deux lignes vides de suite
+assert "::\n\n::" in out, repr(out)             # une ligne vide entre chaque section
+assert not out.endswith("\n\n"), repr(out)
+out2 = c.clean("::tab\n合 工\n::\n::lyrics\nx\n::\n")
+assert out2.startswith("::tab\n"), repr(out2)  # pas de ligne vide en tête sans métadonnées
+assert "\n\n\n" not in out2 and not out2.endswith("\n\n"), repr(out2)
+assert c.clean(out) == out and c.clean(out2) == out2
+print("OK séparateurs : une seule ligne vide entre bloc méta/sections, aucune en tête/fin")
+
 print("\nTous les tests d'ordre des métadonnées passent.")

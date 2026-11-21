@@ -14,6 +14,9 @@ Règles (voir AGENTS.md, section « Long terme ») :
 - métadonnées : toutes regroupées en haut du fichier ; `@format` `@version`
   `@title` toujours en premier (si présents), puis les autres métadonnées
   présentes dans leur ordre d'apparition dans le fichier ;
+- séparateurs : une et une seule ligne vide entre le bloc des métadonnées et
+  la première section, et entre chaque section (aucune ligne vide en tête
+  si pas de métadonnées, aucune en fin de fichier) ;
 - complétion structurelle : `::vocal` manquante créée (cases vides alignées),
   `::vocal` désalignée réalignée si le total boucle (sinon avertissement),
   `::lyrics` manquante créée vide, `::tab` implicite rendue explicite,
@@ -221,7 +224,11 @@ def clean(text):
     for key, val in meta.items():  # sécurité : clés non vues au scan raw
         if key not in file_keys:
             out.append(f"@{key} {val}")
-    out.append("")
+    # une et une seule ligne vide entre le bloc des métadonnées et la première
+    # section (et aucune ligne vide en tête si pas de métadonnées), puis une
+    # seule ligne vide entre chaque section
+    if out and ordered:
+        out.append("")
     for b in ordered:
         head = "::" + b.kind + (f" {b.label}" if b.label else "")
         out.append(head)
