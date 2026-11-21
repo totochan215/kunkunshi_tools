@@ -91,7 +91,7 @@
 <line x1="168" y1="246" x2="117" y2="246" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="168" y1="498" x2="117" y2="498" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="120" y1="246" x2="120" y2="498" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="115" y="372" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 115 372)">rows_per_col·cell_h = 12·58 = 696 px (4 cases + rupture dessinées, -c)</text>
+<text x="115" y="372" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 115 372)">cells_per_dan·cell_h = 12·58 = 696 px (4 cases + rupture dessinées, -c)</text>
 <line x1="168" y1="498" x2="149" y2="498" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="168" y1="514" x2="149" y2="514" stroke="#1a56db" stroke-width="0.5"/>
 <line x1="152" y1="498" x2="152" y2="514" stroke="#1a56db" stroke-width="1" marker-start="url(#arr)" marker-end="url(#arr)"/>
