@@ -332,9 +332,9 @@ def convert_portama_to_kkml(data):
         lines.append(f"@title {portama_title_to_kkml(title)}")
 
     choshi = data.get("choshi", "")
-    tuning = CHOSHI_MAP.get(choshi, choshi)
-    if tuning:
-        lines.append(f"@tuning {tuning}")
+    choshi_kkml = CHOSHI_MAP.get(choshi, choshi)
+    if choshi_kkml:
+        lines.append(f"@choshi {choshi_kkml}")
 
     # Nombre de colonnes : cellsPerDan / 2 = nombre de notes par dan
     cells_per_dan = data.get("cellsPerDan", 24)

@@ -19,12 +19,13 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ✅ (2026-11-22) `kkml2pdf.py` : validation des PDF de page produits par le moteur SVG→PDF — `_pdf_complet()` attend (jusqu'à `_PDF_TIMEOUT` = 10 s) que le fichier commence par `%PDF-` et contienne `%%EOF` dans son dernier tampon, sinon `RuntimeError` explicite. Cause d'un crash utilisateur (inkscape sur macOS rend la main avant d'avoir tout écrit → PDF tronqué → pypdf : « EOF marker not found » + `PdfStreamError: Stream has ended unexpectedly` au merge ; reproduit avec pypdf 3.9). Test n°9 `tests/test_kkml2pdf.py` (tronqué détecté, écriture différée attendue).
 
 - ✅ (2026-11-22) Renommage `kkml_cleaner.py` → `kkml_clean.py` (objet → verbe d'action) : fichier renommé, imports (`import kkml_clean as c` dans `kkml_beautify.py` et les tests), tests renommés (`tests/test_kkml_clean.py`, `test_clean_meta.py`, `test_clean_medley.py`), références README/`docs/kkml-format.md`/`.github/workflows/tests.yml` mises à jour, préfixes stderr `kkml_clean: ...`. Shim `kkml_cleaner.py` conservé pour la transition (AVERTISSEMENT + délégation vers `kkml_clean.py`). Comportement inchangé : sorties du cleaner byte-identiques à l'ancien cleaner sur les samples ; toute la suite de tests passe.
+- ✅ (2026-11-22) `@tuning` → `@choshi` (le champ JSON Portama s'appelle `choshi`) : alias `@tuning` accepté au parsing (info stderr, stocké sous la clé canonique `choshi` dans `song.meta`, forme collée `@tuningValeur` comprise — `META_ALIASES = {"tuning": "choshi"}` dans kkml2svg.py, `tuning` reste dans `META_KEYS`), rectifié en `@choshi` par kkml_clean (info « renommé en @choshi ») ; `META_ORDER`/`_meta_blocks` et tous les rendus lisent `choshi` ; `portama2kkml.py` émet `@choshi` (CHOSHI_MAP) ; samples, README et `docs/kkml-format.md` en forme canonique. Rendus 60/60 byte-identiques vs main ; rendu `@tuning` == rendu `@choshi` (test). Tests : `tests/test_source.py` (alias + META_ORDER), `tests/test_clean_meta.py` n°10 (rectification), `tests/test_portama_meta.py` (émission `@choshi`) — en CI.
 - ⬜ (2026-11-22) Idées utilisateur pour la roadmap, à trier/implémenter :
-  - **Constantes par modèle de mise en page** déterminant, pour chaque métadonnée, si elle est représentée ou non (ex. table « méta affichée » dans chaque `LayoutSpec` : `@source`/`@comment`/`@speed` non affichés partout aujourd'hui, `@tuning` dans la colonne titre, etc.) — rendre explicite et surchargeable ce que chaque layout rend.
-  - En `chindami`, `vertical`, `mega` : descendre la métadonnée `@tuning` (accordage ; « choushi » côté Portama) pour que **son bas touche la hauteur du haut de la dernière case** (au lieu de la colonne titre en haut de page).
+  - **Constantes par modèle de mise en page** déterminant, pour chaque métadonnée, si elle est représentée ou non (ex. table « méta affichée » dans chaque `LayoutSpec` : `@source`/`@comment`/`@speed` non affichés partout aujourd'hui, `@choshi` dans la colonne titre, etc.) — rendre explicite et surchargeable ce que chaque layout rend.
+  - En `chindami`, `vertical`, `mega` : descendre la métadonnée `@choshi` (accordage ; « choshi » côté Portama) pour que **son bas touche la hauteur du haut de la dernière case** (au lieu de la colonne titre en haut de page).
   - Représenter `@speed` sous la forme `♩= 120`, **toujours à l'horizontal, même en mise en page verticale** (texte non pivoté, ex. via `text-orientation` ou bloc horizontal dédié) — actuellement `@speed` est stocké tel quel et non affiché (champ Portama `speed`).
 - ⬜ (2026-11-22) Autres idées utilisateur :
-  - Remplacer `@tuning` par `@choshi` (meilleure compréhension par les utilisateurs Portama — le champ JSON s'appelle déjà `choshi`) ; prévoir alias `@tuning` accepté avec info stderr, rectifié par le cleaner.
+  - ✅ (2026-11-22) `@tuning` remplacé par `@choshi` — fait (voir entrée ✅ de la section 0) : alias `@tuning` accepté au parsing avec info stderr, rectifié en `@choshi` par le cleaner.
   - Mises en page à taille fixe (nomura, chindami, mega) : ajouter un **bloc de texte pour le numéro de page**, incrémenté automatiquement à chaque page, pouvant partir d'une `@page_base > 1` (ex. intégrer les pages dans un recueil existant).
   - Supprimer les `::` de fin de section superflus dans les medleys (semblent ne servir à rien) — le cleaner les supprime automatiquement.
   - Les 3 niveaux de stderr du cleaner en **majuscules** : `ERROR`, `WARNING`, `INFO` (aujourd'hui `ERREUR`/`AVERTISSEMENT`/`info` en français).
@@ -181,7 +182,7 @@ Diagnostics : le cleaner émet info / avertissement / erreur sur stderr selon la
 - ⬜ (2026-11-22) Gestion de medleys (compilations) — trois chantiers liés :
   - `kkml-append.py` : créer un medley KKML à partir de plusieurs chansons (fichiers KKML individuels) — chaque chanson devient un run `::song <nom>` + son contenu (`::tab`/`::vocal`/`::lyrics`), métadonnées communes du medley en tête de fichier.
   - `kkml-split.py` : découper un medley en chansons KKML indépendantes — réattribuer à chaque fichier sorti les métadonnées communes du medley (ex. `@title` global) plus les métadonnées spécifiques de la chanson.
-  - Métadonnées spécifiques à une chanson dans un medley : autoriser des lignes `@clé valeur` À L'INTÉRIEUR du bloc `::song <nom>` (ex. `@tuning`, `@source`, `@chogen` — appliquées à cette chanson uniquement). À parser dans `parse_kkml` (champ dédié sur le bloc song), à préserver/réémettre par le cleaner, à réécrire en tête du fichier par `kkml-split.py`, et éventuellement à prendre en compte au rendu mega (surcharge des méta globales pour les colonnes de cette chanson).
+  - Métadonnées spécifiques à une chanson dans un medley : autoriser des lignes `@clé valeur` À L'INTÉRIEUR du bloc `::song <nom>` (ex. `@choshi`, `@source`, `@chogen` — appliquées à cette chanson uniquement). À parser dans `parse_kkml` (champ dédié sur le bloc song), à préserver/réémettre par le cleaner, à réécrire en tête du fichier par `kkml-split.py`, et éventuellement à prendre en compte au rendu mega (surcharge des méta globales pour les colonnes de cette chanson).
 
 ## 5. Positionnement
 
@@ -437,7 +438,7 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 - Paires (main, straddle) → noires, croches (A/B) ou shuffles (A:B) selon `isSmall`
 - `acc: "sharp"` → 尺♯, `orn: "u"` → suffixe `'`
 - `repeatStart/repeatEnd` → `|:` / `:|`
-- `choshi` → `@tuning`, `cellsPerDan / 2` → `@cells_per_dan`
+- `choshi` → `@choshi`, `cellsPerDan / 2` → `@cells_per_dan`
 - N'exporte pas encore `allRubyData` (proposition `::ruby` / conversion `::vocal`, voir `docs/kkml-format.md`)
 
 ## Séparation documentation humaine / agent
@@ -489,7 +490,7 @@ Calibrage Inkscape nov. 2026 (grille de test + こぐやで風節, てぃんさ�
 - Structure du tableau `allRubyData` : 1 array par page, 1 ligne par dan, 3 unités double largeur par cellule. Description détaillée à documenter.
 - Structure du tableau `allLyricsData` : `id`, `content`, `x`, `y`, `width`, `height`, `fontSize` — description détaillée à documenter.
 - Mapping conversion restant à définir : orn `nu` → suffixe `n` (proposition ; `"` en place depuis 2026-11-04). ✅ yubii et vocalPosMarkers encodés depuis le 2026-11-19 (vocalPosMarkers : seules les cellules isSmall mid → `::vocal`, le reste ignoré avec info stderr).
-- `choshi` + `chogen` → `@tuning` (chogen − 5 = demi-tons ; pas encore implémenté).
+- `choshi` + `chogen` → `@choshi` (chogen − 5 = demi-tons ; pas encore implémenté).
 - Point ouvert : `repeatStart`/`repeatEnd`/`vocalRepStart`/`vocalRepEnd` ne rendent RIEN dans テスト節.pdf (dan 1, cases 13–19 : aucun graphique ni flèche), alors que d'autres pièces rendent des flèches dans la colonne marker. Le déclencheur exact du rendu des flèches reste à élucider.
 - ✅ `kkml2pdf.py` (2026-11-19) : KKML → PDF multipage pour les layouts à format cm prédéfini (chindami/nomura/mega) — voir la section architecture `kkml2pdf.py` ci-dessous.
 ## Modèles de page — état (2026-11-15)

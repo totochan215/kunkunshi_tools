@@ -66,23 +66,23 @@ EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
 # Ordre commun des blocs de métadonnées après le titre (tous layouts) :
 # auteur, compositeur, parolier (personnes), puis genre et origine
-# (classification), enfin l'accordage. tuning = @choushi (défaut 本調子) ;
+# (classification), enfin l'accordage : @choshi (défaut 本調子) ;
 # genre n'est pas répété s'il égale author. @source et @comment ne sont PAS
 # affichés : information stockée dans le KKML uniquement.
-META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "tuning")
+META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "choshi")
 
 
 def _meta_blocks(song):
     """Blocs de métadonnées dans l'ordre commun META_ORDER.
-    Retourne une liste de (texte, taille_police, fill) — le bloc tuning
+    Retourne une liste de (texte, taille_police, fill) — le bloc choshi
     porte la taille/fill de l'accordage (15, #555), les autres 12, #777.
     Le genre n'est pas répété s'il est identique à l'auteur."""
     blocks = []
     genre = song.meta.get("genre", "")
     author = song.meta.get("author", "")
     for k in META_ORDER:
-        if k == "tuning":
-            val = song.meta.get("tuning", "本調子")
+        if k == "choshi":
+            val = song.meta.get("choshi", "本調子")
             if val:
                 blocks.append((val, 15, "#555"))
         else:
@@ -411,8 +411,13 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 SECTION_ALIASES = {"tabs": "tab", "vocals": "vocal", "lyric": "lyrics",
                    "songs": "song", "section": "song"}
 
-# Clés de métadonnées reconnues (pour la tolérance @cléValeur collée)
-META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle", "show_dots",
+# Alias de clés de métadonnées acceptés au parsing (rectifiés par kkml_clean) :
+# @tuning = ancien nom de @choshi (le champ JSON Portama s'appelle `choshi`)
+META_ALIASES = {"tuning": "choshi"}
+
+# Clés de métadonnées reconnues (pour la tolérance @cléValeur collée) —
+# "tuning" y reste pour la forme collée @tuningValeur (alias, voir META_ALIASES)
+META_KEYS = {"title", "choshi", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle", "show_dots",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "source", "shaku_circled", "shaku_sharp", "speed", "font_style",
              "mega_dans",
@@ -480,6 +485,10 @@ def parse_kkml(text):
                     key = mk
                     break
         if m and not stripped.startswith("::"):
+            if key in META_ALIASES:
+                # alias d'ancien nom (@tuning -> @choshi) : rectifié par le cleaner
+                _info_input_variant("@" + key, "@" + META_ALIASES[key])
+                key = META_ALIASES[key]
             if key in ("cols", "cells_per_dan"):
                 # @cells_per_dan (ex-@cols) est une indication de mise en page
                 # (cellules par dan), pas une caractéristique de la chanson :
@@ -908,7 +917,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
         cols = None  # ignoré : le layout fixe ses propres cases/dan
 
     title = song.meta.get("title", "")
-    tuning = song.meta.get("tuning", "本調子")
+    tuning = song.meta.get("choshi", "本調子")
 
     # Regrouper les sections en 4-uplets
     sections = []   # (section_title, content, kind, vocal_flat=None, lead_straddle=None)
@@ -965,7 +974,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     MARGIN_R = spec.u(spec.margin_r + spec.pad_r)
     MARGIN_T = spec.u(spec.margin_t + spec.pad_t)
     header_h = spec.u(spec.header_h)  # vertical sans titre
-    if layout == "vertical" and (song.meta.get("title") or song.meta.get("tuning", "本調子")):
+    if layout == "vertical" and (song.meta.get("title") or song.meta.get("choshi", "本調子")):
         # Titre/accordage/parolier/compositeur/origine rendus verticalement
         # à droite : l'en-tête haut-gauche est vide, marge de tête minimale.
         header_h = spec.u(spec.header_h_title)
@@ -1058,7 +1067,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
                      fs, ml, mr, mt, header_h, marker=False, opts=None,
                      page_dans=None, spec=None):
     title = song.meta.get("title", "")
-    tuning = song.meta.get("tuning", "本調子")
+    tuning = song.meta.get("choshi", "本調子")
 
     spec = spec or VERTICAL
     GAP_HEADER = spec.u(spec.gap_header)       # saut après l'en-tête, avant la tablature
@@ -1098,7 +1107,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
     if title:
         v_blocks.append((title, 26, TITLE_SPACING, "black", 20))
     for k in META_ORDER:
-        if k == "tuning":
+        if k == "choshi":
             val = tuning
         else:
             val = song.meta.get(k, "")
@@ -1106,7 +1115,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
                 continue
         if val:
             v_blocks.append((val, 15, TUNING_SPACING,
-                             "#555" if k == "tuning" else "#777", 15))
+                             "#555" if k == "choshi" else "#777", 15))
     # Règle alignée (layouts libres) : les métadonnées s'ajoutent SOUS le
     # titre dans la MÊME colonne, autant que de besoin, SANS repli en
     # colonne suivante ; la hauteur de page grandit pour couvrir tout le
@@ -1604,7 +1613,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     (::lyrics) en colonnes verticales à gauche de la dernière page.
     Retourne une liste de SVG (un par page)."""
     title = song.meta.get("title", "")
-    tuning = song.meta.get("tuning", "本調子")
+    tuning = song.meta.get("choshi", "本調子")
     musicno = song.meta.get("musicno", "")
     font_family = (opts or {}).get('font_family', 'serif')
 
@@ -1877,7 +1886,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     occupent la dernière colonne de la dernière page.
     """
     title = song.meta.get("title", "")
-    tuning = song.meta.get("tuning", "本調子")
+    tuning = song.meta.get("choshi", "本調子")
     # La colonne marker est cosubstantielle du layout nomura : forcer
     # @marker on, quelle que soit la méta (et même sans ::vocal).
     marker = True
@@ -2801,7 +2810,7 @@ def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
 def _render_horizontal(song, sections, cols, cell_w, cell_h,
                        fs, ml, mr, mt, header_h, marker=False, opts=None, spec=None):
     title = song.meta.get("title", "")
-    tuning = song.meta.get("tuning", "本調子")
+    tuning = song.meta.get("choshi", "本調子")
 
     prepared = []
     for items in sections:
@@ -3253,7 +3262,7 @@ def _tuto_title_page(song, W, H, opts=None, spec=None):
         else:
             _emit_centered_text(out, title, cx, y, fs_t, "black", links=True)
         y += fs_t * 1.6
-    tuning = song.meta.get("tuning", "")
+    tuning = song.meta.get("choshi", "")
     if tuning:
         out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
                    f'font-size="{max(10, int(H * 0.035))}" fill="#555">{escape(tuning)}</text>')
@@ -3489,7 +3498,7 @@ def _mega_paginate(stream, dans_per_block, blocks_per_page=2, per_page=None, row
 
 def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=None):
     title = song.meta.get("title", "")
-    tuning = song.meta.get("tuning", "本調子")
+    tuning = song.meta.get("choshi", "本調子")
 
     # Syllabes vocales présentes -> colonne marker forcée (comme vertical)
     has_vocal = any(s[3] or s[2] == "vocal" for s in sections)
