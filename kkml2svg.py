@@ -949,23 +949,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
                     padded = list(syls[:n]) + ["-"] * max(0, n - len(syls))
                     vocal_flat.extend(padded)
                 sec_title, tab_content, tab_kind, _, lead0 = sections[last_tab_index]
-                # Koedashi/koekiri ( ) de ::vocal : rattachés à la case ::tab
-                # alignée (même index) pour être rendus ○/□ DANS la case par
-                # render_cell — pas dans la colonne marker.
-                merged = list(tab_content)
-                for i, syl in enumerate(vocal_flat):
-                    if i >= len(merged) or not syl or syl == "-":
-                        continue
-                    if "(" in syl or ")" in syl:
-                        t = merged[i]
-                        if t in ("", "-"):
-                            t = REST_TOKEN   # borne de chant sur un repos : légitime
-                        if "(" in syl:
-                            t = "(" + t
-                        if ")" in syl:
-                            t = t + ")"
-                        merged[i] = t
-                sections[last_tab_index] = (sec_title, merged, tab_kind, vocal_flat, lead0)
+                sections[last_tab_index] = (sec_title, tab_content, tab_kind, vocal_flat, lead0)
             else:
                 # Pas de section ::tab précédente : aplatir tel quel (non rendu)
                 vocal_flat = []
@@ -1844,11 +1828,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                 cy = y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
                 rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                if koe:
-                    if tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                        base_tok = '(' + base_tok  # koedashi : ○ dans la case
-                    if tok.rstrip('|:').endswith(')') and not base_tok.endswith(')'):
-                        base_tok = base_tok + ')'  # koekiri : □ dans la case
+                if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                    base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                 render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                             cell_w, cell_h, opts)
             if vcol and marker_w > 0 and syllable_fs > 0:
@@ -2124,11 +2105,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                 cy = grid_y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
                 rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                if koe:
-                    if tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                        base_tok = '(' + base_tok  # koedashi : ○ dans la case
-                    if tok.rstrip('|:').endswith(')') and not base_tok.endswith(')'):
-                        base_tok = base_tok + ')'  # koekiri : □ dans la case
+                if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                    base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                 render_cell(out, base_tok, nx + cell_w / 2, cy + cell_h / 2,
                             fs, cell_w, cell_h, opts)
             # syllabes vocales dans le marker — logique points commune
@@ -2146,6 +2124,18 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                     sx = gx + cell_w + marker_w / 2
                     elems = _vocal_elements(syllable)
                     n = max(len(elems), 1)
+                    # Bornes de chant ( ) : ○/□ DANS la case (bord droit), alignés
+                    # en hauteur sur l'élément (syllabe ou point, même masqué)
+                    # auquel la borne est rattachée.
+                    slots, _n = _vocal_paren_slots(syllable)
+                    if slots and o.get('render_koe', True):
+                        ss = int(fs * 0.42)
+                        xk = gx + cell_w * 0.86
+                        for ch, j in slots:
+                            yk = cy + cell_h / 2 + cell_h * (j / n) + ss * 0.318
+                            g = chr(0x25CB) if ch == "(" else chr(0x25A1)
+                            out.append(f'<text x="{xk:g}" y="{yk:g}" text-anchor="middle" '
+                                       f'font-family="serif" font-size="{ss}" fill="black">{g}</text>')
                     for j, el in enumerate(elems):
                         # 1er élément au centre de la case, puis cell_h * j/n (comme vertical/horizontal)
                         sy = cy + cell_h / 2 + cell_h * (j / n) + syl_fs / 3
@@ -2542,6 +2532,18 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
             # toute la case (centré). Même règle qu'en horizontal/tuto.
             elems = _vocal_elements(token)
             n = max(len(elems), 1)
+            # Bornes de chant ( ) : ○/□ DANS la case (bord droit), alignés en
+            # hauteur sur l'élément (syllabe ou point, même masqué) auquel la
+            # borne est rattachée — ( = élément après, ) = élément avant.
+            slots, _n = _vocal_paren_slots(token)
+            if slots and (opts or {}).get('render_koe', True):
+                ss = int(fs * 0.42)
+                xk = x + cell_w * 0.86
+                for ch, j in slots:
+                    yk = cy + cell_h / 2 + cell_h * (j / n) + ss * 0.318
+                    g = chr(0x25CB) if ch == "(" else chr(0x25A1)
+                    out.append(f'<text x="{xk:g}" y="{yk:g}" text-anchor="middle" '
+                               f'font-family="serif" font-size="{ss}" fill="black">{g}</text>')
             for j, el in enumerate(elems):
                 # 1er élément au CENTRE de la case, puis mêmes multiplicateurs
                 # qu'en horizontal/tuto : y_i = centre + cell_h * i/n
@@ -2662,11 +2664,8 @@ def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
             cy = y0 + ri * cell_h
             tok = col[ri] if ri < len(col) else ""
             rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-            if koe:
-                if tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                    base_tok = '(' + base_tok  # koedashi : ○ dans la case
-                if tok.rstrip('|:').endswith(')') and not base_tok.endswith(')'):
-                    base_tok = base_tok + ')'  # koekiri : □ dans la case
+            if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
             render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                         cell_w, cell_h, opts)
 
@@ -2742,7 +2741,7 @@ def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
         out.append(f'<circle cx="{hx + r:g}" cy="{vy:g}" r="{r:g}"/>')
     out.append('</g>')
 def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
-                            syl_fs, show_dots=False):
+                            syl_fs, show_dots=False, cell_h=0, note_fs=0):
     """Syllabes ::vocal dans la ligne marker horizontale (sous la rangée de
     cases) — transposée de _draw_vertical_vocal : éléments (points ・ et
     syllabes) répartis le long de la case (x_i = cx + cell_w·i/n, i=0 sous
@@ -2762,6 +2761,17 @@ def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
         cx = ml + idx * cell_w + cell_w / 2
         elems = _vocal_elements(syl)
         n = max(len(elems), 1)
+        # Bornes de chant ( ) : ○/□ DANS la case, alignés en x sur l'élément
+        # (syllabe ou point, même masqué) auquel la borne est rattachée.
+        slots, _n = _vocal_paren_slots(syl)
+        if slots and note_fs:
+            ss = int(note_fs * 0.42)
+            yk = (y_top - cell_h / 2 + ss * 0.318) if cell_h else sy
+            for ch, j in slots:
+                xk = cx + cell_w * (j / n)
+                g = chr(0x25CB) if ch == "(" else chr(0x25A1)
+                out.append(f'<text x="{xk:g}" y="{yk:g}" text-anchor="middle" '
+                           f'font-family="serif" font-size="{ss}" fill="black">{g}</text>')
         for j, el in enumerate(elems):
             sx = cx + cell_w * (j / n)
             if el == "" and show_dots:
@@ -2961,11 +2971,8 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                                f'height="{cell_h}" fill="none" '
                                f'stroke="{cs}" stroke-width="{csw:g}"/>')
                     rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                    if koe:
-                        if tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                            base_tok = '(' + base_tok  # koedashi : ○ dans la case
-                        if tok.rstrip('|:').endswith(')') and not base_tok.endswith(')'):
-                            base_tok = base_tok + ')'  # koekiri : □ dans la case
+                    if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                        base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
                     row_notes.append((base_tok, x))
                     if rs:
                         row_syms.append(('a', 'start', x))
@@ -3006,7 +3013,8 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                 if marker_h > 0 and vrows0 and ri < len(vrows0):
                     _draw_marker_line_vocal(out, vrows0[ri], row, ml,
                                             y + cell_h, cell_w, marker_h,
-                                            h_syl_fs, show_dots=bool(o.get('show_dots')))
+                                            h_syl_fs, show_dots=bool(o.get('show_dots')),
+                                            cell_h=cell_h, note_fs=fs)
                 y += cell_h + marker_h
             y += 6
             if do_end_circle and si == last_tab_idx and h_last_filled:
@@ -3109,6 +3117,35 @@ def _vocal_elements(tok):
     if cur:
         elems.extend(_split_syllables(cur))
     return elems
+
+
+def _vocal_paren_slots(tok):
+    """Positions des bornes ( ) d'un token ::vocal, en index d'élément :
+    `(` se rattache à l'élément juste APRÈS (index = nb d'éléments avant elle),
+    `)` à l'élément juste AVANT (index = nb d'éléments avant − 1).
+    Retourne (slots, n), n = nb total d'éléments (points `.` compris, même
+    masqués par @show_dots off : l'alignement suit l'emplacement théorique)."""
+    slots = []
+    n = 0
+    cur = ""
+    for ch in tok:
+        if ch == ".":
+            if cur:
+                n += len(_split_syllables(cur)); cur = ""
+            n += 1
+        elif ch == "(":
+            if cur:
+                n += len(_split_syllables(cur)); cur = ""
+            slots.append(("(", n))
+        elif ch == ")":
+            if cur:
+                n += len(_split_syllables(cur)); cur = ""
+            slots.append((")", max(n - 1, 0)))
+        else:
+            cur += ch
+    if cur:
+        n += len(_split_syllables(cur))
+    return slots, n
 
 
 def _tuto_block_size(song):

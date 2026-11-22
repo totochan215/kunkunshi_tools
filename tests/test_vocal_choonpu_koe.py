@@ -88,4 +88,49 @@ out_koe = c.clean(src_koe)
 assert "(" + chr(0x3042) in out_koe and chr(0x3046) + ")" in out_koe, out_koe
 print("OK cleaner : parenthèses koedashi/koekiri restent dans ::vocal")
 
+# --- 5. alignement des bornes sur l'élément rattaché (slot), point masqué compris ---
+import re as _re
+# cell 0 : "(.あ" -> koedashi ○ sur le POINT (élément 0) ; cell 1 : "あ.)" -> koekiri □ sur le POINT (élément 1)
+src_al = ("@format KKML\n::tab\n" + chr(0x5408) + " " + chr(0x5408) + "\n::\n::vocal\n(."
+          + chr(0x3042) + " " + chr(0x3042) + ".)\n::\n")
+
+
+def koe_and_syl(svg):
+    koe = [(float(m[0]), float(m[1]), m[3]) for m in
+           _re.findall(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>([\u25cb\u25a1])</text>', svg)]
+    syl = [(float(m[0]), float(m[1]), m[2]) for m in
+           _re.findall(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">(.)</text>', svg)
+           if m[2] != chr(0x30FB)]
+    dot = [(float(m[0]), float(m[1])) for m in
+           _re.findall(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">' + chr(0x30FB) + r'</text>', svg)]
+    return koe, syl, dot
+
+
+# vertical : ○/□ en hauteur (y) en face de l'élément rattaché
+v_on = render("@show_dots on\n" + src_al, "vertical")
+v_off = render(src_al, "vertical")
+koe, syl, dot = koe_and_syl(v_on)
+assert len(koe) == 2 and len(syl) == 2 and len(dot) == 2, (koe, syl, dot)
+o_cell0 = next(k for k in koe if k[2] == KOE_O)     # ○ de la case 0 (slot 0 = point)
+s_cell1 = next(k for k in koe if k[2] == KOE_S)     # □ de la case 1 (slot 1 = point)
+a0 = syl[0][1]                                     # syllabe あ de la case 0 (slot 1)
+d0, d1 = dot[0][1], dot[1][1]                      # points des cases 0 et 1
+assert o_cell0[1] < a0, (o_cell0, a0)              # ○ au-dessus de あ : slot 0 < slot 1
+assert abs(o_cell0[1] - d0) < 6, (o_cell0, d0)     # ○ en face du point de la case 0
+assert abs(s_cell1[1] - d1) < 6, (s_cell1, d1)     # □ en face du point de la case 1
+# @show_dots off : les points disparaissent MAIS l'alignement des bornes ne change pas
+koe_off, syl_off, dot_off = koe_and_syl(v_off)
+assert dot_off == [] and koe_off == koe, (koe_off, koe)   # mêmes positions de ○/□
+print("OK vertical : ○/□ alignés sur le slot de l'élément rattaché (point masqué compris)")
+
+# horizontal : ○/□ alignés en x sur l'élément rattaché
+h_on = render("@show_dots on\n" + src_al, "horizontal")
+koe_h, syl_h, dot_h = koe_and_syl(h_on)
+o_h = next(k for k in koe_h if k[2] == KOE_O)
+a_h = syl_h[0]
+d_h = dot_h[0]
+assert o_h[0] < a_h[0], (o_h, a_h)                 # ○ à gauche de あ (slot 0 < slot 1)
+assert abs(o_h[0] - d_h[0]) < 6, (o_h, d_h)        # ○ en face du point (même x)
+print("OK horizontal : ○/□ alignés en x sur l'élément rattaché")
+
 print("Tous les tests de test_vocal_choonpu_koe.py passent.")
