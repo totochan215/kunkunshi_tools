@@ -16,6 +16,7 @@ Pipeline : Portama JSON → KKML → SVG / PDF. Ce document est la référence u
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
 
 ## 0. Syntaxe KKML — points à trancher (personne n'utilise encore KKML, il y a le temps)
+- ✅ (2026-11-22) `kkml2pdf.py` : validation des PDF de page produits par le moteur SVG→PDF — `_pdf_complet()` attend (jusqu'à `_PDF_TIMEOUT` = 10 s) que le fichier commence par `%PDF-` et contienne `%%EOF` dans son dernier tampon, sinon `RuntimeError` explicite. Cause d'un crash utilisateur (inkscape sur macOS rend la main avant d'avoir tout écrit → PDF tronqué → pypdf : « EOF marker not found » + `PdfStreamError: Stream has ended unexpectedly` au merge ; reproduit avec pypdf 3.9). Test n°9 `tests/test_kkml2pdf.py` (tronqué détecté, écriture différée attendue).
 
 - ⬜ (2026-11-22) Idées utilisateur pour la roadmap, à trier/implémenter :
   - **Constantes par modèle de mise en page** déterminant, pour chaque métadonnée, si elle est représentée ou non (ex. table « méta affichée » dans chaque `LayoutSpec` : `@source`/`@comment`/`@speed` non affichés partout aujourd'hui, `@tuning` dans la colonne titre, etc.) — rendre explicite et surchargeable ce que chaque layout rend.
