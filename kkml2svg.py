@@ -2090,8 +2090,10 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                                                cell_h * 0.5, links=True)
             else:
                 ty_end = ty
-            for i, ch in enumerate(tuning):
-                _vertical_char(out, ch, tx, ty_end + i * 20.0 + 14, 13.0, "#555")
+            if tuning:
+                tyb = grid_y0 + grid_h - 4 - len(tuning) * 20.0
+                for i, ch in enumerate(tuning):
+                    _vertical_char(out, ch, tx, tyb + i * 20.0, 13.0, "#555")
             x_right -= (group_w + spec.dan_gap)
 
         # 2. dans (cases + marker)
@@ -3712,7 +3714,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
         # --- Titre vertical à droite de la grille (répété sur chaque page) --- #
         _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
-                          TUNING_SPACING, spec)
+                          TUNING_SPACING, spec, grid_bottom)
         _draw_page_no(out, page_base + pi, spec.page_w / 2,
                       (grid_bottom + spec.page_h) / 2 + spec.page_no_fs * 0.35,
                       spec.page_no_fs)
@@ -3853,7 +3855,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                         cy = _render_vertical_text(out, line, vx, cy,
                                                    LYRICS_FS, "#333", LYRICS_SP)
             _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
-                              TUNING_SPACING, spec)
+                              TUNING_SPACING, spec, grid_bottom)
             _draw_page_no(out, page_base + len(pages) + lpi, spec.page_w / 2,
                           (grid_bottom + spec.page_h) / 2 + spec.page_no_fs * 0.35,
                           spec.page_no_fs)
@@ -3863,7 +3865,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
 
 def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
-                      TUNING_SPACING, spec):
+                      TUNING_SPACING, spec, grid_bottom=0):
     """Colonne titre vertical à droite de la page mega (titre, accordage,
     genre, auteur) — répétée sur chaque page, tablature comme paroles."""
     if title or tuning:
@@ -3874,19 +3876,20 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
                                           TITLE_SPACING, links=True)
         else:
             ty_end = ty
-        ty2 = ty_end
-        for i, ch in enumerate(tuning):
-            _vertical_char(out, ch, tx, ty2 + i * TUNING_SPACING + 15, 15, "#555")
         genre = song.meta.get("genre", "")
         author = song.meta.get("author", "")
         show_genre = genre and genre != author
-        ty3 = ty2 + len(tuning) * TUNING_SPACING + 15
+        ty3 = ty_end
         if show_genre:
             for i, ch in enumerate(genre):
                 _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
             ty3 += len(genre) * TUNING_SPACING + 15
         for i, ch in enumerate(author):
             _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+        if tuning:
+            yb = grid_bottom - 4 - len(tuning) * TUNING_SPACING
+            for i, ch in enumerate(tuning):
+                _vertical_char(out, ch, tx, yb + i * TUNING_SPACING, 15, "#555")
 
 
 # --------------------------------------------------------------------------- #
