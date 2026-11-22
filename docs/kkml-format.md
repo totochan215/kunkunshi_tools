@@ -103,6 +103,10 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 ### Chanson nommée
 `::song nom` — nom de chanson, s'applique au bloc suivant (utile en layout `mega` pour une compilation/medley : le nom de chaque chanson est imprimé au-dessus de ses colonnes). `::section nom` est un ancien nom accepté comme alias de `::song nom` (renommé avec une info stderr) — `::section` était trop générique, `::tab` étant déjà une section.
 
+De même, les fautes de frappe usuelles sont acceptées comme alias et rectifiées
+en nom canonique par `kkml_cleaner.py` (avec une info stderr au parsing) :
+`::tabs` → `::tab`, `::vocals` → `::vocal`, `::lyric` → `::lyrics`, `::songs` → `::song`.
+
 ### Sauts de mise en page (layout `mega` uniquement)
 `::block` — ferme le bloc horizontal courant et passe au bloc suivant ; le bloc sauté est rempli de *dans* vides jusqu'à son nombre de colonnes prévues (`@mega_dans`). `::page` — idem, puis la page courante est complétée de blocs vides et on passe à la page suivante. Sans contenu ; ignorés par les autres layouts.
 

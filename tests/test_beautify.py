@@ -107,4 +107,14 @@ assert ls[2] == "中    合", repr(ls[2])          # 中 + 4 espaces -> 合 à l
 assert b.beautify(out) == out
 print("OK straddle de tête /B : hors grille, alignement sur la note suivante")
 
+
+# 8. alias tolérés ::tabs/::vocals : corps aligné, en-tête émis tel quel
+src = "::tabs\n合/工 尺\n中 合\n::\n::vocals\n- てぃ\n. あ\n::\n"
+out = b.beautify(src)
+ls = out.splitlines()
+assert ls[0] == "::tabs" and ls[2] == "中    合", ls
+assert ls[4] == "::vocals" and ls[6] == ". あ", ls
+assert b.beautify(out) == out
+print("OK alias ::tabs/::vocals : corps alignés, en-têtes conservés")
+
 print("Tous les tests de test_beautify.py passent.")
