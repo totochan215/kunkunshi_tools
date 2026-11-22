@@ -461,3 +461,19 @@ assert chr(0x5408) + " " + chr(0x5de5) + "\n" in out42          # ::tab re-joint
 assert chr(0x4e00) + chr(0x3001) + "a\n" in out42               # ::lyrics trimmé
 assert run_clean(out42)[0] == out42                              # idempotent
 print("OK trim des fins de lignes (espaces/tabulations)")
+
+# 43. variantes de repos ⚪ (U+26AA) normalisées en ◯ (U+25EF) dans ::tab,
+#     y compris en token composite (|:⚪, ⚪:|) et en straddle de tête (/⚪)
+CIR_W, CIR_R = chr(0x26aa), chr(0x25ef)
+t43 = ("@format KKML\n::tab\n/" + CIR_W + " 老 合\n|:" + CIR_W + " 合\n" + CIR_W + ":| 工\n"
+       + CIR_W + " 中\n" + CIR_W + chr(0xfe0e) + " 四\n中 工\n::\n")
+out43, _e43, rc43 = run_clean(t43)
+assert rc43 == 0
+assert CIR_W not in out43, repr(out43)
+assert "|:" + CIR_R in out43 and CIR_R + ":|" in out43
+assert "/" + CIR_R in out43                       # straddle de tête normalisé
+# les straddles note/note (○/工) ne sont PAS touchés
+t43b = "@format KKML\n::tab\n" + chr(0x25cb) + "/" + chr(0x5de5) + " 合\n::\n"
+out43b, _e43b, _rc43b = run_clean(t43b)
+assert chr(0x25cb) + "/" + chr(0x5de5) in out43b, repr(out43b)
+print("OK variantes de repos : ⚪/⚪︎ -> ◯ dans ::tab (composites et /B inclus), ○/工 préservé")

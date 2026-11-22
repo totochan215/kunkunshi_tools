@@ -100,6 +100,25 @@ REPEAT_END = ":|"
 VREPEAT_START = "|("
 VREPEAT_END = ")|"
 
+# Caractères des marqueurs de répétition/boucles (|: :| (| )| ( )) : aucun
+# n'est une variante de repos, donc sert à isoler la "base" d'un token.
+_MARKER_CHARS = frozenset("|():")
+
+
+def _normalize_rest_token(tk):
+    """Variante de repos -> token canonique ◯ (REST_TOKEN). Au-delà du token
+    exact (⚪ ○ 〇 ◯), gère les tokens composites : si la base une fois les
+    marqueurs |: :| (| )| ( ) retirés est une variante de repos (ex. |:⚪),
+    la variante est remplacée dans le token (ex. |:◯)."""
+    if tk in REST_VARIANTS:
+        return REST_TOKEN
+    if any(c in _MARKER_CHARS for c in tk) and \
+            "".join(c for c in tk if c not in _MARKER_CHARS) in REST_VARIANTS:
+        for v in REST_VARIANTS:
+            if v != REST_TOKEN:
+                tk = tk.replace(v, REST_TOKEN)
+    return tk
+
 # Normalisation d'entrée pleine chasse (IME japonais) — sections tab/vocal.
 # Objectif : un fichier tapé avec une méthode de saisie japonaise (pleine
 # chasse) reste valide. Les équivalents pleine chasse des séparateurs et
@@ -561,7 +580,7 @@ def parse_kkml(text):
                     if changed:
                         _info_input_variant(tk, tk2)
                     norm.append(tk2)
-                norm = [REST_TOKEN if tk in REST_VARIANTS else tk for tk in norm]
+                norm = [_normalize_rest_token(tk) for tk in norm]
                 # Token de tête "/B" d'un bloc ::tab : note à cheval sur le bord
                 # PRÉCÉDENT de la première case (rang -1 ; haut en vertical, gauche en
                 # horizontal) — ne consomme PAS de case.
@@ -571,7 +590,7 @@ def parse_kkml(text):
                         _warn_once(f"techniques ignorées sur le straddle de tête '{norm[0]}'")
                         lead = lead[:-1]
                     if lead:
-                        current.leading_straddle = lead
+                        current.leading_straddle = _normalize_rest_token(lead)
                     else:
                         _warn_once("'/' seul en tête de ::tab : ignoré")
                     norm = norm[1:]
