@@ -204,7 +204,7 @@ print("OK tuto : syllabe seule sous la note principale (bas de case) ; avec poin
 # 23. tuto : ".あ" -> point sous note principale, syllabe sous straddle ; "あ." -> inverse
 GO, GO5, A = chr(0x5408), chr(0x5DE5), chr(0x3042)
 DOT = chr(0x30FB)
-t23 = "@layout tuto\n::tab\n" + GO + "/" + GO5 + " " + GO + "\n::\n::vocal\n." + A + " " + A + ".\n::\n"
+t23 = "@layout tuto\n@show_dots on\n::tab\n" + GO + "/" + GO5 + " " + GO + "\n::\n::vocal\n." + A + " " + A + ".\n::\n"
 tab23 = _k.render_svg(_k.parse_kkml(t23))[1]
 import re as _re23
 els = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re23.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab23)]
@@ -248,7 +248,7 @@ print("OK tuto : 4 éléments -> 4 positions en quartiers, toujours en bas de ca
 # 26. tuto : n=3 éléments (cas des imports Portama, grille 3 unités/case)
 #    ".あい" -> ・, あ, い aux positions cx, cx+CW/3, cx+2CW/3 (toujours en bas)
 DOT = chr(0x30FB)
-t26 = "@layout tuto\n::tab\n" + chr(0x5408) + "/" + chr(0x5DE5) + "\n::\n::vocal\n." + chr(0x3042) + chr(0x3044) + "\n::\n"
+t26 = "@layout tuto\n@show_dots on\n::tab\n" + chr(0x5408) + "/" + chr(0x5DE5) + "\n::\n::vocal\n." + chr(0x3042) + chr(0x3044) + "\n::\n"
 tab26 = _k.render_svg(_k.parse_kkml(t26))[1]
 import re as _re26
 els26 = [(float(m.group(1)), float(m.group(2)), m.group(3)) for m in _re26.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">([^<]*)</text>', tab26)]
@@ -376,7 +376,7 @@ print("OK horizontal : accordage à droite du titre, 1re rangée y=%.0f (avant 1
 
 # 35. vertical : logique points/vocal commune (_vocal_elements) — ".あ" -> ・ puis あ en colonne marker
 GO = chr(0x5408)
-v35 = _k.render_svg(_k.parse_kkml("@layout vertical\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n." + chr(0x3042) + " " + chr(0x3044) + "\n::\n"), layout="vertical")[0]
+v35 = _k.render_svg(_k.parse_kkml("@layout vertical\n@show_dots on\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n." + chr(0x3042) + " " + chr(0x3044) + "\n::\n"), layout="vertical")[0]
 import re as _re35
 dot35 = [ (float(m.group(1)), float(m.group(2))) for m in _re35.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="(?:#333|#888)">' + chr(0x30FB) + r'</text>', v35) ]
 syl35 = [ (float(m.group(1)), float(m.group(2))) for m in _re35.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*fill="#333">' + chr(0x3042) + r'</text>', v35) ]
@@ -392,7 +392,7 @@ print("OK vertical : logique points/vocal commune (_vocal_elements, ・ puis syl
 
 # 36. nomura : logique points commune — ".あ" -> ・ + あ dans le marker
 GO = chr(0x5408)
-n36 = _k.render_svg(_k.parse_kkml("@layout nomura\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n." + chr(0x3042) + " " + chr(0x3044) + "\n::\n"), layout="nomura")
+n36 = _k.render_svg(_k.parse_kkml("@layout nomura\n@show_dots on\n::tab\n" + GO + " " + GO + "\n::\n::vocal\n." + chr(0x3042) + " " + chr(0x3044) + "\n::\n"), layout="nomura")
 svg36 = n36[0]
 import re as _re36
 has_dot = chr(0x30FB) in svg36
@@ -412,7 +412,7 @@ print("OK nomura : width=21cm height=29.7cm (A4 via CM), viewBox en pt, export d
 
 # 38. vertical : n=2 -> 1er élément au centre, 2e à centre + cell_h/2 (multiplicateur i/n)
 GO = chr(0x5408)
-v38 = _k.render_svg(_k.parse_kkml("@layout vertical\n::tab\n" + GO + "\n::\n::vocal\n." + chr(0x3042) + "\n::\n"), layout="vertical")[0]
+v38 = _k.render_svg(_k.parse_kkml("@layout vertical\n@show_dots on\n::tab\n" + GO + "\n::\n::vocal\n." + chr(0x3042) + "\n::\n"), layout="vertical")[0]
 import re as _re38
 d38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*fill="(?:#333|#888)">' + chr(0x30FB) + r'</text>', v38))
 a38 = next(float(m.group(1)) for m in _re38.finditer(r'<text x="[\d.]+" y="([\d.]+)"[^>]*fill="#333">' + chr(0x3042) + r'</text>', v38))
