@@ -477,3 +477,18 @@ t43b = "@format KKML\n::tab\n" + chr(0x25cb) + "/" + chr(0x5de5) + " 合\n::\n"
 out43b, _e43b, _rc43b = run_clean(t43b)
 assert chr(0x25cb) + "/" + chr(0x5de5) in out43b, repr(out43b)
 print("OK variantes de repos : ⚪/⚪︎ -> ◯ dans ::tab (composites et /B inclus), ○/工 préservé")
+
+# 44. alias de noms de sections mal formatés : acceptés au parsing (info stderr),
+#     rectifiés en nom canonique par le cleaner
+t44 = ("@format KKML\n::tabs\n" + chr(0x5408) + " " + chr(0x5de5) + "\n::\n::vocals\n- -\n::\n"
+       "::lyric\nx\n::\n::songs A\n::\n")
+out44, err44, rc44 = run_clean(t44)
+assert rc44 == 0
+assert "::tabs" not in out44 and "::vocals" not in out44 and "::lyric\n" not in out44 and "::songs" not in out44
+for canon in ("::tab\n", "::vocal\n", "::lyrics\n", "::song A\n"):
+    assert canon in out44, (canon, out44)
+assert "normalisée en '::tab'" in err44 and "::songs" in err44   # info stderr au parsing
+s44 = _k.parse_kkml(t44)
+assert [b.kind for b in s44.blocks] == ["tab", "vocal", "lyrics", "song"]
+assert run_clean(out44)[0] == out44                              # idempotent
+print("OK alias de sections : ::tabs/::vocals/::lyric/::songs -> canoniques")

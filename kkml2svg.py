@@ -402,6 +402,12 @@ FONT_STYLES = {
 # étrangers (romaji) ou aux kanas seuls.
 LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"}
 
+# Alias de noms de sections acceptés au parsing (rectifiés par kkml_cleaner) :
+# fautes de frappe usuelles + ancien nom ::section de ::song (trop générique,
+# ::tab étant déjà une section)
+SECTION_ALIASES = {"tabs": "tab", "vocals": "vocal", "lyric": "lyrics",
+                   "songs": "song", "section": "song"}
+
 # Clés de métadonnées reconnues (pour la tolérance @cléValeur collée)
 META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
              "lyrics_size", "genre", "author", "composer", "lyricist",
@@ -514,12 +520,11 @@ def parse_kkml(text):
             if kind in LYRICS_VARIANTS:
                 variant = kind[len("lyrics-"):]
                 kind = "lyrics"
-            if kind == "section":
-                # Ancien nom de ::song : nom de chanson dans une compilation
-                # (medley) — ::section était trop générique (::tab est déjà
-                # une section)
-                _info_input_variant("::section", "::song")
-                kind = "song"
+            if kind in SECTION_ALIASES:
+                # Alias acceptés (fautes de frappe usuelles, ancien nom) :
+                # rectifiés en nom canonique par le cleaner
+                _info_input_variant("::" + kind, "::" + SECTION_ALIASES[kind])
+                kind = SECTION_ALIASES[kind]
             if kind in ("block", "page"):
                 # Marqueurs de saut (layout mega uniquement) : ::block ferme le
                 # bloc courant, ::page ferme la page courante, même non pleins.
