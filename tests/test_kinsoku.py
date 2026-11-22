@@ -65,14 +65,14 @@ joined = "".join(t for lines, _ind in subs for t in lines)
 assert "〔安〕《やす》" in joined and subs[-1][0][0] == "う", subs
 print("OK groupe ruby atomique intact au repli")
 
-# 6. Méta @kinsoku reconnue ; valeur invalide -> AVERTISSEMENT + défaut
+# 6. Méta @kinsoku reconnue ; valeur invalide -> WARNING + défaut
 song = k.parse_kkml("@kinsoku strict\n::tab\n工 工\n::\n")
 assert song.meta.get("kinsoku") == "strict"
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     k.render_svg(k.parse_kkml("@kinsoku bogus\n::tab\n工 工\n::\n"))
-assert "AVERTISSEMENT" in err.getvalue(), err.getvalue()
-print("OK @kinsoku en méta, AVERTISSEMENT sur valeur invalide")
+assert "WARNING" in err.getvalue(), err.getvalue()
+print("OK @kinsoku en méta, WARNING sur valeur invalide")
 
 # 7. E2E chindami : kinsoku actif change le repli (、 à la limite de colonne)
 long_line = "あ" * 29 + "、" + "い" * 10   # 40 unités > max_lyr_u chindami (~29)
@@ -81,7 +81,7 @@ err = io.StringIO()
 with contextlib.redirect_stderr(err):
     svg_on = k.render_svg(k.parse_kkml(kkml_tmpl.format(k="simple", line=long_line)))[0]
     svg_off = k.render_svg(k.parse_kkml(kkml_tmpl.format(k="off", line=long_line)))[0]
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 assert svg_on != svg_off
 print("OK e2e chindami : @kinsoku simple vs off produisent des repli différents")
 
@@ -95,7 +95,7 @@ with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as f:
 r = subprocess.run([sys.executable, str(ROOT / "kkml2svg.py"), kkml_path,
                     "-l", "chindami", "--kinsoku", "strict", "-o", svg_path],
                    capture_output=True, text=True)
-assert r.returncode == 0 and "AVERTISSEMENT" not in r.stderr, r.stderr
+assert r.returncode == 0 and "WARNING" not in r.stderr, r.stderr
 print("OK CLI --kinsoku strict (chindami, rc=0)")
 
 print("\nTous les tests kinsoku passent.")

@@ -63,7 +63,7 @@ for layout in ("vertical", "horizontal", "nomura", "chindami", "tuto", "mega"):
     err = io.StringIO()
     with contextlib.redirect_stderr(err):
         svg = "".join(k.render_svg(k.parse_kkml(kkml), layout=layout))
-    assert "AVERTISSEMENT" not in err.getvalue(), (layout, err.getvalue())
+    assert "WARNING" not in err.getvalue(), (layout, err.getvalue())
     texts = "".join(re.findall(r"<text[^>]*>([^<]*)</text>", svg))
     assert "chindami" not in texts and "沖縄" not in texts, layout
 print("OK @source non rendue dans les SVG (vertical/horizontal/nomura/chindami/tuto/mega)")
@@ -83,7 +83,7 @@ for layout in ("vertical", "horizontal", "tuto"):
     err = io.StringIO()
     with contextlib.redirect_stderr(err):
         svg = "".join(k.render_svg(k.parse_kkml(kkml_link), layout=layout))
-    assert "AVERTISSEMENT" not in err.getvalue(), (layout, err.getvalue())
+    assert "WARNING" not in err.getvalue(), (layout, err.getvalue())
     assert '<a xmlns:xlink="http://www.w3.org/1999/xlink" ' \
            'xlink:href="https://exemple.jp/x?a=1&amp;b=2">' in svg, layout
     assert "Portama" in svg, layout

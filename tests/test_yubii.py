@@ -46,7 +46,7 @@ print("OK ㊀-㊃ absents de POSITION_CHARS, présents dans TECHNIQUE_CHARS")
 
 # 2. Suffixe yubii rendu (glyphe ㊀ dans le SVG, taille réduite, pas d'alerte)
 svgs, err = render(f"::tab\n{GO}{Y[1]} {GOU}\n::\n")
-assert Y[1] in svgs[0] and "AVERTISSEMENT" not in err, err
+assert Y[1] in svgs[0] and "WARNING" not in err, err
 import re
 m = re.search(r'<text x="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>' + Y[1], svgs[0])
 assert m, "pas de glyphe ㊀"
@@ -61,12 +61,12 @@ print(f"OK {GO}㊀ rendu à gauche de la note (dx={note_x-yb_x:.2f}, fs={yb_fs}/
 
 # 3. Combinaison avec un suffixe de technique
 svgs, err = render(f"::tab\n{GO}'{Y[2]}\n::\n")
-assert Y[2] in svgs[0] and UCHI in svgs[0] and "AVERTISSEMENT" not in err, err
+assert Y[2] in svgs[0] and UCHI in svgs[0] and "WARNING" not in err, err
 print(f"OK {GO}'㊁ : technique + yubii rendus ensemble")
 
 # 4. ㊀ seul : avertissement, jamais rendu comme une note
 svgs, err = render(f"::tab\n{Y[1]} {GO}\n::\n")
-assert "AVERTISSEMENT" in err and "yubii" in err, err
+assert "WARNING" in err and "yubii" in err, err
 print("OK ㊀ seul : avertissement « yubii sans note », rien rendu comme note")
 
 # 5. Variantes parenthésées normalisées (idempotent)
@@ -79,7 +79,7 @@ print("OK ㈠ -> ㊀ (normalisation canonique, idempotente)")
 # 6. Croche et shuffle avec yubii en fin de token
 for t in (f"{GO}/{GOU}{Y[1]}", f"{GO}:{GOU}{Y[2]}"):
     svgs, err = render(f"::tab\n{t}\n::\n")
-    assert t[-1] in svgs[0] and "AVERTISSEMENT" not in err, (t, err)
+    assert t[-1] in svgs[0] and "WARNING" not in err, (t, err)
 print(f"OK croche {GO}/{GOU}㊀ et shuffle {GO}:{GOU}㊁")
 
 # 7. portama2kkml : cell.yubii -> suffixe ; note PUA E041-E044 -> suffixe
@@ -135,7 +135,7 @@ for n in sorted(os.listdir("samples/portama-json")):
                         f"samples/portama-json/{n}"], capture_output=True, text=True)
     assert r.returncode == 0, (n, r.stderr)
     svgs, err = render(r.stdout)
-    assert "AVERTISSEMENT" not in err, (n, err)
+    assert "WARNING" not in err, (n, err)
 print("OK non-régression : 7 échantillons Portama -> KKML -> SVG sans avertissement")
 
 print("Tous les tests yubii passent.")

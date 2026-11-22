@@ -36,7 +36,7 @@ def render(kkml, layout):
     err = io.StringIO()
     with contextlib.redirect_stderr(err):
         svgs = k.render_svg(k.parse_kkml(kkml), layout=layout)
-    assert "AVERTISSEMENT" not in err.getvalue(), (layout, err.getvalue())
+    assert "WARNING" not in err.getvalue(), (layout, err.getvalue())
     return svgs
 
 
