@@ -67,7 +67,7 @@ def normalize_tab_line(tokens):
         if changed:
             info(f"'{tk}' normalisé en '{tk2}'")
         out.append(tk2)
-    return [k.REST_TOKEN if tk in k.REST_VARIANTS else tk for tk in out]
+    return [k._normalize_rest_token(tk) for tk in out]
 
 
 def normalize_vocal_line(tokens):
