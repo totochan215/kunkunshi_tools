@@ -92,7 +92,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 Ces 8 attributs de design sont définis dans chaque mise en page (champs `text_color`, `frame_color`, `frame_width`, `cell_color`, `cell_width`, `arrow_color`, `arrow_width`, `arrow_fill` du `LayoutSpec` de `kkml2svg.py`) ; la métadonnée KKML correspondante surcharge le défaut du layout. Une valeur invalide (couleur non HTML, épaisseur non positive, `arrow_fill` autre que `on`/`off`) est ignorée avec un `AVERTISSEMENT` et le défaut du layout s'applique.
 | `@musicno`       | —          | Numéro de morceau (champ Portama `musicno`, entier). Valeur stockée telle quelle ; affichée en layout `chindami` (tronquée mod 1000 si > 999) |
 | `@chogen`        | `5`        | Accordage absolu en demi-tons (champ Portama `chogen`, chaîne, ex. `"5"`). Valeur stockée telle quelle. Se déduit de `@base_note` et vice-et-versa. |
-| `@speed`         | —          | Tempo en bpm (champ Portama `speed`, chaîne, ex. `"68"`). Valeur stockée telle quelle |
+| `@speed`         | —          | Tempo en bpm (champ Portama `speed`, chaîne, ex. `"68"`). Rendu `♩=120` en horizontal, fs 12, sans espace : à droite du titre avant `@choshi` (layouts horizontaux sauf tuto), sous le titre centré au-dessus de `@choshi` (vertical, chindami, nomura, mega), page de titre sous le titre (tuto) |
 | `@rythm`         | —          | Rythme (champ Portama `rhythm`, chaîne). Valeur stockée telle quelle          |
 | `@rythm_mode`    | —          | Mode rythmique (champ Portama `rhythmMode`, chaîne). Valeur stockée telle quelle |
 

@@ -109,7 +109,7 @@ Exemple :
 
 *Extrait de かぎやで風節 (Kajadifu bushi)*
 
-- Métadonnées : `@title`, `@choshi` (`@tuning` = alias accepté), `@cells_per_dan`, `@layout`, `@marker`, `@show_dots`, `@page_base`, `@author`,
+- Métadonnées : `@title`, `@choshi` (`@tuning` = alias accepté), `@cells_per_dan`, `@layout`, `@marker`, `@show_dots`, `@page_base`, `@speed`, `@author`,
   `@source`, `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc. (`@source` : source de la
   version du morceau, texte libre, non affiché dans le SVG — information KKML uniquement)
 - Sections :
