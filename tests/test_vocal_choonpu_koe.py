@@ -22,7 +22,7 @@ os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
 import kkml2svg as k
-import kkml_cleaner as c
+import kkml_clean as c
 
 CH = chr(0x30FC)          # ー choonpu
 BS = chr(92)              # antislash

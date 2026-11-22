@@ -27,7 +27,7 @@ jobs:
       - name: Lancer les tests @source et liens
         run: python3 tests/test_source.py
       - name: Lancer les tests d'ordre des métadonnées du cleaner
-        run: python3 tests/test_cleaner_meta.py
+        run: python3 tests/test_clean_meta.py
       - name: Lancer les tests des marqueurs de couplet ①-⑳
         run: python3 tests/test_verse_markers.py
       - name: Lancer les tests de ::song (nom de chanson ; ::section = alias)
@@ -41,9 +41,9 @@ jobs:
       - name: Lancer les tests des attributs de design (@text_color, @frame_*, @cell_*, @arrow_*)
         run: python3 tests/test_layout_attrs.py
       - name: Lancer les tests du cleaner sur medley (pas de vrac par ::song)
-        run: python3 tests/test_cleaner_medley.py
-      - name: Lancer les tests complets du cleaner (kkml_cleaner)
-        run: python3 tests/test_kkml_cleaner.py
+        run: python3 tests/test_clean_medley.py
+      - name: Lancer les tests complets du cleaner (kkml_clean)
+        run: python3 tests/test_kkml_clean.py
       - name: Lancer les tests de kkml_beautify (alignement ::tab/::vocal)
         run: python3 tests/test_beautify.py
       - name: Lancer les tests de @show_dots (points ・ des ::vocal)

@@ -9,7 +9,7 @@ Avant, tout était regroupé globalement (tous les ::tab, puis tous les
 était mis en vrac et le réalignement ::vocal comparait le mauvais ::tab.
 
 Usage :
-    python3 tests/test_cleaner_medley.py
+    python3 tests/test_clean_medley.py
 """
 import contextlib
 import io
@@ -23,7 +23,7 @@ os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
 import kkml2svg as k
-import kkml_cleaner as c
+import kkml_clean as c
 
 
 def clean(text):
@@ -103,4 +103,4 @@ assert "てぃん" in svg and "かぎやで" in svg.replace("か《ぎ》やで"
 assert "十九" in svg or "【" in svg
 print("OK rendu mega du medley nettoyé : noms de chansons présents")
 
-print("Tous les tests de test_cleaner_medley.py passent.")
+print("Tous les tests de test_clean_medley.py passent.")

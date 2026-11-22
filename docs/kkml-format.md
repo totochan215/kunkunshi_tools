@@ -69,7 +69,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@dans_per_page` | —          | Nombre max de *dans* par page avant un saut de page forcé |
 | `@tuto_block`    | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
 | `@mega_dans`     | `32`       | Layout `mega` uniquement : nombre de colonnes (*dans*) par bloc horizontal (2 blocs/page A3, donc 64 dans/page par défaut). La largeur des cases s'adapte |
-| `@cells_per_dan` | —          | Nombre de cellules par *dan*. Utilisé par `kkml_cleaner.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal` (défaut `12`) et `tuto` (défaut `8`), mais pas par `chindami`, `nomura` et `mega`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
+| `@cells_per_dan` | —          | Nombre de cellules par *dan*. Utilisé par `kkml_clean.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal` (défaut `12`) et `tuto` (défaut `8`), mais pas par `chindami`, `nomura` et `mega`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
 | `@marker`        | `on`       | Active/désactive les colonnes/lignes de marker : `on` : activé, `off`, désactivé. Certaines mises en pages surchargent cette valeur. |
 | `@show_dots`     | `off`      | Points ・ (U+30FB) de positionnement des syllabes `::vocal` dans la colonne/ligne marker : `on` = affichés, `off` = masqués (défaut). Les syllabes conservent leur position dans les deux cas (le point occupe toujours sa sous-partie de case). |
 | `@end_circle`    | —          | **Déprécié** |
@@ -105,7 +105,7 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 `::song nom` — nom de chanson, s'applique au bloc suivant (utile en layout `mega` pour une compilation/medley : le nom de chaque chanson est imprimé au-dessus de ses colonnes). `::section nom` est un ancien nom accepté comme alias de `::song nom` (renommé avec une info stderr) — `::section` était trop générique, `::tab` étant déjà une section.
 
 De même, les fautes de frappe usuelles sont acceptées comme alias et rectifiées
-en nom canonique par `kkml_cleaner.py` (avec une info stderr au parsing) :
+en nom canonique par `kkml_clean.py` (avec une info stderr au parsing) :
 `::tabs` → `::tab`, `::vocals` → `::vocal`, `::lyric` → `::lyrics`, `::songs` → `::song`.
 
 ### Sauts de mise en page (layout `mega` uniquement)
