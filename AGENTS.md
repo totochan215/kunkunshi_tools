@@ -10,13 +10,14 @@ Règles :
 ---
 # Feuille de route
 
-Dernière mise à jour : 20 novembre 2026
+Dernière mise à jour : 22 novembre 2026
 
 Pipeline : Portama JSON → KKML → SVG / PDF. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
 
 ## 0. Syntaxe KKML — points à trancher (personne n'utilise encore KKML, il y a le temps)
 
+- ✅ (2026-11-22) Outils lenients sur les noms de sections mal écrits : `SECTION_ALIASES` dans `kkml2svg.py` (`::tabs`→`::tab`, `::vocals`→`::vocal`, `::lyric`→`::lyrics`, `::songs`→`::song`, plus l'ancien `::section`→`::song`) — acceptés au parsing avec info stderr, `kkml_cleaner.py` les rectifie en nom canonique (il rémet `::`+kind canonique), `kkml_beautify.py` aligne aussi les corps de `::tabs`/`::vocals` (SECTION_RE élargi, en-tête émis tel quel). 60 rendus samples × 6 layouts byte-identiques vs main ; cleaner byte-identique sur les 10 samples. Tests : n°44 `tests/test_kkml_cleaner.py`, n°8 `tests/test_beautify.py` (en CI). Doc `docs/kkml-format.md`.
 - ✅ (2026-11-21) Faille « ⚪ laissé passer dans ::tab » : la normalisation des variantes de repos ne matchait que le token EXACT (`tk in REST_VARIANTS`) — les tokens composites (`|:⚪`, `⚪:|`, `(:○`) et le straddle de tête `/⚪` y échappaient. Fix : helper `_normalize_rest_token` (kkml2svg) qui canonicalise la base quand les marqueurs `|: :| (| )| ( )` sont retirés, utilisé au parse (tokens + `leading_straddle`) et dans le cleaner. `○/工` (straddle note/note) préservé. 102/114 rendus identiques vs main ; 12 diffs = un seul glyphe `○`→`◯` dans `(○` (medley-samples, 安波節). Test 43 dans `tests/test_kkml_cleaner.py` (en CI).
 - ✅ (2026-11-21) `kkml_beautify.py` : le straddle de tête `/B` (1er token de la 1re ligne de `::tab`) sort de la grille d'alignement — émis tel quel + 1 espace, les colonnes sont calculées sur la note suivante (test 7 de `tests/test_beautify.py`) ; 114 rendus raw vs beautifié identiques, idempotent.
 - ✅ (2026-11-21) Cleaner : trim des fins de lignes — espaces/tabulations supprimés sur toutes les lignes émises (`rstrip(" \t")` à l'assemblage) ; idempotent ; aucune différence de sortie sur les 19 samples (leurs espaces finaux étaient déjà dans des lignes re-jointes), test 42 dans `tests/test_kkml_cleaner.py` (en CI).
