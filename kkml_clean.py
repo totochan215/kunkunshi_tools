@@ -28,7 +28,7 @@ Règles (voir AGENTS.md, section « Long terme ») :
   `::tab` manquante créée vide ;
 - `@cells_per_dan n` présent → repli de `::tab` à n cellules/ligne puis
   alignement de `::vocal` dessus ; absent → sauts de ligne conservés
-  (`@cols` = ancien nom, renommé avec une info) ;
+  (`@cols` et `@tuning` = anciens noms de `@cells_per_dan`/`@choshi`, renommés avec une info) ;
 - idempotent : clean(clean(x)) == clean(x).
 
 Diagnostics sur stderr : info (normalisation appliquée), avertissement
@@ -120,6 +120,9 @@ def clean(text):
                 if key.startswith(mk) and len(key) > len(mk):
                     key = mk
                     break
+        if key in k.META_ALIASES:
+            info(f"@{key} renommé en @{k.META_ALIASES[key]}")
+            key = k.META_ALIASES[key]
         if key == "cols":
             key = "cells_per_dan"
         elif key == "page_dans":

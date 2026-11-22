@@ -90,7 +90,7 @@ Format texte permettant de saisir et mettre en forme des tablatures 工工四 (k
 Exemple :
 
     @title かぎやで風節
-    @tuning 本調子
+    @choshi 本調子
     @cells_per_dan 12
 
     ::tab
@@ -111,7 +111,7 @@ Exemple :
 
 *Extrait de かぎやで風節 (Kajadifu bushi)*
 
-- Métadonnées : `@title`, `@tuning`, `@cells_per_dan`, `@layout`, `@marker`, `@show_dots`, `@author`,
+- Métadonnées : `@title`, `@choshi` (`@tuning` = alias accepté), `@cells_per_dan`, `@layout`, `@marker`, `@show_dots`, `@author`,
   `@source`, `@shaku_circled`, `@shaku_sharp`, `@lyrics_size`, etc. (`@source` : source de la
   version du morceau, texte libre, non affiché dans le SVG — information KKML uniquement)
 - Sections :
