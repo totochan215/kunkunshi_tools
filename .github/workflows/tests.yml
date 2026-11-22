@@ -48,3 +48,5 @@ jobs:
         run: python3 tests/test_beautify.py
       - name: Lancer les tests de @show_dots (points ・ des ::vocal)
         run: python3 tests/test_show_dots.py
+      - name: Lancer les tests \\ー échappé et koedashi/koekiri ○/□ dans la case
+        run: python3 tests/test_vocal_choonpu_koe.py
