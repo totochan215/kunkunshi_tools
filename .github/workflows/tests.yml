@@ -56,3 +56,5 @@ jobs:
         run: python3 tests/test_choshi_align.py
       - name: Lancer les tests du tempo @speed en ♩=120 (6 layouts)
         run: python3 tests/test_speed.py
+      - name: Lancer les tests d'alignement des bornes ◯/□ (tiers inférieur de case en horizontal)
+        run: python3 tests/test_koe_lower_third.py
