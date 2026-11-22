@@ -132,5 +132,27 @@ d_h = dot_h[0]
 assert o_h[0] < a_h[0], (o_h, a_h)                 # ○ à gauche de あ (slot 0 < slot 1)
 assert abs(o_h[0] - d_h[0]) < 6, (o_h, d_h)        # ○ en face du point (même x)
 print("OK horizontal : ○/□ alignés en x sur l'élément rattaché")
+# --- 6. petit kana tassé à droite du grand en vertical (vertical/chindami/mega) ---
+src_sk = "@format KKML\n::tab\n" + chr(0x5408) + " " + chr(0x5408) + "\n::\n::vocal\n" + chr(0x3061) + chr(0x3085) + " -\n::\n"
 
+
+def chi_yu(svg):
+    return [(float(m[0]), float(m[1]), int(m[2]), m[3]) for m in
+            _re.findall(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*fill="#333">(.)</text>', svg)
+            if m[3] in (chr(0x3061), chr(0x3085))]
+
+
+for layout in ("vertical", "mega", "chindami"):
+    pair = chi_yu(render(src_sk, layout))
+    assert len(pair) == 2, (layout, pair)
+    (x0, y0, f0, c0), (x1, y1, f1, c1) = pair
+    assert c0 == chr(0x3061) and c1 == chr(0x3085), pair
+    assert x1 > x0 and y1 > y0, pair                      # décalé à droite et rapproché
+    assert f1 < f0, pair                                   # petit kana réduit
+    assert abs((x1 - x0) - 0.25 * f0) < 1 and abs((y1 - y0) - 0.55 * f0) < 1, pair
+print("OK vertical/mega/chindami : petit kana tassé à droite du grand, réduit (~65%)")
+
+pair_h = chi_yu(render(src_sk, "horizontal"))
+assert pair_h and pair_h[0][1] == pair_h[1][1], pair_h   # horizontal : côte à côte, même y
+print("OK horizontal : inchangé (côte à côte)")
 print("Tous les tests de test_vocal_choonpu_koe.py passent.")
