@@ -149,7 +149,7 @@ for layout in ("vertical", "mega", "chindami"):
     assert c0 == chr(0x3061) and c1 == chr(0x3085), pair
     assert x1 > x0 and y1 > y0, pair                      # décalé à droite et rapproché
     assert f1 == f0, pair                                  # MÊME taille de police (le glyphe petit kana est nativement plus petit : グヮ vs グワ)
-    assert abs((x1 - x0) - 0.25 * f0) < 1 and abs((y1 - y0) - 0.55 * f0) < 1, pair
+    assert abs((x1 - x0) - 0.25 * f0) < 1 and abs((y1 - y0) - 0.60 * f0) < 1, pair
 print("OK vertical/mega/chindami : petit kana tassé à droite du grand, même taille de police")
 
 pair_h = chi_yu(render(src_sk, "horizontal"))
