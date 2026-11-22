@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Tests de l'ordre des métadonnées produites par kkml_cleaner.
+"""Tests de l'ordre des métadonnées produites par kkml_clean.
 
 Règle (2026-11-21) : toutes les métadonnées sont regroupées en haut du fichier ;
 `@format` `@version` `@title` toujours en premier (si présents), puis les
@@ -7,7 +7,7 @@ autres métadonnées présentes dans leur ordre d'apparition dans le fichier
 (l'ancien ordre canonique est supprimé). Dédoublonnage : première occurrence.
 
 Usage :
-    python3 tests/test_cleaner_meta.py
+    python3 tests/test_clean_meta.py
 """
 import os
 import sys
@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
-import kkml_cleaner as c
+import kkml_clean as c
 
 
 def meta_lines(out):

@@ -24,7 +24,7 @@ os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
 import kkml2svg as k
-import kkml_cleaner as c
+import kkml_clean as c
 
 # 1. Parsing : clé reconnue, texte libre (éventuellement avec lien en clair), @sourceValeur collé
 song = k.parse_kkml("@source chindami p.78\n@title t\n::tab\n合 工\n::\n")
