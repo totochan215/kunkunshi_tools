@@ -27,7 +27,10 @@ import unicodedata
 
 import kkml_cleaner as c
 
-SECTION_RE = re.compile(r"^::(tab|vocal)(?:\s|$)")
+# sections alignées : ::tab/::vocal + alias tolérés (::tabs/::vocals, rectifiés
+# par le cleaner) — l'en-tête est émis tel quel, seul le corps est aligné
+SECTION_RE = re.compile(r"^::(tabs?|vocals?)(?:\s|$)")
+TAB_KINDS = ("tab", "tabs")
 
 
 def disp_width(s):
@@ -95,8 +98,9 @@ def beautify(text):
             while i < n and not lines[i].startswith("::"):
                 body.append(lines[i])
                 i += 1
-            normalize = c.normalize_tab_line if kind == "tab" else c.normalize_vocal_line
-            out.extend(beautify_body(body, normalize, is_tab=(kind == "tab")))
+            is_tab = kind in TAB_KINDS
+            normalize = c.normalize_tab_line if is_tab else c.normalize_vocal_line
+            out.extend(beautify_body(body, normalize, is_tab=is_tab))
         else:
             out.append(ln)
             i += 1
