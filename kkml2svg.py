@@ -1442,10 +1442,10 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
             vcy = ty
             for text, mfs, msp, fill, lead in v_blocks:
                 if msp is None:
-                    # tempo ♩=... : ligne horizontale centrée dans la colonne titre
-                    w = _h_text_w(_link_free(text), mfs)
-                    _render_horizontal_text(out, text, tx_cur - w / 2, vcy + lead,
-                                            mfs, fill, links=True)
+                    # tempo ♩=... : ligne horizontale, text-anchor=middle sur tx_cur
+                    # = centerline de base du titre (hors ruby)
+                    _emit_centered_text(out, text, tx_cur, vcy + lead, mfs, fill,
+                                        links=True)
                     vcy += lead + mfs
                 else:
                     vcy = _vertical_grouped_text(out, text, tx_cur, vcy + lead,
@@ -1850,11 +1850,10 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                                       links=True)
             st = _speed_text(song)
             if st:
-                # tempo ♩=... : horizontal, centré sous le titre, au-dessus de @choshi
+                # tempo ♩=... : horizontal, text-anchor=middle sur tx (centerline de
+                # base du titre, hors ruby), sous le titre, au-dessus de @choshi ; fs 10 en chindami
                 base_y = title_end if title_end is not None else title_top + 18 * 0.88
-                w = _h_text_w(_link_free(st), 12)
-                _render_horizontal_text(out, st, tx - w / 2, base_y + 6 + 12 * 0.88,
-                                        12, "#555")
+                _emit_centered_text(out, st, tx, base_y + 6 + 10 * 0.88, 10, "#555")
             if tuning:
                 _vertical_grouped_text(out, tuning, tx, fy1 - 4 - len(tuning) * 16,
                                        11, "#555", 16, font_family)
@@ -2130,10 +2129,9 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                 ty_end = ty
             st = _speed_text(song)
             if st:
-                # tempo ♩=... : horizontal, centré sous le titre, au-dessus de @choshi
-                w = _h_text_w(_link_free(st), 12)
-                _render_horizontal_text(out, st, tx - w / 2, ty_end + 8 + 12 * 0.88,
-                                        12, "#555")
+                # tempo ♩=... : horizontal, text-anchor=middle sur tx (centerline de
+                # base du titre, hors ruby), sous le titre, au-dessus de @choshi
+                _emit_centered_text(out, st, tx, ty_end + 8 + 12 * 0.88, 12, "#555")
             if tuning:
                 tyb = grid_y0 + grid_h - 4 - len(tuning) * 20.0
                 for i, ch in enumerate(tuning):
@@ -3929,10 +3927,9 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
             ty_end = ty
         st = _speed_text(song)
         if st:
-            # tempo ♩=... : horizontal, centré sous le titre, au-dessus de genre/auteur
-            w = _h_text_w(_link_free(st), 12)
-            _render_horizontal_text(out, st, tx - w / 2, ty_end + 6 + 12 * 0.88,
-                                    12, "#555")
+            # tempo ♩=... : horizontal, text-anchor=middle sur tx (centerline de
+            # base du titre, hors ruby), sous le titre, au-dessus de genre/auteur
+            _emit_centered_text(out, st, tx, ty_end + 6 + 12 * 0.88, 12, "#555")
             ty_end += 6 + 12
         genre = song.meta.get("genre", "")
         author = song.meta.get("author", "")
