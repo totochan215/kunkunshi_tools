@@ -99,14 +99,14 @@ print("OK ::vocal : ( ) en ligne 1 pos. 11-12 et ) en ligne 2 pos. 1 (cellules p
 # --- 3. La sortie du convertisseur rend sans avertissement ------------------
 for layout in ("vertical", "horizontal", "mega"):
     _, e = render(kkml, layout)
-    assert "AVERTISSEMENT" not in e, (layout, e)
+    assert "WARNING" not in e, (layout, e)
 print("OK sortie convertisseur sans avertissement (vertical/horizontal/mega)")
 
 # --- 4. La correction manuelle de l'utilisateur rend sans avertissement -----
 user_kkml = open(KKML_PATH, encoding="utf-8").read()
 for layout in ("vertical", "horizontal", "mega"):
     _, e = render(user_kkml, layout)
-    assert "AVERTISSEMENT" not in e, (layout, e)
+    assert "WARNING" not in e, (layout, e)
 print("OK samples/kkml/テスト節.kkml (correction manuelle) sans avertissement")
 
 # --- 5. Correction manuelle == convertisseur après normalisation ------------
@@ -189,9 +189,9 @@ uv = vocal_lines(k.parse_kkml(u2))
 assert uv[:4] == voc2[:4] and uv[4] == voc2[4][:5] + [")."], (uv[4], voc2[4])
 for layout in ("vertical", "horizontal", "mega"):
     _, e = render(kkml2, layout)
-    assert "AVERTISSEMENT" not in e, (layout, e)
+    assert "WARNING" not in e, (layout, e)
     _, e = render(u2, layout)
-    assert "AVERTISSEMENT" not in e, (layout, e)
+    assert "WARNING" not in e, (layout, e)
 print("OK テスト節-2 : ::tab sans paires vides terminales, ::vocal avec () .( ), "
       "rendu sans avertissement (convertisseur et correction)")
 
@@ -212,7 +212,7 @@ v = p2k.dan_to_vocal([{"note": ""}, {"note": "", "isSmall": True, "vocalPosMarke
 assert v == ["(", ".)", "..("], v
 for layout in ("vertical", "horizontal", "mega"):
     _, e = render(kkml3, layout)
-    assert "AVERTISSEMENT" not in e, (layout, e)
+    assert "WARNING" not in e, (layout, e)
 print("OK テスト節-3 : top → ( ), mid → .( .), bot → ..( ..), combinaison )( , rendu sans avertissement")
 
 print("\nTous les tests testbushi passent.")

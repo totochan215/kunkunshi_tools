@@ -7,7 +7,7 @@ Les défauts viennent du LayoutSpec de chaque mise en page (champs
 text_color/frame_color/frame_width/cell_color/cell_width/arrow_color/
 arrow_width/arrow_fill) ; la métadonnée surcharge. Couleurs au format HTML
 (#rgb, #rrggbb ou nom CSS), épaisseurs en pt > 0 ; valeur invalide ->
-AVERTISSEMENT + défaut du layout. Sans métadonnée, le rendu est identique
+WARNING + défaut du layout. Sans métadonnée, le rendu est identique
 octet par octet au rendu historique.
 
 Usage :
@@ -66,7 +66,7 @@ print("OK sans métadonnée : défauts du layout rendus tels quels")
 kkml = ("@title t\n@text_color #a00000\n@cell_color red\n@cell_width 2\n"
         "@arrow_color blue\n@arrow_width 1.5\n@arrow_fill on\n" + TAB)
 svg, err = render(kkml, "vertical")
-assert "AVERTISSEMENT" not in err
+assert "WARNING" not in err
 assert '<svg fill="#a00000"' in svg and 'fill="black"' not in svg
 assert 'stroke="red" stroke-width="2"' in svg                       # grille
 assert 'fill="blue" stroke="blue" stroke-width="1.5"' in svg        # tête remplie
@@ -96,14 +96,14 @@ assert 'stroke="#bbbbbb" stroke-width="2"' in svg
 assert 'stroke="#bbbbbb" stroke-width="0.75"' in svg   # flèches gardent leur épaisseur
 print("OK @cell_width et @arrow_width indépendants")
 
-# 7. Valeurs invalides : AVERTISSEMENT + défaut du layout conservé
+# 7. Valeurs invalides : WARNING + défaut du layout conservé
 svg, err = render("@title t\n@text_color pas-une-couleur!\n@cell_width abc\n"
                   "@arrow_width -2\n@arrow_fill maybe\n" + TAB, "vertical")
-assert err.count("AVERTISSEMENT") == 4, err
+assert err.count("WARNING") == 4, err
 assert 'fill="black"' in svg and '<svg fill=' not in svg
 assert 'stroke="#bbbbbb" stroke-width="0.75"' in svg
 assert 'fill="none" stroke="#bbbbbb" stroke-width="0.75"' in svg
-print("OK valeurs invalides : 4 AVERTISSEMENT, défauts du layout appliqués")
+print("OK valeurs invalides : 4 WARNING, défauts du layout appliqués")
 
 # 8. Horizontal : défauts #999999, surcharge par @cell_color (les flèches gardent
 #    @arrow_color, donc #999999 tant que @arrow_color n'est pas renseigné)
@@ -138,7 +138,7 @@ print("OK LayoutSpec : frame_rect()/hanmen_rect(), pad_*, frame_width par défau
 svg, _ = render("@title t\n" + TAB, "nomura")
 assert 'stroke="#333333" stroke-width="1.5"' in svg
 svg, err = render("@title t\n@frame_width 0\n" + TAB, "nomura")
-assert "AVERTISSEMENT" not in err
+assert "WARNING" not in err
 assert 'stroke="#333333" stroke-width="1.5"' not in svg   # filet parti
 assert 'stroke="#333333" stroke-width="0.6"' in svg       # grille intacte
 print("OK nomura : cadre tracé par défaut, @frame_width 0 = non tracé")
@@ -158,11 +158,11 @@ print("OK chindami/mega/tuto : cadre virtuel par défaut, tracé si @frame_width
 assert render("@title t\n@frame_width 2\n" + TAB, "vertical")[0] == render("@title t\n" + TAB, "vertical")[0]
 print("OK vertical (page libre) : cadre non tracé, @frame_width ignoré")
 
-# 14. @frame_width invalide (négatif ou non numérique) : AVERTISSEMENT + défaut
+# 14. @frame_width invalide (négatif ou non numérique) : WARNING + défaut
 svg, err = render("@title t\n@frame_width -1\n" + TAB, "nomura")
-assert err.count("AVERTISSEMENT") == 1 and 'stroke="#333333" stroke-width="1.5"' in svg
+assert err.count("WARNING") == 1 and 'stroke="#333333" stroke-width="1.5"' in svg
 svg, err = render("@title t\n@frame_width abc\n" + TAB, "nomura")
-assert err.count("AVERTISSEMENT") == 1 and 'stroke="#333333" stroke-width="1.5"' in svg
-print("OK @frame_width invalide : AVERTISSEMENT + défaut du layout")
+assert err.count("WARNING") == 1 and 'stroke="#333333" stroke-width="1.5"' in svg
+print("OK @frame_width invalide : WARNING + défaut du layout")
 
 print("Tous les tests de test_layout_attrs.py passent.")

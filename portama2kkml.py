@@ -260,7 +260,7 @@ VOCAL_POS_MARKER_TOKEN = {
 
 
 def _info(msg):
-    print(f"portama2kkml: {msg}", file=sys.stderr)
+    print(f"portama2kkml: INFO: {msg}", file=sys.stderr)
 
 
 def dan_to_vocal(dan):

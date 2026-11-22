@@ -26,7 +26,7 @@ print("OK vocal réalignée (total boucle)")
 # 3. total ne boucle pas -> avertissement, pas de réalignement
 t3 = "@title t\n::tab\n合 工 尺\n五 合\n::\n::vocal\n- - - - - -\n::\n"
 out, err, rc = run_clean(t3)
-assert "AVERTISSEMENT" in err and "PAS de réalignement" in err, err
+assert "WARNING" in err and "PAS de réalignement" in err, err
 assert "- - - - - -" in out
 print("OK avertissement si total ne boucle pas")
 
@@ -39,7 +39,7 @@ print("OK lyrics créée vide")
 # 5. ::tab implicite -> explicite (info)
 t5 = "@title t\n合 工\n"
 out, err, rc = run_clean(t5)
-assert "::tab\n合 工\n::" in out and "info" in err
+assert "::tab\n合 工\n::" in out and "INFO" in err
 print("OK tab implicite -> explicite")
 
 # 6. ::tab manquante -> créée vide
@@ -81,7 +81,7 @@ print("OK idempotence sur tous les cas")
 # mais un contenu binaire oui)
 r = subprocess.run([sys.executable, 'kkml_clean.py', '-n', '/dev/null'],
                    capture_output=True, text=True)
-assert r.returncode == 1 and "ERREUR" in r.stderr
+assert r.returncode == 1 and "ERROR" in r.stderr
 print("OK erreur fatale fichier vide")
 
 # 12. normalisation ＂ (U+FF02) -> " (nuchi-utu)

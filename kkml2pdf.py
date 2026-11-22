@@ -292,7 +292,7 @@ def produce_pdf(svgs, out_path, engine, merger, workdir=None):
             svg_path.write_text(svg, encoding="utf-8")
             size = page_size_cm(svg)
             if size is None:
-                print(f"AVERTISSEMENT : page {i} sans width/height en cm "
+                print(f"kkml2pdf: WARNING: page {i} sans width/height en cm "
                       f"— taille de page PDF laissée au moteur", file=sys.stderr)
             else:
                 print(f"page {i}/{len(svgs)} : {size[0]:g} x {size[1]:g} cm",
@@ -349,7 +349,7 @@ def main():
         layout, svgs = render_pages(text, layout=args.layout, cols=args.cols,
                                     page_dans=args.page_dans)
     except UnsupportedLayout as e:
-        print(f"ERREUR : {e}", file=sys.stderr)
+        print(f"kkml2pdf: ERROR: {e}", file=sys.stderr)
         return 2
     print(f"layout {layout} : {len(svgs)} page(s) "
           f"({LAYOUTS_CM[layout][0]:g} x {LAYOUTS_CM[layout][1]:g} cm)",
@@ -359,7 +359,7 @@ def main():
         engine = detect_engine(args.engine)
         merger = detect_merger(args.merger)
     except EngineUnavailable as e:
-        print(f"ERREUR : {e}", file=sys.stderr)
+        print(f"kkml2pdf: ERROR: {e}", file=sys.stderr)
         return 1
     print(f"moteur SVG->PDF : {engine} ; fusion : {merger}", file=sys.stderr)
 
@@ -367,7 +367,7 @@ def main():
         produce_pdf(svgs, out_path, engine, merger,
                     workdir=args.keep_temp)
     except (RuntimeError, EngineUnavailable) as e:
-        print(f"ERREUR : {e}", file=sys.stderr)
+        print(f"kkml2pdf: ERROR: {e}", file=sys.stderr)
         return 1
     return 0
 

@@ -179,7 +179,7 @@ with tempfile.TemporaryDirectory() as td:
                         "-o", str(Path(td) / "v.pdf")],
                        capture_output=True, text=True)
     assert r.returncode == 2, (r.returncode, r.stderr)
-    assert "ERREUR" in r.stderr and "chindami" in r.stderr, r.stderr
+    assert "ERROR" in r.stderr and "chindami" in r.stderr, r.stderr
     print("OK CLI garde : layout vertical -> exit 2 + message d'erreur")
 
 # 8. CLI de bout en bout avec faux rsvg-convert en tête du PATH

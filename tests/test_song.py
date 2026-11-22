@@ -46,7 +46,7 @@ kkml = ("@title medley\n@layout mega\n::song 南島節\n::tab\n合 工 工 工\n
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     svg = "".join(k.render_svg(k.parse_kkml(kkml), layout="mega"))
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 assert "南島節" in svg and "仲順流り" in svg, "titres de chansons absents du SVG"
 assert 'font-size="11" fill="#555"' in svg
 print("OK rendu mega : titres ::song rendus en en-tête de chanson")
@@ -57,7 +57,7 @@ with contextlib.redirect_stderr(err):
     svg = "".join(k.render_svg(k.parse_kkml(
         open(ROOT / "samples/kkml/medley-samples.kkml", encoding="utf-8").read()),
         layout="mega"))
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 assert "てぃんさぐ" in svg
 print("OK sample medley-samples.kkml : titres de chansons rendus en mega")
 

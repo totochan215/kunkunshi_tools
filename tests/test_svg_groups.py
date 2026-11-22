@@ -28,7 +28,7 @@ for layout in ("vertical", "horizontal"):
     err = io.StringIO()
     with contextlib.redirect_stderr(err):
         svg = "".join(k.render_svg(k.parse_kkml(KKML), layout=layout))
-    assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+    assert "WARNING" not in err.getvalue(), err.getvalue()
     ET.fromstring(svg)  # XML bien formé
     assert svg.count('<g class="repeat-arrow"') == 2, svg.count('<g class="repeat-arrow"')
     assert svg.count('<g class="vocal-rep"') == 2
