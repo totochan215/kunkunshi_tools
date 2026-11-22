@@ -421,7 +421,7 @@ META_KEYS = {"title", "choshi", "tuning", "cols", "cells_per_dan", "layout", "ma
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "source", "shaku_circled", "shaku_sharp", "speed", "font_style",
              "mega_dans",
-             "page_dans", "dans_per_page", "tuto_block", "kinsoku",
+             "page_dans", "dans_per_page", "tuto_block", "kinsoku", "page_base",
              # attributs de design surchargeables par mise en page (défaut = LayoutSpec)
              "text_color", "frame_color", "frame_width", "cell_color", "cell_width",
              "arrow_color", "arrow_width", "arrow_fill",
@@ -740,6 +740,7 @@ class LayoutSpec:
     arrow_color: str = "#bbbbbb"     # flèches de répétition (et symboles vocaux ⚪⚫)
     arrow_width: float = 0.75        # épaisseur des flèches de boucles
     arrow_fill: bool = False         # têtes de flèches remplies (on) ou creuses (off)
+    page_no_fs: float = 11
 
     def u(self, v_pt):
         """valeur en pt -> unité native du layout (int si valeur entière exacte)."""
@@ -867,6 +868,28 @@ def _meta_pt(meta, key, zero_ok=False):
               f"valeur de la mise en page conservée", file=sys.stderr)
         return None
     return f
+
+
+def _meta_page_base(meta):
+    """@page_base : numéro affiché sur la 1re page (entier >= 1, défaut 1)."""
+    v = meta.get("page_base", "").strip()
+    if not v:
+        return 1
+    try:
+        n = int(v)
+    except ValueError:
+        n = 0
+    if n < 1:
+        print(f"kkml2svg: WARNING: @page_base {v!r} doit être un entier >= 1, "
+              f"défaut 1 appliqué", file=sys.stderr)
+        return 1
+    return n
+
+
+def _draw_page_no(out, n, x, y, fs, anchor="middle", fill="#555"):
+    """Numéro de page ーnー (layouts à page fixe : nomura/chindami/mega)."""
+    out.append(f'<text x="{x:g}" y="{y:.2f}" text-anchor="{anchor}" '
+               f'font-family="serif" font-size="{fs:g}" fill="{fill}">ー{n}ー</text>')
 
 
 def _apply_text_color(svg, color):
@@ -1408,7 +1431,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
 # --------------------------------------------------------------------------- #
 # Modèle de page mesuré/spécifié sur les recueils Nomura-ryu (AGENTS.md) :
 #   - page A4 portrait (595.28 x 841.89 pt), filet de cadre à ~48 pt des bords
-#     (le numéro de page seul est à l'extérieur du filet)
+#     (seul le numéro de page ーnー est hors du filet, en haut, alterné gauche/droite)
 #   - dans = colonnes de 12 cases empilées (haut->bas), lecture droite->gauche
 #   - case plus haute que large : 31.7 pt (l) x 60.6 pt (h)
 #   - sous-colonne marker à gauche des notes (côté lecture suivante),
@@ -1631,6 +1654,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     rows = spec.cells_per_dan
     fs = spec.fs
     fx0, fy0, fx1, fy1 = spec.frame_rect()   # cadre = marges depuis le bord (non tracé ici)
+    page_base = _meta_page_base(song.meta)
     title_offset = (spec.title_w + spec.title_gap) if (title or musicno) else 0
     syllable_fs = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else 0
 
@@ -1871,6 +1895,10 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                                                 lyr_sp, font_family)
                     cy += lyr_sp
                 vx -= lyr_col_w + int(lyr_col_w * 0.8)
+        grid_bottom = fy0 + rows * cell_h
+        _draw_page_no(out, page_base + pno - 1, total_w / 2,
+                      (grid_bottom + total_h) / 2 + spec.page_no_fs * 0.35,
+                      spec.page_no_fs)
         out.append('</svg>')
         svgs.append("\n".join(out))
     return svgs
@@ -1906,6 +1934,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     asw = o.get('arrow_width') or spec.arrow_width
     afill = bool(o.get('arrow_fill', spec.arrow_fill))
     fx0, fy0, fx1, fy1 = spec.frame_rect()      # cadre = marges depuis le bord
+    page_base = _meta_page_base(song.meta)
     hx0, hy0, hx1, hy1 = spec.hanmen_rect()     # hanmen = cadre - padding
     cell_h = (fy1 - fy0 - 2 * spec.dan_gap) / spec.cells_per_dan
     cell_w = (fx1 - fx0 - 8 * spec.dan_gap) / 14.0
@@ -2035,10 +2064,12 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
         # filet de cadre (origine du placement relatif) ; tracé si frame_width > 0
         _draw_frame(out, spec, o)
 
-        # numéro de page à l'extérieur du filet (bas)
-        out.append(f'<text x="{spec.page_w / 2}" y="{fy1 + 24}" '
-                   f'text-anchor="middle" font-family="serif" '
-                   f'font-size="11" fill="#555">{pi + 1}</text>')
+        pno = page_base + pi
+        if pno % 2 == 0:
+            pnx, pnanchor = fx0, "start"
+        else:
+            pnx, pnanchor = fx1, "end"
+        _draw_page_no(out, pno, pnx, fy0 - 4, spec.page_no_fs, pnanchor)
 
         # --- placement des groupes, droite -> gauche --- #
         # positions x (bord droit de chaque groupe), depuis le bord droit du
@@ -3518,6 +3549,9 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
               / (spec.blocks * spec.cells_per_dan))
     fs = max(spec.fs_min, int(cell_h * spec.fs_ratio))  # ratio fs/case ~0,38 (calibrage Portama)
+    page_base = _meta_page_base(song.meta)
+    grid_bottom = (spec.margin_t + spec.blocks * spec.cells_per_dan * cell_h
+                   + (spec.blocks - 1) * spec.block_gap)
 
     # --- Colonne titre verticale (à droite de la grille, comme vertical) --- #
     TITLE_W = spec.u(spec.title_w)
@@ -3679,6 +3713,9 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         # --- Titre vertical à droite de la grille (répété sur chaque page) --- #
         _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
                           TUNING_SPACING, spec)
+        _draw_page_no(out, page_base + pi, spec.page_w / 2,
+                      (grid_bottom + spec.page_h) / 2 + spec.page_no_fs * 0.35,
+                      spec.page_no_fs)
 
         out.append("</svg>")
         result.append("\n".join(out))
@@ -3762,7 +3799,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         per_page = spec.blocks * max_cols
         ly_pages = [ly_cols[i:i + per_page]
                     for i in range(0, len(ly_cols), per_page)] or [[]]
-        for page_cols in ly_pages:
+        for lpi, page_cols in enumerate(ly_pages):
             out = _svg_open_print(spec.page_w, spec.page_h, 42, 29.7, title=title)
             _draw_frame(out, spec, opts)   # tracé seulement si frame_width > 0 (défaut 0)
             for b in range(spec.blocks):
@@ -3817,6 +3854,9 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                                                    LYRICS_FS, "#333", LYRICS_SP)
             _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
                               TUNING_SPACING, spec)
+            _draw_page_no(out, page_base + len(pages) + lpi, spec.page_w / 2,
+                          (grid_bottom + spec.page_h) / 2 + spec.page_no_fs * 0.35,
+                          spec.page_no_fs)
             out.append("</svg>")
             result.append("\n".join(out))
     return result
