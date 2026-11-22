@@ -52,3 +52,5 @@ jobs:
         run: python3 tests/test_vocal_choonpu_koe.py
       - name: Lancer les tests de numéros de page (@page_base)
         run: python3 tests/test_page_numbers.py
+      - name: Lancer les tests d'alignement bas du @choshi (mega/nomura)
+        run: python3 tests/test_choshi_align.py
