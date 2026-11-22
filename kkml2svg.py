@@ -2560,7 +2560,7 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
                     # petit dans le cadratin : グヮ vs グワ) — JLREQ cl-11, comme
                     # dans les PDF Nomura/Portama.
                     _emit(sx, sy, el[0])
-                    out.append(f'<text x="{sx + syllable_fs * 0.25:g}" y="{sy + syllable_fs * 0.55:g}" '
+                    out.append(f'<text x="{sx + syllable_fs * 0.25:g}" y="{sy + syllable_fs * 0.60:g}" '
                                f'text-anchor="middle" font-family="serif" font-size="{syllable_fs}" '
                                f'fill="#333">{escape(el[1])}</text>')
                 else:
