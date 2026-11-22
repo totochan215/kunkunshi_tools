@@ -2553,6 +2553,16 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
                     out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
                                f'font-family="serif" font-size="{syllable_fs}" '
                                f'fill="#333">{chr(0x30FB)}</text>')
+                elif len(el) == 2 and el[1] in SMALL_KANA:
+                    # Syllabe en 2 parties (grand kana + petit kana, ex. ちゅ) :
+                    # en vertical, le petit kana est tassé à droite du grand et
+                    # réduit (JLREQ cl-11 : face du petit kana à droite du centre
+                    # horizontal du cadratin) — comme dans les PDF Nomura/Portama.
+                    _emit(sx, sy, el[0])
+                    sfs = max(1, int(syllable_fs * 0.65))
+                    out.append(f'<text x="{sx + syllable_fs * 0.25:g}" y="{sy + syllable_fs * 0.55:g}" '
+                               f'text-anchor="middle" font-family="serif" font-size="{sfs}" '
+                               f'fill="#333">{escape(el[1])}</text>')
                 else:
                     for k, ch in enumerate(el):
                         _emit(sx, sy + k * step, ch)
