@@ -35,11 +35,13 @@ Options CLI : -o/--output, -c/--cells-per-dan, -l/--layout,
 -p/--dans-per-page, --engine, --merger, --keep-temp DIR.
 """
 import argparse
+import os
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import kkml2svg as k
@@ -143,30 +145,64 @@ def detect_engine(name="auto"):
         "--engine pour forcer un moteur précis")
 
 
+_PDF_TIMEOUT = 10.0   # attente max de stabilisation d'un PDF produit (s)
+
+
+def _pdf_complet(path, timeout=_PDF_TIMEOUT):
+    """Vrai si le PDF existe, commence par '%PDF-' et contient un marqueur
+    %%EOF dans son dernier tampon — en attendant (jusqu'à `timeout` s) que la
+    taille se stabilise : certains moteurs (ex. inkscape sur macOS) rendent la
+    main avant d'avoir tout écrit sur disque."""
+    p = Path(path)
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        try:
+            size = p.stat().st_size
+        except OSError:
+            size = -1
+        if size > 0:
+            with open(p, "rb") as f:
+                head = f.read(8)
+                f.seek(max(0, size - 2048), os.SEEK_SET)
+                tail = f.read()
+            if head.startswith(b"%PDF-") and b"%%EOF" in tail:
+                return True
+        time.sleep(0.2)
+    return False
+
+
 def convert_page(engine, svg_path, pdf_path):
     """Convertit un SVG (1 page) en PDF 1 page. `engine` : nom détecté ou
     fonction appelable (svg_path, pdf_path) — utile pour les tests."""
     if callable(engine):
         engine(Path(svg_path), Path(pdf_path))
-        return
-    if engine == "rsvg-convert":
+    elif engine == "rsvg-convert":
         cmd = ["rsvg-convert", "-f", "pdf", "-o", str(pdf_path), str(svg_path)]
+        r = subprocess.run(cmd, capture_output=True, text=True)
+        if r.returncode != 0:
+            raise RuntimeError(
+                f"{engine} a échoué (rc={r.returncode}) sur {svg_path} : "
+                f"{r.stderr.strip() or r.stdout.strip()}")
     elif engine == "inkscape":
         cmd = ["inkscape", str(svg_path), "--export-type=pdf",
                f"--export-filename={pdf_path}"]
+        r = subprocess.run(cmd, capture_output=True, text=True)
+        if r.returncode != 0:
+            raise RuntimeError(
+                f"{engine} a échoué (rc={r.returncode}) sur {svg_path} : "
+                f"{r.stderr.strip() or r.stdout.strip()}")
     elif engine == "cairosvg":
         import cairosvg
         cairosvg.svg2pdf(url=str(svg_path), write_to=str(pdf_path))
-        return
     else:
         raise EngineUnavailable(f"moteur inconnu : {engine}")
-    r = subprocess.run(cmd, capture_output=True, text=True)
-    if r.returncode != 0:
-        raise RuntimeError(
-            f"{engine} a échoué (rc={r.returncode}) sur {svg_path} : "
-            f"{r.stderr.strip() or r.stdout.strip()}")
     if not Path(pdf_path).exists():
         raise RuntimeError(f"{engine} n'a produit aucun PDF pour {svg_path}")
+    if not _pdf_complet(pdf_path, timeout=_PDF_TIMEOUT):
+        raise RuntimeError(
+            f"{engine} a produit un PDF incomplet (pas de marqueur %%EOF) "
+            f"pour {svg_path} — réessayez, ou changez de moteur "
+            f"(--engine rsvg-convert|cairosvg|inkscape)")
 
 
 # --------------------------------------------------------------------------- #
