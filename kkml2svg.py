@@ -2856,11 +2856,12 @@ def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
         elems = _vocal_elements(syl)
         n = max(len(elems), 1)
         # Bornes de chant ( ) : ○/□ DANS la case, alignés en x sur l'élément
-        # (syllabe ou point, même masqué) auquel la borne est rattachée.
+        # (syllabe ou point, même masqué) auquel la borne est rattachée, et en y
+        # sur la centerline du TIERS INFÉRIEUR de la case (y_top - cell_h/6).
         slots, _n = _vocal_paren_slots(syl)
         if slots and note_fs:
             ss = int(note_fs * 0.42)
-            yk = (y_top - cell_h / 2 + ss * 0.318) if cell_h else sy
+            yk = (y_top - cell_h / 6 + ss * 0.318) if cell_h else sy
             for ch, j in slots:
                 xk = cx + cell_w * (j / n)
                 g = chr(0x25CB) if ch == "(" else chr(0x25A1)
