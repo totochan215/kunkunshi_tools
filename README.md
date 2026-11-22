@@ -37,8 +37,6 @@ Normalise un fichier KKML sous sa forme canonique.
 
 Options CLI : `-n/--dry-run`, `-o/--output`
 
-Ancien nom `kkml_cleaner.py` : un shim reste en place (AVERTISSEMENT sur stderr, puis délégation vers `kkml_clean.py`).
-
 ### kkml_beautify.py
 
 Beautifie un fichier KKML pour l'édition en chasse fixe : dans les sections `::tab` et `::vocal`, les tokens sont normalisés (comme `kkml_clean.py`) puis complétés d'espaces simples pour que les débuts de chaque cellule soient alignés en colonnes (les caractères CJK pleine chasse comptent double). Le reste du fichier est inchangé. Idempotent, et le rendu SVG est inchangé.
