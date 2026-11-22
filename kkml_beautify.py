@@ -121,7 +121,7 @@ def main():
         with open(args.input, encoding="utf-8") as f:
             text = f.read()
     except OSError as e:
-        print(f"kkml_beautify: ERREUR: lecture impossible : {e}", file=sys.stderr)
+        print(f"kkml_beautify: ERROR: lecture impossible : {e}", file=sys.stderr)
         sys.exit(1)
 
     result = beautify(text)
@@ -130,7 +130,7 @@ def main():
         if args.output:
             with open(args.output, "w", encoding="utf-8") as f:
                 f.write(result)
-            print(f"kkml_beautify: info: résultat écrit dans {args.output} (original intact)",
+            print(f"kkml_beautify: INFO: résultat écrit dans {args.output} (original intact)",
                   file=sys.stderr)
         else:
             sys.stdout.write(result)
@@ -138,7 +138,7 @@ def main():
         target = args.output or args.input
         with open(target, "w", encoding="utf-8") as f:
             f.write(result)
-        print(f"kkml_beautify: info: fichier beautifié : {target}", file=sys.stderr)
+        print(f"kkml_beautify: INFO: fichier beautifié : {target}", file=sys.stderr)
 
 
 if __name__ == "__main__":

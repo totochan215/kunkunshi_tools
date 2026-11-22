@@ -98,7 +98,7 @@ REPEAT_END = ":|"
 
 # Marqueurs de répétition du chant (Portama vocalRepStart/vocalRepEnd).
 # DÉPRÉCIÉ (2026-11-01) : |( et )| entrent en conflit avec le shuffle A:B et la
-# barre | (saut de ligne de couplet). Encore acceptés avec un AVERTISSEMENT ;
+# barre | (saut de ligne de couplet). Encore acceptés avec un WARNING ;
 # la boucle vocale se note désormais dans ::vocal avec (: ... :).
 VREPEAT_START = "|("
 VREPEAT_END = ")|"
@@ -542,7 +542,7 @@ def parse_kkml(text):
                 # bloc courant, ::page ferme la page courante, même non pleins.
                 # Sans contenu ; ignorés par les autres layouts.
                 if label:
-                    print(f"AVERTISSEMENT : ::{kind} n'a pas de contenu (label {label!r} ignoré)",
+                    print(f"kkml2svg: WARNING: ::{kind} n'a pas de contenu (label {label!r} ignoré)",
                           file=sys.stderr)
                 label = None
             current = Block(kind, label)
@@ -838,13 +838,13 @@ _COLOR_RE = re.compile(r"#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-
 
 def _meta_color(meta, key):
     """Métadonnée couleur au format HTML (#rgb/#rrggbb/#rrggbbaa ou nom CSS) ;
-    None si absente, AVERTISSEMENT + None si invalide."""
+    None si absente, WARNING + None si invalide."""
     v = meta.get(key, "").strip()
     if not v:
         return None
     if _COLOR_RE.fullmatch(v):
         return v
-    print(f"AVERTISSEMENT : @{key} {v!r} n'est pas une couleur HTML valide "
+    print(f"kkml2svg: WARNING: @{key} {v!r} n'est pas une couleur HTML valide "
           f"(#rgb, #rrggbb ou nom CSS), valeur de la mise en page conservée",
           file=sys.stderr)
     return None
@@ -853,7 +853,7 @@ def _meta_color(meta, key):
 def _meta_pt(meta, key, zero_ok=False):
     """Métadonnée épaisseur en pt (float > 0, ou >= 0 si zero_ok — ex.
     @frame_width 0 = cadre non tracé) ; None si absente,
-    AVERTISSEMENT + None si invalide."""
+    WARNING + None si invalide."""
     v = meta.get(key, "").strip()
     if not v:
         return None
@@ -862,7 +862,7 @@ def _meta_pt(meta, key, zero_ok=False):
     except ValueError:
         f = -1.0
     if f < 0 or (f == 0 and not zero_ok):
-        print(f"AVERTISSEMENT : @{key} {v!r} doit être un nombre "
+        print(f"kkml2svg: WARNING: @{key} {v!r} doit être un nombre "
               f"{'positif ou nul' if zero_ok else 'strictement positif'} (pt), "
               f"valeur de la mise en page conservée", file=sys.stderr)
         return None
@@ -991,7 +991,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     if kinsoku is None:
         kinsoku = song.meta.get("kinsoku", "off" if layout == "nomura" else "simple")
     if kinsoku not in ("simple", "strict", "off"):
-        print(f"AVERTISSEMENT : kinsoku inconnu {kinsoku!r} (simple|strict|off), "
+        print(f"kkml2svg: WARNING: kinsoku inconnu {kinsoku!r} (simple|strict|off), "
               f"défaut appliqué", file=sys.stderr)
         kinsoku = "off" if layout == "nomura" else "simple"
 
@@ -1022,14 +1022,14 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
         opts['arrow_fill'] = (_af == 'on')
     else:
         if _af:
-            print(f"AVERTISSEMENT : @arrow_fill {_af!r} doit être 'on' ou 'off', "
+            print(f"kkml2svg: WARNING: @arrow_fill {_af!r} doit être 'on' ou 'off', "
                   f"valeur de la mise en page conservée", file=sys.stderr)
         opts['arrow_fill'] = spec.arrow_fill
 
     font_family = opts.get('font_family', 'serif')
     if layout not in ("vertical", "horizontal", "mega") and any(
             len(s) > 4 and s[4] for s in sections):
-        print("AVERTISSEMENT : straddle de tête '/B' non supporté en layout "
+        print("kkml2svg: WARNING: straddle de tête '/B' non supporté en layout "
               f"{layout!r} (vertical/horizontal/mega seulement), ignoré",
               file=sys.stderr)
     if layout == "chindami":
@@ -3512,7 +3512,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         try:
             dans_per_block = max(1, int(song.meta["mega_dans"]))
         except ValueError:
-            print(f"AVERTISSEMENT : @mega_dans non entier ({song.meta['mega_dans']!r}), "
+            print(f"kkml2svg: WARNING: @mega_dans non entier ({song.meta['mega_dans']!r}), "
                   f"défaut {spec.dans_per_block} utilisé", file=sys.stderr)
     dans_per_page = spec.blocks * dans_per_block
     cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
@@ -4124,16 +4124,16 @@ _WARNED_MISC = set()
 def _warn_once(msg):
     if msg not in _WARNED_MISC:
         _WARNED_MISC.add(msg)
-        print(f"AVERTISSEMENT : {msg}", file=sys.stderr)
+        print(f"kkml2svg: WARNING: {msg}", file=sys.stderr)
 
 
 def _info_input_variant(orig, canon):
-    """Info stderr (une seule fois par paire) : une variante de saisie
+    """INFO stderr (une seule fois par paire) : une variante de saisie
     pleine chasse a été normalisée vers la forme canonique."""
     key = (orig, canon)
     if key not in _INFO_INPUT_SEEN:
         _INFO_INPUT_SEEN.add(key)
-        print(f"kkml2svg: entrée '{orig}' normalisée en '{canon}' "
+        print(f"kkml2svg: INFO: entrée '{orig}' normalisée en '{canon}' "
               f"(variante de saisie acceptée)",
               file=sys.stderr)
 
@@ -4147,14 +4147,14 @@ _WARNED_MISC = set()
 def _warn_once(msg):
     if msg not in _WARNED_MISC:
         _WARNED_MISC.add(msg)
-        print(f"AVERTISSEMENT : {msg}", file=sys.stderr)
+        print(f"kkml2svg: WARNING: {msg}", file=sys.stderr)
 
 
 def _warn_unknown_token(tok):
     """Alerte stderr une seule fois par token non reconnu (anti-spam)."""
     if tok not in _WARNED_TOKENS:
         _WARNED_TOKENS.add(tok)
-        print(f"AVERTISSEMENT : token non reconnu {tok!r} "
+        print(f"kkml2svg: WARNING: token non reconnu {tok!r} "
               f"(rendu dégradé : 3 premiers caractères condensés)",
               file=sys.stderr)
 

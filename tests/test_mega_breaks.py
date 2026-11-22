@@ -61,7 +61,7 @@ with contextlib.redirect_stderr(err):
                          layout="mega")
     p_33 = k.render_svg(k.parse_kkml(
         "@title t\n@layout mega\n@mega_dans 33\n::tab\n" + tab130 + "\n::\n"), layout="mega")
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 assert len(p_def) == 3 and len(p_33) == 2, (len(p_def), len(p_33))
 print("OK e2e @mega_dans 33 : 130 dans -> 2 pages (3 par défaut)")
 
@@ -70,16 +70,16 @@ kkml_b = ("@title t\n@layout mega\n::tab\n" + " ".join(["合"] * 480) + "\n::\n:
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     pages_b = k.render_svg(k.parse_kkml(kkml_b), layout="mega")
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 assert len(pages_b) == 2
 print("OK e2e ::block : rendu mega 2 pages sans avertissement")
 
-# 7. @mega_dans invalide -> AVERTISSEMENT + défaut
+# 7. @mega_dans invalide -> WARNING + défaut
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     k.render_svg(k.parse_kkml("@title t\n@layout mega\n@mega_dans abc\n::tab\n合\n::\n"),
                  layout="mega")
-assert "AVERTISSEMENT" in err.getvalue() and "@mega_dans" in err.getvalue()
-print("OK @mega_dans invalide : AVERTISSEMENT + défaut 32")
+assert "WARNING" in err.getvalue() and "@mega_dans" in err.getvalue()
+print("OK @mega_dans invalide : WARNING + défaut 32")
 
 print("\nTous les tests mega (@mega_dans, ::block/::page) passent.")
