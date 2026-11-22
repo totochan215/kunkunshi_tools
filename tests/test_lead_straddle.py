@@ -4,7 +4,7 @@
 Implémenté le 2026-11-21 : un token '/B' en tout premier token d'un bloc
 ::tab = note à cheval sur le bord PRÉCÉDENT de la première case (rang -1 ;
 haut en vertical, gauche en horizontal). Le token ne consomme pas de case.
-Ailleurs : AVERTISSEMENT + ignoré. Rendu : vertical, horizontal, mega.
+Ailleurs : WARNING + ignoré. Rendu : vertical, horizontal, mega.
 
 Usage :
     python3 tests/test_lead_straddle.py
@@ -30,17 +30,17 @@ with contextlib.redirect_stderr(err):
     song = k.parse_kkml("::tab\n/六 合 工\n::\n")
 assert song.blocks[0].leading_straddle == "六"
 assert song.blocks[0].lines == [["合", "工"]], song.blocks[0].lines
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 print("OK parse /六 -> leading_straddle, token retiré des cases")
 
-# 2. Token '/X' ailleurs dans le bloc : AVERTISSEMENT + ignoré
+# 2. Token '/X' ailleurs dans le bloc : WARNING + ignoré
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     song = k.parse_kkml("::tab\n合 /工\n::\n")
 assert song.blocks[0].leading_straddle is None
 assert song.blocks[0].lines == [["合"]]
-assert "AVERTISSEMENT" in err.getvalue()
-print("OK '/X' hors tête de bloc : AVERTISSEMENT + ignoré")
+assert "WARNING" in err.getvalue()
+print("OK '/X' hors tête de bloc : WARNING + ignoré")
 
 # 3. Rendu vertical : le 六 est rendu en petit AU-DESSUS de la 1re case (grille)
 kkml = ("@title t\n::tab\n/六 " + " ".join(["合", "工/尺", "合/上", "合/老", "四/老", "上/尺",
@@ -49,7 +49,7 @@ kkml = ("@title t\n::tab\n/六 " + " ".join(["合", "工/尺", "合/上", "合/�
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     svg = "".join(k.render_svg(k.parse_kkml(kkml), layout="vertical"))
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 ms = re.findall(r'<text x="([0-9.]+)" y="([0-9.]+)"[^>]*font-size="(\d+)"[^>]*>六</text>', svg)
 assert ms, "straddle de tête 六 absent du SVG vertical"
 m = min(ms, key=lambda t: float(t[1]))  # le plus haut = le straddle de tête
@@ -64,7 +64,7 @@ print("OK vertical : /六 pile à cheval sur le bord de la 1re case (centre=%s, 
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     svgh = "".join(k.render_svg(k.parse_kkml(kkml), layout="horizontal"))
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 mhs = re.findall(r'<text x="([0-9.]+)" y="([0-9.]+)"[^>]*font-size="(\d+)"[^>]*>六</text>', svgh)
 assert mhs, "straddle de tête 六 absent du SVG horizontal"
 mh = min(mhs, key=lambda t: float(t[0]))  # le plus à gauche = le straddle de tête
@@ -79,16 +79,16 @@ kkml2 = ("@title medley\n@layout mega\n::song A\n::tab\n/六 " + " ".join(["合"
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     svgm = "".join(k.render_svg(k.parse_kkml(kkml2), layout="mega"))
-assert "AVERTISSEMENT" not in err.getvalue(), err.getvalue()
+assert "WARNING" not in err.getvalue(), err.getvalue()
 assert re.search(r'font-size="\d+"[^>]*>六</text>', svgm)
 print("OK mega : /六 rendu en tête de chanson dans le medley")
 
-# 6. Layout non supporté (nomura) : AVERTISSEMENT, pas de crash
+# 6. Layout non supporté (nomura) : WARNING, pas de crash
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     k.render_svg(k.parse_kkml(kkml), layout="nomura")
 assert "non support" in err.getvalue()
-print("OK nomura : AVERTISSEMENT 'non supporté', rendu sans crash")
+print("OK nomura : WARNING 'non supporté', rendu sans crash")
 
 # 7. Cleaner : réémet '/六' en tête de bloc, idempotent
 out = c.clean("::tab\n/六 合 工\n::\n")

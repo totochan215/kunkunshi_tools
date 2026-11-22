@@ -102,7 +102,7 @@ for layout in ("vertical", "horizontal", "chindami"):
     err = io.StringIO()
     with contextlib.redirect_stderr(err):
         pages = k.render_svg(k.parse_kkml(kkml), layout=layout)
-    assert "AVERTISSEMENT" not in err.getvalue(), (layout, err.getvalue())
+    assert "WARNING" not in err.getvalue(), (layout, err.getvalue())
     svg = "".join(pages)
     assert "\\" not in svg, (layout, "antislash fuite dans le SVG")
     assert "《" in svg and "》" in svg, (layout, "《》 littéraux absents du rendu")
@@ -120,7 +120,7 @@ with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as f:
 r = subprocess.run([sys.executable, str(ROOT / "kkml2svg.py"), kkml_path,
                     "-l", "vertical", "-o", svg_path],
                    capture_output=True, text=True)
-assert r.returncode == 0 and "AVERTISSEMENT" not in r.stderr, r.stderr
+assert r.returncode == 0 and "WARNING" not in r.stderr, r.stderr
 svg = open(svg_path, encoding="utf-8").read()
 assert "\\" not in svg and "《" in svg
 print("OK CLI kkml2svg (rc=0, 《 littéral rendu sans antislash)")

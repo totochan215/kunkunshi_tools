@@ -53,7 +53,7 @@ for layout in ("vertical", "horizontal", "chindami"):
     err = io.StringIO()
     with contextlib.redirect_stderr(err):
         svg = "".join(k.render_svg(k.parse_kkml(kkml), layout=layout))
-    assert "AVERTISSEMENT" not in err.getvalue(), (layout, err.getvalue())
+    assert "WARNING" not in err.getvalue(), (layout, err.getvalue())
     assert "①" in svg and "②" in svg, layout
 print("OK e2e render (vertical/horizontal/chindami) : ①② rendus sans avertissement")
 

@@ -31,8 +31,8 @@ Règles (voir AGENTS.md, section « Long terme ») :
   (`@cols` et `@tuning` = anciens noms de `@cells_per_dan`/`@choshi`, renommés avec une info) ;
 - idempotent : clean(clean(x)) == clean(x).
 
-Diagnostics sur stderr : info (normalisation appliquée), avertissement
-(rééalignement refusé…), erreur fatale (KKML illisible, exit 1).
+Diagnostics sur stderr : INFO (normalisation appliquée), WARNING
+(rééalignement refusé…), ERROR fatale (KKML illisible, exit 1).
 """
 
 import argparse
@@ -43,15 +43,15 @@ import kkml2svg as k
 
 
 def info(msg):
-    print(f"kkml_clean: info: {msg}", file=sys.stderr)
+    print(f"kkml_clean: INFO: {msg}", file=sys.stderr)
 
 
 def warn(msg):
-    print(f"kkml_clean: AVERTISSEMENT: {msg}", file=sys.stderr)
+    print(f"kkml_clean: WARNING: {msg}", file=sys.stderr)
 
 
 def die(msg):
-    print(f"kkml_clean: ERREUR: {msg}", file=sys.stderr)
+    print(f"kkml_clean: ERROR: {msg}", file=sys.stderr)
     sys.exit(1)
 
 

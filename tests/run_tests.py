@@ -17,7 +17,7 @@ Usage :
     python3 tests/run_tests.py                 # rend chaque .kkml (vertical+horizontal+mega)
     python3 tests/run_tests.py --write-svg     # écrit en plus les rendus
                                                 # dans samples/svg/
-Le test échoue si kkml2svg retourne non-zéro ou émet un AVERTISSEMENT.
+Le test échoue si kkml2svg retourne non-zéro ou émet un WARNING.
 """
 import re
 import sys
@@ -81,7 +81,7 @@ def main() -> int:
                      "-l", layout, "-o",
                      str(out) if out else tmp.name],
                     capture_output=True, text=True)
-            if r.returncode != 0 or "AVERTISSEMENT" in r.stderr:
+            if r.returncode != 0 or "WARNING" in r.stderr:
                 failures += 1
                 print(f"   ECHEC {layout} : rc={r.returncode} "
                       f"{r.stderr.strip()}")
