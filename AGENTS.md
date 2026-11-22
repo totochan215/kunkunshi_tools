@@ -204,8 +204,8 @@ petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
   (formes verticales U+FE11/FE12) au lieu du centrage de `_vertical_char` ; étendre
   `VERTICAL_ROTATE_CHARS` avec ― – ‥ … ′ ″ et les formes U+FE30–FE4F.
 - ✅ (2026-11-22) Petits kana tassés dans la colonne marker verticale (`_draw_vertical_vocal` : layouts
-  vertical/chindami/mega ; syllabe 2 parties grand+petit → petit à droite (+0,25 fs) et réduit
-  (~0,65 fs), comme les PDF Nomura/Portama — conforme JLREQ cl-11 ; nomura/horizontal/tuto inchangés).
+  vertical/chindami/mega ; syllabe 2 parties grand+petit → petit à droite (+0,25 fs, +0,60 fs — avance ~0,6 em, conforme JLREQ cl-11), MÊME taille de police
+  (le glyphe petit kana est nativement plus petit : グヮ vs グワ), comme les PDF Nomura/Portama — JLREQ cl-11 ; nomura/horizontal/tuto inchangés).
 - ⬜ P1 Petits kana (cl-11) tassés (avance ~0,6 em + décalage haut-droite) dans TOUTES les
   colonnes verticales (paroles/titre via `_render_vertical_text`), pas seulement la colonne
   marker ; inclus dans 行頭禁則.
