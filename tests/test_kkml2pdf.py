@@ -228,4 +228,39 @@ else:
         print("OK CLI end-to-end (faux rsvg-convert) : chindami 23x15 cm, "
               "stdin mega -> output.pdf A3 42x29,7 cm, --keep-temp OK")
 
+# 9. convert_page : validation du PDF produit (marqueur %%EOF) — évite le
+#    « EOF marker not found » de pypdf quand un moteur (ex. inkscape sur macOS)
+#    rend la main avant d'avoir fini d'écrire le fichier.
+import threading
+import time
+p._PDF_TIMEOUT = 0.5
+with tempfile.TemporaryDirectory() as td:
+    svg = Path(td) / "p.svg"
+    svg.write_text("<svg/>", encoding="utf-8")
+    out_ok = Path(td) / "ok.pdf"
+    p.convert_page(lambda s_, o: write_minimal_pdf(o, 100, 100), svg, out_ok)
+    assert out_ok.exists() and p._pdf_complet(out_ok, timeout=0.5)
+
+    def engine_tronque(s_, o):   # PDF sans %%EOF (fichier incomplet)
+        Path(o).write_bytes(minimal_pdf_bytes(100, 100)[:-20])
+    try:
+        p.convert_page(engine_tronque, svg, Path(td) / "bad.pdf")
+        raise AssertionError("garde non déclenchée")
+    except RuntimeError as e:
+        assert "%%EOF" in str(e), e
+
+    def engine_lent(s_, o):      # écriture en deux fois (taille qui se stabilise)
+        data = minimal_pdf_bytes(100, 100)
+        Path(o).write_bytes(data[:-10])
+        def fin():
+            time.sleep(0.3)
+            with open(o, "ab") as f:
+                f.write(data[-10:])
+        threading.Thread(target=fin).start()
+    out_late = Path(td) / "late.pdf"
+    p.convert_page(engine_lent, svg, out_late)
+    assert p._pdf_complet(out_late, timeout=2.0)
+    print("OK convert_page : PDF tronqué détecté (RuntimeError %%EOF), "
+          "écriture différée attendue jusqu'à stabilisation")
+
 print("Tous les tests kkml2pdf passent.")
