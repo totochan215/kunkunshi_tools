@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Tests des numéros de page auto-incrémentés ーnー (nomura/chindami/mega) avec @page_base.
+"""Tests des numéros de page auto-incrémentés –n– (nomura/chindami/mega) avec @page_base.
 
 Règles (2026-11-22) :
-- nomura/chindami/mega : chaque page porte ーnー, n = @page_base (défaut 1) + index de page ;
+- nomura/chindami/mega : chaque page porte –n–, n = @page_base (défaut 1) + index de page ;
 - nomura : hors du cadre, juste au-dessus (baseline fy0 - 4) ; n pair -> aligné à gauche
   du cadre (x=fx0, start), n impair -> aligné à droite (x=fx1, end) ;
 - chindami : centré (x = page_w/2), à mi-hauteur entre le bas de la grille et le bas de la page ;
@@ -30,7 +30,7 @@ import kkml2svg as k
 import kkml_clean as c
 
 PNO_RE = re.compile(
-    r'<text x="([\d.]+)" y="([\d.]+)" text-anchor="(\w+)"[^>]*font-size="([\d.]+)" fill="#555">ー(\d+)ー</text>')
+    r'<text x="([\d.]+)" y="([\d.]+)" text-anchor="(\w+)"[^>]*font-size="([\d.]+)" fill="#555">–(\d+)–</text>')
 
 
 def page_nos(svg):
@@ -47,7 +47,7 @@ def render(src, layout):
 GO = "合"
 MEDLEY = open("samples/kkml/medley-samples.kkml", encoding="utf-8").read()
 
-# 1. mega : 2 pages, ー1ー ー2ー, centrés, même y (mi-distance bas du 2e bloc / bord bas feuille)
+# 1. mega : 2 pages, –1– –2–, centrés, même y (mi-distance bas du 2e bloc / bord bas feuille)
 svgs, err = render(MEDLEY, "mega")
 assert len(svgs) == 2 and "WARNING" not in err, (len(svgs), err)
 p1, p2 = page_nos(svgs[0])[0], page_nos(svgs[1])[0]
@@ -60,9 +60,9 @@ cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
 grid_bottom = (spec.margin_t + spec.blocks * spec.cells_per_dan * cell_h
                + (spec.blocks - 1) * spec.block_gap)
 assert abs(float(p1[1]) - ((grid_bottom + spec.page_h) / 2 + spec.page_no_fs * 0.35)) < 0.01
-print("OK mega : ーnー centré, mi-distance bas du 2e bloc / bord bas feuille, n auto-incrémenté")
+print("OK mega : –n– centré, mi-distance bas du 2e bloc / bord bas feuille, n auto-incrémenté")
 
-# 2. @page_base 5 -> ー5ー ー6ー ; forme collée @page_base7 -> 7, 8
+# 2. @page_base 5 -> –5– –6– ; forme collée @page_base7 -> 7, 8
 svgs, _ = render("@page_base 5\n" + MEDLEY, "mega")
 assert [page_nos(s)[0][4] for s in svgs] == ["5", "6"]
 svgs, _ = render("@page_base7\n" + MEDLEY, "mega")
@@ -96,11 +96,12 @@ n1, n2 = page_nos(svgs[0])[0], page_nos(svgs[1])[0]
 assert n1[4] == "1" and n2[4] == "2"
 assert n1[2] == "end" and abs(float(n1[0]) - fx1) < 0.01
 assert n2[2] == "start" and abs(float(n2[0]) - fx0) < 0.01
-assert abs(float(n1[1]) - (fy0 - 4)) < 0.01 and float(n1[1]) < fy0
+assert abs(float(n1[1]) - (fy0 - 8)) < 0.01 and float(n1[1]) < fy0
+assert n1[3] == "13", n1   # nomura : fs 13 = taille des métadonnées (champ page_no_fs indépendant)
 svgs, _ = render("@page_base 2\n" + tab8, "nomura")
 n1, n2 = page_nos(svgs[0])[0], page_nos(svgs[1])[0]
 assert n1[4] == "2" and n1[2] == "start" and n2[4] == "3" and n2[2] == "end", (n1, n2)
-print("OK nomura : ーnー au-dessus du cadre, n pair -> gauche, impair -> droite, @page_base")
+print("OK nomura : –n– au-dessus du cadre, n pair -> gauche, impair -> droite, @page_base")
 
 # 6. chindami : centré, mi-hauteur bas de grille / bas de page, auto-incrémenté
 svgs, err = render(MEDLEY, "chindami")
@@ -112,7 +113,7 @@ p0 = page_nos(svgs[0])[0]
 assert p0[4] == "1" and p0[2] == "middle" and abs(float(p0[0]) - spec.page_w / 2) < 0.01
 assert abs(float(p0[1]) - ((grid_bottom + spec.page_h) / 2 + spec.page_no_fs * 0.35)) < 0.01
 assert [page_nos(s)[0][4] for s in svgs] == [str(i + 1) for i in range(len(svgs))]
-print("OK chindami : ーnー centré, mi-hauteur bas grille / bas de page, auto-incrémenté")
+print("OK chindami : –n– centré, mi-hauteur bas grille / bas de page, auto-incrémenté")
 
 # 7. layouts libres : pas de numéro de page
 for layout in ("vertical", "horizontal", "tuto"):
