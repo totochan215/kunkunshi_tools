@@ -27,6 +27,9 @@ Options supplémentaires en-tête KKML (défauts : @layout vertical,
     @end_circle off      → désactive le marqueur de fin de chanson (cercle creux)
                            dans la colonne marker, au bas de la dernière case remplie
                            (défaut: on)
+    @show_dots on        → affiche les points ・ (U+30FB) de positionnement des
+                           syllabes ::vocal dans la colonne/ligne marker
+                           (défaut: off, masqués — les syllabes gardent leur position)
     @lyrics_size small|medium|big → taille de police des couplets
                            (small=50%, medium=75%, big=100% de la taille des kanjis)
 
@@ -409,7 +412,7 @@ SECTION_ALIASES = {"tabs": "tab", "vocals": "vocal", "lyric": "lyrics",
                    "songs": "song", "section": "song"}
 
 # Clés de métadonnées reconnues (pour la tolérance @cléValeur collée)
-META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle",
+META_KEYS = {"title", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle", "show_dots",
              "lyrics_size", "genre", "author", "composer", "lyricist",
              "origin", "source", "shaku_circled", "shaku_sharp", "speed", "font_style",
              "mega_dans",
@@ -980,6 +983,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
         'shaku_circled': song.meta.get('shaku_circled', 'off') == 'on',
         'shaku_sharp': song.meta.get('shaku_sharp', 'off') == 'on',
         'end_circle': song.meta.get('end_circle', 'on') == 'on',
+        'show_dots': song.meta.get('show_dots', 'off') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'kinsoku': kinsoku,
         'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
@@ -2116,7 +2120,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                     for j, el in enumerate(elems):
                         # 1er élément au centre de la case, puis cell_h * j/n (comme vertical/horizontal)
                         sy = cy + cell_h / 2 + cell_h * (j / n) + syl_fs / 3
-                        if el == "":
+                        if el == "" and o.get('show_dots'):
                             out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
                                        f'font-family="serif" font-size="{syl_fs}" '
                                        f'fill="#333">{chr(0x30FB)}</text>')
@@ -2513,7 +2517,7 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
                 # 1er élément au CENTRE de la case, puis mêmes multiplicateurs
                 # qu'en horizontal/tuto : y_i = centre + cell_h * i/n
                 sy = cy + cell_h / 2 + cell_h * (j / n) + syllable_fs / 3
-                if el == "":
+                if el == "" and (opts or {}).get('show_dots'):
                     # point : rendu ・ (même couleur que le texte, #333), occupe sa sous-partie
                     out.append(f'<text x="{sx}" y="{sy}" text-anchor="middle" '
                                f'font-family="serif" font-size="{syllable_fs}" '
@@ -2706,7 +2710,7 @@ def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
         out.append(f'<circle cx="{hx + r:g}" cy="{vy:g}" r="{r:g}"/>')
     out.append('</g>')
 def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
-                            syl_fs):
+                            syl_fs, show_dots=False):
     """Syllabes ::vocal dans la ligne marker horizontale (sous la rangée de
     cases) — transposée de _draw_vertical_vocal : éléments (points ・ et
     syllabes) répartis le long de la case (x_i = cx + cell_w·i/n, i=0 sous
@@ -2728,7 +2732,7 @@ def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
         n = max(len(elems), 1)
         for j, el in enumerate(elems):
             sx = cx + cell_w * (j / n)
-            if el == "":
+            if el == "" and show_dots:
                 out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
                            f'font-family="serif" font-size="{syl_fs}" '
                            f'fill="#333">{chr(0x30FB)}</text>')
@@ -2967,7 +2971,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                 if marker_h > 0 and vrows0 and ri < len(vrows0):
                     _draw_marker_line_vocal(out, vrows0[ri], row, ml,
                                             y + cell_h, cell_w, marker_h,
-                                            h_syl_fs)
+                                            h_syl_fs, show_dots=bool(o.get('show_dots')))
                 y += cell_h + marker_h
             y += 6
             if do_end_circle and si == last_tab_idx and h_last_filled:
@@ -3014,7 +3018,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
 # exactement WxH (@tuto_block, defaut 1280x720).
 
 
-def _draw_vocal_cell(out, elements, x, y, cell_w, cell_h, syl_fs, syl_pad):
+def _draw_vocal_cell(out, elements, x, y, cell_w, cell_h, syl_fs, syl_pad, show_dots=False):
     # Ligne marker virtuelle (layouts horizontaux : horizontal, tuto) :
     # les éléments du token vocal (points ・ et syllabes) vont en bas de case,
     # sans toucher la bordure, répartis en x_i = cx + cell_w * i/n
@@ -3025,8 +3029,9 @@ def _draw_vocal_cell(out, elements, x, y, cell_w, cell_h, syl_fs, syl_pad):
     for i, part in enumerate(elements):
         sx = x + cell_w / 2 + cell_w * (i / n)
         if part == "":
-            out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
-                       f'font-family="serif" font-size="{syl_fs}" fill="#333">{chr(0x30FB)}</text>')
+            if show_dots:
+                out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
+                           f'font-family="serif" font-size="{syl_fs}" fill="#333">{chr(0x30FB)}</text>')
         else:
             out.append(f'<text x="{sx:g}" y="{sy:g}" text-anchor="middle" '
                        f'font-family="serif" font-size="{syl_fs}" fill="#333">{escape(part)}</text>')
@@ -3225,7 +3230,8 @@ def _tuto_tab_page(rows, vrows, W, H, ml, mt, cols, cell_w, cell_h, fs, opts, se
                     disp = syl.replace('(', '').replace(')', '')
                     if disp:
                         _draw_vocal_cell(out, _vocal_elements(syl), x, y,
-                                         cell_w, cell_h, syl_fs, syl_pad)
+                                         cell_w, cell_h, syl_fs, syl_pad,
+                                         show_dots=bool(o.get('show_dots')))
     out.append("</svg>")
     return "\n".join(out)
 
