@@ -53,7 +53,9 @@ mini = {"title": "t", "choshi": "hon", "score": [[{"note": ""}]]}
 kkml = p2k.convert_portama_to_kkml(mini)
 assert not any(f"@{key} " in kkml for key in p2k.META_TO_PORTAMA_FIELD), kkml
 assert p2k.portama_fields_from_meta(k.parse_kkml(kkml).meta) == {}
+assert "@choshi 本調子" in kkml and "@tuning" not in kkml, kkml
 print("OK absence des champs préservée (pas de méta émise, pas de champ reconstruit)")
+print("OK choshi 'hon' émis en @choshi 本調子 (CHOSHI_MAP), jamais en @tuning")
 
 # 4. musicno reste utilisé par le rendu chindami (n° > 999 tronqué mod 1000)
 svg = k.render_svg(k.parse_kkml("@layout chindami\n@musicno 5168\n::tab\n合\n::\n"),

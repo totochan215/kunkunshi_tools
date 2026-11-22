@@ -63,7 +63,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@origin`        | —          | Origine (ruby supporté)           |
 | `@source`        | —          | Source de la version du morceau (chindami, nomura, site web, production perso…) — texte libre, **non affiché** dans les mises en page (information KKML uniquement, comme `@comment`) |
 | `@comment`       | —          | Commentaire                       |
-| `@tuning`        | `本調子`   | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ` |
+| `@choshi`        | `本調子`   | Accordage relatif (champ Portama `choshi`). Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`. Ancien nom `@tuning` accepté (alias), rectifié en `@choshi` par `kkml_clean.py` |
 | `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ). Stockée telle quelle, sans effet sur le rendu SVG à ce jour |
 | `@layout`        | `vertical` | Modèle de rendu : `vertical`, `horizontal`, `nomura`, `chindami`, `tuto` ou `mega` (voir [svg-layout.md](svg-layout.md)) |
 | `@dans_per_page` | —          | Nombre max de *dans* par page avant un saut de page forcé |
