@@ -405,7 +405,7 @@ FONT_STYLES = {
 # étrangers (romaji) ou aux kanas seuls.
 LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"}
 
-# Alias de noms de sections acceptés au parsing (rectifiés par kkml_cleaner) :
+# Alias de noms de sections acceptés au parsing (rectifiés par kkml_clean) :
 # fautes de frappe usuelles + ancien nom ::section de ::song (trop générique,
 # ::tab étant déjà une section)
 SECTION_ALIASES = {"tabs": "tab", "vocals": "vocal", "lyric": "lyrics",
