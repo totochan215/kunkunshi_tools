@@ -54,3 +54,5 @@ jobs:
         run: python3 tests/test_page_numbers.py
       - name: Lancer les tests d'alignement bas du @choshi (mega/nomura)
         run: python3 tests/test_choshi_align.py
+      - name: Lancer les tests du tempo @speed en ♩=120 (6 layouts)
+        run: python3 tests/test_speed.py

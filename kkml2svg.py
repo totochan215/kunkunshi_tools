@@ -72,16 +72,29 @@ SUSTAIN_TOKEN = "."
 META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "choshi")
 
 
-def _meta_blocks(song):
+def _speed_text(song):
+    """Texte du tempo @speed rendu horizontal : ♩=valeur (sans espace),
+    ou chaîne vide si @speed est absent."""
+    v = song.meta.get("speed", "").strip()
+    return f"♩={v}" if v else ""
+
+
+def _meta_blocks(song, speed_h=False):
     """Blocs de métadonnées dans l'ordre commun META_ORDER.
     Retourne une liste de (texte, taille_police, fill) — le bloc choshi
     porte la taille/fill de l'accordage (15, #555), les autres 12, #777.
-    Le genre n'est pas répété s'il est identique à l'auteur."""
+    Le genre n'est pas répété s'il est identique à l'auteur.
+    speed_h=True : le tempo @speed (♩=..., fs 12, #555) est inséré
+    juste avant le bloc choshi (dernier)."""
     blocks = []
     genre = song.meta.get("genre", "")
     author = song.meta.get("author", "")
     for k in META_ORDER:
         if k == "choshi":
+            if speed_h:
+                st = _speed_text(song)
+                if st:
+                    blocks.append((st, 12, "#555"))
             val = song.meta.get("choshi", "本調子")
             if val:
                 blocks.append((val, 15, "#555"))
@@ -1123,6 +1136,11 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
         if not text:
             return 0
         return _plan_vertical_ruby(_parse_ruby(_link_free(text)), mfs, msp)[1]
+    def _v_block_h(text, mfs, msp, lead):
+        # msp None = bloc horizontal (tempo ♩=...) : une ligne de hauteur mfs
+        if msp is None:
+            return lead + mfs
+        return lead + _meta_block_h(text, mfs, msp)
     # Blocs de la colonne titre : le titre, puis les métadonnées dans
     # l'ordre commun META_ORDER (accordage en dernier) —
     # (texte, fs, espacement, fill, avance verticale avant la baseline)
@@ -1131,6 +1149,11 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
         v_blocks.append((title, 26, TITLE_SPACING, "black", 20))
     for k in META_ORDER:
         if k == "choshi":
+            st = _speed_text(song)
+            if st:
+                # tempo ♩=... : ligne HORIZONTALE (msp None), centrée
+                # dans la colonne titre, au-dessus de @choshi
+                v_blocks.append((st, 12, None, "#555", 15))
             val = tuning
         else:
             val = song.meta.get(k, "")
@@ -1143,7 +1166,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
     # titre dans la MÊME colonne, autant que de besoin, SANS repli en
     # colonne suivante ; la hauteur de page grandit pour couvrir tout le
     # flux (titre + métadonnées).
-    title_total_h = (sum(lead + _meta_block_h(text, mfs, msp)
+    title_total_h = (sum(_v_block_h(text, mfs, msp, lead)
                          for text, mfs, msp, _fill, lead in v_blocks)
                      + (10 if v_blocks else 0))
 
@@ -1323,7 +1346,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
             v_cols = 1
             vcy = v_top
             for text, mfs, msp, _fill, lead in v_blocks:
-                bh = lead + _meta_block_h(text, mfs, msp)
+                bh = _v_block_h(text, mfs, msp, lead)
                 if vcy + bh > v_bottom and vcy > v_top:
                     v_cols += 1
                     vcy = v_top
@@ -1418,8 +1441,15 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
             tx_cur = total_w - mr - TITLE_W / 2
             vcy = ty
             for text, mfs, msp, fill, lead in v_blocks:
-                vcy = _vertical_grouped_text(out, text, tx_cur, vcy + lead,
-                                             mfs, fill, msp, links=True)
+                if msp is None:
+                    # tempo ♩=... : ligne horizontale centrée dans la colonne titre
+                    w = _h_text_w(_link_free(text), mfs)
+                    _render_horizontal_text(out, text, tx_cur - w / 2, vcy + lead,
+                                            mfs, fill, links=True)
+                    vcy += lead + mfs
+                else:
+                    vcy = _vertical_grouped_text(out, text, tx_cur, vcy + lead,
+                                                 mfs, fill, msp, links=True)
 
         out.append("</svg>")
         result.append("\n".join(out))
@@ -1655,7 +1685,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     fs = spec.fs
     fx0, fy0, fx1, fy1 = spec.frame_rect()   # cadre = marges depuis le bord (non tracé ici)
     page_base = _meta_page_base(song.meta)
-    title_offset = (spec.title_w + spec.title_gap) if (title or musicno) else 0
+    title_offset = (spec.title_w + spec.title_gap) if (title or musicno or _speed_text(song)) else 0
     syllable_fs = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else 0
 
     # Flux : aplatir les sections tab en colonnes de 12, avec vocal sync.
@@ -1799,7 +1829,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
             mno = str(n) if n else ""
         except ValueError:
             pass  # n° non numérique : rendu tel quel, pousse le titre pareil
-        if is_first and (title or mno):
+        if is_first and (title or mno or _speed_text(song)):
             tx = fx1 - spec.title_w / 2
             title_top = fy0
             if mno:
@@ -1811,12 +1841,20 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                            f'text-anchor="middle" font-family="serif" '
                            f'font-size="{MNO_FS}" fill="#333">{escape(mno)}</text>')
                 title_top = fy0 + MNO_FS + MNO_GAP
+            title_end = None
             if title:
                 # Blocs <text> groupés (même règle que le vertical) : base
                 # en un seul élément, rubys indépendants, pivotés à part
-                _vertical_grouped_text(out, title, tx,
+                title_end = _vertical_grouped_text(out, title, tx,
                                       title_top + 18 * 0.88, 18, "#000", 22, font_family,
                                       links=True)
+            st = _speed_text(song)
+            if st:
+                # tempo ♩=... : horizontal, centré sous le titre, au-dessus de @choshi
+                base_y = title_end if title_end is not None else title_top + 18 * 0.88
+                w = _h_text_w(_link_free(st), 12)
+                _render_horizontal_text(out, st, tx - w / 2, base_y + 6 + 12 * 0.88,
+                                        12, "#555")
             if tuning:
                 _vertical_grouped_text(out, tuning, tx, fy1 - 4 - len(tuning) * 16,
                                        11, "#555", 16, font_family)
@@ -2090,6 +2128,12 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                                                cell_h * 0.5, links=True)
             else:
                 ty_end = ty
+            st = _speed_text(song)
+            if st:
+                # tempo ♩=... : horizontal, centré sous le titre, au-dessus de @choshi
+                w = _h_text_w(_link_free(st), 12)
+                _render_horizontal_text(out, st, tx - w / 2, ty_end + 8 + 12 * 0.88,
+                                        12, "#555")
             if tuning:
                 tyb = grid_y0 + grid_h - 4 - len(tuning) * 20.0
                 for i, ch in enumerate(tuning):
@@ -2904,7 +2948,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     if title and _has_ruby(_parse_ruby(_link_free(title))):
         meta_flow_w = _render_horizontal_text([], _link_free(title), ml, 0, 26, "black") - ml
         meta_flow_w += 20
-    for text, hfs, _fill in _meta_blocks(song):
+    for text, hfs, _fill in _meta_blocks(song, speed_h=True):
         meta_flow_w += _h_text_w(_link_free(text), hfs) + h_sep_w
     # Largeur des paroles sans repli (usable_w infini) : mesurée avec le
     # même moteur de rendu de texte (_render_horizontal_text → end x).
@@ -2984,7 +3028,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     # SANS repli (règle alignée : la page s'est élargie au flux entier).
     h_sep_w = 2 * _char_w(" ", 12)
     hx = end_x + 20
-    for text, hfs, fill in _meta_blocks(song):
+    for text, hfs, fill in _meta_blocks(song, speed_h=True):
         # centre d'encre du bloc sur celui du titre (26pt)
         by = ty0 - 0.38 * (26 - hfs)
         hxe = _render_horizontal_text(out, text, hx, by, hfs, fill, links=True)
@@ -3295,6 +3339,13 @@ def _tuto_title_page(song, W, H, opts=None, spec=None):
         else:
             _emit_centered_text(out, title, cx, y, fs_t, "black", links=True)
         y += fs_t * 1.6
+    st = _speed_text(song)
+    if st:
+        # tempo ♩=... : horizontal, centré sous le titre, au-dessus de @choshi ;
+        # même fs (px) que la ligne @choshi de la page de titre
+        fs_s = max(10, int(H * 0.035))
+        _emit_centered_text(out, st, cx, y, fs_s, "#555")
+        y += H * 0.06
     tuning = song.meta.get("choshi", "")
     if tuning:
         out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
@@ -3876,6 +3927,13 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
                                           TITLE_SPACING, links=True)
         else:
             ty_end = ty
+        st = _speed_text(song)
+        if st:
+            # tempo ♩=... : horizontal, centré sous le titre, au-dessus de genre/auteur
+            w = _h_text_w(_link_free(st), 12)
+            _render_horizontal_text(out, st, tx - w / 2, ty_end + 6 + 12 * 0.88,
+                                    12, "#555")
+            ty_end += 6 + 12
         genre = song.meta.get("genre", "")
         author = song.meta.get("author", "")
         show_genre = genre and genre != author
