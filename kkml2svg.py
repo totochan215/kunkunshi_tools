@@ -795,7 +795,7 @@ NOMURA = LayoutSpec(
     dan_gap=14.5, max_dans=7, cells_per_dan=12, dans_per_block=7,
     marker_ratio=1.0,             # sous-colonne marker = pleine case
     fs=26.0,
-    cell_color="#333333", cell_width=0.6, arrow_color="#333333", arrow_width=0.6)
+    cell_color="#333333", cell_width=0.6, arrow_color="#333333", arrow_width=0.6, page_no_fs=13)
 
 CHINDAMI = LayoutSpec(
     name="chindami", unit="pt",
@@ -887,9 +887,9 @@ def _meta_page_base(meta):
 
 
 def _draw_page_no(out, n, x, y, fs, anchor="middle", fill="#555"):
-    """Numéro de page ーnー (layouts à page fixe : nomura/chindami/mega)."""
+    """Numéro de page –n– (layouts à page fixe : nomura/chindami/mega)."""
     out.append(f'<text x="{x:g}" y="{y:.2f}" text-anchor="{anchor}" '
-               f'font-family="serif" font-size="{fs:g}" fill="{fill}">ー{n}ー</text>')
+               f'font-family="serif" font-size="{fs:g}" fill="{fill}">–{n}–</text>')
 
 
 def _apply_text_color(svg, color):
@@ -1431,7 +1431,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
 # --------------------------------------------------------------------------- #
 # Modèle de page mesuré/spécifié sur les recueils Nomura-ryu (AGENTS.md) :
 #   - page A4 portrait (595.28 x 841.89 pt), filet de cadre à ~48 pt des bords
-#     (seul le numéro de page ーnー est hors du filet, en haut, alterné gauche/droite)
+#     (seul le numéro de page –n– est hors du filet, en haut, alterné gauche/droite)
 #   - dans = colonnes de 12 cases empilées (haut->bas), lecture droite->gauche
 #   - case plus haute que large : 31.7 pt (l) x 60.6 pt (h)
 #   - sous-colonne marker à gauche des notes (côté lecture suivante),
@@ -2069,7 +2069,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
             pnx, pnanchor = fx0, "start"
         else:
             pnx, pnanchor = fx1, "end"
-        _draw_page_no(out, pno, pnx, fy0 - 4, spec.page_no_fs, pnanchor)
+        _draw_page_no(out, pno, pnx, fy0 - 8, spec.page_no_fs, pnanchor)
 
         # --- placement des groupes, droite -> gauche --- #
         # positions x (bord droit de chaque groupe), depuis le bord droit du
