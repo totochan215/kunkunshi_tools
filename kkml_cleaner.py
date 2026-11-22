@@ -73,7 +73,9 @@ def normalize_tab_line(tokens):
 def normalize_vocal_line(tokens):
     out = []
     for tk in tokens:
-        if tk in k.EMPTY_INPUT_VARIANTS:
+        if tk.startswith("\\") and tk[1:] in k.EMPTY_INPUT_VARIANTS:
+            out.append("\\" + chr(0x30FC))   # \ー échappé = choonpu littéral (forme canonique conservée)
+        elif tk in k.EMPTY_INPUT_VARIANTS:
             info(f"'{tk}' normalisé en '{k.EMPTY_TOKEN}' (case vide, ::vocal)")
             out.append(k.EMPTY_TOKEN)
         else:

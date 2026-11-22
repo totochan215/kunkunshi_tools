@@ -623,6 +623,13 @@ def parse_kkml(text):
                 # syllabe (よー) il reste la voyelle longue.
                 norm = []
                 for tk in stripped.split():
+                    # Échappement : \ー (antislash + choonpu ー/ｰ/－) = choonpu
+                    # LITTÉRAL seul dans la case (voyelle longue isolée, ex.
+                    # 唐船ドーイ) — jamais pris pour une case vide.
+                    if tk.startswith("\\") and tk[1:] in EMPTY_INPUT_VARIANTS:
+                        if tk[1:] != chr(0x30FC):
+                            _info_input_variant(tk, "\\" + chr(0x30FC))
+                        tk = "\\" + chr(0x30FC)
                     if tk in EMPTY_INPUT_VARIANTS:
                         _info_input_variant(tk, EMPTY_TOKEN)
                         norm.append(EMPTY_TOKEN)
@@ -942,7 +949,23 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
                     padded = list(syls[:n]) + ["-"] * max(0, n - len(syls))
                     vocal_flat.extend(padded)
                 sec_title, tab_content, tab_kind, _, lead0 = sections[last_tab_index]
-                sections[last_tab_index] = (sec_title, tab_content, tab_kind, vocal_flat, lead0)
+                # Koedashi/koekiri ( ) de ::vocal : rattachés à la case ::tab
+                # alignée (même index) pour être rendus ○/□ DANS la case par
+                # render_cell — pas dans la colonne marker.
+                merged = list(tab_content)
+                for i, syl in enumerate(vocal_flat):
+                    if i >= len(merged) or not syl or syl == "-":
+                        continue
+                    if "(" in syl or ")" in syl:
+                        t = merged[i]
+                        if t in ("", "-"):
+                            t = REST_TOKEN   # borne de chant sur un repos : légitime
+                        if "(" in syl:
+                            t = "(" + t
+                        if ")" in syl:
+                            t = t + ")"
+                        merged[i] = t
+                sections[last_tab_index] = (sec_title, merged, tab_kind, vocal_flat, lead0)
             else:
                 # Pas de section ::tab précédente : aplatir tel quel (non rendu)
                 vocal_flat = []
@@ -1821,8 +1844,11 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                 cy = y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
                 rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                    base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
+                if koe:
+                    if tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                        base_tok = '(' + base_tok  # koedashi : ○ dans la case
+                    if tok.rstrip('|:').endswith(')') and not base_tok.endswith(')'):
+                        base_tok = base_tok + ')'  # koekiri : □ dans la case
                 render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                             cell_w, cell_h, opts)
             if vcol and marker_w > 0 and syllable_fs > 0:
@@ -2098,8 +2124,11 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                 cy = grid_y0 + ri * cell_h
                 tok = col[ri] if ri < len(col) else ""
                 rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                    base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
+                if koe:
+                    if tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                        base_tok = '(' + base_tok  # koedashi : ○ dans la case
+                    if tok.rstrip('|:').endswith(')') and not base_tok.endswith(')'):
+                        base_tok = base_tok + ')'  # koekiri : □ dans la case
                 render_cell(out, base_tok, nx + cell_w / 2, cy + cell_h / 2,
                             fs, cell_w, cell_h, opts)
             # syllabes vocales dans le marker — logique points commune
@@ -2633,8 +2662,11 @@ def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
             cy = y0 + ri * cell_h
             tok = col[ri] if ri < len(col) else ""
             rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-            if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
+            if koe:
+                if tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                    base_tok = '(' + base_tok  # koedashi : ○ dans la case
+                if tok.rstrip('|:').endswith(')') and not base_tok.endswith(')'):
+                    base_tok = base_tok + ')'  # koekiri : □ dans la case
             render_cell(out, base_tok, x + cell_w / 2, cy + cell_h / 2, fs,
                         cell_w, cell_h, opts)
 
@@ -2929,8 +2961,11 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                                f'height="{cell_h}" fill="none" '
                                f'stroke="{cs}" stroke-width="{csw:g}"/>')
                     rs, base_tok, re_, vs, ve, koe = _strip_repeat_marks(tok)
-                    if koe and tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
-                        base_tok = '(' + base_tok  # koedashi : rendre ○ dans la case
+                    if koe:
+                        if tok.lstrip('|:').startswith('(') and not base_tok.startswith('('):
+                            base_tok = '(' + base_tok  # koedashi : ○ dans la case
+                        if tok.rstrip('|:').endswith(')') and not base_tok.endswith(')'):
+                            base_tok = base_tok + ')'  # koekiri : □ dans la case
                     row_notes.append((base_tok, x))
                     if rs:
                         row_syms.append(('a', 'start', x))
@@ -3058,6 +3093,8 @@ def _vocal_elements(tok):
     # du inline formatting : retirées, jamais comptées comme éléments.
     # Ex. ".ちゅ" -> ['', 'ちゅ'] ; "ぐさ" -> ['ぐ', 'さ'] ; "..." -> ['', '', ''] (3 points) ;
     # ".)" -> [''] (1 point, la parenthèse ne compte pas).
+    if tok.startswith("\\") and tok[1:] in EMPTY_INPUT_VARIANTS:
+        tok = chr(0x30FC)   # \ー échappé : choonpu littéral seul dans la case
     tok = tok.replace('(', '').replace(')', '')
     elems = []
     cur = ""
@@ -4404,14 +4441,14 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                            f'{_note_svg(note, sh, opts)}</text>')
             _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
             return
-        # En présence d'une borne de chant ( / ), les deux notes du shuffle
-        # gardent la taille pleine (fs) : la borne est un petit glyphe à part.
-        koe = koe_prefix or koe_suffix
+        # La borne de chant ○/□ est un petit glyphe à part (côté droit de la
+        # case) : elle ne change PAS la géométrie des notes du shuffle.
+        koe = False
         sh_pos = int(fs * 0.72)
         # Taille : 80% d'une note seule (noire) — nettement plus grand
         # qu'une note à cheval (72%), sans atteindre la taille pleine.
         # Clamp : la case doit tenir 2 glyphes + 3 marges (m ~ 0.45 sh).
-        sh = effective_fs * 0.8 if not (koe and '/' not in base_tok) else fs
+        sh = effective_fs * 0.8
         if orient == "h":
             sh = min(sh, cell_w / 2.9)
         else:
