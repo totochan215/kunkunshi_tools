@@ -25,7 +25,7 @@ os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
 import kkml2svg as k
-import kkml_cleaner as c
+import kkml_clean as c
 
 TAB = "::tab\n|: 合 工 尺 :| 合\n::\n"
 

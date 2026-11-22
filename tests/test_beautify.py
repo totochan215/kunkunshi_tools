@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Tests de kkml_beautify.py : alignement des débuts de cellules dans
 ::tab et ::vocal (chasse fixe : CJK pleine chasse = 2, combinant = 0),
-après normalisation des tokens (comme kkml_cleaner). Espaces simples
+après normalisation des tokens (comme kkml_clean). Espaces simples
 uniquement, pas d'espace en fin de ligne, reste du fichier inchangé,
 idempotent, rendu SVG inchangé.
 

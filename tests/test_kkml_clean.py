@@ -5,7 +5,7 @@ os.chdir(Path(__file__).resolve().parent.parent)
 def run_clean(text):
     with tempfile.NamedTemporaryFile('w', suffix='.kkml', delete=False, encoding='utf-8') as f:
         f.write(text); path = f.name
-    r = subprocess.run([sys.executable, 'kkml_cleaner.py', '-n', path],
+    r = subprocess.run([sys.executable, 'kkml_clean.py', '-n', path],
                        capture_output=True, text=True)
     os.unlink(path)
     return r.stdout, r.stderr, r.returncode
@@ -79,7 +79,7 @@ print("OK idempotence sur tous les cas")
 
 # 11. erreur fatale : fichier illisible (section jamais fermée n'est pas fatal,
 # mais un contenu binaire oui)
-r = subprocess.run([sys.executable, 'kkml_cleaner.py', '-n', '/dev/null'],
+r = subprocess.run([sys.executable, 'kkml_clean.py', '-n', '/dev/null'],
                    capture_output=True, text=True)
 assert r.returncode == 1 and "ERREUR" in r.stderr
 print("OK erreur fatale fichier vide")

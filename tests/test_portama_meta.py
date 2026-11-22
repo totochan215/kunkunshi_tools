@@ -70,7 +70,7 @@ with tempfile.NamedTemporaryFile("w", suffix=".kkml", delete=False,
                                  encoding="utf-8") as f:
     f.write(kkml)
     path = f.name
-r = subprocess.run([sys.executable, "kkml_cleaner.py", "-n", path],
+r = subprocess.run([sys.executable, "kkml_clean.py", "-n", path],
                    capture_output=True, text=True)
 os.unlink(path)
 assert r.returncode == 0, r.stderr
@@ -83,7 +83,7 @@ with tempfile.NamedTemporaryFile("w", suffix=".kkml", delete=False,
                                  encoding="utf-8") as f:
     f.write(out)
     path2 = f.name
-r2 = subprocess.run([sys.executable, "kkml_cleaner.py", "-n", path2],
+r2 = subprocess.run([sys.executable, "kkml_clean.py", "-n", path2],
                     capture_output=True, text=True)
 os.unlink(path2)
 assert r2.stdout == out

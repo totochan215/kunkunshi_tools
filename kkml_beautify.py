@@ -7,7 +7,7 @@ Usage :
     python3 kkml_beautify.py -n -o beau.kkml m.kkml
 
 Dans les sections `::tab` et `::vocal`, les tokens sont d'abord normalisés
-(comme kkml_cleaner), puis complétés d'espaces simples pour que les débuts
+(comme kkml_clean), puis complétés d'espaces simples pour que les débuts
 de chaque cellule soient alignés en colonnes — à condition que l'éditeur
 ouvre le fichier avec une police à chasse fixe (les caractères CJK pleine
 chasse comptent double, les combinants comptent 0). Le dernier token d'une
@@ -25,7 +25,7 @@ import re
 import sys
 import unicodedata
 
-import kkml_cleaner as c
+import kkml_clean as c
 
 # sections alignées : ::tab/::vocal + alias tolérés (::tabs/::vocals, rectifiés
 # par le cleaner) — l'en-tête est émis tel quel, seul le corps est aligné

@@ -26,20 +26,22 @@ Options CLI : `-o/--output`
 
 Gère : notes, ornements (uchi-utu, kaki-utu, nuchi-utu), altérations (dièse, bémol), figures rythmiques (noire, deux croches, croche pointée + double croche, silence, demi silence + croche, croche + demi-silence), positions composites (下老, ロ上, イ合, 下尺, イ五...), styles rythmiques (standard, hayabichi), repères de répétition (instrumental, chant), repères de respiration (koedashi, koekiri), yubii (㊀㊁㊂㊃), accordages (`本調子`, `二揚げ`, `三下げ`, `一揚げ`, `一二揚げ`), numéro de morceau (`musicno`), accordage absolu (`chogen`), tempo (`speed`), rythme (`rhythm`/`rhythmMode`), hauteur de base, autres métadonnées (`@musicno`, `@chogen`, `@speed`, `@rythm`, `@rythm_mode`), paroles, etc.
 
-### kkml_cleaner.py
+### kkml_clean.py
 
 Normalise un fichier KKML sous sa forme canonique. 
-(idempotent : `cleaner(cleaner(x)) == cleaner(x)`) :
+(idempotent : `clean(clean(x)) == clean(x)`) :
 
-    python3 kkml_cleaner.py dirty.kkml                  # réécrit le fichier en place
-    python3 kkml_cleaner.py -n dirty.kkml               # mode test (dry run)
-    python3 kkml_cleaner.py -n -o clean.kkml dirty.kkml # écrit dans un autre morceau
+    python3 kkml_clean.py dirty.kkml                  # réécrit le fichier en place
+    python3 kkml_clean.py -n dirty.kkml               # mode test (dry run)
+    python3 kkml_clean.py -n -o clean.kkml dirty.kkml # écrit dans un autre morceau
 
 Options CLI : `-n/--dry-run`, `-o/--output`
 
+Ancien nom `kkml_cleaner.py` : un shim reste en place (AVERTISSEMENT sur stderr, puis délégation vers `kkml_clean.py`).
+
 ### kkml_beautify.py
 
-Beautifie un fichier KKML pour l'édition en chasse fixe : dans les sections `::tab` et `::vocal`, les tokens sont normalisés (comme `kkml_cleaner.py`) puis complétés d'espaces simples pour que les débuts de chaque cellule soient alignés en colonnes (les caractères CJK pleine chasse comptent double). Le reste du fichier est inchangé. Idempotent, et le rendu SVG est inchangé.
+Beautifie un fichier KKML pour l'édition en chasse fixe : dans les sections `::tab` et `::vocal`, les tokens sont normalisés (comme `kkml_clean.py`) puis complétés d'espaces simples pour que les débuts de chaque cellule soient alignés en colonnes (les caractères CJK pleine chasse comptent double). Le reste du fichier est inchangé. Idempotent, et le rendu SVG est inchangé.
 
     python3 kkml_beautify.py morceau.kkml                  # réécrit le fichier en place
     python3 kkml_beautify.py -n morceau.kkml               # mode test (dry run)

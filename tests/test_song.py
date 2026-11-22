@@ -22,7 +22,7 @@ os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
 
 import kkml2svg as k
-import kkml_cleaner as c
+import kkml_clean as c
 
 # 1. Parsing : ::song -> kind=song avec label, SANS info (forme canonique)
 err = io.StringIO()
