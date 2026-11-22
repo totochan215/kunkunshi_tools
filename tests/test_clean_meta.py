@@ -9,6 +9,8 @@ autres métadonnées présentes dans leur ordre d'apparition dans le fichier
 Usage :
     python3 tests/test_clean_meta.py
 """
+import contextlib
+import io
 import os
 import sys
 from pathlib import Path
@@ -28,21 +30,21 @@ def meta_lines(out):
 src = "@tuning 本調子\n@title t\n@source S\n@version 0.1\n@format KKML\n::tab\n合 工\n::\n"
 out = c.clean(src)
 assert meta_lines(out) == ["@format KKML", "@version 0.1", "@title t",
-                           "@tuning 本調子", "@source S"], meta_lines(out)
+                           "@choshi 本調子", "@source S"], meta_lines(out)
 print("OK @format/@version/@title en premier, puis ordre du fichier")
 
 # 2. métadonnées éparpillées (y compris après les sections) -> toutes en haut
 src = "::tab\n合 工\n::\n@tuning 本調子\n@title t\n::lyrics\n一、x\n::\n"
 out = c.clean(src)
 ml = meta_lines(out)
-assert ml == ["@format KKML", "@title t", "@tuning 本調子"], ml
+assert ml == ["@format KKML", "@title t", "@choshi 本調子"], ml
 assert all(out.index(ln) < out.index("::tab") for ln in ml), out
 print("OK métadonnées regroupées en haut, @title en tête, puis ordre du fichier")
 
 # 3. sans format/version/title -> ordre du fichier pur
 src = "@source S\n@tuning 本調子\n@author A\n::tab\n合\n::\n"
 out = c.clean(src)
-assert meta_lines(out) == ["@format KKML", "@source S", "@tuning 本調子", "@author A"], meta_lines(out)
+assert meta_lines(out) == ["@format KKML", "@source S", "@choshi 本調子", "@author A"], meta_lines(out)
 print("OK sans @format/@version/@title : ordre du fichier conservé")
 
 # 4. @layout/@cells_per_dan/@dans_per_page conservés à leur place (ordre fichier)
@@ -57,7 +59,7 @@ print("OK @layout/@cells_per_dan/@dans_per_page préservés, ordre du fichier")
 src = "@tuning A\n@title t\n@tuning B\n::tab\n合\n::\n"
 out = c.clean(src)
 ml = meta_lines(out)
-assert ml[0] == "@format KKML" and ml[1] == "@title t" and sum(ln.startswith("@tuning") for ln in ml) == 1, ml
+assert ml[0] == "@format KKML" and ml[1] == "@title t" and sum(ln.startswith("@choshi") for ln in ml) == 1, ml
 print("OK dédup des métadonnées (une seule ligne par clé)")
 
 # 6. @cols renommé en @cells_per_dan
@@ -98,5 +100,16 @@ out = c.clean("@format KKML\n@title t\n::tab\n合 工\n::\n")
 assert meta_lines(out)[:2] == ["@format KKML", "@title t"], meta_lines(out)
 assert c.clean(c.clean("@title t\n::tab\n合 工\n::\n")) == c.clean("@title t\n::tab\n合 工\n::\n")
 print("OK @format KKML ajouté si absent, en première ligne, idempotent")
+
+# 10. alias @tuning -> @choshi rectifié par le cleaner (info stderr), y compris collé
+err = io.StringIO()
+with contextlib.redirect_stderr(err):
+    out = c.clean("@tuning 本調子\n::tab\n合\n::\n")
+assert meta_lines(out) == ["@format KKML", "@choshi 本調子"], meta_lines(out)
+assert "renommé en @choshi" in err.getvalue(), err.getvalue()
+out = c.clean("@tuning二揚げ\n::tab\n合\n::\n")
+assert "@choshi 二揚げ" in meta_lines(out), meta_lines(out)
+assert c.clean(out) == out
+print("OK alias @tuning rectifié en @choshi (info stderr), forme collée comprise, idempotent")
 
 print("\nTous les tests d'ordre des métadonnées passent.")

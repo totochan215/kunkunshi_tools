@@ -34,9 +34,25 @@ assert song_l.meta.get("source") == "[Portama](https://exemple.jp)", song_l.meta
 song2 = k.parse_kkml("@sourcehttps://exemple.jp\n::tab\n合 工\n::\n")
 assert song2.meta.get("source") == "https://exemple.jp", song2.meta
 print("OK parsing @source (valeur libre conservée telle quelle + @sourceValeur collé)")
+# 1b. alias @tuning -> @choshi : info stderr, clé canonique, rendu identique
+err = io.StringIO()
+with contextlib.redirect_stderr(err):
+    s_t = k.parse_kkml("@tuning 本調子\n::tab\n合\n::\n")
+assert s_t.meta.get("choshi") == "本調子" and "tuning" not in s_t.meta, s_t.meta
+assert "'@tuning'" in err.getvalue(), err.getvalue()
+s_g = k.parse_kkml("@tuning二揚げ\n::tab\n合\n::\n")   # forme collée
+assert s_g.meta.get("choshi") == "二揚げ", s_g.meta
+s_c = k.parse_kkml("@choshi 二揚げ\n::tab\n合\n::\n")
+assert s_c.meta.get("choshi") == "二揚げ", s_c.meta
+base = "@title t\n::tab\n合 工\n::\n"
+svg_t = "".join(k.render_svg(k.parse_kkml("@tuning 二揚げ\n" + base), layout="vertical"))
+svg_c = "".join(k.render_svg(k.parse_kkml("@choshi 二揚げ\n" + base), layout="vertical"))
+assert svg_t == svg_c and "二揚げ" in svg_t
+print("OK alias @tuning -> @choshi (info stderr, meta['choshi'], rendu @tuning == @choshi)")
+
 
 # 2. @source NON affichée : hors META_ORDER / _meta_blocks
-assert k.META_ORDER == ("author", "composer", "lyricist", "genre", "origin", "tuning")
+assert k.META_ORDER == ("author", "composer", "lyricist", "genre", "origin", "choshi")
 blocks = k._meta_blocks(k.parse_kkml("@origin O\n@source S\n@tuning 本調子\n::tab\n合\n::\n"))
 assert [b[0] for b in blocks] == ["O", "本調子"], blocks
 print("OK @source hors META_ORDER/_meta_blocks (non affichée)")
