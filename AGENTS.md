@@ -260,6 +260,8 @@ dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
 dans le dépôt (droits d'auteur) ; leur provenance et leur emplacement
 privés ne sont pas référencés ici.
 
+- ✅ (2026-11-23) `calibration/left-1200.png` / `right-1200.png` **purgés de tout l'historique git** (données personnelles accidentelles dans `left-1200.png`) : réécriture `git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch calibration/left-1200.png calibration/right-1200.png' --prune-empty` (le commit d'upload ne contenait que les 2 PNG → commit vide éliminé), force-push de `main` (`4c3ce57` → `5848a64`, 1175 commits), gc local (pack promisor du partial clone supprimé). Plus aucun objet PNG atteignable depuis `main`, localement comme sur le serveur. **Reste à faire** : les refs internes `refs/pull/*` (~95 refs GitHub) et les vues en cache conservent encore les anciens objets côté serveur — purge définitive à demander au **Support GitHub** (suppression de données sensibles / cached views). Ne jamais réuploader de scans ou PNG de calibrage dans le dépôt.
+
 # Architecture des convertisseurs Python
 
 > Contenu déplacé depuis `docs/converter-architecture.md`. Documentation agent : structure interne du code, pour la navigation lors des modifications. La documentation utilisateur reste dans `docs/`.
