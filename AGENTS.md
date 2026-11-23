@@ -37,6 +37,9 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   - ✅ (2026-11-22) `@choshi` en bas de la colonne titre en chindami (déjà en place), mega et nomura (fait, voir entrée ✅ de la section 0) ; **vertical** reste à faire.
   - ✅ (2026-11-22) Représenter `@speed` sous la forme `♩=120` (fs 12, sans espace), **toujours à l'horizontal, même en mise en page verticale** — fait (voir entrée ✅ de la section 0) : `<text>` sans `transform`.
   - ✅ (2026-11-22) Position de kaki-utu `^` (`⌝`) revue : tout passé en relatif de `note_fs`, homogène entre layouts — fait (voir entrée ✅ de la section 0).
+  - ⬜ (2026-11-23) Nouvelle section `::melody` (optionnelle), alignée sur `::vocal`, pour représenter la hauteur de chant — compatibilité avec les manuels nomura-ryu (sous-colonne « hauteur » de la colonne marker nomura, voir P3 `::声楽譜`).
+  - ⬜ (2026-11-23) Blocs de lyrics multiples dans les layouts : pouvoir déclarer plusieurs blocs `::lyrics` et les rendre dans la mise en page (plusieurs blocs/colonnes de paroles), au-delà du flux unique rendu à la suite aujourd'hui (voir aussi `@lyrics_variant`, section 2).
+  - ⬜ (2026-11-23) Amélioration de l'indentation des couplets (pas encore parfaite — cf. déviation JLREQ notée section 6 : indent à 3 chasses pleines vs 字下げ 1 em).
 - ⬜ (2026-11-22) Autres idées utilisateur :
   - ✅ (2026-11-22) `@tuning` remplacé par `@choshi` — fait (voir entrée ✅ de la section 0) : alias `@tuning` accepté au parsing avec info stderr, rectifié en `@choshi` par le cleaner.
   - ✅ (2026-11-22) Numéros de page auto-incrémentés en nomura/chindami/mega — fait (voir entrée ✅ de la section 0) : `–n–`, n = `@page_base` (>= 1) + index de page.
@@ -174,6 +177,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 ## 4. Long terme
 
+- ❓ (2026-11-23) Remplacer les notations `A/B` (croche), `A:B` (shuffle), `A//B/C`… de `::tab` par un système de points analogue à celui de `::vocal` — **long terme, soumis à un vote préalable des utilisateurs**, car cela remet en cause le caractère intuitif du KKML.
 - ⬜ Conversion KKML -> Portama JSON
 - ⬜ Pipeline de publication LaTeX : collaboration avec éditeurs et communauté large.
   Pas de LilyPond / portée standard.
