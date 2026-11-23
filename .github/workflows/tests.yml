@@ -60,3 +60,5 @@ jobs:
         run: python3 tests/test_koe_lower_third.py
       - name: Lancer les tests de la constante md_spacing (espacement homogène des métadonnées)
         run: python3 tests/test_md_spacing.py
+      - name: Lancer les tests de position de kaki-utu ^ (⌝)
+        run: python3 tests/test_kaki_utu.py
