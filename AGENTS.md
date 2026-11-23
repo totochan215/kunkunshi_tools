@@ -34,9 +34,13 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ⬜ (2026-11-22) Idées utilisateur pour la roadmap, à trier/implémenter :
   - ⬜ (2026-11-23) Renommer le marqueur de chanson de medley `::song <nom>` en `::part <nom>` (la fermeture de section `::` est inchangée) : `::song` resterait un alias accepté au parsing (info stderr) et rectifié en `::part` par le cleaner, comme les autres alias de sections (`::section`, `::tabs`…). Impact : kkml2svg (`SECTION_ALIASES`, rendu mega des titres de chansons), kkml_clean, kkml_beautify, `docs/kkml-format.md`, medleys de samples/fixtures (PSC-eisa-medley, medley-samples), tests.
   - **Constantes par modèle de mise en page** déterminant, pour chaque métadonnée, si elle est représentée ou non (ex. table « méta affichée » dans chaque `LayoutSpec` : `@source`/`@comment` non affichés partout aujourd'hui, `@choshi` dans la colonne titre, etc.) — rendre explicite et surchargeable ce que chaque layout rend.
+  - ⬜ (2026-11-23) Constantes de modèle de layout indiquant quels **types de sections** sont pris en compte (ex. table « sections rendues » dans chaque `LayoutSpec` : `::lyrics` exclu du layout tuto, `::vocal` non supporté en horizontal) — pendant « sections » de la table « méta affichée » ci-dessus.
   - ✅ (2026-11-22) `@choshi` en bas de la colonne titre en chindami (déjà en place), mega et nomura (fait, voir entrée ✅ de la section 0) ; **vertical** reste à faire.
   - ✅ (2026-11-22) Représenter `@speed` sous la forme `♩=120` (fs 12, sans espace), **toujours à l'horizontal, même en mise en page verticale** — fait (voir entrée ✅ de la section 0) : `<text>` sans `transform`.
   - ✅ (2026-11-22) Position de kaki-utu `^` (`⌝`) revue : tout passé en relatif de `note_fs`, homogène entre layouts — fait (voir entrée ✅ de la section 0).
+  - ⬜ (2026-11-23) Nouvelle section `::melody` (optionnelle), alignée sur `::vocal`, pour représenter la hauteur de chant — compatibilité avec les manuels nomura-ryu (sous-colonne « hauteur » de la colonne marker nomura, voir P3 `::声楽譜`).
+  - ⬜ (2026-11-23) Blocs de lyrics multiples dans les layouts : pouvoir déclarer plusieurs blocs `::lyrics` et les rendre dans la mise en page (plusieurs blocs/colonnes de paroles), au-delà du flux unique rendu à la suite aujourd'hui (voir aussi `@lyrics_variant`, section 2).
+  - ⬜ (2026-11-23) Amélioration de l'indentation des couplets (pas encore parfaite — cf. déviation JLREQ notée section 6 : indent à 3 chasses pleines vs 字下げ 1 em).
 - ⬜ (2026-11-22) Autres idées utilisateur :
   - ✅ (2026-11-22) `@tuning` remplacé par `@choshi` — fait (voir entrée ✅ de la section 0) : alias `@tuning` accepté au parsing avec info stderr, rectifié en `@choshi` par le cleaner.
   - ✅ (2026-11-22) Numéros de page auto-incrémentés en nomura/chindami/mega — fait (voir entrée ✅ de la section 0) : `–n–`, n = `@page_base` (>= 1) + index de page.
@@ -77,12 +81,8 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   jumeau de `'` (uchi-utu tenu) ; glyphe rendu ゜ (U+309C, « apostrophe vide ») ;
   ＂ (U+FF02) normalisé en `"` via FULLWIDTH_MAP ; mapping Portama `nu` → `"`.
   `n` reste EXCLU (collision romaji : yon, bon…).
-- ❓ Koedashi/koekiri attenant à un point `.` (ex. `.)`, `(.`) : les parenthèses sont
-  retirées avant le découpage (`_vocal_elements`), donc elles ne changent PAS le nombre
-  de sous-positions vocales de la case (corrigé 2026-11-10, commit 5d4838a — cas ahabushi
-  case 44 : 3 points dans le KKML = 3 positions, plus de point fantôme). Point ouvert :
-  faut-il rendre le koedashi/koekiri sur le point (ex. ○/□ à côté du ・ en
-  vertical/horizontal) ? En layout tuto, ○/□ ne sont pas rendus pour le moment.
+- ✅ (2026-11-23) Koedashi/koekiri attenant à un point `.` (ex. `.)`, `(.`) : résolu — la borne se rattache au point via `_vocal_paren_slots` (kkml2svg.py:3243) et ○/□ est rendu DANS la case aligné sur le slot du point, même masqué par `@show_dots off` (vérifié : `.)` en vertical → □ à la hauteur du ・ avec `@show_dots on`, position inchangée avec `off`). Les parenthèses ne changent PAS le nombre de sous-positions vocales de la case (corrigé 2026-11-10, commit 5d4838a — cas ahabushi case 44 : 3 points dans le KKML = 3 positions, plus de point fantôme).
+- ⬜ (2026-11-23) Affichage des koedashi/koekiri (○/□) piloté par une **constante de layout** (champ `LayoutSpec`, ex. `render_koe on|off`, surchargeable par méta) au lieu du `render_koe = layout != "tuto"` en dur (kkml2svg.py:1051) — aujourd'hui le layout tuto ne rend pas ○/□ ; même esprit que les tables « méta affichée » / « sections rendues » (entrées ci-dessus).
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
   jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
 
@@ -90,9 +90,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 - ✅ (2026-11-01, PR #12) marqueur de couplet en début de ligne dans `::lyrics` force le changement de couplet (même sans ligne vide) → saut de colonne en layout vertical. Cas jukunoharu. `_split_verses` modifié.
 
-- ⬜ Valider visuellement かぎやで風節 (KKML `samples/kkml/かぎやで風節.kkml`) contre le PDF :
-  occurrences de `八` (U+E024, dan 5), silences `◯/尺♯` (dan 14), ornements `'` (dans 3, 10, 12, 18).
-  Confirme le mapping PUA U+E024 = 八.
+- ✅ (2026-11-23) Validation かぎやで風節 (KKML `samples/kkml/かぎやで風節.kkml`) vs PDF Portama (`samples/portama-pdf/かぎやで風節.pdf`, 2 p.) — **mapping PUA U+E024 = 八 confirmé** : une seule occurrence dans le JSON (`score[4][2].note`), dessinée p.1 colonne x=469 en 2e case du dan 5 (y=485,8), lue « 八 » à l'OCR de la page et à la même position dans le SVG vertical régénéré (dan 5 `七 八 七 五…`, 八 unique dans le rendu). Silences ◯/尺♯ (dan 14) OK : 13 ◯ (U+25EF) dans le SVG, 尺♯ rendu 尺 (U+5C3A) + ♯ (U+266F) séparé — les ♯ du PDF sont des runs F3@10pt aux mêmes positions. Ornements ' OK : 7 × orn "u" dans le JSON (dans 3, 5, 10, 12×2, 18×2) = 7 suffixes ' dans le KKML = 7 × U+FF40 dans le SVG, coin haut-droite de la note porteuse (dx ≈ +0,58·fs, dy ≈ −2) ; le PDF dessine l'ornement en petit glyphe (U+E032, F3@10pt) près de la note. Méthodo : extraction texte du PDF (ToUnicode Identity-H, fontes F2/F3) + OCR des 2 pages + SVG vertical/nomura régénérés, comparaison colonne par colonne.
 - ⬜ Régénérer et valider le SVG de test des souhou (uchi-utu `'` (alias `*`), kaki-utu `^`, aki-utu `v`,
   kachi-utu `<`, kuubanchi `s`, taachi `=`, nuchi-utu `"`) ; ajuster dx/dy/scale/rotate selon retours visuels.
 - ⬜ Valider le rendu vocal multi-caractères (うちなぐち) : empilement petits kana, ー vertical,
@@ -174,6 +172,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 ## 4. Long terme
 
+- ❓ (2026-11-23) Remplacer les notations `A/B` (croche), `A:B` (shuffle), `A//B/C`… de `::tab` par un système de points analogue à celui de `::vocal` — **long terme, soumis à un vote préalable des utilisateurs**, car cela remet en cause le caractère intuitif du KKML.
 - ⬜ Conversion KKML -> Portama JSON
 - ⬜ Pipeline de publication LaTeX : collaboration avec éditeurs et communauté large.
   Pas de LilyPond / portée standard.
@@ -472,7 +471,7 @@ Python 3 autonome. Ce dépôt est la source de vérité du code.
 - 尺 entouré (noire, `@shaku_circled on`) : cercle SVG `r = effective_fs * 0.6325`, centre `(cx, cy+2)`, `stroke-width=1`
 - 尺 entouré (croche, note principale) : même cercle `(cx, cy+2)`, dessiné avant le texte
 - 尺 entouré (croche, note à cheval) : cercle `r = ss * 0.713`, centre `(straddle_x, cy+2)` en horizontal, `(cx, straddle_y - ss*0.35)` en vertical
-- 下尻 : TOUJOURS entouré (indépendamment de `@shaku_circled`) : cercle `r = effective_fs * 0.6325`, centre `(cx, cy)` — recentré sur le glyphe au calibrage nov. 2026 (l'ancien `cy+2` décentrait vers le bas)
+- 下尺 : TOUJOURS entouré (indépendamment de `@shaku_circled`) : cercle `r = effective_fs * 0.6325`, centre `(cx, cy)` — recentré sur le glyphe au calibrage nov. 2026 (l'ancien `cy+2` décentrait vers le bas)
 - Marques diacritiques : police serif, `font-size = int(effective_fs * 1.1)` (+10%). Positionnement : voir les deux modes ci-dessus (notes simples vs tokens multi-caractères avec text_w)
 - uchi-utu : caractère ｀ (accent grave, U+FF40) en haut-droite
 - 下老 : un seul `<text>` avec `textLength = effective_fs * 1.0`, `lengthAdjust="spacingAndGlyphs"`, `text-anchor` non spécifié (left). Techniques passées avec `text_w=effective_fs * 1.0`
