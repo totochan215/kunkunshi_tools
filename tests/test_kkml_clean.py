@@ -492,3 +492,16 @@ s44 = _k.parse_kkml(t44)
 assert [b.kind for b in s44.blocks] == ["tab", "vocal", "lyrics", "song"]
 assert run_clean(out44)[0] == out44                              # idempotent
 print("OK alias de sections : ::tabs/::vocals/::lyric/::songs -> canoniques")
+
+# 45. Garde-fou : les samples du dépôt sont en forme canonique (clean) ;
+#     les versions "sales" d'origine vivent dans tests/fixtures/dirty/
+import contextlib as _clb
+import io as _io
+import kkml_clean as _c
+for f in sorted(os.listdir("samples/kkml")):
+    if not f.endswith(".kkml"):
+        continue
+    x = open(f"samples/kkml/{f}", encoding="utf-8").read()
+    with _clb.redirect_stderr(_io.StringIO()):
+        assert _c.clean(x) == x, f
+print("OK samples/kkml : tous les samples sont déjà en forme canonique (clean)")

@@ -1,7 +1,7 @@
 @format KKML
 @version 0.1
 @title ＰＳＣエイサーメドレー
-@tuning 本調子
+@choshi 本調子
 @cells_per_dan 12
 @layout mega
 @mega_dans 33
@@ -137,8 +137,6 @@
 - - - - - - - - - - - -
 - - - - - - - - - - - -
 ::
-
-
 
 ::lyrics
 ①　えー　トゥタンカーニ　えー　兼久ぬナビ小にうち惚りてぃ
