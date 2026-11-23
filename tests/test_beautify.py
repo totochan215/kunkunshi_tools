@@ -78,13 +78,14 @@ out = b.beautify(src)
 assert out == "::tab\n合 工\n::\n::lyrics\n一、a\n::\n", repr(out)
 print("OK fermeture '::' + section suivante préservées")
 
-# 5. Idempotent
-for f in sorted(os.listdir("samples/kkml")):
-    if not f.endswith(".kkml"):
-        continue
-    x = open(f"samples/kkml/{f}", encoding="utf-8").read()
-    assert b.beautify(b.beautify(x)) == b.beautify(x), f
-print("OK idempotent sur tous les samples")
+# 5. Idempotent (samples en forme canonique + fixtures "sales" d'origine)
+for d in ("samples/kkml", "tests/fixtures/dirty"):
+    for f in sorted(os.listdir(d)):
+        if not f.endswith(".kkml"):
+            continue
+        x = open(f"{d}/{f}", encoding="utf-8").read()
+        assert b.beautify(b.beautify(x)) == b.beautify(x), (d, f)
+print("OK idempotent sur tous les samples et les fixtures dirty")
 
 # 6. Rendu SVG inchangé : parse(beautify(x)) rend pareil que parse(x)
 for f in ("samples/kkml/medley-samples.kkml", "samples/kkml/十九の春.kkml"):

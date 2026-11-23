@@ -37,8 +37,9 @@ def headers(text):
     return [ln for ln in text.splitlines() if ln.startswith("::") and ln != "::"]
 
 
-# 1. Sample medley réel : ordre ::song/::tab/::vocal/::lyrics par chanson
-src = open("samples/kkml/medley-samples.kkml", encoding="utf-8").read()
+# 1. Medley "sale" d'origine (fixture) : ordre ::song/::tab/::vocal/::lyrics
+#    par chanson. Le sample du dépôt, lui, est en forme canonique (clean).
+src = open("tests/fixtures/dirty/medley-samples.kkml", encoding="utf-8").read()
 out, err = clean(src)
 hs = headers(out)
 songs = [h for h in hs if h.startswith("::song")]
@@ -50,7 +51,9 @@ for i, h in enumerate(hs):
 # les ::song ne sont pas tous relégués à la fin du fichier
 assert not hs[-1].startswith("::song"), hs[-3:]
 assert c.clean(out) == out, "pas idempotent"
-print("OK medley sample : ::song/::tab/::vocal/::lyrics par chanson, idempotent")
+sample = open("samples/kkml/medley-samples.kkml", encoding="utf-8").read()
+assert clean(sample)[0] == sample, "le sample medley-samples.kkml n'est pas clean"
+print("OK medley fixture dirty : ::song/::tab/::vocal/::lyrics par chanson, idempotent ; sample du dépôt clean")
 
 # 2. Medley synthétique avec blocs dans le désordre : ordre canonique PAR
 #    ::song, marqueurs à leur place
