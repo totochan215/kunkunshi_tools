@@ -81,12 +81,8 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   jumeau de `'` (uchi-utu tenu) ; glyphe rendu ゜ (U+309C, « apostrophe vide ») ;
   ＂ (U+FF02) normalisé en `"` via FULLWIDTH_MAP ; mapping Portama `nu` → `"`.
   `n` reste EXCLU (collision romaji : yon, bon…).
-- ❓ Koedashi/koekiri attenant à un point `.` (ex. `.)`, `(.`) : les parenthèses sont
-  retirées avant le découpage (`_vocal_elements`), donc elles ne changent PAS le nombre
-  de sous-positions vocales de la case (corrigé 2026-11-10, commit 5d4838a — cas ahabushi
-  case 44 : 3 points dans le KKML = 3 positions, plus de point fantôme). Point ouvert :
-  faut-il rendre le koedashi/koekiri sur le point (ex. ○/□ à côté du ・ en
-  vertical/horizontal) ? En layout tuto, ○/□ ne sont pas rendus pour le moment.
+- ✅ (2026-11-23) Koedashi/koekiri attenant à un point `.` (ex. `.)`, `(.`) : résolu — la borne se rattache au point via `_vocal_paren_slots` (kkml2svg.py:3243) et ○/□ est rendu DANS la case aligné sur le slot du point, même masqué par `@show_dots off` (vérifié : `.)` en vertical → □ à la hauteur du ・ avec `@show_dots on`, position inchangée avec `off`). Les parenthèses ne changent PAS le nombre de sous-positions vocales de la case (corrigé 2026-11-10, commit 5d4838a — cas ahabushi case 44 : 3 points dans le KKML = 3 positions, plus de point fantôme).
+- ⬜ (2026-11-23) Affichage des koedashi/koekiri (○/□) piloté par une **constante de layout** (champ `LayoutSpec`, ex. `render_koe on|off`, surchargeable par méta) au lieu du `render_koe = layout != "tuto"` en dur (kkml2svg.py:1051) — aujourd'hui le layout tuto ne rend pas ○/□ ; même esprit que les tables « méta affichée » / « sections rendues » (entrées ci-dessus).
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
   jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
 
