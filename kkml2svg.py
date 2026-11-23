@@ -258,10 +258,11 @@ TECHNIQUE_SUFFIXES = {
     '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
           'pos': 'top-right', 'dx': 1.125, 'dy': 0.02, 'scale': 1.21},
     # Calibrage complémentaire (correction manuelle Inkscape, Hiragino Mincho ProN,
-    # nomura 十九の春, nov. 2026) : ⌝ décalé de -3/+3 pt à fs 26 sur note à cheval
-    # (note_fs = ss = 18) -> dx 0.63 - 3/18 = 0.4633, dy -0.42 + 3/26 = -0.3046.
+    # nomura 十九の春, nov. 2026) : ⌝ décalé de -3/+3 pt sur note à cheval (note_fs = ss = 18)
+    # dx etait deja x note_fs : dx 0.63 - 3/18 = 0.4633. dy etait x fs (26) : pour
+    # reproduire +3 pt a ss=18 -> dy = (26*-0.42 + 3)/18 = -0.44 (maintenant x note_fs).
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
-          'scale': 0.91, 'dx': 0.4633, 'dy': -0.3046},
+          'scale': 0.91, 'dx': 0.4633, 'dy': -0.44},
     'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
           'dx': 0.57, 'dy': 0.44},
     # kachi-utu : ⌞ (U+231E, coin bas-gauche), pendant du ⌝ (kaki-utu).
@@ -3972,29 +3973,30 @@ def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None):
 
     base_y  : baseline de la note porteuse.
     note_fs : taille (font-size) de la note porteuse — pleine, petite
-              (croche à cheval) ou réduite ('s'). Les offsets horizontaux
-              sont exprimés en fractions de note_fs : la marque reste
-              collée au coin du kanji quelle que soit sa taille.
+              (croche à cheval) ou réduite ('s'). Taille du glyphe ET tous les
+              offsets (dx, dy, drop, retrait 0,34) sont des fractions de note_fs :
+              la marque reste collée au coin du kanji quelle que soit sa taille,
+              de manière homogène entre les mises en page.
 
     Vertical (ty) :
-      - 'anchor': 'note-top' (uchi-utu) : ty = sommet de la note + fs*drop,
+      - 'anchor': 'note-top' (uchi-utu) : ty = sommet de la note + note_fs*drop,
         la marque chevauche le coin haut-droit du kanji ;
-      - sinon : ty = base_y + fs*dy (dy propre à chaque marque).
+      - sinon : ty = base_y + note_fs*dy (dy propre à chaque marque).
 
     Horizontal (tx) :
       - texte mono-caractère : tx = cx ± note_fs*dx, ancre middle ;
       - token multi-caractères (text_w) : top-right → ancre start en cx
         (la marque surplombe le caractère de DROITE du token) ;
-        bottom-left → ancre end en cx - fs*0.34 (léger retrait à gauche
+        bottom-left → ancre end en cx - note_fs*0.34 (léger retrait à gauche
         du token).
     """
     dx = tech.get('dx', 0.22)
     dy = tech.get('dy', 0.05)
     top = tech['pos'] == 'top-right'
     if tech.get('anchor') == 'note-top':
-        ty = base_y - note_fs + fs * tech['drop']
+        ty = base_y - note_fs + note_fs * tech['drop']
     else:
-        ty = base_y + fs * dy
+        ty = base_y + note_fs * dy
     if text_w is None:
         tx = cx + note_fs * dx if top else cx - note_fs * dx
         anchor = "middle"
@@ -4004,8 +4006,8 @@ def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None):
             anchor = "start"
         else:
             # bottom-left multi-caractères : ancre end, léger retrait à
-            # gauche du token (calibrage ⌞ nov. 2026 : cx − 0,34·fs)
-            tx = cx - fs * 0.34
+            # gauche du token (calibrage ⌞ nov. 2026 : cx − 0,34·note_fs)
+            tx = cx - note_fs * 0.34
             anchor = "end"
     return tx, ty, anchor
 
@@ -4027,7 +4029,8 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
     hautes) au lieu du centre de la cellule.
 
     note_fs : taille réelle de la note porteuse quand elle diffère de fs
-    (croche à cheval rendue à ss). Par défaut note_fs = fs.
+    (croche à cheval rendue à ss). Par défaut note_fs = fs. Taille du glyphe
+    (tech_fs) et offsets de position (dx, dy, drop) sont tous relatifs à note_fs.
     """
     note_fs = fs if note_fs is None else note_fs
     base_y = cy + fs * 0.318
@@ -4038,7 +4041,7 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
             sym = tech['symbol']
             scale = tech.get('scale', 1.0)
             rotate = tech.get('rotate', 0)
-            tech_fs = int(fs * 1.1 * scale)
+            tech_fs = int(note_fs * 1.1 * scale)
             if tech['pos'] == 'inside-right':
                 # ○/□ 声だし・声切り : petit glyphe DANS la case, côté
                 # droit, centré verticalement (区画中右方, traité 野村流).
