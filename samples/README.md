@@ -19,3 +19,7 @@ correspond à `国頭ジントヨー.kkml`).
   présentables tels quels.
 - Les versions « sales » d'origine sont conservées comme fixtures de test
   dans [tests/fixtures/dirty/](../tests/fixtures/dirty/).
+- `samples/kkml/` ne contient que des **chansons/medleys réels**. Les fichiers
+  synthétiques de test (`テスト節.kkml`, `テスト節-2.kkml`, `medley-samples.kkml`,
+  avec les rendus mega de référence `medley-samples-mega-p1/p2.svg`) sont dans
+  [tests/fixtures/synthetic/](../tests/fixtures/synthetic/).

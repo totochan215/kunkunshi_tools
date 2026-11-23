@@ -45,7 +45,7 @@ def render(src, layout):
 
 
 GO = "合"
-MEDLEY = open("samples/kkml/medley-samples.kkml", encoding="utf-8").read()
+MEDLEY = open("tests/fixtures/synthetic/medley-samples.kkml", encoding="utf-8").read()
 
 # 1. mega : 2 pages, –1– –2–, centrés, même y (mi-distance bas du 2e bloc / bord bas feuille)
 svgs, err = render(MEDLEY, "mega")
