@@ -260,6 +260,13 @@ dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
 dans le dépôt (droits d'auteur) ; leur provenance et leur emplacement
 privés ne sont pas référencés ici.
 
+- ⬜ (2026-11-23) `calibration/left-1200.png` / `right-1200.png` (byte-identiques,
+  uploadés dans `068b4d5`) ont été **supprimés du dépôt** : `left-1200.png`
+  contenait accidentellement des données personnelles. **Point ouvert** : les
+  deux fichiers restent dans l'historique git — purge définitive = réécriture
+  d'historique (`git filter-repo`/BFG) puis demande à GitHub Support pour purger
+  les vues en cache. Ne jamais réuploader de scans/PNG de calibrage dans le dépôt.
+
 # Architecture des convertisseurs Python
 
 > Contenu déplacé depuis `docs/converter-architecture.md`. Documentation agent : structure interne du code, pour la navigation lors des modifications. La documentation utilisateur reste dans `docs/`.
