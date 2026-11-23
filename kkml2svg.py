@@ -2026,14 +2026,26 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     # autant de colonnes que nécessaire pour les couplets (>= 1 si paroles)
     lyrics_col_count = 0
     lyrics_layouts = []   # [(col_lines, indent)]
+    # Hauteur disponible pour une colonne de paroles : le hanmen est IMPOSÉ
+    # (page A4 fixe) — comme en chindami, une colonne trop longue est REPLIÉE
+    # en sous-colonnes de ≤ max_lyr_u unités (_cap_lyr_column, kinsoku JLREQ) ;
+    # les sous-colonnes comptent dans la pagination (elles consomment des dans
+    # virtuels comme les colonnes pleines).
+    lyr_col_w_n = group_w / 3.0
+    lyr_fs_n = lyr_col_w_n * 0.7
+    lyr_sp_n = lyr_fs_n * 1.2
+    max_lyr_u = int((rows * cell_h - lyr_fs_n) // lyr_sp_n) + 1
+    kinsoku_n = o.get("kinsoku", "off")
     for _, data in lyrics_sections:
         base_indent = _verse_indent_target(data)
         for verse in _split_verses(data):
             for col_lines, indent in _lyrics_columns_layout(verse, base_indent):
                 if not col_lines:
                     continue
-                lyrics_layouts.append((col_lines, indent))
-                lyrics_col_count += 1
+                for sub_lines, sub_ind in _cap_lyr_column(col_lines, indent, max_lyr_u,
+                                                          kinsoku=kinsoku_n):
+                    lyrics_layouts.append((sub_lines, sub_ind))
+                    lyrics_col_count += 1
 
     # au plus 3 colonnes de couplets par dan virtuel
     LYRICS_MAX_COLS = 3

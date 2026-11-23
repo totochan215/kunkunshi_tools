@@ -193,7 +193,7 @@ droite à gauche.
 - **Tempo** `@speed` : `♩=120` horizontal (fs 12), `text-anchor="middle"` sur la centerline de base du titre (hors ruby), sous le titre (page 1, colonne titre), au-dessus de `@choshi`
 - `md_spacing = 8` pt — espacement titre → méta (@choshi ancré en bas de la grille, exclu de cette règle)
 - Chaque dan est constitué d'une **pile de cases** et d'une **colonne marker** (même largeur qu'une case), dans laquelle sont placés les boucles de répétitions, les syllabes vocales, les symboles de technique de chant, et la hauteur de chant.
-- Les **paroles** occupent les dernières colonnes de la dernière page.
+- Les **paroles** occupent les dernières colonnes de la dernière page. La page étant imposée, une colonne de couplet plus haute que le hanmen est **repliée en sous-colonnes** de ≤ `max_lyr_u = int((grid_h − LYRICS_FS) // LYRICS_SP) + 1` unités (`_cap_lyr_column`, kinsoku JLREQ, défaut `off` en nomura comme avant) — les sous-colonnes consomment des dans virtuels comme les colonnes pleines ; jamais de débordement du cadre.
 - Les dans sont séparés par une marge,
 - Pour une régularité de la mise en page, le titre et les paroles occupent des espaces correspondant à des **dans virtuels**, de même largeur qu'un dan, mais sans cases ni marker ni bordures,
 - La sortie est automatiquement multipage : chaque page est rendue sous forme d'un SVG
