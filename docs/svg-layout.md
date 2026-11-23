@@ -143,7 +143,8 @@ Calibrage Inkscape de nov. 2026 (grille de test + かぎやで風節, てぃん�
 
 - `｀` uchi-utu (`'`) : haut-droit, chevauche le coin du kanji. `tx = cx + 0,58·note_fs` ; `ty = baseline − note_fs + 0,91·fs` (la marque descend sur le coin haut-droit, posée sur le sommet de la note). Notes pleines et petites notes calibrées (résidu < 1 px).
 - `゜` nuchi-utu (`"`) : à droite de la note, à mi-hauteur du kanji. `tx = cx + 1,125·note_fs`, `ty = baseline + 0,02·fs`.
-- `⌝` kaki-utu (`^`) : haut-droit, près de la tête de la note. `tx = cx + 0,63·note_fs`, `ty = baseline − 0,42·fs`.
+- `⌝` kaki-utu (`^`) : haut-droit, près de la tête de la note. `tx = cx + 0,4633·note_fs`, `ty = baseline − 0,3046·fs`
+  (calibrage complémentaire nov. 2026, correction Inkscape Hiragino Mincho ProN sur nomura 十九の春 : −3/+3 pt à fs 26 sur note à cheval ss=18 ; avant : 0,63 / −0,42).
 - `⌞` kachi-utu (`<`) et `V` aki-utu (`v`) : bas-gauche, au contact du kanji. `tx = cx − 0,57·note_fs`, `ty = baseline + 0,44·fs` ; en multi-caractères, ancre `end` à cx − 0,34·fs.
 - Taille des glyphes inchangée : uchi/nuchi ≈ 4/3 de la note (scale 1,21), kaki ≈ la note (0,91), kachi/aki ≈ 1,1.
 

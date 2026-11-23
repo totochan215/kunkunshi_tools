@@ -257,8 +257,11 @@ TECHNIQUE_SUFFIXES = {
     # Position : à DROITE de la note, à mi-hauteur du kanji (calibrage nov. 2026).
     '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
           'pos': 'top-right', 'dx': 1.125, 'dy': 0.02, 'scale': 1.21},
+    # Calibrage complémentaire (correction manuelle Inkscape, Hiragino Mincho ProN,
+    # nomura 十九の春, nov. 2026) : ⌝ décalé de -3/+3 pt à fs 26 sur note à cheval
+    # (note_fs = ss = 18) -> dx 0.63 - 3/18 = 0.4633, dy -0.42 + 3/26 = -0.3046.
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
-          'scale': 0.91, 'dx': 0.63, 'dy': -0.42},
+          'scale': 0.91, 'dx': 0.4633, 'dy': -0.3046},
     'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
           'dx': 0.57, 'dy': 0.44},
     # kachi-utu : ⌞ (U+231E, coin bas-gauche), pendant du ⌝ (kaki-utu).
