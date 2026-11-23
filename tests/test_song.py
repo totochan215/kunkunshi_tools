@@ -5,7 +5,7 @@ Décision du 2026-11-21 : `::song <nom>` est la forme canonique pour délimiter
 les chansons d'une compilation (`::section` était trop générique, `::tab` étant
 déjà une section) ; `::section <nom>` reste accepté comme alias (info stderr,
 comme les autres alias), pour que les medleys nommés en `::song`
-(ex. samples/kkml/medley-samples.kkml) rendent bien les titres de chanson
+(ex. tests/fixtures/synthetic/medley-samples.kkml) rendent bien les titres de chanson
 au-dessus des colonnes en layout mega.
 
 Usage :
@@ -51,15 +51,15 @@ assert "南島節" in svg and "仲順流り" in svg, "titres de chansons absents
 assert 'font-size="11" fill="#555"' in svg
 print("OK rendu mega : titres ::song rendus en en-tête de chanson")
 
-# 4. Le sample medley du dépôt rend aussi ses titres de chanson
+# 4. La fixture medley rend aussi ses titres de chanson
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     svg = "".join(k.render_svg(k.parse_kkml(
-        open(ROOT / "samples/kkml/medley-samples.kkml", encoding="utf-8").read()),
+        open(ROOT / "tests/fixtures/synthetic/medley-samples.kkml", encoding="utf-8").read()),
         layout="mega"))
 assert "WARNING" not in err.getvalue(), err.getvalue()
 assert "てぃんさぐ" in svg
-print("OK sample medley-samples.kkml : titres de chansons rendus en mega")
+print("OK fixture medley-samples.kkml : titres de chansons rendus en mega")
 
 # 5. Cleaner : ::section réémis en ::song (forme canonique) ; ::song conservé
 out = c.clean("::section 南島節\n::tab\n合 工\n::\n")

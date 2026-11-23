@@ -51,9 +51,9 @@ for i, h in enumerate(hs):
 # les ::song ne sont pas tous relégués à la fin du fichier
 assert not hs[-1].startswith("::song"), hs[-3:]
 assert c.clean(out) == out, "pas idempotent"
-sample = open("samples/kkml/medley-samples.kkml", encoding="utf-8").read()
-assert clean(sample)[0] == sample, "le sample medley-samples.kkml n'est pas clean"
-print("OK medley fixture dirty : ::song/::tab/::vocal/::lyrics par chanson, idempotent ; sample du dépôt clean")
+sample = open("tests/fixtures/synthetic/medley-samples.kkml", encoding="utf-8").read()
+assert clean(sample)[0] == sample, "la fixture medley-samples.kkml n'est pas clean"
+print("OK medley fixture dirty : ::song/::tab/::vocal/::lyrics par chanson, idempotent ; fixture synthetic clean")
 
 # 2. Medley synthétique avec blocs dans le désordre : ordre canonique PAR
 #    ::song, marqueurs à leur place

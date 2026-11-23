@@ -134,7 +134,7 @@ La roadmap du projet et le contexte technique pour contributeurs/agents IA sont 
 
 ### Matériel disponible
 
-- [samples/kkml/](samples/kkml/) — fichiers KKML de référence, en forme canonique (clean ; les originaux « sales » sont conservés dans [tests/fixtures/dirty/](tests/fixtures/dirty/))
+- [samples/kkml/](samples/kkml/) — fichiers KKML de référence : chansons/medleys réels uniquement, en forme canonique (clean ; les originaux « sales » sont dans [tests/fixtures/dirty/](tests/fixtures/dirty/), les fichiers synthétiques de test dans [tests/fixtures/synthetic/](tests/fixtures/synthetic/))
 - [samples/portama-json/](samples/portama-json/) — fichiers Portama bruts en JSON
 - [samples/portama-pdf/](samples/portama-pdf/) — fichiers Portama rendus au format PDF
 - [samples/svg/](samples/svg/) — rendus SVG de référence

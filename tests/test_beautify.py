@@ -88,7 +88,7 @@ for d in ("samples/kkml", "tests/fixtures/dirty"):
 print("OK idempotent sur tous les samples et les fixtures dirty")
 
 # 6. Rendu SVG inchangé : parse(beautify(x)) rend pareil que parse(x)
-for f in ("samples/kkml/medley-samples.kkml", "samples/kkml/十九の春.kkml"):
+for f in ("tests/fixtures/synthetic/medley-samples.kkml", "samples/kkml/十九の春.kkml"):
     x = open(f, encoding="utf-8").read()
     for layout in ("vertical", "mega"):
         a = "".join(k.render_svg(k.parse_kkml(x), layout=layout))
