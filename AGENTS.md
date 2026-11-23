@@ -90,9 +90,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 
 - ✅ (2026-11-01, PR #12) marqueur de couplet en début de ligne dans `::lyrics` force le changement de couplet (même sans ligne vide) → saut de colonne en layout vertical. Cas jukunoharu. `_split_verses` modifié.
 
-- ⬜ Valider visuellement かぎやで風節 (KKML `samples/kkml/かぎやで風節.kkml`) contre le PDF :
-  occurrences de `八` (U+E024, dan 5), silences `◯/尺♯` (dan 14), ornements `'` (dans 3, 10, 12, 18).
-  Confirme le mapping PUA U+E024 = 八.
+- ✅ (2026-11-23) Validation かぎやで風節 (KKML `samples/kkml/かぎやで風節.kkml`) vs PDF Portama (`samples/portama-pdf/かぎやで風節.pdf`, 2 p.) — **mapping PUA U+E024 = 八 confirmé** : une seule occurrence dans le JSON (`score[4][2].note`), dessinée p.1 colonne x=469 en 2e case du dan 5 (y=485,8), lue « 八 » à l'OCR de la page et à la même position dans le SVG vertical régénéré (dan 5 `七 八 七 五…`, 八 unique dans le rendu). Silences ◯/尻♯ (dan 14) OK : 13 ◯ (U+25EF) dans le SVG, 尻♯ rendu 尻 (U+5C3A) + ♯ (U+266F) séparé — les ♯ du PDF sont des runs F3@10pt aux mêmes positions. Ornements ' OK : 7 × orn "u" dans le JSON (dans 3, 5, 10, 12×2, 18×2) = 7 suffixes ' dans le KKML = 7 × U+FF40 dans le SVG, coin haut-droite de la note porteuse (dx ≈ +0,58·fs, dy ≈ −2) ; le PDF dessine l'ornement en petit glyphe (U+E032, F3@10pt) près de la note. Méthodo : extraction texte du PDF (ToUnicode Identity-H, fontes F2/F3) + OCR des 2 pages + SVG vertical/nomura régénérés, comparaison colonne par colonne.
 - ⬜ Régénérer et valider le SVG de test des souhou (uchi-utu `'` (alias `*`), kaki-utu `^`, aki-utu `v`,
   kachi-utu `<`, kuubanchi `s`, taachi `=`, nuchi-utu `"`) ; ajuster dx/dy/scale/rotate selon retours visuels.
 - ⬜ Valider le rendu vocal multi-caractères (うちなぐち) : empilement petits kana, ー vertical,
