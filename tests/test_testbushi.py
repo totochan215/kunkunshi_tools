@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Tests de la conversion Portama -> KKML de テスト節 (« test bushi ») et du
-rendu de la correction manuelle de l'utilisateur (samples/kkml/テスト節.kkml).
+rendu de la correction manuelle de l'utilisateur (tests/fixtures/synthetic/テスト節.kkml).
 
 Couvre :
 - PUA composites (E003-E008, E014-E018, E025-E028) -> positions condensées
@@ -45,7 +45,7 @@ SHI_SHARP = SHI + SHARP  # 尺♯ (cas spécial @shaku_sharp)
 Y1, Y2, Y4 = chr(0x3280), chr(0x3281), chr(0x3283)
 
 JSON_PATH = ROOT / "samples" / "portama-json" / "テスト節.json"
-KKML_PATH = ROOT / "samples" / "kkml" / "テスト節.kkml"
+KKML_PATH = ROOT / "tests" / "fixtures" / "synthetic" / "テスト節.kkml"
 
 
 def render(kkml, layout="vertical"):
@@ -107,7 +107,7 @@ user_kkml = open(KKML_PATH, encoding="utf-8").read()
 for layout in ("vertical", "horizontal", "mega"):
     _, e = render(user_kkml, layout)
     assert "WARNING" not in e, (layout, e)
-print("OK samples/kkml/テスト節.kkml (correction manuelle) sans avertissement")
+print("OK tests/fixtures/synthetic/テスト節.kkml (correction manuelle) sans avertissement")
 
 # --- 5. Correction manuelle == convertisseur après normalisation ------------
 u_tab = tab_lines(k.parse_kkml(user_kkml))
@@ -174,7 +174,7 @@ print("OK paires vides terminales retirées de la ligne ::tab")
 
 # --- 9. テスト節-2 : dan 5 à 11 cellules, marqueurs vocaux sur cases vides -----
 JSON2 = ROOT / "samples" / "portama-json" / "テスト節-2.json"
-KKML2 = ROOT / "samples" / "kkml" / "テスト節-2.kkml"
+KKML2 = ROOT / "tests" / "fixtures" / "synthetic" / "テスト節-2.kkml"
 data2 = json.load(open(JSON2, encoding="utf-8"))
 with contextlib.redirect_stderr(io.StringIO()):
     kkml2 = p2k.convert_portama_to_kkml(data2)
