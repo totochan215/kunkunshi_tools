@@ -716,6 +716,7 @@ class LayoutSpec:
     title_gap: float = 0
     title_spacing: float = 0
     tuning_spacing: float = 0
+    md_spacing: float = 0             # avance titre->1re méta et méta->méta (@choshi exclu si ancré en bas)
     title_fs: float = 0
     meta_fs: float = 0
     header_h: float = 0              # en-tête sans titre
@@ -781,6 +782,7 @@ VERTICAL = LayoutSpec(
     marker_ratio=0.5,
     title_w=36 * PX, title_gap=10 * PX, title_spacing=30 * PX, tuning_spacing=22 * PX,
     title_fs=26 * PX, meta_fs=15 * PX,
+    md_spacing=15 * PX,
     lyr_gap=12 * PX)
 
 HORIZONTAL = LayoutSpec(
@@ -790,6 +792,7 @@ HORIZONTAL = LayoutSpec(
     cell_w=52 * PX, cell_h=58 * PX, fs=22 * PX, cells_per_dan=12,
     marker_ratio=0.5,             # marker_h = cell_h // 2 (bande sous la rangée)
     title_fs=26 * PX, meta_fs=12 * PX,
+    md_spacing=20 * PX,
     lyr_gap=12 * PX,
     cell_color="#999999", arrow_color="#999999")
 
@@ -806,6 +809,7 @@ NOMURA = LayoutSpec(
     pad_l=14.5, pad_r=14.5, pad_t=14.5, pad_b=14.5,
     frame_width=1.5,              # filet de cadre tracé (frame_color #333333)
     dan_gap=14.5, max_dans=7, cells_per_dan=12, dans_per_block=7,
+    md_spacing=8,
     marker_ratio=1.0,             # sous-colonne marker = pleine case
     fs=26.0,
     cell_color="#333333", cell_width=0.6, arrow_color="#333333", arrow_width=0.6, page_no_fs=13)
@@ -821,6 +825,7 @@ CHINDAMI = LayoutSpec(
     cell_w=65 / 2.785, cell_h=83 / 2.785, pile_w=97 / 2.785, marker_w=32 / 2.785,
     dan_gap=0, max_dans=15, cells_per_dan=12, dans_per_block=15, fs=12,
     title_w=(1816 - 1750) / 2.785, title_gap=10,
+    md_spacing=6,
     lyr_gap=12, lyr_fs=10.8,   # 0,9 x fs=12, int() -> 10
     cell_width=0.6, arrow_width=0.6)
 
@@ -831,6 +836,7 @@ TUTO = LayoutSpec(
     cell_w=0, cell_h=0, fs=0, fs_ratio=0.38,    # dérivés du bloc (voir _render_tuto)
     cells_per_dan=8, max_dans=7, dans_per_block=7,  # 8 cases/dan, 7 dans/page
     marker_ratio=0,                              # pas de bande marker en tuto
+    md_spacing=43.2 * PX,                        # gap entre blocs de la page de titre (H*0.06 à H=720)
     cell_color="#999999")
 
 MEGA = LayoutSpec(
@@ -840,7 +846,7 @@ MEGA = LayoutSpec(
     blocks=2, block_gap=30, cells_per_dan=12, dans_per_block=32,
     fs_ratio=0.38, marker_ratio=0.5,
     title_w=36, title_gap=10, title_spacing=30, tuning_spacing=22,
-    title_fs=26, meta_fs=15,
+    title_fs=26, meta_fs=15, md_spacing=15,
     lyr_gap=12, lyr_inline_max_ratio=0.15)
 
 LAYOUTS = {"vertical": VERTICAL, "horizontal": HORIZONTAL, "nomura": NOMURA,
@@ -1106,6 +1112,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
     tuning = song.meta.get("choshi", "本調子")
 
     spec = spec or VERTICAL
+    MD_SP = spec.u(spec.md_spacing)  # avance avant chaque bloc méta (titre -> 1re méta, méta -> méta)
     GAP_HEADER = spec.u(spec.gap_header)       # saut après l'en-tête, avant la tablature
     VERSE_GAP = 16        # saut entre les couplets (ligne vide dans ::lyrics)
     
@@ -1153,7 +1160,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
             if st:
                 # tempo ♩=... : ligne HORIZONTALE (msp None), centrée
                 # dans la colonne titre, au-dessus de @choshi
-                v_blocks.append((st, 12, None, "#555", 15))
+                v_blocks.append((st, 12, None, "#555", MD_SP))
             val = tuning
         else:
             val = song.meta.get(k, "")
@@ -1161,7 +1168,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
                 continue
         if val:
             v_blocks.append((val, 15, TUNING_SPACING,
-                             "#555" if k == "choshi" else "#777", 15))
+                             "#555" if k == "choshi" else "#777", MD_SP))
     # Règle alignée (layouts libres) : les métadonnées s'ajoutent SOUS le
     # titre dans la MÊME colonne, autant que de besoin, SANS repli en
     # colonne suivante ; la hauteur de page grandit pour couvrir tout le
@@ -1671,6 +1678,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     font_family = (opts or {}).get('font_family', 'serif')
 
     spec = spec or CHINDAMI
+    MD_SP = spec.u(spec.md_spacing)  # gap titre -> méta (tempo)
     o = opts or {}
     cs = o.get('cell_color') or spec.cell_color
     csw = o.get('cell_width') or spec.cell_width
@@ -1853,7 +1861,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                 # tempo ♩=... : horizontal, text-anchor=middle sur tx (centerline de
                 # base du titre, hors ruby), sous le titre, au-dessus de @choshi ; fs 10 en chindami
                 base_y = title_end if title_end is not None else title_top + 18 * 0.88
-                _emit_centered_text(out, st, tx, base_y + 6 + 10 * 0.88, 10, "#555")
+                _emit_centered_text(out, st, tx, base_y + MD_SP + 10 * 0.88, 10, "#555")
             if tuning:
                 _vertical_grouped_text(out, tuning, tx, fy1 - 4 - len(tuning) * 16,
                                        11, "#555", 16, font_family)
@@ -1961,6 +1969,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
         opts['shaku_circled'] = False
 
     spec = spec or NOMURA
+    MD_SP = spec.u(spec.md_spacing)  # gap titre -> méta (tempo)
     o = opts or {}
     fcol = o.get('frame_color') or spec.frame_color
     _fsw = o.get('frame_width')
@@ -2131,7 +2140,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
             if st:
                 # tempo ♩=... : horizontal, text-anchor=middle sur tx (centerline de
                 # base du titre, hors ruby), sous le titre, au-dessus de @choshi
-                _emit_centered_text(out, st, tx, ty_end + 8 + 12 * 0.88, 12, "#555")
+                _emit_centered_text(out, st, tx, ty_end + MD_SP + 12 * 0.88, 12, "#555")
             if tuning:
                 tyb = grid_y0 + grid_h - 4 - len(tuning) * 20.0
                 for i, ch in enumerate(tuning):
@@ -2908,6 +2917,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     #   lyrics_offset − lyrics_total_w en vertical ; le +6 résiduel du
     #   bloc tab et l'ascension d'encre du premier vers sont compensés.
     spec = spec or HORIZONTAL
+    MD_SP = spec.u(spec.md_spacing)  # gap horizontal : titre -> méta et méta -> méta
     o = opts or {}
     cs = o.get('cell_color') or spec.cell_color
     csw = o.get('cell_width') or spec.cell_width
@@ -2942,11 +2952,11 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     #   verticale = une ligne, la page s'élargit à la ligne la plus longue.
     # Largeur du flux de métadonnées (une seule ligne, même simulation
     # que le rendu, blocs jamais scindés).
-    h_sep_w = 2 * _char_w(" ", 12)
-    meta_flow_w = _h_text_w(_link_free(title), 26) + (20 if title else 0)
+    h_sep_w = MD_SP
+    meta_flow_w = _h_text_w(_link_free(title), 26) + (MD_SP if title else 0)
     if title and _has_ruby(_parse_ruby(_link_free(title))):
         meta_flow_w = _render_horizontal_text([], _link_free(title), ml, 0, 26, "black") - ml
-        meta_flow_w += 20
+        meta_flow_w += MD_SP
     for text, hfs, _fill in _meta_blocks(song, speed_h=True):
         meta_flow_w += _h_text_w(_link_free(text), hfs) + h_sep_w
     # Largeur des paroles sans repli (usable_w infini) : mesurée avec le
@@ -3025,8 +3035,8 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     # Métadonnées dans l'ordre commun (_meta_blocks) : toutes à la suite du
     # titre sur SA ligne, centrées verticalement sur lui (centres d'encre),
     # SANS repli (règle alignée : la page s'est élargie au flux entier).
-    h_sep_w = 2 * _char_w(" ", 12)
-    hx = end_x + 20
+    h_sep_w = MD_SP
+    hx = end_x + MD_SP
     for text, hfs, fill in _meta_blocks(song, speed_h=True):
         # centre d'encre du bloc sur celui du titre (26pt)
         by = ty0 - 0.38 * (26 - hfs)
@@ -3323,6 +3333,8 @@ def _tuto_text_width(segs, fs):
 
 
 def _tuto_title_page(song, W, H, opts=None, spec=None):
+    spec = spec or TUTO
+    md_sp = spec.u(spec.md_spacing)  # gap entre blocs de la page de titre (px)
     # Page a part : titre, accordage et autres infos, centres.
     out = _tuto_svg_open(W, H)
     _draw_frame(out, spec, opts)   # tracé seulement si frame_width > 0 (défaut 0)
@@ -3337,19 +3349,19 @@ def _tuto_title_page(song, W, H, opts=None, spec=None):
             _render_horizontal_text(out, title, cx - est / 2, y, fs_t, "black", links=True)
         else:
             _emit_centered_text(out, title, cx, y, fs_t, "black", links=True)
-        y += fs_t * 1.6
+        y += md_sp
     st = _speed_text(song)
     if st:
         # tempo ♩=... : horizontal, centré sous le titre, au-dessus de @choshi ;
         # même fs (px) que la ligne @choshi de la page de titre
         fs_s = max(10, int(H * 0.035))
         _emit_centered_text(out, st, cx, y, fs_s, "#555")
-        y += H * 0.06
+        y += md_sp
     tuning = song.meta.get("choshi", "")
     if tuning:
         out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
                    f'font-size="{max(10, int(H * 0.035))}" fill="#555">{escape(tuning)}</text>')
-        y += H * 0.06
+        y += md_sp
     lines = []
     genre = song.meta.get("genre", "")
     author = song.meta.get("author", "")
@@ -3363,7 +3375,7 @@ def _tuto_title_page(song, W, H, opts=None, spec=None):
             lines.append(v)
     for ln in lines:
         _emit_centered_text(out, ln, cx, y, max(9, int(H * 0.028)), "#777", links=True)
-        y += H * 0.05
+        y += md_sp
     out.append("</svg>")
     return "\n".join(out)
 
@@ -3918,6 +3930,7 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
                       TUNING_SPACING, spec, grid_bottom=0):
     """Colonne titre vertical à droite de la page mega (titre, accordage,
     genre, auteur) — répétée sur chaque page, tablature comme paroles."""
+    md = spec.md_spacing  # avance avant chaque bloc de métadonnées
     if title or tuning:
         tx = spec.page_w - spec.margin_l - TITLE_W / 2
         ty = spec.margin_l
@@ -3930,18 +3943,18 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
         if st:
             # tempo ♩=... : horizontal, text-anchor=middle sur tx (centerline de
             # base du titre, hors ruby), sous le titre, au-dessus de genre/auteur
-            _emit_centered_text(out, st, tx, ty_end + 6 + 12 * 0.88, 12, "#555")
-            ty_end += 6 + 12
+            _emit_centered_text(out, st, tx, ty_end + md + 12 * 0.88, 12, "#555")
+            ty_end += md + 12
         genre = song.meta.get("genre", "")
         author = song.meta.get("author", "")
         show_genre = genre and genre != author
         ty3 = ty_end
         if show_genre:
             for i, ch in enumerate(genre):
-                _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
-            ty3 += len(genre) * TUNING_SPACING + 15
+                _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + md, 15, "#777")
+            ty3 += len(genre) * TUNING_SPACING + md
         for i, ch in enumerate(author):
-            _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + 15, 15, "#777")
+            _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + md, 15, "#777")
         if tuning:
             yb = grid_bottom - 4 - len(tuning) * TUNING_SPACING
             for i, ch in enumerate(tuning):
