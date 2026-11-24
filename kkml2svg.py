@@ -263,7 +263,7 @@ TECHNIQUE_SUFFIXES = {
     # reproduire +3 pt a ss=18 -> dy = (26*-0.42 + 3)/18 = -0.44 (maintenant x note_fs).
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
           'scale': 0.91, 'dx': 0.4633, 'dy': -0.44},
-    'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
+    'v': {'name': 'aki-utu',   'type': 'char',   'symbol': '\u2228', 'pos': 'bottom-left',
           'dx': 0.57, 'dy': 0.44},
     # kachi-utu : ⌞ (U+231E, coin bas-gauche), pendant du ⌝ (kaki-utu).
     # Calibrage Inkscape nov. 2026 (2e tour, glyphe ⌞) : le coin se place
@@ -298,8 +298,8 @@ TECHNIQUE_SUFFIXES = {
     # Altérations en suffixe sur TOUTE note (ex. 合♯, 合♭) — Portama acc sharp/flat.
     # ASCII `#` → ♯ via FULLWIDTH_MAP ; `b` → ♭ via _normalize_tab_token.
     # Calibrage PDF Portama (テスト節.pdf) : marque en haut-droite de la note, fs ≈ 0,53 × fs
-    # note (9/17), dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs. `尺♯` n'est PAS décomposé
-    # (cas spécial plus bas, option @shaku_sharp).
+    # note (9/17), dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs. Au rendu, `尺♯` est
+    # décomposé comme toute altération (render_cell : @shaku_sharp masque le ♯).
     '♯': {'name': 'dièse (altération)', 'type': 'char', 'symbol': '♯',
           'pos': 'top-right', 'dx': 0.87, 'dy': -0.2, 'scale': 0.48},
     '♭': {'name': 'bémol (altération)', 'type': 'char', 'symbol': '♭',
@@ -2693,7 +2693,7 @@ def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient
         # (miroir exact du straddle normal : bord_inf + ss_pos/3)
         x = cx
         y = cy_edge + ss_pos / 3
-    if note == "尖" and opts and opts.get('shaku_circled'):
+    if note == "尺" and opts and opts.get('shaku_circled'):
         r = ss * 0.713
         ccy = y - ss * 0.35 if orient == "v" else cy_edge + cell_h / 2 + 2
         out.append(f'<circle cx="{x}" cy="{ccy}" r="{r}" '
@@ -4327,7 +4327,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     ni le centrage ni la taille de la note (sauf 's' qui réduit la taille).
 
     Positions étendues :
-      尺♯       → rendu en 尺♯ si @shaku_sharp on (défaut), sinon 尺 simple ; jamais entouré
+      尺♯       → décomposé au rendu (note 尺 + marque ♯ standard) ; @shaku_sharp off
+               masque le ♯ (rendu en 尺 simple) ; jamais entouré par @shaku_circled
       下尺      → 尺 entouré d'un cercle
       下老      → deux caractères condensés en demi-largeur
       下八      → deux caractères condensés (patron 下老, sans cercle)
@@ -4391,10 +4392,16 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     # on ne touche PAS à base_tok ici — la branche shuffle gère ':' quelle que
     # soit sa position, et la note garde sa taille pleine (effective_fs = fs).
     tech_suffixes = []
-    # `尺♯` n'est pas décomposé : cas spécial géré plus bas (option @shaku_sharp)
-    while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS and base_tok != "尺♯":
+    # Le token 尺♯ reste indivisible au FORMAT, mais il est décomposé au RENDU comme
+    # toute note altérée : la note 尺 garde sa position et sa taille, le ♯ est la marque
+    # d'altération standard (haut-droite). Sémantique conservée : @shaku_sharp off masque le ♯
+    # (rendu en 尺 simple) ; un shaku altéré n'est JAMAIS cerclé par @shaku_circled.
+    while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
         tech_suffixes.insert(0, base_tok[-1])
         base_tok = base_tok[:-1]
+    shaku_sharp = base_tok == "尺" and "♯" in tech_suffixes
+    if shaku_sharp and not opts.get("shaku_sharp", False):
+        tech_suffixes = [t for t in tech_suffixes if t != "♯"]
     # Doigtés (yubii) : un token composé UNIQUEMENT de ㊀-㊃ n'est pas une
     # note (les ㊀-㊃ ne sont jamais des positions autonomes : confusion avec
     # le silence ◯) — avertissement, rien n'est rendu.
@@ -4424,14 +4431,6 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
 
     is_small = 's' in tech_suffixes
     effective_fs = int(fs * 0.67) if is_small else fs
-
-    # 尺♯ — jamais entouré
-    if base_tok == "尺♯":
-        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
-                  f'font-family="serif" font-size="{effective_fs}" '
-                  f'fill="black">{_note_svg(base_tok, effective_fs, opts)}</text>')
-        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
-        return
 
     # 下尺 → 尺 entouré d'un cercle
     if base_tok == "下尺":
@@ -4533,14 +4532,17 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
 
         # Extraire les techniques de la note principale (avant le /)
         main_tech = []
-        while len(main_note) > 1 and main_note[-1] in TECHNIQUE_CHARS and main_note != "尺♯":
+        while len(main_note) > 1 and main_note[-1] in TECHNIQUE_CHARS:
             main_tech.insert(0, main_note[-1])
             main_note = main_note[:-1]
+        main_sharp = main_note == "尺" and "♯" in main_tech
+        if main_sharp and not opts.get("shaku_sharp", False):
+            main_tech = [t for t in main_tech if t != "♯"]
 
-        # Cercle autour du SHARP principal si @shaku_circled on
-        if main_note == "尖" and opts.get('shaku_circled'):
+        # Cercle autour du shaku principal si @shaku_circled on (jamais si altéré)
+        if main_note == "尺" and opts.get('shaku_circled') and not main_sharp:
             r = effective_fs * 0.6325
-            out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
+            out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
         out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
@@ -4564,8 +4566,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                 # vertical : chevauche la bordure INFÉRIEURE (horizontale)
                 straddle_x = cx
                 straddle_y = cy + cell_h * 0.50 + ss_pos / 3
-            # Cercle autour du SHARP à cheval si @shaku_circled on
-            if straddle_note == "尖" and opts.get('shaku_circled'):
+            if straddle_note == "尺" and not opts.get("shaku_sharp", False):
+                tech_suffixes = [t for t in tech_suffixes if t != "♯"]
+            # Cercle autour du shaku à cheval si @shaku_circled on (jamais si altéré)
+            if straddle_note == "尺" and opts.get('shaku_circled') and "♯" not in tech_suffixes:
                 r = ss * 0.713
                 ccx, ccy = (straddle_x, cy + 2) if orient == "h" else (cx, straddle_y - ss * 0.35)
                 out.append(f'<circle cx="{ccx}" cy="{ccy}" r="{r}" '
@@ -4684,9 +4688,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
 
     # --- note simple (noire) --- #
     if len(base_tok) == 1:
-        if base_tok == "尺" and opts.get('shaku_circled'):
+        if base_tok == "尺" and opts.get('shaku_circled') and not shaku_sharp:
             r = effective_fs * 0.6325
-            out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
+            out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
         out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '

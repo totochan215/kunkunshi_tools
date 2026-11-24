@@ -122,23 +122,50 @@ toks = tab_lines(song)[0]
 assert toks == [f"合{SHARP}", f"合{FLAT}", f"{RO}上", REST, SHI_SHARP], toks
 print("OK variantes : # -> ♯, b -> ♭, 口上 -> ロ上, ⚪︎ -> ◯, 尺♯ intact")
 
-# --- 7. Cas spécial 尺♯ : pas de ♯ séparé avec @shaku_sharp off --------------
+# --- 7. 尺♯ décomposé au rendu comme toute note altérée (2026-11-23) ------------
+# @shaku_sharp off (défaut) : le ♯ est masqué, rendu en 尺 simple
 out = []
 k.render_cell(out, SHI_SHARP, 42, 29, 22,
               opts={"shaku_sharp": False, "shaku_circled": False})
 svg = "".join(out)
 assert SHARP not in svg and SHI in svg, svg
+# @shaku_sharp on : la note 尺 garde EXACTEMENT la position/taille de 尺 seul, le ♯
+# est une marque séparée (haut-droite), identique à celle de 合♯ — plus de tspan inline
 out = []
 k.render_cell(out, SHI_SHARP, 42, 29, 22,
               opts={"shaku_sharp": True, "shaku_circled": False})
-svg = "".join(out)
-assert SHI in svg and SHARP in svg and "tspan" in svg, svg
-# et sur une autre note, ♯ est bien un suffixe séparé (haut-droite)
+svg_sharp = "".join(out)
+assert svg_sharp.count("<text") == 2 and SHI in svg_sharp and SHARP in svg_sharp, svg_sharp
+assert "tspan" not in svg_sharp, svg_sharp
+out = []
+k.render_cell(out, SHI, 42, 29, 22, opts={"shaku_sharp": True, "shaku_circled": False})
+svg_plain = "".join(out)
+import re as _re
+note = lambda svg: _re.search(r'<text x="([\d.-]+)" y="([\d.-]+)"[^>]*font-size="(\d+)"[^>]*>尺</text>', svg).groups()
+assert note(svg_sharp) == note(svg_plain), (note(svg_sharp), note(svg_plain))
+mark = lambda svg: _re.search(r'<text x="([\d.-]+)" y="([\d.-]+)"[^>]*font-size="(\d+)"[^>]*>♯</text>', svg).groups()
 out = []
 k.render_cell(out, f"合{SHARP}", 42, 29, 22, opts={"shaku_sharp": False})
+svg_gou = "".join(out)
+assert mark(svg_sharp) == mark(svg_gou), (mark(svg_sharp), mark(svg_gou))
+# cerclage : un shaku altéré n'est JAMAIS cerclé ; 尺 simple cerclé centré en (cx, cy)
+out = []
+k.render_cell(out, SHI_SHARP, 42, 29, 22,
+              opts={"shaku_sharp": True, "shaku_circled": True})
+assert "<circle" not in "".join(out), "".join(out)
+out = []
+k.render_cell(out, SHI, 42, 29, 22, opts={"shaku_sharp": True, "shaku_circled": True})
 svg = "".join(out)
-assert svg.count("<text") == 2 and SHARP in svg, svg
-print("OK 尺♯ : masqué avec @shaku_sharp off (pas de régression), ♯ suffixe sur 合♯")
+assert '<circle cx="42" cy="29"' in svg, svg  # centrage unifié (cx, cy), plus cy+2
+# croches : cercle sur le shaku principal / à cheval (codepoint corrigé 尖->尺)
+for tok in (f"尺/合", f"合/尺"):
+    out = []
+    k.render_cell(out, tok, 42, 29, 22, opts={"shaku_circled": True, "shaku_sharp": True})
+    assert "<circle" in "".join(out), tok
+out = []
+k.render_cell(out, f"合/尺♯", 42, 29, 22, opts={"shaku_circled": True, "shaku_sharp": True})
+assert "<circle" not in "".join(out), "".join(out)  # shaku à cheval altéré : pas de cercle
+print("OK 尺♯ : décomposé au rendu (note identique à 尺 seul, ♯ = marque standard), masqué avec @shaku_sharp off, jamais cerclé si altéré ; cercles croches OK")
 
 # --- 8. Unités : paire à cheval seule, cellule terminale impaire -------------
 dan = [{"note": ""}, {"note": chr(0xE000), "isSmall": True},

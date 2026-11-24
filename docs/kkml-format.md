@@ -249,7 +249,7 @@ Au sein des sections `::tab` et `::vocal`, les équivalents UTF-8 des signes ASC
 | `♯` (U+266F)    | `#`   | Dièse                |
 | `♭` (U+266D)    | `b`   | Bémol                |
 
-En **suffixe d'une note quelconque** (ex. `合♯`, `合♭`), `♯`/`♭` denote une altération (champ `acc` de Portama : `sharp`/`flat`), rendue en haut-droite de la note à ≈ 48 % de sa taille. Cas spécial : `尺♯` (U+5C3A U+266F) n'est PAS décomposé en note + suffixe — il est rendu selon l'option `@shaku_sharp`.
+En **suffixe d'une note quelconque** (ex. `合♯`, `合♭`), `♯`/`♭` denote une altération (champ `acc` de Portama : `sharp`/`flat`), rendue en haut-droite de la note à ≈ 48 % de sa taille. Cas spécial : `尺♯` (U+5C3A U+266F) reste indivisible au format, mais est décomposé au rendu (note + marque ♯ standard) ; `@shaku_sharp off` masque le ♯, et un shaku altéré n'est jamais cerclé (`@shaku_circled`).
 
 #### Caractères graphiquement similaires
 
