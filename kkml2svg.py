@@ -292,16 +292,18 @@ TECHNIQUE_SUFFIXES = {
     # ::tab (ex. 合㊀), JAMAIS des positions autonomes (confusion avec le
     # silence ◯). Portama : champ cell.yubii 1-4 (PUA U+E041-E044).
     # Calibrage PDF Portama (テスト節.pdf, paysage) : glyphe à GAUCHE de la
-    # note dans la case, même baseline, fs ≈ 0,735 × fs note (12,5/17),
-    # dx ≈ 0,91 × note_fs, ancre middle.
+    # note dans la case, fs ≈ 0,735 × fs note (12,5/17), dx ≈ 0,91 × note_fs,
+    # ancre middle. Vertical : ancre 'cell-center' (retour visuel PR #98) — le yubii
+    # est CENTRÉ verticalement sur la case (baseline = cy + 0,318 × fs du glyphe),
+    # et non plus calé sur la baseline de la note (trop bas quand la note est petite).
     '㊀': {'name': 'yubii 1 (index 人差指)',   'type': 'char', 'symbol': '㊀',
-          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+          'pos': 'left', 'dx': 0.91, 'anchor': 'cell-center', 'scale': 0.67},
     '㊁': {'name': 'yubii 2 (majeur 中指)',  'type': 'char', 'symbol': '㊁',
-          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+          'pos': 'left', 'dx': 0.91, 'anchor': 'cell-center', 'scale': 0.67},
     '㊂': {'name': 'yubii 3 (non précisé 無名指)', 'type': 'char', 'symbol': '㊂',
-          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+          'pos': 'left', 'dx': 0.91, 'anchor': 'cell-center', 'scale': 0.67},
     '㊃': {'name': 'yubii 4 (auriculaire 小指)', 'type': 'char', 'symbol': '㊃',
-          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+          'pos': 'left', 'dx': 0.91, 'anchor': 'cell-center', 'scale': 0.67},
 
     # Altérations en suffixe sur TOUTE note (ex. 合♯, 合♭) — Portama acc sharp/flat.
     # ASCII `#` → ♯ via FULLWIDTH_MAP ; `b` → ♭ via _normalize_tab_token.
@@ -4030,6 +4032,8 @@ def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None, cell_h=None,
       - 'anchor': 'cell-bottom' (aki-utu) : ty = bas de la case − note_fs*drop,
         avec bas de case = cell_cy + cell_h/2 (cell_cy = centre réel de la case,
         utile quand base_y est celui d'une note à cheval) ;
+      - 'anchor': 'cell-center' (yubii) : ty = cy + 0,318 × fs du glyphe
+        (centrage vertical sur la case, quelle que soit la taille de la note) ;
       - sinon : ty = base_y + note_fs*dy (dy propre à chaque marque).
 
     Horizontal (tx) — la marque s'ancre au COIN du token rendu, quelle que soit
@@ -4049,6 +4053,12 @@ def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None, cell_h=None,
     elif anchor_kind == 'cell-bottom' and cell_h is not None:
         cy = cell_cy if cell_cy is not None else base_y - fs * 0.318
         ty = cy + cell_h / 2 - note_fs * tech.get('drop', 0.1)
+    elif anchor_kind == 'cell-center':
+        # centrage vertical sur la CASE (retour visuel PR #98, yubii) :
+        # baseline = cy + 0,318 x fs DU GLYPHE (meme convention que les notes)
+        cy = cell_cy if cell_cy is not None else base_y - fs * 0.318
+        mark_fs = int(note_fs * 1.1 * tech.get('scale', 1.0))
+        ty = cy + mark_fs * 0.318
     else:
         ty = base_y + note_fs * dy
     if text_w is None:

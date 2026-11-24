@@ -59,6 +59,20 @@ assert abs((note_x - yb_x) - 0.91 * note_fs) < 0.5, (note_x, yb_x)
 assert abs(yb_fs / note_fs - 0.735) < 0.1, (yb_fs, note_fs)
 print(f"OK {GO}㊀ rendu à gauche de la note (dx={note_x-yb_x:.2f}, fs={yb_fs}/{note_fs})")
 
+# 2b. Centrage vertical sur la CASE (retour visuel PR #98) : baseline = cy + 0,318 x fs du glyphe yubii
+_cx, _cy, _fs, _cw, _ch = 42, 29, 22, 52, 58
+for tok in (GO + Y[1], chr(0x4E0B) + chr(0x8001) + Y[1], GO + "/" + chr(0x5C3A) + Y[1]):  # note / composite / straddle
+    out = []
+    k.render_cell(out, tok, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch, opts={})
+    m = re.search(r'<text x="([\d.-]+)" y="([\d.-]+)"[^>]*font-size="(\d+)"[^>]*>' + Y[1] + r'</text>', "".join(out))
+    yb_y, yb_fs = float(m.group(2)), int(m.group(3))
+    note_fs = _fs
+    if "/" in tok:
+        note_fs = int(_fs * k.STRADDLE_RATIO)   # le yubii s'applique à la note à cheval
+    exp_fs = int(note_fs * 1.1 * k.TECHNIQUE_SUFFIXES[Y[1]]["scale"])
+    assert yb_fs == exp_fs and abs(yb_y - (_cy + exp_fs * 0.318)) < 1e-9, (tok, yb_y, exp_fs)
+print("OK yubii centré verticalement sur la case (baseline = cy + 0,318 x fs du glyphe), note/composite/straddle")
+
 # 3. Combinaison avec un suffixe de technique
 svgs, err = render(f"::tab\n{GO}'{Y[2]}\n::\n")
 assert Y[2] in svgs[0] and UCHI in svgs[0] and "WARNING" not in err, err
