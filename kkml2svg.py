@@ -461,7 +461,7 @@ LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"
 # fautes de frappe usuelles + anciens noms de ::part (::song depuis le 2026-11-23,
 # et ::section avant, trop générique, ::tab étant déjà une section)
 SECTION_ALIASES = {"tabs": "tab", "vocals": "vocal", "lyric": "lyrics",
-                   "songs": "part", "section": "part", "song": "part"}
+                   "parts": "part", "songs": "part", "section": "part", "song": "part"}
 
 # Alias de clés de métadonnées acceptés au parsing (rectifiés par kkml_clean) :
 # @tuning = ancien nom de @choshi (le champ JSON Portama s'appelle `choshi`)
