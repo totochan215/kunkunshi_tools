@@ -458,10 +458,10 @@ FONT_STYLES = {
 LYRICS_VARIANTS = {"lyrics-kanji", "lyrics-romaji", "lyrics-kana", "lyrics-ruby"}
 
 # Alias de noms de sections acceptés au parsing (rectifiés par kkml_clean) :
-# fautes de frappe usuelles + ancien nom ::section de ::song (trop générique,
-# ::tab étant déjà une section)
+# fautes de frappe usuelles + anciens noms de ::part (::song depuis le 2026-11-23,
+# et ::section avant, trop générique, ::tab étant déjà une section)
 SECTION_ALIASES = {"tabs": "tab", "vocals": "vocal", "lyric": "lyrics",
-                   "songs": "song", "section": "song"}
+                   "parts": "part", "songs": "part", "section": "part", "song": "part"}
 
 # Alias de clés de métadonnées acceptés au parsing (rectifiés par kkml_clean) :
 # @tuning = ancien nom de @choshi (le champ JSON Portama s'appelle `choshi`)
@@ -1006,7 +1006,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     last_tab_index = -1
     last_tab_blk = None
     for blk in song.blocks:
-        if blk.kind == "song":
+        if blk.kind == "part":
             cur_title = blk.label
             continue
         if blk.kind in ("block", "page"):
@@ -3522,7 +3522,7 @@ def _wrap_horizontal(tokens, cols):
 # contient jusqu'à 32 blocs verticaux (dans) de 12 cases. Ordre de lecture :
 # bloc du haut d'abord, de haut en bas et de droite à gauche dans chaque dan,
 # puis bloc du bas idem. Colonne marker d'une DEMI-CASE à droite de chaque dan
-# (comme en vertical). Medley : chaque chanson = une section (::song nom
+# (comme en vertical). Medley : chaque chanson = une section (::part nom
 # + ::tab) ; le nom de la chanson est imprimé au-dessus des colonnes concernées
 # et la dernière colonne de chaque chanson est complétée par des cases VIDES
 # (pas de tenuto, pas de cercle de repos) pour que la chanson suivante commence
@@ -3855,7 +3855,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         lyr_by_song = []
         cur_song = None
         for blk in song.blocks:
-            if blk.kind == "song":
+            if blk.kind == "part":
                 cur_song = blk.label
             elif blk.kind == "lyrics":
                 lyr_by_song.append((cur_song, blk.lines))

@@ -21,7 +21,7 @@ KKML se base sur le format texte brut encodé en UTF-8, sans utilisation des ext
 @meta valeur
 @cells_per_dan 12
 
-::song
+::part
 contenu
 ::
 
@@ -103,11 +103,11 @@ Les mises en page ou la ligne de commande peuvent surcharger certaines métadonn
 ## Sections
 
 ### Chanson nommée
-`::song nom` — nom de chanson, s'applique au bloc suivant (utile en layout `mega` pour une compilation/medley : le nom de chaque chanson est imprimé au-dessus de ses colonnes). `::section nom` est un ancien nom accepté comme alias de `::song nom` (renommé avec une info stderr) — `::section` était trop générique, `::tab` étant déjà une section.
+`::part nom` — nom de chanson (partie d'une compilation), s'applique au bloc suivant (utile en layout `mega` pour un medley : le nom de chaque chanson est imprimé au-dessus de ses colonnes). `::parts nom` (pluriel), `::song nom` et `::section nom` sont d'anciens noms acceptés comme alias de `::part nom` (renommés avec une info stderr) — `::song` renommé en `::part` le 2026-11-23 ; `::section` était trop générique, `::tab` étant déjà une section.
 
 De même, les fautes de frappe usuelles sont acceptées comme alias et rectifiées
 en nom canonique par `kkml_clean.py` (avec une info stderr au parsing) :
-`::tabs` → `::tab`, `::vocals` → `::vocal`, `::lyric` → `::lyrics`, `::songs` → `::song`.
+`::tabs` → `::tab`, `::vocals` → `::vocal`, `::lyric` → `::lyrics`, `::parts`/`::songs`/`::song`/`::section` → `::part`.
 
 ### Sauts de mise en page (layout `mega` uniquement)
 `::block` — ferme le bloc horizontal courant et passe au bloc suivant ; le bloc sauté est rempli de *dans* vides jusqu'à son nombre de colonnes prévues (`@mega_dans`). `::page` — idem, puis la page courante est complétée de blocs vides et on passe à la page suivante. Sans contenu ; ignorés par les autres layouts.

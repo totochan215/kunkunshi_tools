@@ -73,9 +73,9 @@ assert float(mh[0]) <= first_cell_x + 0.01, (mh[0], first_cell_x)
 print("OK horizontal : /六 sur le bord gauche de la 1re case (x=%s, case x=%s)"
       % (mh[0], first_cell_x))
 
-# 5. Mega (medley) : /六 en tête de la ::tab d'une ::song
-kkml2 = ("@title medley\n@layout mega\n::song A\n::tab\n/六 " + " ".join(["合"] * 12) + "\n::\n"
-         "::song B\n::tab\n" + " ".join(["工"] * 12) + "\n::\n")
+# 5. Mega (medley) : /六 en tête de la ::tab d'une ::part
+kkml2 = ("@title medley\n@layout mega\n::part A\n::tab\n/六 " + " ".join(["合"] * 12) + "\n::\n"
+         "::part B\n::tab\n" + " ".join(["工"] * 12) + "\n::\n")
 err = io.StringIO()
 with contextlib.redirect_stderr(err):
     svgm = "".join(k.render_svg(k.parse_kkml(kkml2), layout="mega"))

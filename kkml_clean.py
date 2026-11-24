@@ -11,8 +11,8 @@ Règles (voir AGENTS.md, section « Long terme ») :
   kanji kandokoro, kanji composites → katakana+kanji, repos → ◯,
   `::tab-lyrics`/`::tab-vocals` → `::vocal` ;
 - ordre des sections : `::tab` `::vocal` `::lyrics` **par groupe** (les blocs de
-  contenu entre deux marqueurs `::song`/`::block`/`::page`, qui restent à leur
-  place dans le flux) — un medley à plusieurs `::song` n'est pas mis en vrac ;
+  contenu entre deux marqueurs `::part`/`::block`/`::page`, qui restent à leur
+  place dans le flux) — un medley à plusieurs `::part` n'est pas mis en vrac ;
 - métadonnées : toutes regroupées en haut du fichier ; `@format` `@version`
   `@title` toujours en premier (si présents), puis les autres métadonnées
   présentes dans leur ordre d'apparition dans le fichier ; `@format KKML`
@@ -152,12 +152,12 @@ def clean(text):
 
     # --- sections : normalisation + complétion structurelle --- #
     # Découpage en "runs" : un run = les blocs de contenu (::tab/::vocal/
-    # ::lyrics) qui se suivent, délimités par les marqueurs (::song, ::block,
+    # ::lyrics) qui se suivent, délimités par les marqueurs (::part, ::block,
     # ::page, autres). À la réassemblage, chaque run est émis dans l'ordre
     # canonique ::tab ::vocal ::lyrics et les marqueurs restent à leur place
-    # dans le flux — sinon un medley (plusieurs ::song) partait en vrac :
+    # dans le flux — sinon un medley (plusieurs ::part) partait en vrac :
     # tous les ::tab, puis tous les ::vocal, puis tous les ::lyrics, et les
-    # ::song à la fin.
+    # ::part à la fin.
     blocks = song.blocks
     CONTENT_KINDS = ("tab", "vocal", "lyrics")
     runs = []              # [(marqueur ou None, [blocs de contenu])]
@@ -181,7 +181,7 @@ def clean(text):
 
     # 1. ::tab implicite -> explicite : parse_kkml crée déjà un Block("tab")
     #    implicite ; rien à faire ici si saw_marker, sinon info.
-    if tab_blks and "::tab" not in text and "::section" not in text and "::song" not in text:
+    if tab_blks and "::tab" not in text and "::part" not in text and "::section" not in text and "::song" not in text:
         info("section ::tab implicite rendue explicite")
 
     # 2. ::tab manquante -> créée vide (rattachée au premier run)
@@ -224,7 +224,7 @@ def clean(text):
             v.lines = [[k.EMPTY_TOKEN] * len(ln) for ln in b.lines]
         run_of(tab_blks[0])[1].append(v)
         vocal_blks = [v]
-    # réalignement PAR RUN : dans un medley, chaque ::song a son propre
+    # réalignement PAR RUN : dans un medley, chaque ::part a son propre
     # ::tab/::vocal — comparer un ::vocal au premier ::tab global mélangeait
     # les chansons.
     for _m, content in runs:
