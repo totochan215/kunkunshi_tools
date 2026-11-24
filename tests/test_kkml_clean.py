@@ -485,13 +485,13 @@ t44 = ("@format KKML\n::tabs\n" + chr(0x5408) + " " + chr(0x5de5) + "\n::\n::voc
 out44, err44, rc44 = run_clean(t44)
 assert rc44 == 0
 assert "::tabs" not in out44 and "::vocals" not in out44 and "::lyric\n" not in out44 and "::songs" not in out44
-for canon in ("::tab\n", "::vocal\n", "::lyrics\n", "::song A\n"):
+for canon in ("::tab\n", "::vocal\n", "::lyrics\n", "::part A\n"):
     assert canon in out44, (canon, out44)
 assert "normalisée en '::tab'" in err44 and "::songs" in err44   # info stderr au parsing
 s44 = _k.parse_kkml(t44)
-assert [b.kind for b in s44.blocks] == ["tab", "vocal", "lyrics", "song"]
+assert [b.kind for b in s44.blocks] == ["tab", "vocal", "lyrics", "part"]
 assert run_clean(out44)[0] == out44                              # idempotent
-print("OK alias de sections : ::tabs/::vocals/::lyric/::songs -> canoniques")
+print("OK alias de sections : ::tabs/::vocals/::lyric/::songs -> canoniques (::part)")
 
 # 45. Garde-fou : les samples du dépôt et les fixtures synthétiques sont en
 #     forme canonique (clean) ; les versions "sales" d'origine vivent dans

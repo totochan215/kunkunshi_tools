@@ -30,8 +30,8 @@ jobs:
         run: python3 tests/test_clean_meta.py
       - name: Lancer les tests des marqueurs de couplet ①-⑳
         run: python3 tests/test_verse_markers.py
-      - name: Lancer les tests de ::song (nom de chanson ; ::section = alias)
-        run: python3 tests/test_song.py
+      - name: Lancer les tests de ::part (nom de chanson ; ::song/::section = alias)
+        run: python3 tests/test_part.py
       - name: Lancer les tests mega (@mega_dans, ::block/::page)
         run: python3 tests/test_mega_breaks.py
       - name: Lancer les tests du straddle de tête /B (rang -1)
@@ -40,7 +40,7 @@ jobs:
         run: python3 tests/test_svg_groups.py
       - name: Lancer les tests des attributs de design (@text_color, @frame_*, @cell_*, @arrow_*)
         run: python3 tests/test_layout_attrs.py
-      - name: Lancer les tests du cleaner sur medley (pas de vrac par ::song)
+      - name: Lancer les tests du cleaner sur medley (pas de vrac par ::part)
         run: python3 tests/test_clean_medley.py
       - name: Lancer les tests complets du cleaner (kkml_clean)
         run: python3 tests/test_kkml_clean.py
