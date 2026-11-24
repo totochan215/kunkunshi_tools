@@ -246,6 +246,29 @@ for tok in (_ge_hachi + "v", f"{chr(0x5408)}v", f"{chr(0x5408)}/{SHI}v"):  # com
     assert yv > _cy + _ch / 2 - note_fs * 0.2          # presque touchant le bas
 print("OK marques au coin du token (altération composite = coin haut-droit comme note simple) ; aki-utu v ancré au bas de la case")
 
+# --- 7f. Centrage vertical relatif (retour visuel PR #98, horizontal) : baseline = cy + 0,318 x fs RÉELLE ---
+# kuubanchi / shuffle / straddle : le glyphe est centré sur SA propre fs, pas sur la fs de case (ratio 1,0)
+def _note_y(tok, orient="h"):
+    out = []
+    k.render_cell(out, tok, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch, orient=orient, opts={})
+    m = _re.search(r'<text x="[\d.-]+" y="([\d.-]+)"[^>]*font-size="([\d.]+)"[^>]*>[^<]*</text>', "".join(out))
+    return float(m.group(1)), float(m.group(2))
+y_full, fs_full = _note_y(chr(0x5408))
+assert abs(y_full - (_cy + _fs * 0.318)) < 1e-9 and fs_full == _fs
+y_s, fs_s = _note_y(chr(0x5408) + "s")                       # kuubanchi
+efs = int(_fs * k.KUUBANCHI_RATIO)
+assert fs_s == efs and abs(y_s - (_cy + efs * 0.318)) < 1e-9, (y_s, fs_s)
+y_sh, fs_sh = _note_y(chr(0x30A4) + chr(0x5408) + ":" + SHI)  # shuffle horizontal
+sh = min(_fs * k.SHUFFLE_RATIO, _cw / 2.9)
+assert abs(fs_sh - sh) < 1e-9 and abs(y_sh - (_cy + sh * 0.318)) < 1e-9, (y_sh, fs_sh)
+out = []
+k.render_cell(out, chr(0x5408) + "/" + SHI, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch, orient="h", opts={})
+m = _re.search(r'<text x="[\d.-]+" y="([\d.-]+)"[^>]*font-size="([\d.]+)"[^>]*>' + SHI + r'</text>', "".join(out))
+y_st, fs_st = float(m.group(1)), float(m.group(2))         # straddle horizontal (note à cheval)
+ss = int(_fs * k.STRADDLE_RATIO)
+assert fs_st == ss and abs(y_st - (_cy + ss * 0.318)) < 1e-9, (y_st, fs_st)
+print("OK centrage vertical relatif : baseline = cy + 0,318 x fs réelle (kuubanchi/shuffle/straddle centrés sur la case en horizontal)")
+
 
 
 

@@ -4477,6 +4477,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
 
     is_small = 's' in tech_suffixes
     effective_fs = int(fs * KUUBANCHI_RATIO) if is_small else fs
+    # Centrage vertical relatif (retour visuel PR #98) : la baseline d'un glyphe
+    # est cy + 0,318 × SA PROPRE fs (effective_fs / sh / ss), pas cy + 0,318 × fs
+    # de case — sinon kuubanchi/shuffle/straddle seraient trop bas quand la fs diminue.
 
     # 下尺 → 尺 entouré d'un cercle
     if base_tok == "下尺":
@@ -4485,7 +4488,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # centre = baseline − fs·0.318 = cy ; l'ancien cy+2 décentrait vers le bas)
         out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                    f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape("尺")}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
@@ -4494,7 +4497,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     # 下老 → deux caractères condensés via textLength (règle CONDENSE_W, comme toute position étendue)
     if base_tok == "下老":
         target_w = effective_fs * CONDENSE_W[2]
-        y_text = cy + fs * 0.318
+        y_text = cy + effective_fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -4508,7 +4511,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     # condensés via textLength (règle CONDENSE_W, comme 下老), SANS cercle.
     if base_tok == "下八":
         target_w = effective_fs * CONDENSE_W[2]
-        y_text = cy + fs * 0.318
+        y_text = cy + effective_fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -4525,7 +4528,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1] in HIGH_POS_KANJI):
         target_w = effective_fs * CONDENSE_W[2]
-        y_text = cy + fs * 0.318
+        y_text = cy + effective_fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -4543,7 +4546,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1:] == "下尺"):
         target_w = effective_fs * CONDENSE_W[3]
-        y_text = cy + fs * 0.318
+        y_text = cy + effective_fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -4590,7 +4593,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
         # Techniques de la note principale
@@ -4665,7 +4668,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             if orient == "h":
                 # horizontal : côte à côte, réparties sur la largeur
                 xs = [cx - fs * 0.42 + i * (fs * 0.84 / (n - 1)) for i in range(n)]
-                ys = [cy + fs * 0.318] * n
+                ys = [cy + sh * 0.318] * n
             else:
                 # vertical : empilées de haut en bas, réparties sur la hauteur
                 ys = [cy - fs * 0.30 + i * (fs * 0.68 / (n - 1)) for i in range(n)]
@@ -4698,11 +4701,11 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             # horizontal : deux notes côte à côte, réparties sur la largeur
             # avec des marges égales (bord − m − note − m − note − m − bord).
             if koe:
-                y_main = y_lower = cy + fs * 0.318
+                y_main = y_lower = cy + sh * 0.318
                 x_main = cx
                 x_lower = cx + fs * 0.42 + sh_pos / 3
             else:
-                y_main = y_lower = cy + fs * 0.318
+                y_main = y_lower = cy + sh * 0.318
                 x_left = cx - cell_w / 2
                 m = (cell_w - 2 * sh) / 3
                 x_main = x_left + m + sh / 2
@@ -4710,7 +4713,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         else:
             x_main = x_lower = cx
             if koe:
-                y_main = cy + fs * 0.318
+                y_main = cy + sh * 0.318
                 y_lower = cy + fs * 0.42 + sh_pos / 3
             else:
                 # Distribution verticale à marges égales :
@@ -4738,7 +4741,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape(base_tok)}</text>')
     else:
@@ -4749,7 +4752,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         _warn_unknown_token(base_tok)
         shown = base_tok[:3]
         target_w = effective_fs * CONDENSE_W[len(shown)]
-        out.append(f'<text x="{cx - target_w/2}" y="{cy + fs * 0.318}" '
+        out.append(f'<text x="{cx - target_w/2}" y="{cy + effective_fs * 0.318}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">{escape(shown)}</text>')
