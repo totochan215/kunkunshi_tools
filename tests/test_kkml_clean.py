@@ -293,10 +293,10 @@ els29 = [(float(m.group(1)), float(m.group(2)), float(m.group(3)), m.group(4)) f
 FS = 37; CY = 16 + 98.2857/2; CX0 = 16 + CW/2; BORDER1 = 16 + 2*CW; SS = int(FS*0.713)
 AVG = _k._avg_tech_map()["^"]   # tuto : position moyenne uchi-utu/kaki-utu
 DX, DY, SC = AVG['dx'], AVG['dy'], AVG['scale']
-main_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (CX0 + FS*DX)) < 0.5)
-assert abs(main_c[1] - (CY + FS*0.318 + FS*DY)) < 0.5, main_c   # position moyenne, note principale
-str_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (BORDER1 + SS*DX)) < 0.5)
-assert abs(str_c[1] - (CY + SS*0.318 + SS*DY)) < 0.5, str_c     # position moyenne, straddle
+main_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (CX0 + FS/2 + FS*DX)) < 0.5)
+assert abs(main_c[1] - (CY + FS*0.318 - FS + FS*DY)) < 0.5, main_c   # coin haut-droit de la note principale
+str_c = next(e for e in els29 if e[3] == CORNER and abs(e[0] - (BORDER1 + SS/2 + SS*DX)) < 0.5)
+assert abs(str_c[1] - (CY + SS*0.318 - SS + SS*DY)) < 0.5, str_c     # coin haut-droit du straddle
 assert str_c[2] == int(SS * 1.1 * SC)  # tech_fs avec scale moyenné
 print("OK tuto : ⌝ kaki-utu en haut à droite de sa note (main et straddle)")
 
@@ -357,8 +357,8 @@ c33 = next(e for e in els33 if e[2] == chr(0x231D))    # case 1, cx=42 (colonne 
 FS33 = 22
 U33 = _k.TECHNIQUE_SUFFIXES["'"]["dx"]; K33 = _k.TECHNIQUE_SUFFIXES["^"]["dx"]
 # en vertical les cases sont en colonne : même x, y différent ; on vérifie l'offset relatif en x
-assert abs((g33[0] - 42) - FS33*U33) < 0.5, g33
-assert abs((c33[0] - 42) - FS33*K33) < 0.5, c33
+assert abs((g33[0] - 42) - FS33*(0.5 + U33)) < 0.5, g33   # ancrage coin : box_w/2 + note_fs*dx
+assert abs((c33[0] - 42) - FS33*(0.5 + K33)) < 0.5, c33
 print("OK vertical : ' et ^ chacun à son offset propre (dx'=%.2f, dx^=%.2f)" % (U33, K33))
 
 # 34. horizontal : accordage à droite du titre (même y), espace titre->tab réduit

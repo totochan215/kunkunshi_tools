@@ -250,23 +250,36 @@ TECHNIQUE_SUFFIXES = {
     # ' et ^ ne partagent PLUS une position moyenne : le calibrage montre
     # des réglages distincts (｀ descend sur le coin haut-droit, ⌝ reste
     # près de la tête de la note).
+    # Ancrage 'corner': 'top-right' (2026-11-23) : uchi/nuchi/kaki s'ancrent sur le
+    # COIN HAUT-DROIT du rectangle englobant de la note rendue (note seule,
+    # composite condensé, ou groupe d'accord) : tx = cx + box_w/2 + note_fs*dx,
+    # ty = box_top + note_fs*dy. box_w = largeur RENDUE (note_fs, textLength du
+    # composite, largeur max des membres d'un accord) ; box_top = sommet em de la
+    # note (base_y − note_fs, ou du membre le plus haut pour un accord).
+    # Taille : tech_fs = int(note_fs*1.1*scale) — proportionnelle à la fs de la
+    # note de rattachement, facteur propre à chaque ornement, INDÉPENDANTE de la
+    # condensation du composite. dx/dy sont mesurés depuis le coin (dx = ex-dx − 0,5 ;
+    # dy depuis le sommet em). Calibrage 2026-11-24 (corrections manuelles Inkscape
+    # sur la grille composites, 6 layouts, facteurs moyennés par ornement) :
+    # ' dx 0,00 dy 0,91 ; " dx 0,60 dy 1,02 ; ^ dx −0,07 dy 0,42 ;
+    # altérations ♯/♭ dx 0,20 dy 0,80.
     "'": {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'dx': 0.58, 'anchor': 'note-top', 'drop': 0.91, 'scale': 1.21},
+          'corner': 'top-right', 'dx': 0.0, 'dy': 0.91, 'scale': 1.21},
     '*': {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'dx': 0.58, 'anchor': 'note-top', 'drop': 0.91, 'scale': 1.21},
+          'corner': 'top-right', 'dx': 0.0, 'dy': 0.91, 'scale': 1.21},
     # nuchi-utu = uchi-nuchi-utu (打ち抜き音) : hammer-on SANS tenir la note.
     # Suffixe `"` (U+0022), jumeau de `'` (uchi-utu tenu) ; `n` reste EXCLU
     # (collision romaji : yon, bon...). Glyphe rendu : ゜ (U+309C, apostrophe
     # vide), pendant creux du ｀ plein de uchi-utu. ＂ (U+FF02) normalisé en `"`.
     # Position : à DROITE de la note, à mi-hauteur du kanji (calibrage nov. 2026).
     '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
-          'pos': 'top-right', 'dx': 1.125, 'dy': 0.02, 'scale': 1.21},
+          'pos': 'top-right', 'corner': 'top-right', 'dx': 0.60, 'dy': 1.02, 'scale': 1.21},
     # Calibrage complémentaire (correction manuelle Inkscape, Hiragino Mincho ProN,
     # nomura 十九の春, nov. 2026) : ⌝ décalé de -3/+3 pt sur note à cheval (note_fs = ss = 18)
     # dx etait deja x note_fs : dx 0.63 - 3/18 = 0.4633. dy etait x fs (26) : pour
     # reproduire +3 pt a ss=18 -> dy = (26*-0.42 + 3)/18 = -0.44 (maintenant x note_fs).
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
-          'scale': 0.91, 'dx': 0.4633, 'dy': -0.44},
+          'corner': 'top-right', 'scale': 0.91, 'dx': -0.07, 'dy': 0.42},
     # aki-utu : chevron ∨ U+2228 (sans serif ; le V en porterait), scale 0,80
     # (test visuel PR #98). Ancrage 'cell-bottom' (retour visuel PR #98) : le chevron
     # descend jusqu'au bas de la case (ty = bas_case − note_fs*drop), il ne flotte
@@ -314,9 +327,9 @@ TECHNIQUE_SUFFIXES = {
     # note (9/17), dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs. Au rendu, `尺♯` est
     # décomposé comme toute altération (render_cell : @shaku_sharp masque le ♯).
     '♯': {'name': 'dièse (altération)', 'type': 'char', 'symbol': '♯',
-          'pos': 'top-right', 'dx': 0.87, 'dy': -0.2, 'scale': 0.48},
+          'pos': 'top-right', 'corner': 'top-right', 'dx': 0.20, 'dy': 0.80, 'scale': 0.48},
     '♭': {'name': 'bémol (altération)', 'type': 'char', 'symbol': '♭',
-          'pos': 'top-right', 'dx': 0.87, 'dy': -0.2, 'scale': 0.48},
+          'pos': 'top-right', 'corner': 'top-right', 'dx': 0.20, 'dy': 0.80, 'scale': 0.48},
 }
 # Positions hautes (préfixes イ / ロ)
 #   イ  = 人偏 (亻) — 1 octave au-dessus du kanji de droite
@@ -4017,7 +4030,7 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
 # Helpers
 # --------------------------------------------------------------------------- #
 def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None, cell_h=None,
-                   cell_cy=None, cell_w=None, orient="v"):
+                   cell_cy=None, cell_w=None, orient="v", box_w=None, box_top=None):
     """Position (tx, ty, anchor) d'une marque de technique de type 'char'.
 
     base_y  : baseline de la note porteuse.
@@ -4032,8 +4045,13 @@ def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None, cell_h=None,
     orient  : 'v' (layouts verticaux) ou 'h' (horizontal/tuto) ; une marque peut
               définir 'pos_h' pour sa position en horizontal.
 
+    'corner': 'top-right' (uchi/nuchi/kaki-utu) : ancré sur le coin haut-droit du
+      rectangle englobant de la note rendue : tx = cx + box_w/2 + note_fs*dx,
+      ty = box_top + note_fs*dy (box_w = largeur rendue : note_fs, ou text_w pour un
+      composite condensé, ou largeur max du groupe d'accord ; box_top = base_y − note_fs,
+      ou sommet du membre le plus haut pour un accord).
+
     Vertical (ty) :
-      - 'anchor': 'note-top' (uchi-utu) : ty = sommet de la note + note_fs*drop ;
       - 'anchor': 'cell-bottom' (aki-utu) : ty = bas de la case − note_fs*drop ;
       - 'anchor': 'note-center' (yubii) : ty = centerline de la note + 0,318*mark_fs,
         soit base_y − 0,318*note_fs + 0,318*mark_fs (mark_fs = fs du glyphe) ;
@@ -4056,9 +4074,11 @@ def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None, cell_h=None,
     top = pos == 'top-right'
     cy = cell_cy if cell_cy is not None else base_y - fs * 0.318
     anchor_kind = tech.get('anchor')
-    if anchor_kind == 'note-top':
-        ty = base_y - note_fs + note_fs * tech['drop']
-    elif anchor_kind == 'cell-bottom' and cell_h is not None:
+    if tech.get('corner') == 'top-right':
+        bw = box_w if box_w is not None else (text_w if text_w is not None else note_fs)
+        bt = box_top if box_top is not None else base_y - note_fs
+        return cx + bw / 2 + note_fs * dx, bt + note_fs * dy, "middle"
+    if anchor_kind == 'cell-bottom' and cell_h is not None:
         ty = cy + cell_h / 2 - note_fs * tech.get('drop', 0.1)
     elif anchor_kind == 'note-center':
         ty = base_y - 0.318 * note_fs + 0.318 * mark_fs
@@ -4084,7 +4104,8 @@ def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None, cell_h=None,
 
 
 def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
-                       tech_map=None, note_fs=None, cell_cy=None, orient="v"):
+                       tech_map=None, note_fs=None, cell_cy=None, orient="v",
+                       box_w=None, box_top=None):
     """Dessine les marques de technique (souhou) autour de la cellule.
 
     Les marques de type 'char' sont rendues dans la même police (serif) et la
@@ -4126,9 +4147,11 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
             tx, ty, anchor = _tech_char_pos(tech, cx, base_y, fs, note_fs,
                                              text_w=text_w, cell_h=cell_h,
                                              cell_cy=cell_cy if cell_cy is not None else cy,
-                                             cell_w=cell_w, orient=orient)
-            if text_w is not None and tpos in ('top-right', 'bottom-left'):
+                                             cell_w=cell_w, orient=orient,
+                                             box_w=box_w, box_top=box_top)
+            if text_w is not None and tpos in ('top-right', 'bottom-left') and not tech.get('corner'):
                 # token condensé (composite) : la marque reste DANS la case
+                # (sauf ancrage 'corner' : ancrée au coin, peut déborder — nomura)
                 half = tech_fs / 2
                 if tpos == 'top-right':
                     tx = min(tx, cx + cell_w / 2 - half)
@@ -4418,10 +4441,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         opts = {}
     tmap = _avg_tech_map()  # copie des positions propres à chaque marque
     def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None, note_fs=None,
-            cell_cy=None):
+            cell_cy=None, box_w=None, box_top=None):
         _render_techniques(out, suffixes, cx, cy, cw, ch, fs, text_w=text_w,
                            tech_map=tmap, note_fs=note_fs, cell_cy=cell_cy,
-                           orient=orient)
+                           orient=orient, box_w=box_w, box_top=box_top)
 
     if tok in (EMPTY_TOKEN, "", None):
         return
@@ -4599,7 +4622,14 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                            f'text-anchor="middle" font-family="serif" '
                            f'font-size="{small}" fill="black"{_condensed_attrs(c, small)}>'
                            f'{escape(c)}</text>')
-            _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
+            # rectangle englobant du GROUPE d'accord (règle corner 2026-11-23) :
+            # largeur = max des largeurs rendues des membres (condensés si composites),
+            # sommet em = baseline du membre le plus haut − small
+            box_w = max(small if len(c) == 1 else small * CONDENSE_W.get(min(len(c), 3), 1.8)
+                        for c in chord_notes)
+            box_top = start + small / 3 - small
+            _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs,
+                box_w=box_w, box_top=box_top)
             return
 
     if "/" in base_tok:
