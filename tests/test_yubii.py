@@ -32,10 +32,10 @@ PAREN1 = chr(0x3220)                         # ㈠ variante parenthésée de ㊀
 REST = chr(0x25EF)                           # ◯ silence
 
 
-def render(kkml):
+def render(kkml, layout="vertical"):
     err = io.StringIO()
     with contextlib.redirect_stderr(err):
-        svgs = k.render_svg(k.parse_kkml(kkml))
+        svgs = k.render_svg(k.parse_kkml(kkml), layout=layout)
     return svgs, err.getvalue()
 
 
@@ -54,24 +54,38 @@ mn = re.search(r'<text x="([\d.]+)"[^>]*font-size="(\d+)"[^>]*>' + GO, svgs[0])
 assert mn
 yb_x, yb_fs = float(m.group(1)), int(m.group(2))
 note_x, note_fs = float(mn.group(1)), int(mn.group(2))
-# calibrage Portama : à gauche de la note (dx ≈ 0,91 × note_fs), fs ≈ 73 %
-assert abs((note_x - yb_x) - 0.91 * note_fs) < 0.5, (note_x, yb_x)
+# calibrage Portama : fs ≈ 73 % de la note (position testée en 2b : 1er tiers gauche en vertical)
 assert abs(yb_fs / note_fs - 0.735) < 0.1, (yb_fs, note_fs)
-print(f"OK {GO}㊀ rendu à gauche de la note (dx={note_x-yb_x:.2f}, fs={yb_fs}/{note_fs})")
+print(f"OK {GO}㊀ rendu (fs={yb_fs}/{note_fs}={yb_fs/note_fs:.3f}) ; position : voir 2b")
 
-# 2b. Centrage vertical sur la CASE (retour visuel PR #98) : baseline = cy + 0,318 x fs du glyphe yubii
+# 2b. Position (retour visuel PR #98) : vertical = centre du 1er tiers GAUCHE de la case,
+# ancré sur la centerline de la note ; horizontal = tiers INFÉRIEUR, centerline de la note ; tuto = off
 _cx, _cy, _fs, _cw, _ch = 42, 29, 22, 52, 58
-for tok in (GO + Y[1], chr(0x4E0B) + chr(0x8001) + Y[1], GO + "/" + chr(0x5C3A) + Y[1]):  # note / composite / straddle
+def _yb(tok, orient="v"):
     out = []
-    k.render_cell(out, tok, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch, opts={})
+    k.render_cell(out, tok, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch, orient=orient, opts={})
     m = re.search(r'<text x="([\d.-]+)" y="([\d.-]+)"[^>]*font-size="(\d+)"[^>]*>' + Y[1] + r'</text>', "".join(out))
-    yb_y, yb_fs = float(m.group(2)), int(m.group(3))
-    note_fs = _fs
-    if "/" in tok:
-        note_fs = int(_fs * k.STRADDLE_RATIO)   # le yubii s'applique à la note à cheval
-    exp_fs = int(note_fs * 1.1 * k.TECHNIQUE_SUFFIXES[Y[1]]["scale"])
-    assert yb_fs == exp_fs and abs(yb_y - (_cy + exp_fs * 0.318)) < 1e-9, (tok, yb_y, exp_fs)
-print("OK yubii centré verticalement sur la case (baseline = cy + 0,318 x fs du glyphe), note/composite/straddle")
+    return float(m.group(1)), float(m.group(2)), int(m.group(3))
+# vertical, note seule : tx = cx - cell_w/3 ; ty = base_y - 0,318*note_fs + 0,318*mark_fs
+x, y, yfs = _yb(GO + Y[1], "v")
+mfs = int(_fs * 1.1 * k.TECHNIQUE_SUFFIXES[Y[1]]["scale"])
+assert yfs == mfs and abs(x - (_cx - _cw / 3)) < 1e-9 and abs(y - ((_cy + _fs * 0.318) - 0.318 * _fs + 0.318 * mfs)) < 1e-9, (x, y, yfs)
+# vertical, composite : idem (indépendant du token)
+x, y, yfs = _yb(chr(0x4E0B) + chr(0x8001) + Y[1], "v")
+assert abs(x - (_cx - _cw / 3)) < 1e-9 and yfs == mfs, (x, y, yfs)
+# vertical, straddle : ancré sur la centerline de la note à cheval (note_fs = ss)
+x, y, yfs = _yb(GO + "/" + chr(0x5C3A) + Y[1], "v")
+ss = int(_fs * k.STRADDLE_RATIO)
+mfs_ss = int(ss * 1.1 * k.TECHNIQUE_SUFFIXES[Y[1]]["scale"])
+straddle_y = _cy + _ch / 2 + int(_fs * k.STRADDLE_RATIO) / 3
+assert yfs == mfs_ss and abs(y - (straddle_y - 0.318 * ss + 0.318 * mfs_ss)) < 1e-9, (x, y, yfs)
+# horizontal : tiers inférieur de la case, sur la centerline de la note (tx = cx)
+x, y, yfs = _yb(GO + Y[1], "h")
+assert abs(x - _cx) < 1e-9 and abs(y - (_cy + _ch / 3 + 0.318 * mfs)) < 1e-9, (x, y, yfs)
+# tuto : pas de yubii (collision avec les vocals)
+svgs, err = render(f"::tab\n{GO}{Y[1]} {GOU}\n::\n", layout="tuto")
+assert Y[1] not in "".join(svgs) and "WARNING" not in err, err
+print("OK yubii : 1er tiers gauche + centerline de la note (vertical), tiers inférieur + centerline (horizontal), off en tuto")
 
 # 3. Combinaison avec un suffixe de technique
 svgs, err = render(f"::tab\n{GO}'{Y[2]}\n::\n")

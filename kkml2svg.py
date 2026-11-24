@@ -291,19 +291,22 @@ TECHNIQUE_SUFFIXES = {
     # Doigtés (yubii) : suffixes ㊀-㊃ (U+3280-U+3283) apposés à la note dans
     # ::tab (ex. 合㊀), JAMAIS des positions autonomes (confusion avec le
     # silence ◯). Portama : champ cell.yubii 1-4 (PUA U+E041-E044).
-    # Calibrage PDF Portama (テスト節.pdf, paysage) : glyphe à GAUCHE de la
-    # note dans la case, fs ≈ 0,735 × fs note (12,5/17), dx ≈ 0,91 × note_fs,
-    # ancre middle. Vertical : ancre 'cell-center' (retour visuel PR #98) — le yubii
-    # est CENTRÉ verticalement sur la case (baseline = cy + 0,318 × fs du glyphe),
-    # et non plus calé sur la baseline de la note (trop bas quand la note est petite).
+    # Position (retour visuel PR #98) : fs ≈ 0,735 × fs note (12,5/17, calibrage
+    # PDF Portama). Layouts VERTICAUX ('pos': 'left-third') : centre du 1er tiers
+    # GAUCHE de la case (tx = cx − cell_w/3), ancré verticalement sur la CENTERLINE
+    # de la note porteuse ('anchor': 'note-center') — plusieurs notes par case
+    # (main + straddle). Layout HORIZONTAL ('pos_h': 'bottom-third') : tiers
+    # INFÉRIEUR de la case, sur la centerline de la note (tx = cx). Tuto : non
+    # affichés (opts 'render_yubii' off — collision avec la ligne vocale).
+    # Ajustements ultérieurs prévus (roadmap).
     '㊀': {'name': 'yubii 1 (index 人差指)',   'type': 'char', 'symbol': '㊀',
-          'pos': 'left', 'dx': 0.91, 'anchor': 'cell-center', 'scale': 0.67},
+          'pos': 'left-third', 'pos_h': 'bottom-third', 'anchor': 'note-center', 'scale': 0.67},
     '㊁': {'name': 'yubii 2 (majeur 中指)',  'type': 'char', 'symbol': '㊁',
-          'pos': 'left', 'dx': 0.91, 'anchor': 'cell-center', 'scale': 0.67},
+          'pos': 'left-third', 'pos_h': 'bottom-third', 'anchor': 'note-center', 'scale': 0.67},
     '㊂': {'name': 'yubii 3 (non précisé 無名指)', 'type': 'char', 'symbol': '㊂',
-          'pos': 'left', 'dx': 0.91, 'anchor': 'cell-center', 'scale': 0.67},
+          'pos': 'left-third', 'pos_h': 'bottom-third', 'anchor': 'note-center', 'scale': 0.67},
     '㊃': {'name': 'yubii 4 (auriculaire 小指)', 'type': 'char', 'symbol': '㊃',
-          'pos': 'left', 'dx': 0.91, 'anchor': 'cell-center', 'scale': 0.67},
+          'pos': 'left-third', 'pos_h': 'bottom-third', 'anchor': 'note-center', 'scale': 0.67},
 
     # Altérations en suffixe sur TOUTE note (ex. 合♯, 合♭) — Portama acc sharp/flat.
     # ASCII `#` → ♯ via FULLWIDTH_MAP ; `b` → ♭ via _normalize_tab_token.
@@ -1081,6 +1084,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'kinsoku': kinsoku,
         'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
+        'render_yubii': layout != "tuto",  # tuto : pas de yubii (collision avec la ligne vocale)
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
@@ -4013,66 +4017,74 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
 # Helpers
 # --------------------------------------------------------------------------- #
 def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None, cell_h=None,
-                   cell_cy=None):
+                   cell_cy=None, cell_w=None, orient="v"):
     """Position (tx, ty, anchor) d'une marque de technique de type 'char'.
 
     base_y  : baseline de la note porteuse.
     note_fs : taille (font-size) de la note porteuse — pleine, petite
               (croche à cheval) ou réduite ('s'). Taille du glyphe ET tous les
-              offsets (dx, dy, drop) sont des fractions de note_fs :
-              la marque reste collée au coin du kanji quelle que soit sa taille,
-              de manière homogène entre les mises en page.
+              offsets (dx, dy, drop) sont des fractions de note_fs.
     text_w  : largeur rendue du token (textLength) ; défaut note_fs (caractère
-              plein chasse). La règle d'ancrage est la MÊME pour une note seule
-              et pour un composite condensé (voir Horizontal ci-dessous).
+              plein chasse). L'ancrage horizontal est le MÊME pour une note seule
+              et pour un composite condensé (coin du token rendu).
+    cell_w / cell_h / cell_cy : géométrie de la case (cell_cy = centre réel de la
+              case, utile quand base_y est celui d'une note à cheval).
+    orient  : 'v' (layouts verticaux) ou 'h' (horizontal/tuto) ; une marque peut
+              définir 'pos_h' pour sa position en horizontal.
 
     Vertical (ty) :
-      - 'anchor': 'note-top' (uchi-utu) : ty = sommet de la note + note_fs*drop,
-        la marque chevauche le coin haut-droit du kanji ;
-      - 'anchor': 'cell-bottom' (aki-utu) : ty = bas de la case − note_fs*drop,
-        avec bas de case = cell_cy + cell_h/2 (cell_cy = centre réel de la case,
-        utile quand base_y est celui d'une note à cheval) ;
-      - 'anchor': 'cell-center' (yubii) : ty = cy + 0,318 × fs du glyphe
-        (centrage vertical sur la case, quelle que soit la taille de la note) ;
+      - 'anchor': 'note-top' (uchi-utu) : ty = sommet de la note + note_fs*drop ;
+      - 'anchor': 'cell-bottom' (aki-utu) : ty = bas de la case − note_fs*drop ;
+      - 'anchor': 'note-center' (yubii) : ty = centerline de la note + 0,318*mark_fs,
+        soit base_y − 0,318*note_fs + 0,318*mark_fs (mark_fs = fs du glyphe) ;
       - sinon : ty = base_y + note_fs*dy (dy propre à chaque marque).
 
-    Horizontal (tx) — la marque s'ancre au COIN du token rendu, quelle que soit
-    sa largeur (note seule ou composite condensé, retour visuel PR #98 :
-    une altération sur composite ne doit pas rester centrée sur la case) :
-    top-right → bord DROIT du token, bottom-left → bord GAUCHE, avec le même
-    décalage relatif (dx − 0,5)·note_fs au-delà du bord, ancre middle :
-      tx = cx ± (text_w/2 + note_fs*(dx − 0,5)).
-    Pour une note seule (text_w = note_fs) on retrouve cx ± note_fs*dx.
+    Horizontal (tx) :
+      - 'left-third' (yubii, layouts verticaux) : centre du 1er tiers GAUCHE de la
+        case, tx = cx − cell_w/3, ancre middle (indépendant du token) ;
+      - 'bottom-third' (yubii, layout horizontal via 'pos_h') : tiers INFÉRIEUR de la
+        case, sur la centerline de la note : tx = cx, ancre middle, et
+        ty = cy + cell_h/3 + 0,318*mark_fs (centre du tiers inférieur) ;
+      - sinon : coin du token rendu, tx = cx ± (text_w/2 + note_fs*(dx − 0,5)),
+        ancre middle (top-right = bord droit, bottom-left = bord gauche).
     """
     dx = tech.get('dx', 0.22)
     dy = tech.get('dy', 0.05)
-    top = tech['pos'] == 'top-right'
+    scale = tech.get('scale', 1.0)
+    mark_fs = int(note_fs * 1.1 * scale)
+    pos = tech.get('pos_h') if (orient == "h" and tech.get('pos_h')) else tech['pos']
+    top = pos == 'top-right'
+    cy = cell_cy if cell_cy is not None else base_y - fs * 0.318
     anchor_kind = tech.get('anchor')
     if anchor_kind == 'note-top':
         ty = base_y - note_fs + note_fs * tech['drop']
     elif anchor_kind == 'cell-bottom' and cell_h is not None:
-        cy = cell_cy if cell_cy is not None else base_y - fs * 0.318
         ty = cy + cell_h / 2 - note_fs * tech.get('drop', 0.1)
-    elif anchor_kind == 'cell-center':
-        # centrage vertical sur la CASE (retour visuel PR #98, yubii) :
-        # baseline = cy + 0,318 x fs DU GLYPHE (meme convention que les notes)
-        cy = cell_cy if cell_cy is not None else base_y - fs * 0.318
-        mark_fs = int(note_fs * 1.1 * tech.get('scale', 1.0))
-        ty = cy + mark_fs * 0.318
+    elif anchor_kind == 'note-center':
+        ty = base_y - 0.318 * note_fs + 0.318 * mark_fs
     else:
         ty = base_y + note_fs * dy
-    if text_w is None:
-        text_w = note_fs
-    if top:
-        tx = cx + text_w / 2 + note_fs * (dx - 0.5)
+    if pos == 'left-third':
+        tx = cx - cell_w / 3
+        anchor = "middle"
+    elif pos == 'bottom-third':
+        tx = cx
+        if cell_h is not None:
+            ty = cy + cell_h / 3 + 0.318 * mark_fs
+        anchor = "middle"
     else:
-        tx = cx - text_w / 2 - note_fs * (dx - 0.5)
-    anchor = "middle"
+        if text_w is None:
+            text_w = note_fs
+        if top:
+            tx = cx + text_w / 2 + note_fs * (dx - 0.5)
+        else:
+            tx = cx - text_w / 2 - note_fs * (dx - 0.5)
+        anchor = "middle"
     return tx, ty, anchor
 
 
 def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
-                       tech_map=None, note_fs=None, cell_cy=None):
+                       tech_map=None, note_fs=None, cell_cy=None, orient="v"):
     """Dessine les marques de technique (souhou) autour de la cellule.
 
     Les marques de type 'char' sont rendues dans la même police (serif) et la
@@ -4110,13 +4122,15 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
                            f'font-size="{int(fs * scale)}" '
                            f'fill="black">{escape(sym)}</text>')
                 continue
+            tpos = tech.get('pos_h') if (orient == "h" and tech.get('pos_h')) else tech['pos']
             tx, ty, anchor = _tech_char_pos(tech, cx, base_y, fs, note_fs,
                                              text_w=text_w, cell_h=cell_h,
-                                             cell_cy=cell_cy if cell_cy is not None else cy)
-            if text_w is not None:
+                                             cell_cy=cell_cy if cell_cy is not None else cy,
+                                             cell_w=cell_w, orient=orient)
+            if text_w is not None and tpos in ('top-right', 'bottom-left'):
                 # token condensé (composite) : la marque reste DANS la case
                 half = tech_fs / 2
-                if tech['pos'] == 'top-right':
+                if tpos == 'top-right':
                     tx = min(tx, cx + cell_w / 2 - half)
                 else:
                     tx = max(tx, cx - cell_w / 2 + half)
@@ -4406,7 +4420,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None, note_fs=None,
             cell_cy=None):
         _render_techniques(out, suffixes, cx, cy, cw, ch, fs, text_w=text_w,
-                           tech_map=tmap, note_fs=note_fs, cell_cy=cell_cy)
+                           tech_map=tmap, note_fs=note_fs, cell_cy=cell_cy,
+                           orient=orient)
 
     if tok in (EMPTY_TOKEN, "", None):
         return
@@ -4469,6 +4484,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # koekiri non affiché (ex. layout tuto) : on garde l'interprétation
         # mais on ne rend pas le symbole □
         tech_suffixes = [s for s in tech_suffixes if s != ')']
+    if not opts.get('render_yubii', True):
+        # yubii non affichés (ex. layout tuto : collision avec les vocals)
+        tech_suffixes = [s for s in tech_suffixes if s not in YUBII_CHARS]
 
     # Bornes de chant (声だし/声切り) sur un repos ◯ : légitime, PAS
     # d'avertissement. Les bornes s'adressent à la VOIX, et la ligne
