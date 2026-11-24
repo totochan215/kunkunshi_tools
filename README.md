@@ -60,9 +60,9 @@ Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizon
 ### kkml2pdf.py
 
 Convertit un fichier KKML en **PDF multipage**, en appelant `kkml2svg`.
-Réservé à ce stade aux layouts dont le format de page est prédéfini en cm :
-`chindami` (23 × 15 cm), `nomura` (A4 portrait 21 × 29,7 cm), `mega` 
-(A3 paysage 42 × 29,7 cm). 
+Réservé aux layouts dont le format de page est prédéfini en cm :
+`chindami` (23 × 15 cm), `nomura` (A4 portrait 21 × 29,7 cm),
+`mega` (A3 paysage 42 × 29,7 cm). 
 Les layouts libres (page à taille variable) sont refusés : utiliser `kkml2svg.py` puis
 l'export du logiciel d'édition.
 
@@ -76,6 +76,7 @@ La taille de page PDF (MediaBox) est celle du SVG en cm. Dépendances externes
 optionnelles (hors stdlib) : un moteur SVG→PDF détecté automatiquement
 (`rsvg-convert`, `inkscape`, ou module python `cairosvg`) et un outil de fusion
 (`pypdf`, `pdfunite` ou `gs`) — l'embed des polices CJK est du ressort du moteur.
+Préférer rsvg-convert sur Mac.
 
 ### kkml2portama.py
 
