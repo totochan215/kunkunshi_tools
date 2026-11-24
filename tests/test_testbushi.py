@@ -224,7 +224,7 @@ for tok in (_ro_shi + FLAT, _ge_hachi + FLAT):
     x, y, anc, tfs = float(m.group(1)), float(m.group(2)), m.group(3), int(m.group(4))
     tw = _fs * k.CONDENSE_W[2]                     # largeur du token condensé
     dx = k.TECHNIQUE_SUFFIXES[FLAT]["dx"]
-    exp_x = min(_cx + tw / 2 + _fs * (dx - 0.5), _cx + _cw / 2 - tfs / 2)  # bord droit, clampé
+    exp_x = _cx + tw / 2 + _fs * dx  # coin haut-droit (ancrage corner : pas de clamp, peut déborder)
     assert anc == "middle" and abs(x - exp_x) < 1e-9, (tok, x, exp_x)
     assert x > _cx + tw / 2, (tok, x)               # à droite du bord droit du token
 out = []

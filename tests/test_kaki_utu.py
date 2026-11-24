@@ -11,8 +11,8 @@ Règles (2026-11-22, ancrage coin 2026-11-23) :
   box_top = base_y − note_fs, ou sommet du membre le plus haut pour un accord).
   dx/dy sont mesurés depuis le coin (dx = ex-dx − 0,5 ; dy depuis le sommet em).
 - Calibrage kaki-utu (correction manuelle Inkscape, Hiragino Mincho ProN, nomura
-  十九の春) : ⌝ décalé de −3/+3 pt sur note à cheval (ss = 18) -> offset coin = 0.63 − 3/18 = 0.4633
-  (dx = 0.4633 − 0,5 = −0,0367) ; dy depuis le sommet em = 1 − 0,44 = 0,56.
+  十九の春, repris au calibrage Inkscape 2026-11-24 sur la grille composites) :
+  dx = −0,07, dy = 0,42 depuis le coin haut-droit.
 
 Usage :
     python3 tests/test_kaki_utu.py
@@ -50,8 +50,8 @@ def num(attrs, name):
 # 1. constantes de l'entrée ^
 tech = k.TECHNIQUE_SUFFIXES["^"]
 assert tech["symbol"] == C and tech["pos"] == "top-right" and tech["corner"] == "top-right"
-assert abs(tech["dx"] - (-0.0367)) < 1e-4, tech
-assert abs(tech["dy"] - 0.56) < 1e-4, tech
+assert abs(tech["dx"] - (-0.07)) < 1e-4, tech
+assert abs(tech["dy"] - 0.42) < 1e-4, tech
 print("OK entrée ^ : dx=%.4f dy=%.4f depuis le coin haut-droit (offset effectif note seule = %.4f)" % (tech["dx"], tech["dy"], 0.5 + tech["dx"]))
 
 # 2. _tech_char_pos, ancrage coin : tx = cx + box_w/2 + note_fs*dx, ty = box_top + note_fs*dy
@@ -77,10 +77,10 @@ strad = next(n for n in notes if n[3] == GO5)
 cx, straddle_y, ss = main[0], strad[1], int(strad[2])
 tx, ty, _ = k._tech_char_pos(tech, cx, straddle_y, 26.0, ss)
 assert abs(cx_el - tx) < 0.05 and abs(cy_el - ty) < 0.05, (cx_el, cy_el, tx, ty)
-# décalage vs l'ancien calibrage (main : dx x ss, dy x fs=26) = exactement -3/+3 pt
-assert abs((tx - (cx + ss * 0.63)) + 3) < 0.01, (tx, cx)
-assert abs((ty - (straddle_y + 26.0 * -0.42)) - 3) < 0.01, (ty, straddle_y)
-print("OK nomura : ⌝ décalé de −3/+3 pt exactement (ss=%d)" % ss)
+# ancrage coin sur la note à cheval : tx = cx + ss/2 + ss*dx, ty = straddle_y - ss + ss*dy
+assert abs(tx - (cx + ss / 2 + ss * tech["dx"])) < 0.01, (tx, cx)
+assert abs(ty - (straddle_y - ss + ss * tech["dy"])) < 0.01, (ty, straddle_y)
+print("OK nomura : ⌝ ancré sur le coin haut-droit de la note à cheval (ss=%d)" % ss)
 
 # 4. homogénéité entre les 6 layouts : offset ⌝/note-à-cheval == (ss·dx, ss·dy),
 #    taille du glyphe == int(ss·1,1·scale) — mêmes valeurs relatives partout

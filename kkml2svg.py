@@ -258,26 +258,28 @@ TECHNIQUE_SUFFIXES = {
     # note (base_y − note_fs, ou du membre le plus haut pour un accord).
     # Taille : tech_fs = int(note_fs*1.1*scale) — proportionnelle à la fs de la
     # note de rattachement, facteur propre à chaque ornement, INDÉPENDANTE de la
-    # condensation du composite. dx/dy sont mesurés depuis le coin (valeurs
-    # choisies pour préserver les positions actuelles note seule/composite :
-    # dx = dx_ancien − 0,5 ; dy compté depuis le sommet em de la note).
+    # condensation du composite. dx/dy sont mesurés depuis le coin (dx = ex-dx − 0,5 ;
+    # dy depuis le sommet em). Calibrage 2026-11-24 (corrections manuelles Inkscape
+    # sur la grille composites, 6 layouts, facteurs moyennés par ornement) :
+    # ' dx 0,00 dy 0,91 ; " dx 0,60 dy 1,02 ; ^ dx −0,07 dy 0,42 ;
+    # altérations ♯/♭ dx 0,20 dy 0,80.
     "'": {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'corner': 'top-right', 'dx': 0.08, 'dy': 0.91, 'scale': 1.21},
+          'corner': 'top-right', 'dx': 0.0, 'dy': 0.91, 'scale': 1.21},
     '*': {'name': 'uchi-utu',  'type': 'char',   'symbol': '｀', 'pos': 'top-right',
-          'corner': 'top-right', 'dx': 0.08, 'dy': 0.91, 'scale': 1.21},
+          'corner': 'top-right', 'dx': 0.0, 'dy': 0.91, 'scale': 1.21},
     # nuchi-utu = uchi-nuchi-utu (打ち抜き音) : hammer-on SANS tenir la note.
     # Suffixe `"` (U+0022), jumeau de `'` (uchi-utu tenu) ; `n` reste EXCLU
     # (collision romaji : yon, bon...). Glyphe rendu : ゜ (U+309C, apostrophe
     # vide), pendant creux du ｀ plein de uchi-utu. ＂ (U+FF02) normalisé en `"`.
     # Position : à DROITE de la note, à mi-hauteur du kanji (calibrage nov. 2026).
     '"': {'name': 'nuchi-utu (uchi-nuchi-utu)', 'type': 'char', 'symbol': '゜',
-          'pos': 'top-right', 'corner': 'top-right', 'dx': 0.625, 'dy': 1.02, 'scale': 1.21},
+          'pos': 'top-right', 'corner': 'top-right', 'dx': 0.60, 'dy': 1.02, 'scale': 1.21},
     # Calibrage complémentaire (correction manuelle Inkscape, Hiragino Mincho ProN,
     # nomura 十九の春, nov. 2026) : ⌝ décalé de -3/+3 pt sur note à cheval (note_fs = ss = 18)
     # dx etait deja x note_fs : dx 0.63 - 3/18 = 0.4633. dy etait x fs (26) : pour
     # reproduire +3 pt a ss=18 -> dy = (26*-0.42 + 3)/18 = -0.44 (maintenant x note_fs).
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
-          'corner': 'top-right', 'scale': 0.91, 'dx': -0.0367, 'dy': 0.56},
+          'corner': 'top-right', 'scale': 0.91, 'dx': -0.07, 'dy': 0.42},
     # aki-utu : chevron ∨ U+2228 (sans serif ; le V en porterait), scale 0,80
     # (test visuel PR #98). Ancrage 'cell-bottom' (retour visuel PR #98) : le chevron
     # descend jusqu'au bas de la case (ty = bas_case − note_fs*drop), il ne flotte
@@ -325,9 +327,9 @@ TECHNIQUE_SUFFIXES = {
     # note (9/17), dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs. Au rendu, `尺♯` est
     # décomposé comme toute altération (render_cell : @shaku_sharp masque le ♯).
     '♯': {'name': 'dièse (altération)', 'type': 'char', 'symbol': '♯',
-          'pos': 'top-right', 'dx': 0.87, 'dy': -0.2, 'scale': 0.48},
+          'pos': 'top-right', 'corner': 'top-right', 'dx': 0.20, 'dy': 0.80, 'scale': 0.48},
     '♭': {'name': 'bémol (altération)', 'type': 'char', 'symbol': '♭',
-          'pos': 'top-right', 'dx': 0.87, 'dy': -0.2, 'scale': 0.48},
+          'pos': 'top-right', 'corner': 'top-right', 'dx': 0.20, 'dy': 0.80, 'scale': 0.48},
 }
 # Positions hautes (préfixes イ / ロ)
 #   イ  = 人偏 (亻) — 1 octave au-dessus du kanji de droite
@@ -4147,8 +4149,9 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
                                              cell_cy=cell_cy if cell_cy is not None else cy,
                                              cell_w=cell_w, orient=orient,
                                              box_w=box_w, box_top=box_top)
-            if text_w is not None and tpos in ('top-right', 'bottom-left'):
+            if text_w is not None and tpos in ('top-right', 'bottom-left') and not tech.get('corner'):
                 # token condensé (composite) : la marque reste DANS la case
+                # (sauf ancrage 'corner' : ancrée au coin, peut déborder — nomura)
                 half = tech_fs / 2
                 if tpos == 'top-right':
                     tx = min(tx, cx + cell_w / 2 - half)
