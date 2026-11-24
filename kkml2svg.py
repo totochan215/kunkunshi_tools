@@ -64,12 +64,19 @@ SPECIAL_CHARS = set("○〇▲Ⓡ□×◯・#")
 RUBY_SCALE = 0.5
 EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
-# Ordre commun des blocs de métadonnées après le titre (tous layouts) :
+# Ordre commun des blocs de métadonnées après le titre (ordre par défaut de
+# tous les layouts ; surchargeable par layout via LayoutSpec.meta_order) :
 # auteur, compositeur, parolier (personnes), puis genre et origine
 # (classification), enfin l'accordage : @choshi (défaut 本調子) ;
 # genre n'est pas répété s'il égale author. @source et @comment ne sont PAS
 # affichés : information stockée dans le KKML uniquement.
 META_ORDER = ("author", "composer", "lyricist", "genre", "origin", "choshi")
+
+# Types de sections KKML (constante globale) : ::part (titre de chanson en
+# medley), ::tab, ::vocal, ::lyrics et les marqueurs de saut ::block/::page
+# (mega). Chaque LayoutSpec déclare lesquels il rend via 'render_sections'
+# (défaut : tous).
+SECTION_KINDS = ("part", "tab", "vocal", "lyrics", "block", "page")
 
 
 def _speed_text(song):
@@ -79,17 +86,20 @@ def _speed_text(song):
     return f"♩={v}" if v else ""
 
 
-def _meta_blocks(song, speed_h=False):
-    """Blocs de métadonnées dans l'ordre commun META_ORDER.
+def _meta_blocks(song, speed_h=False, order=None):
+    """Blocs de métadonnées dans l'ordre commun META_ORDER (order = surcharge
+    par layout, LayoutSpec.meta_order ; défaut META_ORDER).
     Retourne une liste de (texte, taille_police, fill) — le bloc choshi
     porte la taille/fill de l'accordage (15, #555), les autres 12, #777.
     Le genre n'est pas répété s'il est identique à l'auteur.
     speed_h=True : le tempo @speed (♩=..., fs 12, #555) est inséré
-    juste avant le bloc choshi (dernier)."""
+    juste avant le bloc choshi (dernier ; en fin de liste si choshi
+    n'est pas dans order)."""
     blocks = []
     genre = song.meta.get("genre", "")
     author = song.meta.get("author", "")
-    for k in META_ORDER:
+    order = META_ORDER if order is None else order
+    for k in order:
         if k == "choshi":
             if speed_h:
                 st = _speed_text(song)
@@ -103,6 +113,10 @@ def _meta_blocks(song, speed_h=False):
             if not val or (k == "genre" and val == author):
                 continue
             blocks.append((val, 12, "#777"))
+    if speed_h and "choshi" not in order:
+        st = _speed_text(song)
+        if st:
+            blocks.append((st, 12, "#555"))
     return blocks
 REST_TOKEN = "◯"
 REST_VARIANTS = {"◯", "○", "〇", "⚪"}  # O/o/0 retirés : collision romaji
@@ -807,6 +821,16 @@ class LayoutSpec:
     arrow_width: float = 0.75        # épaisseur des flèches de boucles
     arrow_fill: bool = False         # têtes de flèches remplies (on) ou creuses (off)
     page_no_fs: float = 11
+    # Quelles métadonnées et quelles sections ce layout rend (surcharge des
+    # constantes globales META_ORDER / SECTION_KINDS) : meta_order = clés de
+    # META_ORDER affichées, dans cet ordre (@title et @speed restent toujours
+    # affichés) ; render_sections = types de sections rendus. render_koe /
+    # render_yubii = symboles koedashi/koekiri ◯/□ et doigtés ①-④ rendus
+    # dans les cases.
+    meta_order: tuple = META_ORDER
+    render_sections: tuple = SECTION_KINDS
+    render_koe: bool = True
+    render_yubii: bool = True
 
     def u(self, v_pt):
         """valeur en pt -> unité native du layout (int si valeur entière exacte)."""
@@ -864,7 +888,8 @@ NOMURA = LayoutSpec(
     md_spacing=8,
     marker_ratio=1.0,             # sous-colonne marker = pleine case
     fs=26.0,
-    cell_color="#333333", cell_width=0.6, arrow_color="#333333", arrow_width=0.6, page_no_fs=13)
+    cell_color="#333333", cell_width=0.6, arrow_color="#333333", arrow_width=0.6, page_no_fs=13,
+    meta_order=("choshi",))   # nomura : seule la colonne titre (titre, tempo, @choshi) affiche des méta
 
 CHINDAMI = LayoutSpec(
     name="chindami", unit="pt",
@@ -879,7 +904,8 @@ CHINDAMI = LayoutSpec(
     title_w=(1816 - 1750) / 2.785, title_gap=10,
     md_spacing=6,
     lyr_gap=12, lyr_fs=10.8,   # 0,9 x fs=12, int() -> 10
-    cell_width=0.6, arrow_width=0.6)
+    cell_width=0.6, arrow_width=0.6,
+    meta_order=("choshi",))   # chindami : méta = titre + @musicno + tempo + @choshi uniquement
 
 TUTO = LayoutSpec(
     name="tuto", unit="px",
@@ -889,7 +915,12 @@ TUTO = LayoutSpec(
     cells_per_dan=8, max_dans=7, dans_per_block=7,  # 8 cases/dan, 7 dans/page
     marker_ratio=0,                              # pas de bande marker en tuto
     md_spacing=43.2 * PX,                        # gap entre blocs de la page de titre (H*0.06 à H=720)
-    cell_color="#999999")
+    cell_color="#999999",
+    # tuto : seule la tablature est rendue (::lyrics exclu), pas de ◯/□ ni de
+    # yubii (collision avec la ligne vocale en bas de case) ; page de titre :
+    # genre, auteur, compositeur, parolier, origine, puis @choshi sous le tempo
+    meta_order=("genre", "author", "composer", "lyricist", "origin", "choshi"),
+    render_sections=("tab",), render_koe=False, render_yubii=False)
 
 MEGA = LayoutSpec(
     name="mega", unit="pt",
@@ -899,7 +930,8 @@ MEGA = LayoutSpec(
     fs_ratio=0.38, marker_ratio=0.5,
     title_w=36, title_gap=10, title_spacing=30, tuning_spacing=22,
     title_fs=26, meta_fs=15, md_spacing=15,
-    lyr_gap=12, lyr_inline_max_ratio=0.15)
+    lyr_gap=12, lyr_inline_max_ratio=0.15,
+    meta_order=("genre", "author", "choshi"))   # mega : colonne titre = genre, auteur, @choshi en bas
 
 LAYOUTS = {"vertical": VERTICAL, "horizontal": HORIZONTAL, "nomura": NOMURA,
            "chindami": CHINDAMI, "tuto": TUTO, "mega": MEGA}
@@ -1061,6 +1093,12 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
                 sections.append((cur_title, [], "vocal", vocal_flat, None))
             cur_title = None
 
+    # Sections rendues : constante du layout (spec.render_sections, défaut =
+    # SECTION_KINDS = toutes). La section ::vocal rattachée à un ::tab voyage
+    # dans le 4-uplet du tab (vocal_flat) : elle reste rendue avec son tab,
+    # indépendamment du filtre sur les sections autonomes.
+    sections = [s for s in sections if s[2] in spec.render_sections]
+
     # --- Pré-calcul des dimensions (constantes du spec, en unité native) --- #
     # Page libre (vertical/horizontal) : le hanmen = marges + padding
     # (padding 0 -> hanmen = marges, comportement historique).
@@ -1068,7 +1106,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     MARGIN_R = spec.u(spec.margin_r + spec.pad_r)
     MARGIN_T = spec.u(spec.margin_t + spec.pad_t)
     header_h = spec.u(spec.header_h)  # vertical sans titre
-    if layout == "vertical" and (song.meta.get("title") or song.meta.get("choshi", "本調子")):
+    if layout == "vertical" and (song.meta.get("title") or ("choshi" in spec.meta_order and song.meta.get("choshi", "本調子"))):
         # Titre/accordage/parolier/compositeur/origine rendus verticalement
         # à droite : l'en-tête haut-gauche est vide, marge de tête minimale.
         header_h = spec.u(spec.header_h_title)
@@ -1096,8 +1134,8 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
         'show_dots': song.meta.get('show_dots', 'off') == 'on',
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'kinsoku': kinsoku,
-        'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
-        'render_yubii': layout != "tuto",  # tuto : pas de yubii (collision avec la ligne vocale)
+        'render_koe': spec.render_koe,      # constante du layout (tuto : off, pas de ○/□)
+        'render_yubii': spec.render_yubii,  # idem yubii (tuto : off, collision avec la ligne vocale)
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
@@ -1188,7 +1226,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
     TUNING_SPACING = spec.u(spec.tuning_spacing)  # espacement vertical entre caractères de l'accordage
     title_ruby_w = _ruby_needs_extra_width(title, 26) if title else 0
     # largeur de la colonne titre : présente dès que titre OU accordage affiché
-    title_offset = (TITLE_W + TITLE_GAP + title_ruby_w) if (title or tuning) else 0
+    title_offset = (TITLE_W + TITLE_GAP + title_ruby_w) if (title or ("choshi" in spec.meta_order and tuning)) else 0
     genre = song.meta.get("genre", "")
     author = song.meta.get("author", "")
     # Hauteurs réelles (l'écartement ruby allonge les blocs) via le plan
@@ -1207,7 +1245,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
     v_blocks = []
     if title:
         v_blocks.append((title, 26, TITLE_SPACING, "black", 20))
-    for k in META_ORDER:
+    for k in spec.meta_order:
         if k == "choshi":
             st = _speed_text(song)
             if st:
@@ -1915,7 +1953,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                 # base du titre, hors ruby), sous le titre, au-dessus de @choshi ; fs 10 en chindami
                 base_y = title_end if title_end is not None else title_top + 18 * 0.88
                 _emit_centered_text(out, st, tx, base_y + MD_SP + 10 * 0.88, 10, "#555")
-            if tuning:
+            if tuning and "choshi" in spec.meta_order:
                 _vertical_grouped_text(out, tuning, tx, fy1 - 4 - len(tuning) * 16,
                                        11, "#555", 16, font_family)
 
@@ -2100,7 +2138,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     LYRICS_MAX_COLS = 3
     lyrics_dans = (lyrics_col_count + LYRICS_MAX_COLS - 1) // LYRICS_MAX_COLS
 
-    first_cap = spec.max_dans - (1 if (title or tuning) else 0)
+    first_cap = spec.max_dans - (1 if (title or ("choshi" in spec.meta_order and tuning)) else 0)
     # La musique remplit les pages normalement (p.1 : 7 - 1 si titre,
     # puis 7 dans). Les couplets occupent les dans LIBRES de la dernière
     # page de musique ; l'excédent de dans virtuels passe sur des pages
@@ -2161,7 +2199,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     result = []
     n_pages = len(pages)
     for pi, (cols, cols_v, is_last, lyr_here, lyr_col_offset) in enumerate(pages):
-        has_title_col = (pi == 0 and (title or tuning))
+        has_title_col = (pi == 0 and (title or ("choshi" in spec.meta_order and tuning)))
         n_lyr_on_page = lyr_here
 
         # colonnes occupées : titre (droite), dans, paroles (gauche)
@@ -2206,7 +2244,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                 # tempo ♩=... : horizontal, text-anchor=middle sur tx (centerline de
                 # base du titre, hors ruby), sous le titre, au-dessus de @choshi
                 _emit_centered_text(out, st, tx, ty_end + MD_SP + 12 * 0.88, 12, "#555")
-            if tuning:
+            if tuning and "choshi" in spec.meta_order:
                 tyb = grid_y0 + grid_h - 4 - len(tuning) * 20.0
                 for i, ch in enumerate(tuning):
                     _vertical_char(out, ch, tx, tyb + i * 20.0, 13.0, "#555")
@@ -3022,7 +3060,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     if title and _has_ruby(_parse_ruby(_link_free(title))):
         meta_flow_w = _render_horizontal_text([], _link_free(title), ml, 0, 26, "black") - ml
         meta_flow_w += MD_SP
-    for text, hfs, _fill in _meta_blocks(song, speed_h=True):
+    for text, hfs, _fill in _meta_blocks(song, speed_h=True, order=spec.meta_order):
         meta_flow_w += _h_text_w(_link_free(text), hfs) + h_sep_w
     # Largeur des paroles sans repli (usable_w infini) : mesurée avec le
     # même moteur de rendu de texte (_render_horizontal_text → end x).
@@ -3102,7 +3140,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     # SANS repli (règle alignée : la page s'est élargie au flux entier).
     h_sep_w = MD_SP
     hx = end_x + MD_SP
-    for text, hfs, fill in _meta_blocks(song, speed_h=True):
+    for text, hfs, fill in _meta_blocks(song, speed_h=True, order=spec.meta_order):
         # centre d'encre du bloc sur celui du titre (26pt)
         by = ty0 - 0.38 * (26 - hfs)
         hxe = _render_horizontal_text(out, text, hx, by, hfs, fill, links=True)
@@ -3423,20 +3461,17 @@ def _tuto_title_page(song, W, H, opts=None, spec=None):
         _emit_centered_text(out, st, cx, y, fs_s, "#555")
         y += md_sp
     tuning = song.meta.get("choshi", "")
-    if tuning:
+    if tuning and "choshi" in spec.meta_order:
         out.append(f'<text x="{cx:g}" y="{y:g}" text-anchor="middle" font-family="serif" '
                    f'font-size="{max(10, int(H * 0.035))}" fill="#555">{escape(tuning)}</text>')
         y += md_sp
     lines = []
-    genre = song.meta.get("genre", "")
     author = song.meta.get("author", "")
-    if genre and genre != author:
-        lines.append(genre)
-    if author:
-        lines.append(author)
-    for k in ("composer", "lyricist", "origin"):
+    for k in spec.meta_order:
+        if k == "choshi":
+            continue  # @choshi affiché plus haut, sous le tempo
         v = song.meta.get(k, "")
-        if v:
+        if v and not (k == "genre" and v == author):
             lines.append(v)
     for ln in lines:
         _emit_centered_text(out, ln, cx, y, max(9, int(H * 0.028)), "#777", links=True)
@@ -3511,7 +3546,7 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts, spec=None):
 
     pages = [_tuto_title_page(song, W, H, opts, spec)]
     for sec_title, content, kind, vocal, lead in sections:
-        if kind != "tab":
+        if kind not in spec.render_sections:
             continue
         rows = _wrap_horizontal(content, cols)
         vrows = _wrap_horizontal(vocal, cols) if vocal else []
@@ -4010,17 +4045,17 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
             # base du titre, hors ruby), sous le titre, au-dessus de genre/auteur
             _emit_centered_text(out, st, tx, ty_end + md + 12 * 0.88, 12, "#555")
             ty_end += md + 12
-        genre = song.meta.get("genre", "")
         author = song.meta.get("author", "")
-        show_genre = genre and genre != author
         ty3 = ty_end
-        if show_genre:
-            for i, ch in enumerate(genre):
-                _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + md, 15, "#777")
-            ty3 += len(genre) * TUNING_SPACING + md
-        for i, ch in enumerate(author):
-            _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + md, 15, "#777")
-        if tuning:
+        for k in spec.meta_order:
+            if k == "choshi":
+                continue  # accordage ancré en bas de la colonne titre
+            v = song.meta.get(k, "")
+            if v and not (k == "genre" and v == author):
+                for i, ch in enumerate(v):
+                    _vertical_char(out, ch, tx, ty3 + i * TUNING_SPACING + md, 15, "#777")
+                ty3 += len(v) * TUNING_SPACING + md
+        if tuning and "choshi" in spec.meta_order:
             yb = grid_bottom - 4 - len(tuning) * TUNING_SPACING
             for i, ch in enumerate(tuning):
                 _vertical_char(out, ch, tx, yb + i * TUNING_SPACING, 15, "#555")

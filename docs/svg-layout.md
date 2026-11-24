@@ -9,6 +9,14 @@ Toutes les mises en page partagent le même modèle de cadre (`LayoutSpec`) :
 - le cadre est **tracé** (filet `frame_color` × `frame_width`, helper `_draw_frame`) seulement si `frame_width > 0` — nomura : 1,5 pt `#333333` ; chindami/tuto/mega/vertical/horizontal : 0 par défaut. **`@frame_width 0` = cadre non affiché** : avec padding = 0, le cadre virtuel se confond alors avec le hanmen de la page. `@frame_color`/`@frame_width` surchargent le défaut du layout.
 - En page libre (vertical, horizontal : `page_w = 0`), le cadre n'est pas tracé et le hanmen = marges + padding (padding 0 par défaut → comportement historique).
 
+## Métadonnées et sections rendues (générique, tous les layouts)
+
+Chaque mise en page déclare dans son `LayoutSpec` ce qu'elle affiche, en surcharge des constantes globales :
+
+- **`meta_order`** : quelles métadonnées de `META_ORDER` (`author`, `composer`, `lyricist`, `genre`, `origin`, `choshi`) sont affichées, et dans quel ordre. `@title` et `@speed` restent toujours affichés ; `@source`/`@comment` jamais. Défaut : `META_ORDER` complet (vertical, horizontal) ; tuto : genre → auteur → compositeur → parolier → origine → accordage (sous le tempo) ; mega : genre → auteur → accordage (en bas de la colonne titre) ; nomura/chindami : accordage seul.
+- **`render_sections`** : quels types de sections (`SECTION_KINDS` = `part`, `tab`, `vocal`, `lyrics`, `block`, `page`) sont rendus. Défaut : toutes ; tuto : `tab` seul (`::lyrics` exclu). Une `::vocal` rattachée à un `::tab` reste toujours rendue avec lui.
+- **`render_koe` / `render_yubii`** : symboles koedashi/koekiri (○/□) et doigtés (㊀-㊃) rendus dans les cases — off en tuto.
+
 ## Mises en pages standard
 
 ### Mise en page verticale standard
