@@ -1,0 +1,23 @@
+@format KKML
+@title テスト節 composites
+@choshi 本字子
+@cells_per_dan 12
+@marker on
+@shaku_sharp on
+@shaku_circled on
+@font_style gothic
+
+::tab
+イ合 ロ合 イ尺 ロ尺 下老 下八 下尺 尺 尺♯ |: イ中 ロ老
+合=尺 イ合s イ合' イ尺^ 下老v 下尺< イ下尺' ロ尺♭ 合♯ 下老㊀ イ五 ロ五
+イ合 イ合 イ合:尺 合-乙+老 イ下尺^ ロ老" 下尺㊀ 尺=ロ合 下八♭ イ老 ロ中 :|
+::
+
+::vocal
+- - - - - - - - - - - -
+- - - - - - - - - - - -
+- - ( - ) - - - - - - -
+::
+
+::lyrics
+::

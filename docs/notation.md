@@ -290,7 +290,7 @@ Le format d'une figure encode son rythme :
 
 ### Figure non reconnue
 - Toute figure sans séparateur qui n'est pas une position (simple ou étendue) est non reconnue
-- Rendu dégradé : 3 premiers caractères au maximum, condensés en largeur (patron `イ中` pour 2 caractères, `イ下尺` pour 3)
+- Condensation des positions étendues : règle unique pour tous les préfixes (`下`, `イ`, `ロ`) — 2 caractères : `textLength` 120 % de fs ; 3 caractères : 180 % de fs (`CONDENSE_W` dans kkml2svg.py). Rendu dégradé : 3 premiers caractères au maximum, condensés selon la même règle.
 - Alerte sur stderr à la première occurrence de chaque figure unique
 - Historique : l'ancien « ornement » (empilement vertical de tous les caractères) est déprécié le 19 sept. 2026 — sans sémantique musicale ; les kanji empilés réels sont des croches (`A/B`), du hayabiki (`A:B`) ou des accords (`A+B`)
 
@@ -312,13 +312,13 @@ Rendu (calibrage Inkscape nov. 2026) : chaque marque a sa **propre position** (p
 | `'`     | uchi-utu (打音)         | ｀ («accent grave») en haut-droite, même police et taille que la note | Presser la corde sans gratter (hammer-on) et tenir la note. Alias : `｀` (pleine chasse), `*` et `＊` (dépréciés) |
 | `"`     | uchi-nuchi-utu (打ち抜き音) ou nuchi-utu (抜き音) | ゜ (U+309C, «apostrophe vide») en haut-droite, même police et taille que la note | Hammer-on sans tenir la note. Suffixe `"` jumeau de `'` (uchi-utu tenu) |
 | `^`     | kaki-utu (掛音)        | ⌝ (U+231D, «coin haut-droite») en haut-droite | Upstroke (gratter de bas en haut avec le bachi) |
-| `v`     | aki-utu (開音)         | V en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
+| `v`     | aki-utu (開音)         | ∨ (U+2228, chevron sans serif) en bas-gauche, même police et taille que la note | Relâcher le doigt (pull-off) |
 | `<`     | kachi-utu (掻音)       | ⌞ (U+231E, «coin bas-gauche») en bas-gauche, même police et taille que la note | Gratter la corde avec la main gauche |
 | `s`     | kuubanchi (小弾)       | kanji rendu à 67% de la taille (−33%), centrage inchangé | Jeu faible |
 
 ### Altérations en suffixe (Portama `acc`)
 
-`♯` (U+266F) et `♭` (U+266D) accolés à n'importe quelle note (ex. `合♯`, `合♭`) : altération (dièse/bémol) rendue en haut-droite de la note, taille ≈ 48 % de la note (calibrage PDF Portama テスト節.pdf : fs ≈ 0,53 × fs note, dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs). Variantes de saisie : `#` (ASCII) → `♯`, `b` → `♭`. Cas spécial : `尺♯` (U+5C3A U+266F) reste un token indivisible, rendu selon l'option `@shaku_sharp` (jamais décomposé en suffixe).
+`♯` (U+266F) et `♭` (U+266D) accolés à n'importe quelle note (ex. `合♯`, `合♭`) : altération (dièse/bémol) rendue en haut-droite de la note, taille ≈ 48 % de la note (calibrage PDF Portama テスト節.pdf : fs ≈ 0,53 × fs note, dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs). Variantes de saisie : `#` (ASCII) → `♯`, `b` → `♭`. Cas spécial : `尺♯` (U+5C3A U+266F) reste un token indivisible au format KKML, mais il est décomposé au rendu comme toute note altérée (la note garde sa position/taille, le ♯ est la marque standard haut-droite) ; l'option `@shaku_sharp off` masque le ♯ (rendu en 尺 simple) et un shaku altéré n'est jamais cerclé par `@shaku_circled`.
 
 ## Contrôle du chant
 

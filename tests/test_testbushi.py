@@ -117,28 +117,160 @@ assert vocal_lines(k.parse_kkml(user_kkml)) == vocal_lines(k.parse_kkml(kkml))
 print("OK correction manuelle = convertisseur à l'identique après normalisation")
 
 # --- 6. Variantes de saisie normalisées au parsing ---------------------------
-song = k.parse_kkml(f"::tab\n合# 合b {KOU}上 　{REST_WHITE} {SHI_SHARP}\n::\n")
+song = k.parse_kkml(f"::tab\n合# 合b {KOU}上 　{REST_WHITE} {SHI_SHARP} {chr(0x5C3B)} {chr(0x5C16)}♯\n::\n")
 toks = tab_lines(song)[0]
-assert toks == [f"合{SHARP}", f"合{FLAT}", f"{RO}上", REST, SHI_SHARP], toks
-print("OK variantes : # -> ♯, b -> ♭, 口上 -> ロ上, ⚪︎ -> ◯, 尺♯ intact")
+assert toks == [f"合{SHARP}", f"合{FLAT}", f"{RO}上", REST, SHI_SHARP, SHI, f"{SHI}{SHARP}"], toks
+print("OK variantes : # -> ♯, b -> ♭, 口上 -> ロ上, ⚪︎ -> ◯, 尺♯ intact, 尻/尖 -> 尺 (jamais de 尻 ni 尖 en KKML)")
 
-# --- 7. Cas spécial 尺♯ : pas de ♯ séparé avec @shaku_sharp off --------------
+# --- 7. 尺♯ décomposé au rendu comme toute note altérée (2026-11-23) ------------
+# @shaku_sharp off (défaut) : le ♯ est masqué, rendu en 尺 simple
 out = []
 k.render_cell(out, SHI_SHARP, 42, 29, 22,
               opts={"shaku_sharp": False, "shaku_circled": False})
 svg = "".join(out)
 assert SHARP not in svg and SHI in svg, svg
+# @shaku_sharp on : la note 尺 garde EXACTEMENT la position/taille de 尺 seul, le ♯
+# est une marque séparée (haut-droite), identique à celle de 合♯ — plus de tspan inline
 out = []
 k.render_cell(out, SHI_SHARP, 42, 29, 22,
               opts={"shaku_sharp": True, "shaku_circled": False})
-svg = "".join(out)
-assert SHI in svg and SHARP in svg and "tspan" in svg, svg
-# et sur une autre note, ♯ est bien un suffixe séparé (haut-droite)
+svg_sharp = "".join(out)
+assert svg_sharp.count("<text") == 2 and SHI in svg_sharp and SHARP in svg_sharp, svg_sharp
+assert "tspan" not in svg_sharp, svg_sharp
+out = []
+k.render_cell(out, SHI, 42, 29, 22, opts={"shaku_sharp": True, "shaku_circled": False})
+svg_plain = "".join(out)
+import re as _re
+note = lambda svg: _re.search(r'<text x="([\d.-]+)" y="([\d.-]+)"[^>]*font-size="(\d+)"[^>]*>尺</text>', svg).groups()
+assert note(svg_sharp) == note(svg_plain), (note(svg_sharp), note(svg_plain))
+mark = lambda svg: _re.search(r'<text x="([\d.-]+)" y="([\d.-]+)"[^>]*font-size="(\d+)"[^>]*>♯</text>', svg).groups()
 out = []
 k.render_cell(out, f"合{SHARP}", 42, 29, 22, opts={"shaku_sharp": False})
+svg_gou = "".join(out)
+assert mark(svg_sharp) == mark(svg_gou), (mark(svg_sharp), mark(svg_gou))
+# cerclage : un shaku altéré n'est JAMAIS cerclé ; 尺 simple cerclé centré en (cx, cy)
+out = []
+k.render_cell(out, SHI_SHARP, 42, 29, 22,
+              opts={"shaku_sharp": True, "shaku_circled": True})
+assert "<circle" not in "".join(out), "".join(out)
+out = []
+k.render_cell(out, SHI, 42, 29, 22, opts={"shaku_sharp": True, "shaku_circled": True})
 svg = "".join(out)
-assert svg.count("<text") == 2 and SHARP in svg, svg
-print("OK 尺♯ : masqué avec @shaku_sharp off (pas de régression), ♯ suffixe sur 合♯")
+assert '<circle cx="42" cy="29"' in svg, svg  # centrage unifié (cx, cy), plus cy+2
+# croches : cercle sur le shaku principal / à cheval (codepoint corrigé 尖 U+5C16 → 尺 U+5C3A ; jamais de 尻 U+5C3B ni 尖 U+5C16 en KKML)
+for tok in (f"尺/合", f"合/尺"):
+    out = []
+    k.render_cell(out, tok, 42, 29, 22, opts={"shaku_circled": True, "shaku_sharp": True})
+    assert "<circle" in "".join(out), tok
+out = []
+k.render_cell(out, f"合/尺♯", 42, 29, 22, opts={"shaku_circled": True, "shaku_sharp": True})
+assert "<circle" not in "".join(out), "".join(out)  # shaku à cheval altéré : pas de cercle
+print("OK 尺♯ : décomposé au rendu (note identique à 尺 seul, ♯ = marque standard), masqué avec @shaku_sharp off, jamais cerclé si altéré ; cercles croches OK")
+
+# --- 7b. Condensation unifiée des composites (2026-11-23) : règle CONDENSE_W = {2: 120%, 3: 180%}
+def _tl(tok):
+    out = []
+    k.render_cell(out, tok, 42, 29, 22, opts={"shaku_circled": False, "shaku_sharp": True})
+    m = _re.search(r'textLength="([\d.]+)"', "".join(out))
+    return float(m.group(1)) if m else None
+w2 = {_tl(t) for t in ("下老", "下八", "イ合", "ロ尺")}
+assert w2 == {22 * 1.2}, w2  # même largeur pour tous les composites à 2 caractères (下, イ, ロ)
+assert _tl("イ下尺") == 22 * 1.8, _tl("イ下尺")
+print("OK condensation unifiée : 2 car. -> 120% de fs partout (下老/下八/イX/ロX), 3 car. -> 180% (イ下尺)")
+
+# --- 7c. Membres composites d'accords/shuffle condensés à leur fs RÉELLE (2026-11-23) ----
+def _els(tok):
+    out = []
+    k.render_cell(out, tok, 42, 29, 22, opts={"shaku_circled": False, "shaku_sharp": True})
+    return _re.findall(r'<text[^>]*font-size="([\d.]+)"([^>]*)>([^<]*)</text>', "".join(out))
+chord = _els("尺=ロ合")           # accord : membres à CHORD_RATIO de fs
+small = int(22 * k.CHORD_RATIO)
+tl_ro = [float(_re.search(r'textLength="([\d.]+)"', a).group(1)) for fs, a, c in chord
+         if c == "ロ合" and "textLength" in a]
+assert tl_ro == [small * 1.2], (chord, tl_ro)   # condensé à la fs réduite, pas à 22
+assert all("textLength" not in a for fs, a, c in chord if c == "尺")  # note simple : pas de TL
+shuf = _els("イ合:尺")            # shuffle 2 notes : membres à SHUFFLE_RATIO
+sh = 22 * k.SHUFFLE_RATIO  # le shuffle garde sh en float (effective_fs * SHUFFLE_RATIO)
+tl_i = [float(_re.search(r'textLength="([\d.]+)"', a).group(1)) for fs, a, c in shuf
+        if c == "イ合" and "textLength" in a]
+assert tl_i == [sh * 1.2], (shuf, tl_i)
+print("OK membres composites d'accord/shuffle condensés à leur fs réelle (CONDENSE_W × small/sh)")
+
+# --- 7d. Taux kuubanchi/straddle/accord/shuffle (2026-11-23) : constantes séparées, alignées ----
+assert k.KUUBANCHI_RATIO == k.STRADDLE_RATIO and k.CHORD_RATIO == k.SHUFFLE_RATIO
+assert k.STRADDLE_RATIO == 0.713 and k.SHUFFLE_RATIO == 0.8
+# kuubanchi seul : fs * KUUBANCHI_RATIO ; sur un straddle : les taux se multiplient
+els_s = _els("合s")
+assert els_s[0][0] == str(int(22 * k.KUUBANCHI_RATIO)), els_s
+els_bs = _els("合/尺s")   # s s'applique au straddle ; effective_fs (main) inclut déjà s
+main_fs = [fs for fs, a, c in els_bs if c == "合"][0]
+strad_fs = [fs for fs, a, c in els_bs if c == "尺"][0]
+assert float(main_fs) == int(22 * k.KUUBANCHI_RATIO), els_bs
+assert float(strad_fs) == int(int(22 * k.KUUBANCHI_RATIO) * k.STRADDLE_RATIO), els_bs  # multiplication
+print("OK taux : KUUBANCHI_RATIO=STRADDLE_RATIO=%.3f, CHORD_RATIO=SHUFFLE_RATIO=%.2f ; kuubanchi×straddle multipliés" % (k.STRADDLE_RATIO, k.SHUFFLE_RATIO))
+
+# --- 7e. Marques ancrées au coin du token / au bas de la case (retours visuels PR #98) ---
+# Altération sur composite (ex. ロ尺♭, 下八♭) : la marque est ancrée au BORD DROIT
+# du token condensé (text_w), ancre middle — plus centrée sur la case (avant : ancre start en cx).
+# Même y qu'une altération sur note simple ; x proche de celui de 合♯ (note seule), clampé dans la case.
+_cx, _cy, _fs, _cw, _ch = 42, 29, 22, 52, 58
+_ro_shi = chr(0x30ED) + SHI          # ロ尺 (position haute reconnue)
+_ge_hachi = chr(0x4E0B) + chr(0x516B)  # 下八
+for tok in (_ro_shi + FLAT, _ge_hachi + FLAT):
+    out = []
+    k.render_cell(out, tok, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch,
+                  opts={"shaku_circled": False, "shaku_sharp": True})
+    m = _re.search(r'<text x="([\d.-]+)" y="([\d.-]+)" text-anchor="(\w+)"[^>]*font-size="(\d+)"[^>]*>' + FLAT + r'</text>', "".join(out))
+    x, y, anc, tfs = float(m.group(1)), float(m.group(2)), m.group(3), int(m.group(4))
+    tw = _fs * k.CONDENSE_W[2]                     # largeur du token condensé
+    dx = k.TECHNIQUE_SUFFIXES[FLAT]["dx"]
+    exp_x = min(_cx + tw / 2 + _fs * (dx - 0.5), _cx + _cw / 2 - tfs / 2)  # bord droit, clampé
+    assert anc == "middle" and abs(x - exp_x) < 1e-9, (tok, x, exp_x)
+    assert x > _cx + tw / 2, (tok, x)               # à droite du bord droit du token
+out = []
+k.render_cell(out, f"{chr(0x5408)}{SHARP}", _cx, _cy, _fs, opts={"shaku_sharp": True})
+m_s = _re.search(r'<text x="([\d.-]+)" y="([\d.-]+)"[^>]*>' + SHARP + r'</text>', "".join(out))
+x_simple, y_simple = float(m_s.group(1)), float(m_s.group(2))
+assert abs(y - y_simple) < 1e-9 and abs(x - x_simple) < _fs * 0.2, (x, x_simple, y, y_simple)
+# aki-utu 'v' : ancre 'cell-bottom' -> ty = bas de case - note_fs*drop (presque au bas de la case)
+for tok in (_ge_hachi + "v", f"{chr(0x5408)}v", f"{chr(0x5408)}/{SHI}v"):  # composite / note / straddle
+    out = []
+    k.render_cell(out, tok, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch, opts={})
+    m = _re.search(r'<text x="([\d.-]+)" y="([\d.-]+)"[^>]*>\u2228</text>|<text x="([\d.-]+)" y="([\d.-]+)"[^>]*>' + chr(0x2228) + r'</text>', "".join(out))
+    xv, yv = (float(m.group(1)), float(m.group(2))) if m.group(1) else (float(m.group(3)), float(m.group(4)))
+    note_fs = _fs
+    if "/" in tok:
+        note_fs = int(int(_fs * k.KUUBANCHI_RATIO) * k.STRADDLE_RATIO) if "s" in tok else int(_fs * k.STRADDLE_RATIO)
+    exp_y = _cy + _ch / 2 - note_fs * k.TECHNIQUE_SUFFIXES["v"]["drop"]
+    assert abs(yv - exp_y) < 1e-9, (tok, yv, exp_y)   # bas de case = _cy + _ch/2 = 58
+    assert yv > _cy + _ch / 2 - note_fs * 0.2          # presque touchant le bas
+print("OK marques au coin du token (altération composite = coin haut-droit comme note simple) ; aki-utu v ancré au bas de la case")
+
+# --- 7f. Centrage vertical relatif (retour visuel PR #98, horizontal) : baseline = cy + 0,318 x fs RÉELLE ---
+# kuubanchi / shuffle / straddle : le glyphe est centré sur SA propre fs, pas sur la fs de case (ratio 1,0)
+def _note_y(tok, orient="h"):
+    out = []
+    k.render_cell(out, tok, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch, orient=orient, opts={})
+    m = _re.search(r'<text x="[\d.-]+" y="([\d.-]+)"[^>]*font-size="([\d.]+)"[^>]*>[^<]*</text>', "".join(out))
+    return float(m.group(1)), float(m.group(2))
+y_full, fs_full = _note_y(chr(0x5408))
+assert abs(y_full - (_cy + _fs * 0.318)) < 1e-9 and fs_full == _fs
+y_s, fs_s = _note_y(chr(0x5408) + "s")                       # kuubanchi
+efs = int(_fs * k.KUUBANCHI_RATIO)
+assert fs_s == efs and abs(y_s - (_cy + efs * 0.318)) < 1e-9, (y_s, fs_s)
+y_sh, fs_sh = _note_y(chr(0x30A4) + chr(0x5408) + ":" + SHI)  # shuffle horizontal
+sh = min(_fs * k.SHUFFLE_RATIO, _cw / 2.9)
+assert abs(fs_sh - sh) < 1e-9 and abs(y_sh - (_cy + sh * 0.318)) < 1e-9, (y_sh, fs_sh)
+out = []
+k.render_cell(out, chr(0x5408) + "/" + SHI, _cx, _cy, _fs, cell_w=_cw, cell_h=_ch, orient="h", opts={})
+m = _re.search(r'<text x="[\d.-]+" y="([\d.-]+)"[^>]*font-size="([\d.]+)"[^>]*>' + SHI + r'</text>', "".join(out))
+y_st, fs_st = float(m.group(1)), float(m.group(2))         # straddle horizontal (note à cheval)
+ss = int(_fs * k.STRADDLE_RATIO)
+assert fs_st == ss and abs(y_st - (_cy + ss * 0.318)) < 1e-9, (y_st, fs_st)
+print("OK centrage vertical relatif : baseline = cy + 0,318 x fs réelle (kuubanchi/shuffle/straddle centrés sur la case en horizontal)")
+
+
+
 
 # --- 8. Unités : paire à cheval seule, cellule terminale impaire -------------
 dan = [{"note": ""}, {"note": chr(0xE000), "isSmall": True},

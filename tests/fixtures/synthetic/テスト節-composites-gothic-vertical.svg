@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="312" height="758" viewBox="0 0 312 758">
+<rect width="100%" height="100%" fill="white"/>
+<rect x="172" y="56" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="114" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="172" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="230" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="288" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="346" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="404" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="462" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="520" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="578" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="636" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="172" y="694" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="224" y="56" width="26" height="696" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="56" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="114" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="172" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="230" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="288" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="346" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="404" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="462" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="520" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="578" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="636" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="94" y="694" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="146" y="56" width="26" height="696" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="56" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="114" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="172" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="230" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="288" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="346" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="404" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="462" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="520" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="578" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="636" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="16" y="694" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<rect x="68" y="56" width="26" height="696" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
+<g class="repeat-arrow" fill="none" stroke="#bbbbbb" stroke-width="0.75">
+<path d="M 224 589.6 L 241.16 589.6 L 241.16 606.76"/>
+<polygon points="235.44,606.76 246.88,606.76 241.16,616.667"/>
+</g>
+<g class="repeat-arrow" fill="none" stroke="#bbbbbb" stroke-width="0.75">
+<path d="M 68 740.4 L 85.16 740.4 L 85.16 723.24"/>
+<polygon points="79.44,723.24 90.88,723.24 85.16,713.333"/>
+</g>
+<text x="184.8" y="91.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ合</text>
+<text x="184.8" y="149.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">ロ合</text>
+<text x="184.8" y="207.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ尺</text>
+<text x="184.8" y="265.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">ロ尺</text>
+<text x="184.8" y="323.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">下老</text>
+<text x="184.8" y="381.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">下八</text>
+<circle cx="198.0" cy="433.0" r="13.915" fill="none" stroke="black" stroke-width="1"/>
+<text x="198.0" y="439.996" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black">尺</text>
+<circle cx="198.0" cy="491.0" r="13.915" fill="none" stroke="black" stroke-width="1"/>
+<text x="198.0" y="497.996" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black">尺</text>
+<text x="198.0" y="555.996" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black">尺</text>
+<text x="217.14" y="551.596" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="11" fill="black">♯</text>
+<text x="184.8" y="671.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ中</text>
+<text x="184.8" y="729.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">ロ老</text>
+<text x="120.0" y="81.64666666666668" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17" fill="black">合</text>
+<text x="120.0" y="99.68666666666668" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17" fill="black">尺</text>
+<text x="111.0" y="147.77" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="15" fill="black" textLength="18.0" lengthAdjust="spacingAndGlyphs">イ合</text>
+<text x="106.8" y="207.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ合</text>
+<text x="131.5" y="206.01600000000002" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="29" fill="black">｀</text>
+<text x="106.8" y="265.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ尺</text>
+<text x="132.3926" y="256.316" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black">⌝</text>
+<text x="106.8" y="323.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">下老</text>
+<text x="105.26" y="343.36" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="19" fill="black">∨</text>
+<circle cx="120.0" cy="375.0" r="13.915" fill="none" stroke="black" stroke-width="1"/>
+<text x="120.0" y="381.996" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black">尺</text>
+<text x="107.46000000000001" y="391.676" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="24" fill="black">⌞</text>
+<text x="100.2" y="439.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="39.6" lengthAdjust="spacingAndGlyphs">イ下尺</text>
+<text x="131.5" y="438.01599999999996" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="29" fill="black">｀</text>
+<text x="106.8" y="497.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">ロ尺</text>
+<text x="140.5" y="493.596" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="11" fill="black">♭</text>
+<text x="120.0" y="555.996" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black">合</text>
+<text x="139.14" y="551.596" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="11" fill="black">♯</text>
+<text x="106.8" y="613.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">下老</text>
+<text x="102.66666666666667" y="612.088" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="16" fill="black">㊀</text>
+<text x="106.8" y="671.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ五</text>
+<text x="106.8" y="729.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">ロ五</text>
+<text x="28.8" y="91.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ合</text>
+<text x="28.8" y="149.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ合</text>
+<text x="42" y="195.088" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17.6" fill="black" textLength="21.12" lengthAdjust="spacingAndGlyphs">イ合</text>
+<text x="42" y="220.288" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17.6" fill="black">尺</text>
+<text x="42.0" y="246.62666666666667" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17" fill="black">合</text>
+<text x="42.0" y="264.6666666666667" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17" fill="black">乙</text>
+<text x="42.0" y="282.7066666666667" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17" fill="black">老</text>
+<text x="22.2" y="323.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="39.6" lengthAdjust="spacingAndGlyphs">イ下尺</text>
+<text x="57.0" y="314.316" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black">⌝</text>
+<text x="28.8" y="381.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">ロ老</text>
+<text x="53.5" y="382.436" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="29" fill="black">゜</text>
+<circle cx="42.0" cy="433.0" r="13.915" fill="none" stroke="black" stroke-width="1"/>
+<text x="42.0" y="439.996" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black">尺</text>
+<text x="24.666666666666668" y="438.088" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="16" fill="black">㊀</text>
+<text x="42.0" y="487.6466666666667" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17" fill="black">尺</text>
+<text x="42.0" y="505.6866666666667" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="17" fill="black" textLength="20.4" lengthAdjust="spacingAndGlyphs">ロ合</text>
+<text x="28.8" y="555.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">下八</text>
+<text x="62.5" y="551.596" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="11" fill="black">♭</text>
+<text x="28.8" y="613.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ老</text>
+<text x="28.8" y="671.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">ロ中</text>
+<text x="60.72" y="203.862" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="9" fill="black">○</text>
+<text x="60.72" y="319.862" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="9" fill="black">□</text>
+<text x="278 278 278 278 278 278 278 278 278 278 278 278 278 278" y="76 106 136 166 226 256 286 316 346 376 406 436 466 496" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="26" fill="black">テスト節composites</text>
+<text x="278 278 278" y="541 563 585" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="15" fill="#555">本字子</text>
+</svg>

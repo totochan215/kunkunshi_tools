@@ -157,6 +157,10 @@ FULLWIDTH_MAP = {
     '＝': '=',    # accord (variante pleine chasse de = ; + reste canonique)
     '（': '(',    # koe-dashi 声だし
     '）': ')',    # koe-kiri 声切り
+    # Jamais de 尻 (U+5C3B) ni de 尖 (U+5C16) en KKML : le kandokoro shaku
+    # s'écrit 尺 U+5C3A (confusions fréquentes 尻/尖/尺) — alias normalisés ici.
+    '尻': '尺',
+    '尖': '尺',
 }
 
 # Variantes de saisie de la case vide : uniquement en token ISOLÉ.
@@ -263,8 +267,12 @@ TECHNIQUE_SUFFIXES = {
     # reproduire +3 pt a ss=18 -> dy = (26*-0.42 + 3)/18 = -0.44 (maintenant x note_fs).
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
           'scale': 0.91, 'dx': 0.4633, 'dy': -0.44},
-    'v': {'name': 'aki-utu',   'type': 'char',   'symbol': 'V',  'pos': 'bottom-left',
-          'dx': 0.57, 'dy': 0.44},
+    # aki-utu : chevron ∨ U+2228 (sans serif ; le V en porterait), scale 0,80
+    # (test visuel PR #98). Ancrage 'cell-bottom' (retour visuel PR #98) : le chevron
+    # descend jusqu'au bas de la case (ty = bas_case − note_fs*drop), il ne flotte
+    # plus au milieu de la case.
+    'v': {'name': 'aki-utu',   'type': 'char',   'symbol': '\u2228', 'pos': 'bottom-left',
+          'dx': 0.57, 'anchor': 'cell-bottom', 'drop': 0.12, 'scale': 0.80},
     # kachi-utu : ⌞ (U+231E, coin bas-gauche), pendant du ⌝ (kaki-utu).
     # Calibrage Inkscape nov. 2026 (2e tour, glyphe ⌞) : le coin se place
     # au contact du bas-gauche du kanji, PAS au coin de la case.
@@ -283,23 +291,28 @@ TECHNIQUE_SUFFIXES = {
     # Doigtés (yubii) : suffixes ㊀-㊃ (U+3280-U+3283) apposés à la note dans
     # ::tab (ex. 合㊀), JAMAIS des positions autonomes (confusion avec le
     # silence ◯). Portama : champ cell.yubii 1-4 (PUA U+E041-E044).
-    # Calibrage PDF Portama (テスト節.pdf, paysage) : glyphe à GAUCHE de la
-    # note dans la case, même baseline, fs ≈ 0,735 × fs note (12,5/17),
-    # dx ≈ 0,91 × note_fs, ancre middle.
+    # Position (retour visuel PR #98) : fs ≈ 0,735 × fs note (12,5/17, calibrage
+    # PDF Portama). Layouts VERTICAUX ('pos': 'left-third') : centre du 1er tiers
+    # GAUCHE de la case (tx = cx − cell_w/3), ancré verticalement sur la CENTERLINE
+    # de la note porteuse ('anchor': 'note-center') — plusieurs notes par case
+    # (main + straddle). Layout HORIZONTAL ('pos_h': 'bottom-third') : tiers
+    # INFÉRIEUR de la case, sur la centerline de la note (tx = cx). Tuto : non
+    # affichés (opts 'render_yubii' off — collision avec la ligne vocale).
+    # Ajustements ultérieurs prévus (roadmap).
     '㊀': {'name': 'yubii 1 (index 人差指)',   'type': 'char', 'symbol': '㊀',
-          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+          'pos': 'left-third', 'pos_h': 'bottom-third', 'anchor': 'note-center', 'scale': 0.67},
     '㊁': {'name': 'yubii 2 (majeur 中指)',  'type': 'char', 'symbol': '㊁',
-          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+          'pos': 'left-third', 'pos_h': 'bottom-third', 'anchor': 'note-center', 'scale': 0.67},
     '㊂': {'name': 'yubii 3 (non précisé 無名指)', 'type': 'char', 'symbol': '㊂',
-          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+          'pos': 'left-third', 'pos_h': 'bottom-third', 'anchor': 'note-center', 'scale': 0.67},
     '㊃': {'name': 'yubii 4 (auriculaire 小指)', 'type': 'char', 'symbol': '㊃',
-          'pos': 'left', 'dx': 0.91, 'dy': 0.05, 'scale': 0.67},
+          'pos': 'left-third', 'pos_h': 'bottom-third', 'anchor': 'note-center', 'scale': 0.67},
 
     # Altérations en suffixe sur TOUTE note (ex. 合♯, 合♭) — Portama acc sharp/flat.
     # ASCII `#` → ♯ via FULLWIDTH_MAP ; `b` → ♭ via _normalize_tab_token.
     # Calibrage PDF Portama (テスト節.pdf) : marque en haut-droite de la note, fs ≈ 0,53 × fs
-    # note (9/17), dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs. `尺♯` n'est PAS décomposé
-    # (cas spécial plus bas, option @shaku_sharp).
+    # note (9/17), dx ≈ +0,87 × note_fs, baseline ≈ −0,2 × fs. Au rendu, `尺♯` est
+    # décomposé comme toute altération (render_cell : @shaku_sharp masque le ♯).
     '♯': {'name': 'dièse (altération)', 'type': 'char', 'symbol': '♯',
           'pos': 'top-right', 'dx': 0.87, 'dy': -0.2, 'scale': 0.48},
     '♭': {'name': 'bémol (altération)', 'type': 'char', 'symbol': '♭',
@@ -314,6 +327,28 @@ HIGH_PREFIX_RO = "ロ"  # ro- / ko- 同音・別弦
 HIGH_POS_KANJI = {"合", "乙", "老", "四", "上", "尺", "工", "五", "中"}
 # Tokens valides : イ+kanji et ロ+kanji. On autorise tout préfixe 1-char + kanji.
 HIGH_PREFIXES = {HIGH_PREFIX_I, HIGH_PREFIX_RO}
+# Condensation des positions étendues (composites) : textLength en fraction de fs selon
+# le nombre de caractères — règle UNIQUE pour tous les préfixes (下, イ, ロ) :
+CONDENSE_W = {2: 1.2, 3: 1.8}  # 2 car. -> 120% de fs, 3 car. -> 180% (calibrage Inkscape nov. 2026)
+
+# Taux de r\u00e9duction de taille (fractions de fs) \u2014 constantes S\u00c9PAR\u00c9ES mais align\u00e9es
+# deux \u00e0 deux (d\u00e9cision 2026-11-23) : kuubanchi sur straddle, accord sur shuffle.
+# Si un kuubanchi tombe sur un straddle, les taux se MULTIPLIENT
+# (ss = int(int(fs*KUUBANCHI_RATIO) * STRADDLE_RATIO)).
+STRADDLE_RATIO = 0.713            # note \u00e0 cheval (croche A/B)
+KUUBANCHI_RATIO = STRADDLE_RATIO  # kuubanchi (s) align\u00e9 sur le straddle
+SHUFFLE_RATIO = 0.8               # shuffle (A:B)
+CHORD_RATIO = SHUFFLE_RATIO       # accord (A=B, A-B, A+B) align\u00e9 sur le shuffle
+
+
+def _condensed_attrs(tok, fs):
+    """Attributs textLength pour un membre COMPOSITE d'accord/shuffle : condensé via
+    CONDENSE_W à sa fs RÉELLE (réduite : 72% en accord, 80%/60% en shuffle), pas à la fs
+    de case. Token simple (1 car.) : aucun attribut."""
+    if len(tok) > 1:
+        return (f' textLength="{fs * CONDENSE_W.get(min(len(tok), 3), 1.8):g}"'
+                f' lengthAdjust="spacingAndGlyphs"')
+    return ''
 
 TECHNIQUE_CHARS = set(TECHNIQUE_SUFFIXES.keys())
 
@@ -1049,6 +1084,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
         'lyrics_size': song.meta.get('lyrics_size', 'medium'),
         'kinsoku': kinsoku,
         'render_koe': layout != "tuto",  # tuto : pas de symboles ○/□ (koedashi/koekiri)
+        'render_yubii': layout != "tuto",  # tuto : pas de yubii (collision avec la ligne vocale)
         'font_family': FONT_STYLES.get(
             song.meta.get('font_style', 'mincho'), FONT_STYLE_MINCHO),
     }
@@ -2682,8 +2718,8 @@ def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient
     première case — supérieur en vertical, gauche en horizontal (miroir du
     straddle A/B par rapport au centre de la case). cy_edge = bord concerné
     (haut de la case en vertical, haut de la rangée en horizontal)."""
-    ss = int(fs * 0.713)
-    ss_pos = int(fs * 0.713)
+    ss = int(fs * STRADDLE_RATIO)
+    ss_pos = int(fs * STRADDLE_RATIO)
     if orient == "h":
         x = cx - cell_w * 0.5
         y = cy_edge + cell_h / 2 + ss * 0.318
@@ -2693,7 +2729,7 @@ def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient
         # (miroir exact du straddle normal : bord_inf + ss_pos/3)
         x = cx
         y = cy_edge + ss_pos / 3
-    if note == "尖" and opts and opts.get('shaku_circled'):
+    if note == "尺" and opts and opts.get('shaku_circled'):
         r = ss * 0.713
         ccy = y - ss * 0.35 if orient == "v" else cy_edge + cell_h / 2 + 2
         out.append(f'<circle cx="{x}" cy="{ccy}" r="{r}" '
@@ -3980,52 +4016,75 @@ def _mega_meta_column(out, song, title, tuning, TITLE_W, TITLE_SPACING,
 # --------------------------------------------------------------------------- #
 # Helpers
 # --------------------------------------------------------------------------- #
-def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None):
+def _tech_char_pos(tech, cx, base_y, fs, note_fs, text_w=None, cell_h=None,
+                   cell_cy=None, cell_w=None, orient="v"):
     """Position (tx, ty, anchor) d'une marque de technique de type 'char'.
 
     base_y  : baseline de la note porteuse.
     note_fs : taille (font-size) de la note porteuse — pleine, petite
               (croche à cheval) ou réduite ('s'). Taille du glyphe ET tous les
-              offsets (dx, dy, drop, retrait 0,34) sont des fractions de note_fs :
-              la marque reste collée au coin du kanji quelle que soit sa taille,
-              de manière homogène entre les mises en page.
+              offsets (dx, dy, drop) sont des fractions de note_fs.
+    text_w  : largeur rendue du token (textLength) ; défaut note_fs (caractère
+              plein chasse). L'ancrage horizontal est le MÊME pour une note seule
+              et pour un composite condensé (coin du token rendu).
+    cell_w / cell_h / cell_cy : géométrie de la case (cell_cy = centre réel de la
+              case, utile quand base_y est celui d'une note à cheval).
+    orient  : 'v' (layouts verticaux) ou 'h' (horizontal/tuto) ; une marque peut
+              définir 'pos_h' pour sa position en horizontal.
 
     Vertical (ty) :
-      - 'anchor': 'note-top' (uchi-utu) : ty = sommet de la note + note_fs*drop,
-        la marque chevauche le coin haut-droit du kanji ;
+      - 'anchor': 'note-top' (uchi-utu) : ty = sommet de la note + note_fs*drop ;
+      - 'anchor': 'cell-bottom' (aki-utu) : ty = bas de la case − note_fs*drop ;
+      - 'anchor': 'note-center' (yubii) : ty = centerline de la note + 0,318*mark_fs,
+        soit base_y − 0,318*note_fs + 0,318*mark_fs (mark_fs = fs du glyphe) ;
       - sinon : ty = base_y + note_fs*dy (dy propre à chaque marque).
 
     Horizontal (tx) :
-      - texte mono-caractère : tx = cx ± note_fs*dx, ancre middle ;
-      - token multi-caractères (text_w) : top-right → ancre start en cx
-        (la marque surplombe le caractère de DROITE du token) ;
-        bottom-left → ancre end en cx - note_fs*0.34 (léger retrait à gauche
-        du token).
+      - 'left-third' (yubii, layouts verticaux) : centre du 1er tiers GAUCHE de la
+        case, tx = cx − cell_w/3, ancre middle (indépendant du token) ;
+      - 'bottom-third' (yubii, layout horizontal via 'pos_h') : tiers INFÉRIEUR de la
+        case, sur la centerline de la note : tx = cx, ancre middle, et
+        ty = cy + cell_h/3 + 0,318*mark_fs (centre du tiers inférieur) ;
+      - sinon : coin du token rendu, tx = cx ± (text_w/2 + note_fs*(dx − 0,5)),
+        ancre middle (top-right = bord droit, bottom-left = bord gauche).
     """
     dx = tech.get('dx', 0.22)
     dy = tech.get('dy', 0.05)
-    top = tech['pos'] == 'top-right'
-    if tech.get('anchor') == 'note-top':
+    scale = tech.get('scale', 1.0)
+    mark_fs = int(note_fs * 1.1 * scale)
+    pos = tech.get('pos_h') if (orient == "h" and tech.get('pos_h')) else tech['pos']
+    top = pos == 'top-right'
+    cy = cell_cy if cell_cy is not None else base_y - fs * 0.318
+    anchor_kind = tech.get('anchor')
+    if anchor_kind == 'note-top':
         ty = base_y - note_fs + note_fs * tech['drop']
+    elif anchor_kind == 'cell-bottom' and cell_h is not None:
+        ty = cy + cell_h / 2 - note_fs * tech.get('drop', 0.1)
+    elif anchor_kind == 'note-center':
+        ty = base_y - 0.318 * note_fs + 0.318 * mark_fs
     else:
         ty = base_y + note_fs * dy
-    if text_w is None:
-        tx = cx + note_fs * dx if top else cx - note_fs * dx
+    if pos == 'left-third':
+        tx = cx - cell_w / 3
+        anchor = "middle"
+    elif pos == 'bottom-third':
+        tx = cx
+        if cell_h is not None:
+            ty = cy + cell_h / 3 + 0.318 * mark_fs
         anchor = "middle"
     else:
+        if text_w is None:
+            text_w = note_fs
         if top:
-            tx = cx
-            anchor = "start"
+            tx = cx + text_w / 2 + note_fs * (dx - 0.5)
         else:
-            # bottom-left multi-caractères : ancre end, léger retrait à
-            # gauche du token (calibrage ⌞ nov. 2026 : cx − 0,34·note_fs)
-            tx = cx - note_fs * 0.34
-            anchor = "end"
+            tx = cx - text_w / 2 - note_fs * (dx - 0.5)
+        anchor = "middle"
     return tx, ty, anchor
 
 
 def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
-                       tech_map=None, note_fs=None):
+                       tech_map=None, note_fs=None, cell_cy=None, orient="v"):
     """Dessine les marques de technique (souhou) autour de la cellule.
 
     Les marques de type 'char' sont rendues dans la même police (serif) et la
@@ -4063,8 +4122,18 @@ def _render_techniques(out, suffixes, cx, cy, cell_w, cell_h, fs, text_w=None,
                            f'font-size="{int(fs * scale)}" '
                            f'fill="black">{escape(sym)}</text>')
                 continue
+            tpos = tech.get('pos_h') if (orient == "h" and tech.get('pos_h')) else tech['pos']
             tx, ty, anchor = _tech_char_pos(tech, cx, base_y, fs, note_fs,
-                                             text_w=text_w)
+                                             text_w=text_w, cell_h=cell_h,
+                                             cell_cy=cell_cy if cell_cy is not None else cy,
+                                             cell_w=cell_w, orient=orient)
+            if text_w is not None and tpos in ('top-right', 'bottom-left'):
+                # token condensé (composite) : la marque reste DANS la case
+                half = tech_fs / 2
+                if tpos == 'top-right':
+                    tx = min(tx, cx + cell_w / 2 - half)
+                else:
+                    tx = max(tx, cx - cell_w / 2 + half)
             if rotate:
                 anchor = {"start": "end", "end": "start",
                           "middle": "middle"}[anchor]
@@ -4327,9 +4396,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     ni le centrage ni la taille de la note (sauf 's' qui réduit la taille).
 
     Positions étendues :
-      尺♯       → rendu en 尺♯ si @shaku_sharp on (défaut), sinon 尺 simple ; jamais entouré
+      尺♯       → décomposé au rendu (note 尺 + marque ♯ standard) ; @shaku_sharp off
+               masque le ♯ (rendu en 尺 simple) ; jamais entouré par @shaku_circled
       下尺      → 尺 entouré d'un cercle
-      下老      → deux caractères condensés en demi-largeur
+      下老      → deux caractères condensés via textLength (CONDENSE_W)
       下八      → deux caractères condensés (patron 下老, sans cercle)
       イ下尺    → position haute イ + 下尺, 3 caractères condensés (large), sans cercle
 
@@ -4347,9 +4417,11 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     if opts is None:
         opts = {}
     tmap = _avg_tech_map()  # copie des positions propres à chaque marque
-    def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None, note_fs=None):
+    def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None, note_fs=None,
+            cell_cy=None):
         _render_techniques(out, suffixes, cx, cy, cw, ch, fs, text_w=text_w,
-                           tech_map=tmap, note_fs=note_fs)
+                           tech_map=tmap, note_fs=note_fs, cell_cy=cell_cy,
+                           orient=orient)
 
     if tok in (EMPTY_TOKEN, "", None):
         return
@@ -4391,10 +4463,16 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     # on ne touche PAS à base_tok ici — la branche shuffle gère ':' quelle que
     # soit sa position, et la note garde sa taille pleine (effective_fs = fs).
     tech_suffixes = []
-    # `尺♯` n'est pas décomposé : cas spécial géré plus bas (option @shaku_sharp)
-    while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS and base_tok != "尺♯":
+    # Le token 尺♯ reste indivisible au FORMAT, mais il est décomposé au RENDU comme
+    # toute note altérée : la note 尺 garde sa position et sa taille, le ♯ est la marque
+    # d'altération standard (haut-droite). Sémantique conservée : @shaku_sharp off masque le ♯
+    # (rendu en 尺 simple) ; un shaku altéré n'est JAMAIS cerclé par @shaku_circled.
+    while len(base_tok) > 1 and base_tok[-1] in TECHNIQUE_CHARS:
         tech_suffixes.insert(0, base_tok[-1])
         base_tok = base_tok[:-1]
+    shaku_sharp = base_tok == "尺" and "♯" in tech_suffixes
+    if shaku_sharp and not opts.get("shaku_sharp", False):
+        tech_suffixes = [t for t in tech_suffixes if t != "♯"]
     # Doigtés (yubii) : un token composé UNIQUEMENT de ㊀-㊃ n'est pas une
     # note (les ㊀-㊃ ne sont jamais des positions autonomes : confusion avec
     # le silence ◯) — avertissement, rien n'est rendu.
@@ -4406,6 +4484,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # koekiri non affiché (ex. layout tuto) : on garde l'interprétation
         # mais on ne rend pas le symbole □
         tech_suffixes = [s for s in tech_suffixes if s != ')']
+    if not opts.get('render_yubii', True):
+        # yubii non affichés (ex. layout tuto : collision avec les vocals)
+        tech_suffixes = [s for s in tech_suffixes if s not in YUBII_CHARS]
 
     # Bornes de chant (声だし/声切り) sur un repos ◯ : légitime, PAS
     # d'avertissement. Les bornes s'adressent à la VOIX, et la ligne
@@ -4423,15 +4504,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'font-size="{int(fs * 0.42)}" fill="black">○</text>')
 
     is_small = 's' in tech_suffixes
-    effective_fs = int(fs * 0.67) if is_small else fs
-
-    # 尺♯ — jamais entouré
-    if base_tok == "尺♯":
-        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
-                  f'font-family="serif" font-size="{effective_fs}" '
-                  f'fill="black">{_note_svg(base_tok, effective_fs, opts)}</text>')
-        _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
-        return
+    effective_fs = int(fs * KUUBANCHI_RATIO) if is_small else fs
+    # Centrage vertical relatif (retour visuel PR #98) : la baseline d'un glyphe
+    # est cy + 0,318 × SA PROPRE fs (effective_fs / sh / ss), pas cy + 0,318 × fs
+    # de case — sinon kuubanchi/shuffle/straddle seraient trop bas quand la fs diminue.
 
     # 下尺 → 尺 entouré d'un cercle
     if base_tok == "下尺":
@@ -4440,55 +4516,54 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # centre = baseline − fs·0.318 = cy ; l'ancien cy+2 décentrait vers le bas)
         out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                    f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape("尺")}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
-    # 下老 → deux caractères condensés en demi-largeur via textLength
+    # 下老 → deux caractères condensés via textLength (règle CONDENSE_W, comme toute position étendue)
     if base_tok == "下老":
-        target_w = effective_fs * 1.0
-        y_text = cy + fs * 0.318
+        target_w = effective_fs * CONDENSE_W[2]
+        y_text = cy + effective_fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下老")}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
-                           effective_fs, text_w=effective_fs * 1.0)
+                           effective_fs, text_w=target_w)
         return
 
     # 下八 → kandokoro propre (女絃 sous 八, octave de 中) : deux caractères
-    # condensés via textLength, même patron que 下老, SANS cercle.
+    # condensés via textLength (règle CONDENSE_W, comme 下老), SANS cercle.
     if base_tok == "下八":
-        target_w = effective_fs * 1.0
-        y_text = cy + fs * 0.318
+        target_w = effective_fs * CONDENSE_W[2]
+        y_text = cy + effective_fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下八")}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
-                           effective_fs, text_w=effective_fs * 1.0)
+                           effective_fs, text_w=target_w)
         return
 
     # Positions hautes : イ尺, ロ五, イ工, etc. (préfixe + kanji condensés)
-    # Deux caractères dans un seul <text> avec textLength à 120% de la largeur
-    # d'un kanji. lengthAdjust="spacingAndGlyphs" compresse légèrement les
-    # glyphes ; à 120% la déformation reste minime et lisible (vs 100% pour 下老).
+    # Deux caractères dans un seul <text> avec textLength selon CONDENSE_W (120% de fs).
+    # lengthAdjust="spacingAndGlyphs" compresse légèrement les glyphes ; la déformation reste minime et lisible.
     if (len(base_tok) == 2
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1] in HIGH_POS_KANJI):
-        target_w = effective_fs * 1.2
-        y_text = cy + fs * 0.318
+        target_w = effective_fs * CONDENSE_W[2]
+        y_text = cy + effective_fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape(base_tok)}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
-                           effective_fs, text_w=effective_fs * 1.2)
+                           effective_fs, text_w=target_w)
         return
 
     # Position haute 3 caractères : イ下尺 (préfixe + 下尺)
@@ -4498,8 +4573,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     if (len(base_tok) == 3
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1:] == "下尺"):
-        target_w = effective_fs * 1.8
-        y_text = cy + fs * 0.318
+        target_w = effective_fs * CONDENSE_W[3]
+        y_text = cy + effective_fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
@@ -4510,18 +4585,19 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         return
 
     # Accords (jusqu'à 3 notes simultanées) : note+note[+note]
-    # Rendu : caractères empilés verticalement, taille 72%.
+    # Rendu : notes empilées verticalement, taille 72% ; un membre composite est condensé
+    # via CONDENSE_W à cette fs réduite (et non à la fs de case).
     if any(sep in base_tok for sep in ("+", "=", "-")) and len(base_tok) > 1:
         chord_notes = [n for n in re.split(r"[+=\-]", base_tok) if n]
         if len(chord_notes) >= 2:
             n = len(chord_notes)
             step = effective_fs * 0.82
             start = cy - (n - 1) * step / 2
-            small = int(effective_fs * 0.72)
+            small = int(effective_fs * CHORD_RATIO)
             for j, c in enumerate(chord_notes):
                 out.append(f'<text x="{cx}" y="{start + j*step + small/3}" '
                            f'text-anchor="middle" font-family="serif" '
-                           f'font-size="{small}" fill="black">'
+                           f'font-size="{small}" fill="black"{_condensed_attrs(c, small)}>'
                            f'{escape(c)}</text>')
             _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
             return
@@ -4533,16 +4609,19 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
 
         # Extraire les techniques de la note principale (avant le /)
         main_tech = []
-        while len(main_note) > 1 and main_note[-1] in TECHNIQUE_CHARS and main_note != "尺♯":
+        while len(main_note) > 1 and main_note[-1] in TECHNIQUE_CHARS:
             main_tech.insert(0, main_note[-1])
             main_note = main_note[:-1]
+        main_sharp = main_note == "尺" and "♯" in main_tech
+        if main_sharp and not opts.get("shaku_sharp", False):
+            main_tech = [t for t in main_tech if t != "♯"]
 
-        # Cercle autour du SHARP principal si @shaku_circled on
-        if main_note == "尖" and opts.get('shaku_circled'):
+        # Cercle autour du shaku principal si @shaku_circled on (jamais si altéré)
+        if main_note == "尺" and opts.get('shaku_circled') and not main_sharp:
             r = effective_fs * 0.6325
-            out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
+            out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
         # Techniques de la note principale
@@ -4550,8 +4629,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             _rt(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
 
         if straddle_note:
-            ss_pos = int(fs * 0.713)
-            ss = int(effective_fs * 0.713)
+            ss_pos = int(fs * STRADDLE_RATIO)
+            ss = int(effective_fs * STRADDLE_RATIO)
             if orient == "h":
                 # horizontal : la note à cheval chevauche la bordure DROITE (verticale)
                 # le kanji à cheval est CENTRÉ sur la bordure droite (verticale) ;
@@ -4564,8 +4643,10 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                 # vertical : chevauche la bordure INFÉRIEURE (horizontale)
                 straddle_x = cx
                 straddle_y = cy + cell_h * 0.50 + ss_pos / 3
-            # Cercle autour du SHARP à cheval si @shaku_circled on
-            if straddle_note == "尖" and opts.get('shaku_circled'):
+            if straddle_note == "尺" and not opts.get("shaku_sharp", False):
+                tech_suffixes = [t for t in tech_suffixes if t != "♯"]
+            # Cercle autour du shaku à cheval si @shaku_circled on (jamais si altéré)
+            if straddle_note == "尺" and opts.get('shaku_circled') and "♯" not in tech_suffixes:
                 r = ss * 0.713
                 ccx, ccy = (straddle_x, cy + 2) if orient == "h" else (cx, straddle_y - ss * 0.35)
                 out.append(f'<circle cx="{ccx}" cy="{ccy}" r="{r}" '
@@ -4586,7 +4667,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                     # à cheval (taille réelle du kanji porteur)
                     _rt(out, tech_suffixes, cx, straddle_y - fs * 0.318,
                                        cell_w, cell_h, effective_fs,
-                                       note_fs=ss)
+                                       note_fs=ss, cell_cy=cy)
         else:
             # Pas de note à cheval : les techniques s'appliquent à la note principale
             _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
@@ -4602,7 +4683,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             lone = parts[0] or parts[1]
             if lone:
                 out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
-                           f'font-family="serif" font-size="{fs}" fill="black">'
+                           f'font-family="serif" font-size="{fs}" fill="black"{_condensed_attrs(lone, fs)}>'
                            f'{_note_svg(lone, fs, opts)}</text>')
                 _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
                 return
@@ -4615,7 +4696,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             if orient == "h":
                 # horizontal : côte à côte, réparties sur la largeur
                 xs = [cx - fs * 0.42 + i * (fs * 0.84 / (n - 1)) for i in range(n)]
-                ys = [cy + fs * 0.318] * n
+                ys = [cy + sh * 0.318] * n
             else:
                 # vertical : empilées de haut en bas, réparties sur la hauteur
                 ys = [cy - fs * 0.30 + i * (fs * 0.68 / (n - 1)) for i in range(n)]
@@ -4623,7 +4704,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             for xnote, ynote, note in zip(xs, ys, notes):
                 out.append(f'<text x="{xnote:g}" y="{ynote:g}" '
                            f'text-anchor="middle" font-family="serif" '
-                           f'font-size="{sh}" fill="black">'
+                           f'font-size="{sh}" fill="black"{_condensed_attrs(note, sh)}>'
                            f'{_note_svg(note, sh, opts)}</text>')
             _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
             return
@@ -4634,7 +4715,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # Taille : 80% d'une note seule (noire) — nettement plus grand
         # qu'une note à cheval (72%), sans atteindre la taille pleine.
         # Clamp : la case doit tenir 2 glyphes + 3 marges (m ~ 0.45 sh).
-        sh = effective_fs * 0.8
+        sh = effective_fs * SHUFFLE_RATIO
         if orient == "h":
             sh = min(sh, cell_w / 2.9)
         else:
@@ -4648,11 +4729,11 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             # horizontal : deux notes côte à côte, réparties sur la largeur
             # avec des marges égales (bord − m − note − m − note − m − bord).
             if koe:
-                y_main = y_lower = cy + fs * 0.318
+                y_main = y_lower = cy + sh * 0.318
                 x_main = cx
                 x_lower = cx + fs * 0.42 + sh_pos / 3
             else:
-                y_main = y_lower = cy + fs * 0.318
+                y_main = y_lower = cy + sh * 0.318
                 x_left = cx - cell_w / 2
                 m = (cell_w - 2 * sh) / 3
                 x_main = x_left + m + sh / 2
@@ -4660,7 +4741,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         else:
             x_main = x_lower = cx
             if koe:
-                y_main = cy + fs * 0.318
+                y_main = cy + sh * 0.318
                 y_lower = cy + fs * 0.42 + sh_pos / 3
             else:
                 # Distribution verticale à marges égales :
@@ -4672,23 +4753,23 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                 y_lower = cell_top + cell_h - m - sh * 0.12
         out.append(f'<text x="{x_main:g}" y="{y_main:g}" '
                    f'text-anchor="middle" font-family="serif" '
-                   f'font-size="{sh:g}" fill="black">{_note_svg(parts[0], sh, opts)}</text>')
+                   f'font-size="{sh:g}" fill="black"{_condensed_attrs(parts[0], sh)}>{_note_svg(parts[0], sh, opts)}</text>')
         lower = parts[1] if len(parts) > 1 else ""
         if lower:
             out.append(f'<text x="{x_lower:g}" y="{y_lower:g}" '
                        f'text-anchor="middle" font-family="serif" '
-                       f'font-size="{sh:g}" fill="black">'
+                       f'font-size="{sh:g}" fill="black"{_condensed_attrs(lower, sh)}>'
                        f'{_note_svg(lower, sh, opts)}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
     # --- note simple (noire) --- #
     if len(base_tok) == 1:
-        if base_tok == "尺" and opts.get('shaku_circled'):
+        if base_tok == "尺" and opts.get('shaku_circled') and not shaku_sharp:
             r = effective_fs * 0.6325
-            out.append(f'<circle cx="{cx}" cy="{cy+2}" r="{r}" '
+            out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="1"/>')
-        out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
+        out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape(base_tok)}</text>')
     else:
@@ -4698,8 +4779,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # et alerte stderr (une seule fois par token unique).
         _warn_unknown_token(base_tok)
         shown = base_tok[:3]
-        target_w = effective_fs * (1.2 if len(shown) == 2 else 1.8)
-        out.append(f'<text x="{cx - target_w/2}" y="{cy + fs * 0.318}" '
+        target_w = effective_fs * CONDENSE_W[len(shown)]
+        out.append(f'<text x="{cx - target_w/2}" y="{cy + effective_fs * 0.318}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
                    f'lengthAdjust="spacingAndGlyphs">{escape(shown)}</text>')
