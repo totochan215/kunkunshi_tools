@@ -71,7 +71,7 @@
 <rect x="1074.91" y="310.857" width="151.273" height="98.2857" fill="none" stroke="#999999" stroke-width="0.75"/>
 <text x="69.43636363636364" y="371.7660000000001" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="37" fill="black" textLength="44.4" lengthAdjust="spacingAndGlyphs">イ合</text>
 <text x="220.70909090909095" y="371.7660000000001" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="37" fill="black" textLength="44.4" lengthAdjust="spacingAndGlyphs">イ合</text>
-<text x="364.036" y="371.766" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="29.6" fill="black">イ合</text>
+<text x="364.036" y="371.766" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="29.6" fill="black" textLength="35.52" lengthAdjust="spacingAndGlyphs">イ合</text>
 <text x="424.327" y="371.766" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="29.6" fill="black">尺</text>
 <text x="545.4545454545455" y="338.32666666666677" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">合</text>
 <text x="545.4545454545455" y="368.66666666666674" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">乙</text>
@@ -84,7 +84,7 @@
 <text x="999.2727272727274" y="371.7660000000001" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="37" fill="black">尺</text>
 <text x="965.6027272727274" y="373.6160000000001" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="27" fill="black">㊀</text>
 <text x="1150.5454545454547" y="353.4966666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">尺</text>
-<text x="1150.5454545454547" y="383.8366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">ロ合</text>
+<text x="1150.5454545454547" y="383.8366666666667" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" textLength="31.2" lengthAdjust="spacingAndGlyphs">ロ合</text>
 <rect x="16" y="409.143" width="151.273" height="98.2857" fill="none" stroke="#999999" stroke-width="0.75"/>
 <rect x="167.273" y="409.143" width="151.273" height="98.2857" fill="none" stroke="#999999" stroke-width="0.75"/>
 <rect x="318.545" y="409.143" width="151.273" height="98.2857" fill="none" stroke="#999999" stroke-width="0.75"/>

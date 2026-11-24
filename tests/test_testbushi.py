@@ -178,6 +178,25 @@ assert w2 == {22 * 1.2}, w2  # même largeur pour tous les composites à 2 carac
 assert _tl("イ下尺") == 22 * 1.8, _tl("イ下尺")
 print("OK condensation unifiée : 2 car. -> 120% de fs partout (下老/下八/イX/ロX), 3 car. -> 180% (イ下尺)")
 
+# --- 7c. Membres composites d'accords/shuffle condensés à leur fs RÉELLE (2026-11-23) ----
+def _els(tok):
+    out = []
+    k.render_cell(out, tok, 42, 29, 22, opts={"shaku_circled": False, "shaku_sharp": True})
+    return _re.findall(r'<text[^>]*font-size="([\d.]+)"([^>]*)>([^<]*)</text>', "".join(out))
+chord = _els("尺=ロ合")           # accord : membres à 72% de fs
+small = int(22 * 0.72)
+tl_ro = [float(_re.search(r'textLength="([\d.]+)"', a).group(1)) for fs, a, c in chord
+         if c == "ロ合" and "textLength" in a]
+assert tl_ro == [small * 1.2], (chord, tl_ro)   # condensé à la fs réduite, pas à 22
+assert all("textLength" not in a for fs, a, c in chord if c == "尺")  # note simple : pas de TL
+shuf = _els("イ合:尺")            # shuffle 2 notes : membres à 80%
+sh = 22 * 0.8  # le shuffle garde sh en float (effective_fs * 0.8)
+tl_i = [float(_re.search(r'textLength="([\d.]+)"', a).group(1)) for fs, a, c in shuf
+        if c == "イ合" and "textLength" in a]
+assert tl_i == [sh * 1.2], (shuf, tl_i)
+print("OK membres composites d'accord/shuffle condensés à leur fs réelle (CONDENSE_W × small/sh)")
+
+
 
 # --- 8. Unités : paire à cheval seule, cellule terminale impaire -------------
 dan = [{"note": ""}, {"note": chr(0xE000), "isSmall": True},

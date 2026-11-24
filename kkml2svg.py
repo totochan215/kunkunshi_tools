@@ -318,6 +318,16 @@ HIGH_PREFIXES = {HIGH_PREFIX_I, HIGH_PREFIX_RO}
 # le nombre de caractères — règle UNIQUE pour tous les préfixes (下, イ, ロ) :
 CONDENSE_W = {2: 1.2, 3: 1.8}  # 2 car. -> 120% de fs, 3 car. -> 180% (calibrage Inkscape nov. 2026)
 
+
+def _condensed_attrs(tok, fs):
+    """Attributs textLength pour un membre COMPOSITE d'accord/shuffle : condensé via
+    CONDENSE_W à sa fs RÉELLE (réduite : 72% en accord, 80%/60% en shuffle), pas à la fs
+    de case. Token simple (1 car.) : aucun attribut."""
+    if len(tok) > 1:
+        return (f' textLength="{fs * CONDENSE_W.get(min(len(tok), 3), 1.8):g}"'
+                f' lengthAdjust="spacingAndGlyphs"')
+    return ''
+
 TECHNIQUE_CHARS = set(TECHNIQUE_SUFFIXES.keys())
 
 # Caractères de doigté (yubii) : suffixes de note uniquement, jamais des
@@ -4511,7 +4521,8 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         return
 
     # Accords (jusqu'à 3 notes simultanées) : note+note[+note]
-    # Rendu : caractères empilés verticalement, taille 72%.
+    # Rendu : notes empilées verticalement, taille 72% ; un membre composite est condensé
+    # via CONDENSE_W à cette fs réduite (et non à la fs de case).
     if any(sep in base_tok for sep in ("+", "=", "-")) and len(base_tok) > 1:
         chord_notes = [n for n in re.split(r"[+=\-]", base_tok) if n]
         if len(chord_notes) >= 2:
@@ -4522,7 +4533,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             for j, c in enumerate(chord_notes):
                 out.append(f'<text x="{cx}" y="{start + j*step + small/3}" '
                            f'text-anchor="middle" font-family="serif" '
-                           f'font-size="{small}" fill="black">'
+                           f'font-size="{small}" fill="black"{_condensed_attrs(c, small)}>'
                            f'{escape(c)}</text>')
             _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
             return
@@ -4608,7 +4619,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             lone = parts[0] or parts[1]
             if lone:
                 out.append(f'<text x="{cx}" y="{cy + fs * 0.318}" text-anchor="middle" '
-                           f'font-family="serif" font-size="{fs}" fill="black">'
+                           f'font-family="serif" font-size="{fs}" fill="black"{_condensed_attrs(lone, fs)}>'
                            f'{_note_svg(lone, fs, opts)}</text>')
                 _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
                 return
@@ -4629,7 +4640,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             for xnote, ynote, note in zip(xs, ys, notes):
                 out.append(f'<text x="{xnote:g}" y="{ynote:g}" '
                            f'text-anchor="middle" font-family="serif" '
-                           f'font-size="{sh}" fill="black">'
+                           f'font-size="{sh}" fill="black"{_condensed_attrs(note, sh)}>'
                            f'{_note_svg(note, sh, opts)}</text>')
             _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
             return
@@ -4678,12 +4689,12 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                 y_lower = cell_top + cell_h - m - sh * 0.12
         out.append(f'<text x="{x_main:g}" y="{y_main:g}" '
                    f'text-anchor="middle" font-family="serif" '
-                   f'font-size="{sh:g}" fill="black">{_note_svg(parts[0], sh, opts)}</text>')
+                   f'font-size="{sh:g}" fill="black"{_condensed_attrs(parts[0], sh)}>{_note_svg(parts[0], sh, opts)}</text>')
         lower = parts[1] if len(parts) > 1 else ""
         if lower:
             out.append(f'<text x="{x_lower:g}" y="{y_lower:g}" '
                        f'text-anchor="middle" font-family="serif" '
-                       f'font-size="{sh:g}" fill="black">'
+                       f'font-size="{sh:g}" fill="black"{_condensed_attrs(lower, sh)}>'
                        f'{_note_svg(lower, sh, opts)}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
