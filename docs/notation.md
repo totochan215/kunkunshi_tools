@@ -290,7 +290,7 @@ Le format d'une figure encode son rythme :
 
 ### Figure non reconnue
 - Toute figure sans séparateur qui n'est pas une position (simple ou étendue) est non reconnue
-- Rendu dégradé : 3 premiers caractères au maximum, condensés en largeur (patron `イ中` pour 2 caractères, `イ下尺` pour 3)
+- Condensation des positions étendues : règle unique pour tous les préfixes (`下`, `イ`, `ロ`) — 2 caractères : `textLength` 120 % de fs ; 3 caractères : 180 % de fs (`CONDENSE_W` dans kkml2svg.py). Rendu dégradé : 3 premiers caractères au maximum, condensés selon la même règle.
 - Alerte sur stderr à la première occurrence de chaque figure unique
 - Historique : l'ancien « ornement » (empilement vertical de tous les caractères) est déprécié le 19 sept. 2026 — sans sémantique musicale ; les kanji empilés réels sont des croches (`A/B`), du hayabiki (`A:B`) ou des accords (`A+B`)
 

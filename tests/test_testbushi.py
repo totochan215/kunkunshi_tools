@@ -167,6 +167,18 @@ k.render_cell(out, f"合/尺♯", 42, 29, 22, opts={"shaku_circled": True, "shak
 assert "<circle" not in "".join(out), "".join(out)  # shaku à cheval altéré : pas de cercle
 print("OK 尺♯ : décomposé au rendu (note identique à 尺 seul, ♯ = marque standard), masqué avec @shaku_sharp off, jamais cerclé si altéré ; cercles croches OK")
 
+# --- 7b. Condensation unifiée des composites (2026-11-23) : règle CONDENSE_W = {2: 120%, 3: 180%}
+def _tl(tok):
+    out = []
+    k.render_cell(out, tok, 42, 29, 22, opts={"shaku_circled": False, "shaku_sharp": True})
+    m = _re.search(r'textLength="([\d.]+)"', "".join(out))
+    return float(m.group(1)) if m else None
+w2 = {_tl(t) for t in ("下老", "下八", "イ合", "ロ尺")}
+assert w2 == {22 * 1.2}, w2  # même largeur pour tous les composites à 2 caractères (下, イ, ロ)
+assert _tl("イ下尺") == 22 * 1.8, _tl("イ下尺")
+print("OK condensation unifiée : 2 car. -> 120% de fs partout (下老/下八/イX/ロX), 3 car. -> 180% (イ下尺)")
+
+
 # --- 8. Unités : paire à cheval seule, cellule terminale impaire -------------
 dan = [{"note": ""}, {"note": chr(0xE000), "isSmall": True},
         {"note": chr(0xE030)}]  # 3 cellules -> 2 paires, la dernière seule

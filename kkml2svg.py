@@ -314,6 +314,9 @@ HIGH_PREFIX_RO = "ロ"  # ro- / ko- 同音・別弦
 HIGH_POS_KANJI = {"合", "乙", "老", "四", "上", "尺", "工", "五", "中"}
 # Tokens valides : イ+kanji et ロ+kanji. On autorise tout préfixe 1-char + kanji.
 HIGH_PREFIXES = {HIGH_PREFIX_I, HIGH_PREFIX_RO}
+# Condensation des positions étendues (composites) : textLength en fraction de fs selon
+# le nombre de caractères — règle UNIQUE pour tous les préfixes (下, イ, ロ) :
+CONDENSE_W = {2: 1.2, 3: 1.8}  # 2 car. -> 120% de fs, 3 car. -> 180% (calibrage Inkscape nov. 2026)
 
 TECHNIQUE_CHARS = set(TECHNIQUE_SUFFIXES.keys())
 
@@ -4330,7 +4333,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
       尺♯       → décomposé au rendu (note 尺 + marque ♯ standard) ; @shaku_sharp off
                masque le ♯ (rendu en 尺 simple) ; jamais entouré par @shaku_circled
       下尺      → 尺 entouré d'un cercle
-      下老      → deux caractères condensés en demi-largeur
+      下老      → deux caractères condensés via textLength (CONDENSE_W)
       下八      → deux caractères condensés (patron 下老, sans cercle)
       イ下尺    → position haute イ + 下尺, 3 caractères condensés (large), sans cercle
 
@@ -4445,9 +4448,9 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h, effective_fs)
         return
 
-    # 下老 → deux caractères condensés en demi-largeur via textLength
+    # 下老 → deux caractères condensés via textLength (règle CONDENSE_W, comme toute position étendue)
     if base_tok == "下老":
-        target_w = effective_fs * 1.0
+        target_w = effective_fs * CONDENSE_W[2]
         y_text = cy + fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
@@ -4455,13 +4458,13 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下老")}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
-                           effective_fs, text_w=effective_fs * 1.0)
+                           effective_fs, text_w=target_w)
         return
 
     # 下八 → kandokoro propre (女絃 sous 八, octave de 中) : deux caractères
-    # condensés via textLength, même patron que 下老, SANS cercle.
+    # condensés via textLength (règle CONDENSE_W, comme 下老), SANS cercle.
     if base_tok == "下八":
-        target_w = effective_fs * 1.0
+        target_w = effective_fs * CONDENSE_W[2]
         y_text = cy + fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
@@ -4469,17 +4472,16 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape("下八")}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
-                           effective_fs, text_w=effective_fs * 1.0)
+                           effective_fs, text_w=target_w)
         return
 
     # Positions hautes : イ尺, ロ五, イ工, etc. (préfixe + kanji condensés)
-    # Deux caractères dans un seul <text> avec textLength à 120% de la largeur
-    # d'un kanji. lengthAdjust="spacingAndGlyphs" compresse légèrement les
-    # glyphes ; à 120% la déformation reste minime et lisible (vs 100% pour 下老).
+    # Deux caractères dans un seul <text> avec textLength selon CONDENSE_W (120% de fs).
+    # lengthAdjust="spacingAndGlyphs" compresse légèrement les glyphes ; la déformation reste minime et lisible.
     if (len(base_tok) == 2
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1] in HIGH_POS_KANJI):
-        target_w = effective_fs * 1.2
+        target_w = effective_fs * CONDENSE_W[2]
         y_text = cy + fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
@@ -4487,7 +4489,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
                    f'lengthAdjust="spacingAndGlyphs">'
                    f'{escape(base_tok)}</text>')
         _rt(out, tech_suffixes, cx, cy, cell_w, cell_h,
-                           effective_fs, text_w=effective_fs * 1.2)
+                           effective_fs, text_w=target_w)
         return
 
     # Position haute 3 caractères : イ下尺 (préfixe + 下尺)
@@ -4497,7 +4499,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     if (len(base_tok) == 3
             and base_tok[0] in HIGH_PREFIXES
             and base_tok[1:] == "下尺"):
-        target_w = effective_fs * 1.8
+        target_w = effective_fs * CONDENSE_W[3]
         y_text = cy + fs * 0.318
         out.append(f'<text x="{cx - target_w/2}" y="{y_text}" '
                    f'font-family="serif" font-size="{effective_fs}" '
@@ -4702,7 +4704,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # et alerte stderr (une seule fois par token unique).
         _warn_unknown_token(base_tok)
         shown = base_tok[:3]
-        target_w = effective_fs * (1.2 if len(shown) == 2 else 1.8)
+        target_w = effective_fs * CONDENSE_W[len(shown)]
         out.append(f'<text x="{cx - target_w/2}" y="{cy + fs * 0.318}" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black" textLength="{target_w}" '
