@@ -264,7 +264,7 @@ TECHNIQUE_SUFFIXES = {
     '^': {'name': 'kaki-utu',  'type': 'char',   'symbol': '⌝', 'pos': 'top-right',
           'scale': 0.91, 'dx': 0.4633, 'dy': -0.44},
     'v': {'name': 'aki-utu',   'type': 'char',   'symbol': '\u2228', 'pos': 'bottom-left',
-          'dx': 0.57, 'dy': 0.44, 'scale': 0.85},  # chevron un peu réduit (test visuel PR #98)
+          'dx': 0.57, 'dy': 0.44, 'scale': 0.80},  # chevron réduit (test visuel PR #98)
     # kachi-utu : ⌞ (U+231E, coin bas-gauche), pendant du ⌝ (kaki-utu).
     # Calibrage Inkscape nov. 2026 (2e tour, glyphe ⌞) : le coin se place
     # au contact du bas-gauche du kanji, PAS au coin de la case.
