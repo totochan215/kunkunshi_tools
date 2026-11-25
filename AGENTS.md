@@ -46,6 +46,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
     - Mises en page à taille de page FIXE (nomura, chindami, mega, tuto) — blocs de tablature : nombre de blocs, dans/bloc et cellules/dan définis par le layout ; si ça déborde → bloc suivant, sinon page suivante, jusqu'à épuisement des tablatures. Blocs de texte (lyrics) : nombre de blocs et taille physique définis/déduits par le layout ; si le texte déborde → bloc suivant, sinon page suivante.
     - Mises en page SANS taille fixe (vertical, horizontal) — tablature : nb de blocs = 1 → le bloc grandit à mesure qu'on rajoute des dans ; nb = 0 → nouveau bloc quand le max de dans/bloc est atteint. Lyrics : en principe nb = 1 ; on pourrait proposer n = 0 (saut de bloc tous les N lignes, vides comprises, et/ou à une certaine largeur en vertical / hauteur en horizontal).
     - Mènera à définir en KKML des instructions explicites de saut de ligne/colonne/dan, de bloc et de page (aujourd'hui : saut de ligne de `::tab` = nouveau dan, `|` = saut de ligne de couplet en `::lyrics`, `::block`/`::page` = mega uniquement).
+  - ⬜ (2026-11-24) Kunojiten dans `::lyrics` (recueil chindami) : les couplets acceptent des marques de répétition portant sur 4 caractères — syntaxe KKML à définir (ex. `々` étendu), rendu à préciser.
 - ⬜ (2026-11-22) Autres idées utilisateur :
   - ✅ (2026-11-22) `@tuning` remplacé par `@choshi` — fait (voir entrée ✅ de la section 0) : alias `@tuning` accepté au parsing avec info stderr, rectifié en `@choshi` par le cleaner.
   - ✅ (2026-11-22) Numéros de page auto-incrémentés en nomura/chindami/mega — fait (voir entrée ✅ de la section 0) : `–n–`, n = `@page_base` (>= 1) + index de page.
@@ -285,6 +286,9 @@ petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
   - ruby : fs = 0,5 × fs du texte qu'ils précisent ;
   - parties de chanson (cas rare, notion proche de la part des medleys, à affiner) : une colonne d'intertitre placée avant chaque bloc de tablature, fs = 75 % de la fs du titre (idem titre alternatif), centrage vertical sur le bloc de tablature ;
   - lyrics : soit un bloc unique sur toute la hauteur du bloc (unique) de tablature, soit deux blocs de hauteur égale séparés par une gouttière ≈ 0,5 cm.
+  - couplets : acceptent les kunojiten (marques de répétition 々) portant sur 4 caractères ;
+  - une seule couleur, le noir, pour tout ; toutes les lignes sont des filets assez fins ;
+  - flèches de répétition INSTRUMENTALES pleines (remplies), mais disques de répétition VOCALE vides (creux) — aujourd'hui `arrow_fill` (LayoutSpec, surchargeable par @arrow_fill) remplit les deux à la fois : à découpler pour chindami (flèches pleines, disques vocaux creux) ;
 
 Les constantes mesurées (NOMURA_*, CHINDAMI_*) figurent dans le code et
 dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
