@@ -6,8 +6,11 @@ constantes globales META_ORDER et SECTION_KINDS :
 - meta_order = clés de META_ORDER affichées, dans cet ordre (@title et @speed
   restent toujours affichés ; @source/@comment jamais) ;
 - render_sections = types de sections rendus (défaut SECTION_KINDS = toutes ;
-  tuto = ("tab",) : ::lyrics exclu). La ::vocal rattachée à un ::tab voyage
-  dans le 4-uplet du tab : elle reste rendue avec lui ;
+  tuto = ("tab", "vocal") : ::lyrics exclu). La ::vocal rattachée à un ::tab
+  voyage dans le 4-uplet du tab : elle n'est rendue avec lui que si le layout
+  déclare aussi "vocal" (sinon : tab sans vocal) ; l'inverse (vocal sans tab)
+  n'a pas de rendu : une ::vocal sans ::tab n'est jamais dessinée (alignement
+  sur la tablature) ;
 - render_koe / render_yubii = symboles koedashi/koekiri et doigtés rendus
   dans les cases (tuto : off).
 Les rendus par défaut sont inchangés octet par octet (175 rendus vérifiés
@@ -72,7 +75,7 @@ for name in ("vertical", "horizontal"):
     assert k.LAYOUTS[name].render_sections == k.SECTION_KINDS, name
     assert k.LAYOUTS[name].render_koe is True and k.LAYOUTS[name].render_yubii is True
 t = k.LAYOUTS["tuto"]
-assert t.render_sections == ("tab",)
+assert t.render_sections == ("tab", "vocal")
 assert t.render_koe is False and t.render_yubii is False
 assert t.meta_order == ("genre", "author", "composer", "lyricist", "origin", "choshi")
 assert k.LAYOUTS["nomura"].meta_order == ("choshi",)
@@ -118,13 +121,16 @@ assert "ZZGenre" in h2 and "ZZAuteur" in h2
 assert "ZZComp" not in h2 and "ZZChoshi" not in h2 and TEMPO in h2
 print("OK 4 : meta_order surchargeable par layout (vertical, horizontal)")
 
-# 5. Surcharge de render_sections par le layout
+# 5. Surcharge de render_sections par le layout : tab et vocal filtrables séparément
 spec = dataclasses.replace(k.LAYOUTS["horizontal"], render_sections=("tab",))
 h3 = text_of("horizontal", spec)
 assert "ZZparoles" not in h3          # ::lyrics exclu
 assert "合" in h3                     # ::tab rendu
-assert "う" in h3                     # ::vocal rattaché au ::tab toujours rendu (ligne marker)
-print("OK 5 : render_sections surchargeable par layout (vocal rattaché conservé)")
+assert "う" not in h3                 # ::vocal rattaché écarté aussi (tab sans vocal)
+spec = dataclasses.replace(k.LAYOUTS["horizontal"], render_sections=("tab", "vocal"))
+h4 = text_of("horizontal", spec)
+assert "ZZparoles" not in h4 and "合" in h4 and "う" in h4  # vocal rattaché conservé (ligne marker)
+print("OK 5 : render_sections surchargeable par layout (tab sans vocal ; vocal avec tab si déclaré)")
 
 # 6. render_koe / render_yubii en constantes de layout
 assert KOEDASHI in text_of("vertical") and YUBII1 in text_of("vertical")

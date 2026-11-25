@@ -14,7 +14,7 @@ Toutes les mises en page partagent le même modèle de cadre (`LayoutSpec`) :
 Chaque mise en page déclare dans son `LayoutSpec` ce qu'elle affiche, en surcharge des constantes globales :
 
 - **`meta_order`** : quelles métadonnées de `META_ORDER` (`author`, `composer`, `lyricist`, `genre`, `origin`, `choshi`) sont affichées, et dans quel ordre. `@title` et `@speed` restent toujours affichés ; `@source`/`@comment` jamais. Défaut : `META_ORDER` complet (vertical, horizontal) ; tuto : genre → auteur → compositeur → parolier → origine → accordage (sous le tempo) ; mega : genre → auteur → accordage (en bas de la colonne titre) ; nomura/chindami : accordage seul.
-- **`render_sections`** : quels types de sections (`SECTION_KINDS` = `part`, `tab`, `vocal`, `lyrics`, `block`, `page`) sont rendus. Défaut : toutes ; tuto : `tab` seul (`::lyrics` exclu). Une `::vocal` rattachée à un `::tab` reste toujours rendue avec lui.
+- **`render_sections`** : quels types de sections (`SECTION_KINDS` = `part`, `tab`, `vocal`, `lyrics`, `block`, `page`) sont rendus. Défaut : toutes ; tuto : `tab` + `vocal` (`::lyrics` exclu). Une `::vocal` rattachée à un `::tab` est rendue avec lui si le layout déclare `vocal` (tuto : en bas de case), sinon elle est ignorée — `tab` et `vocal` se filtrent séparément ; l'inverse (vocal sans tab) n'a pas de rendu : une `::vocal` sans `::tab` n'est jamais dessinée (alignement sur la tablature).
 - **`render_koe` / `render_yubii`** : symboles koedashi/koekiri (○/□) et doigtés (㊀-㊃) rendus dans les cases — off en tuto.
 
 ## Mises en pages standard

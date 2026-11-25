@@ -916,11 +916,11 @@ TUTO = LayoutSpec(
     marker_ratio=0,                              # pas de bande marker en tuto
     md_spacing=43.2 * PX,                        # gap entre blocs de la page de titre (H*0.06 à H=720)
     cell_color="#999999",
-    # tuto : seule la tablature est rendue (::lyrics exclu), pas de ◯/□ ni de
+    # tuto : tablature + vocal en cellule (::lyrics exclu), pas de ◯/□ ni de
     # yubii (collision avec la ligne vocale en bas de case) ; page de titre :
     # genre, auteur, compositeur, parolier, origine, puis @choshi sous le tempo
     meta_order=("genre", "author", "composer", "lyricist", "origin", "choshi"),
-    render_sections=("tab",), render_koe=False, render_yubii=False)
+    render_sections=("tab", "vocal"), render_koe=False, render_yubii=False)
 
 MEGA = LayoutSpec(
     name="mega", unit="pt",
@@ -1095,9 +1095,12 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
 
     # Sections rendues : constante du layout (spec.render_sections, défaut =
     # SECTION_KINDS = toutes). La section ::vocal rattachée à un ::tab voyage
-    # dans le 4-uplet du tab (vocal_flat) : elle reste rendue avec son tab,
-    # indépendamment du filtre sur les sections autonomes.
+    # dans le 4-uplet du tab (vocal_flat) : elle n'est conservée (rendée avec
+    # son tab) que si le layout déclare aussi "vocal" — sinon tab sans vocal.
     sections = [s for s in sections if s[2] in spec.render_sections]
+    if "vocal" not in spec.render_sections:
+        sections = [(s[0], s[1], s[2], None, s[4]) if s[2] == "tab" else s
+                    for s in sections]
 
     # --- Pré-calcul des dimensions (constantes du spec, en unité native) --- #
     # Page libre (vertical/horizontal) : le hanmen = marges + padding
