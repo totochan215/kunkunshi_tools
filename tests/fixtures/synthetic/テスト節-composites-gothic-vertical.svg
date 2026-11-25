@@ -109,5 +109,5 @@
 <text x="60.72" y="203.862" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="9" fill="black">○</text>
 <text x="60.72" y="319.862" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="9" fill="black">□</text>
 <text x="278 278 278 278 278 278 278 278 278 278 278 278 278 278" y="76 106 136 166 226 256 286 316 346 376 406 436 466 496" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="26" fill="black">テスト節composites</text>
-<text x="278 278 278" y="541 563 585" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="15" fill="#555">本字子</text>
+<text x="278 278 278" y="541 563 585" text-anchor="middle" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="15" fill="#555">本調子</text>
 </svg>
