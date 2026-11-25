@@ -492,7 +492,7 @@ SECTION_ALIASES = {"tabs": "tab", "vocals": "vocal", "lyric": "lyrics",
 
 # Alias de clés de métadonnées acceptés au parsing (rectifiés par kkml_clean) :
 # @tuning = ancien nom de @choshi (le champ JSON Portama s'appelle `choshi`)
-META_ALIASES = {"tuning": "choshi"}
+META_ALIASES = {"tuning": "choshi", "arrow_fill": "rep_fill"}  # @arrow_fill = ancien nom de @rep_fill
 
 # Clés de métadonnées reconnues (pour la tolérance @cléValeur collée) —
 # "tuning" y reste pour la forme collée @tuningValeur (alias, voir META_ALIASES)
@@ -503,7 +503,7 @@ META_KEYS = {"title", "choshi", "tuning", "cols", "cells_per_dan", "layout", "ma
              "page_dans", "dans_per_page", "tuto_block", "kinsoku", "page_base",
              # attributs de design surchargeables par mise en page (défaut = LayoutSpec)
              "text_color", "frame_color", "frame_width", "cell_color", "cell_width",
-             "arrow_color", "arrow_width", "arrow_fill",
+             "arrow_color", "arrow_width", "rep_fill", "vrep_fill", "circle_width", "arrow_fill",  # arrow_fill = alias de rep_fill (forme collée)
              # compatibilité Portama (valeurs stockées telles quelles dans song.meta)
              "musicno", "chogen", "base_note", "rythm", "rythm_mode"}
 class Song:
@@ -810,7 +810,7 @@ class LayoutSpec:
     syl_cell_ratio: float = 0.26     # syllabe marker : min(ratio x cell_h, ...)
     syl_marker_ratio: float = 0.8
     syl_fs_ratio: float = 0.6        # repli si pas de marker (horizontal/tuto)
-    # Attributs de design (surchargeables par métadonnées @*_color/@*_width/@arrow_fill) :
+    # Attributs de design (surchargeables par métadonnées @*_color/@*_width/@rep_fill/@vrep_fill/@circle_width) :
     # couleurs au format HTML (#rgb, #rrggbb ou nom), épaisseurs en pt
     text_color: str = "#000000"      # couleur de tout le texte (fill racine SVG)
     frame_color: str = "#333333"     # filet de cadre de page
@@ -819,7 +819,9 @@ class LayoutSpec:
     cell_width: float = 0.75         # épaisseur des filets de cases
     arrow_color: str = "#bbbbbb"     # flèches de répétition (et symboles vocaux ⚪⚫)
     arrow_width: float = 0.75        # épaisseur des flèches de boucles
-    arrow_fill: bool = False         # têtes de flèches remplies (on) ou creuses (off)
+    rep_fill: bool = False           # têtes des FLÈCHES de répétition instrumentale remplies (on) ou creuses (off)
+    vrep_fill: bool = False          # DISQUES de répétition vocale remplis (on) ou creux (off) — séparé de rep_fill
+    circle_width: float = 1.0      # épaisseur du CERCLE de 尺 (@shaku_circled on), unité native — méta @circle_width
     page_no_fs: float = 11
     # Quelles métadonnées et quelles sections ce layout rend (surcharge des
     # constantes globales META_ORDER / SECTION_KINDS) : meta_order = clés de
@@ -905,6 +907,8 @@ CHINDAMI = LayoutSpec(
     md_spacing=6,
     lyr_gap=12, lyr_fs=10.8,   # 0,9 x fs=12, int() -> 10
     cell_width=0.6, arrow_width=0.6,
+    rep_fill=True,   # recueil chindami (2026-11-24) : flèches de boucles instrumentales PLEINES ; disques vocaux creux (vrep_fill off)
+    circle_width=0.5,  # cercles de 尺 (@shaku_circled) : 0,5 pt en chindami (recueil 2026-11-24)
     meta_order=("choshi",))   # chindami : méta = titre + @musicno + tempo + @choshi uniquement
 
 TUTO = LayoutSpec(
@@ -1151,16 +1155,18 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     opts['frame_width'] = spec.frame_width if _fw is None else _fw
     opts['cell_color'] = _meta_color(song.meta, 'cell_color') or spec.cell_color
     opts['cell_width'] = _meta_pt(song.meta, 'cell_width') or spec.cell_width
+    opts['circle_width'] = _meta_pt(song.meta, 'circle_width') or spec.circle_width
     opts['arrow_color'] = _meta_color(song.meta, 'arrow_color') or spec.arrow_color
     opts['arrow_width'] = _meta_pt(song.meta, 'arrow_width') or spec.arrow_width
-    _af = song.meta.get('arrow_fill', '').strip().lower()
-    if _af in ('on', 'off'):
-        opts['arrow_fill'] = (_af == 'on')
-    else:
-        if _af:
-            print(f"kkml2svg: WARNING: @arrow_fill {_af!r} doit être 'on' ou 'off', "
-                  f"valeur de la mise en page conservée", file=sys.stderr)
-        opts['arrow_fill'] = spec.arrow_fill
+    for _fk in ('rep_fill', 'vrep_fill'):
+        _fv = song.meta.get(_fk, '').strip().lower()
+        if _fv in ('on', 'off'):
+            opts[_fk] = (_fv == 'on')
+        else:
+            if _fv:
+                print(f"kkml2svg: WARNING: @{_fk} {_fv!r} doit être 'on' ou 'off', "
+                      f"valeur de la mise en page conservée", file=sys.stderr)
+            opts[_fk] = getattr(spec, _fk)
 
     font_family = opts.get('font_family', 'serif')
     if layout not in ("vertical", "horizontal", "mega") and any(
@@ -1778,7 +1784,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     csw = o.get('cell_width') or spec.cell_width
     acol = o.get('arrow_color') or spec.arrow_color
     asw = o.get('arrow_width') or spec.arrow_width
-    afill = bool(o.get('arrow_fill', spec.arrow_fill))
+    rfill = bool(o.get('rep_fill', spec.rep_fill))
+    vfill = bool(o.get('vrep_fill', spec.vrep_fill))
     cell_w = spec.cell_w
     cell_h = spec.cell_h
     marker_w = spec.marker_w if marker else 0.0
@@ -1985,16 +1992,16 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                 if marker_w > 0:
                     if rs:
                         _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start',
-                                             stroke=acol, sw=asw, arrow_fill=afill)
+                                             stroke=acol, sw=asw, filled=rfill)
                     if re_:
                         _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end',
-                                             stroke=acol, sw=asw, arrow_fill=afill)
+                                             stroke=acol, sw=asw, filled=rfill)
                     if vs:
                         _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start',
-                                            stroke=acol, sw=asw, arrow_fill=afill)
+                                            stroke=acol, sw=asw, filled=vfill)
                     if ve:
                         _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end',
-                                            stroke=acol, sw=asw, arrow_fill=afill)
+                                            stroke=acol, sw=asw, filled=vfill)
             # NOTES par-dessus grille et symboles
             for ri in range(rows):
                 cy = y0 + ri * cell_h
@@ -2072,7 +2079,8 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     csw = o.get('cell_width') or spec.cell_width
     acol = o.get('arrow_color') or spec.arrow_color
     asw = o.get('arrow_width') or spec.arrow_width
-    afill = bool(o.get('arrow_fill', spec.arrow_fill))
+    rfill = bool(o.get('rep_fill', spec.rep_fill))
+    vfill = bool(o.get('vrep_fill', spec.vrep_fill))
     fx0, fy0, fx1, fy1 = spec.frame_rect()      # cadre = marges depuis le bord
     page_base = _meta_page_base(song.meta)
     hx0, hy0, hx1, hy1 = spec.hanmen_rect()     # hanmen = cadre - padding
@@ -2289,16 +2297,16 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                 if marker_w > 0:
                     if rs:
                         _render_repeat_arrow(out, mx, cy, cell_h, marker_w, 'start',
-                                             stroke=acol, sw=asw, arrow_fill=afill)
+                                             stroke=acol, sw=asw, filled=rfill)
                     if re_ and marker_w > 0:
                         _render_repeat_arrow(out, mx, cy, cell_h, marker_w, 'end',
-                                             stroke=acol, sw=asw, arrow_fill=afill)
+                                             stroke=acol, sw=asw, filled=rfill)
                     if vs and marker_w > 0:
                         _render_vrep_marker(out, mx, cy, cell_h, marker_w, 'start',
-                                            stroke=acol, sw=asw, arrow_fill=afill)
+                                            stroke=acol, sw=asw, filled=vfill)
                     if ve and marker_w > 0:
                         _render_vrep_marker(out, mx, cy, cell_h, marker_w, 'end',
-                                            stroke=acol, sw=asw, arrow_fill=afill)
+                                            stroke=acol, sw=asw, filled=vfill)
             # NOTES par-dessus grille et symboles
             for ri in range(rows):
                 cy = grid_y0 + ri * cell_h
@@ -2812,7 +2820,8 @@ def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
     csw = o.get('cell_width') or 0.75
     acol = o.get('arrow_color') or '#bbbbbb'
     asw = o.get('arrow_width') or 0.75
-    afill = bool(o.get('arrow_fill', False))
+    rfill = bool(o.get('rep_fill', False))
+    vfill = bool(o.get('vrep_fill', False))
 
     # Passe 1 : tous les rectangles de la grille
     col_positions = []
@@ -2840,16 +2849,16 @@ def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
             if marker_w > 0:
                 if rs:
                     _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'start',
-                                         stroke=acol, sw=asw, arrow_fill=afill)
+                                         stroke=acol, sw=asw, filled=rfill)
                 if re_:
                     _render_repeat_arrow(out, x + cell_w, cy, cell_h, marker_w, 'end',
-                                         stroke=acol, sw=asw, arrow_fill=afill)
+                                         stroke=acol, sw=asw, filled=rfill)
                 if vs:
                     _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'start',
-                                        stroke=acol, sw=asw, arrow_fill=afill)
+                                        stroke=acol, sw=asw, filled=vfill)
                 if ve:
                     _render_vrep_marker(out, x + cell_w, cy, cell_h, marker_w, 'end',
-                                        stroke=acol, sw=asw, arrow_fill=afill)
+                                        stroke=acol, sw=asw, filled=vfill)
 
     # Marqueur de fin de chanson (symbole) : dans le marker de la dernière
     # colonne, à la hauteur du bas de la dernière case remplie — AVANT les
@@ -2897,14 +2906,14 @@ def _draw_vertical_tab(out, columns, cells_per_dan, ml, y0,
 # 3b. Rendu horizontal (gauche→droite, haut→bas) — mode songbook
 # --------------------------------------------------------------------------- #
 def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
-                    stroke="#999999", sw=0.75, arrow_fill=False):
+                    stroke="#999999", sw=0.75, filled=False):
     """Flèche de répétition dans la LIGNE marker horizontale (sous la rangée
     de cases) — transposée de _render_repeat_arrow (colonne marker
     verticale) : trait vertical depuis le haut de la ligne, puis coude
     horizontal dans le sens de lecture, un seul path, triangle creux au
     bout. 'start' (|:) pointe vers la droite (sens de lecture), 'end' (:|)
     vers la gauche."""
-    out.append(f'<g class="repeat-arrow" fill="{stroke if arrow_fill else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
+    out.append(f'<g class="repeat-arrow" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     v_len = marker_h * 0.66   # trait vertical depuis le haut de la ligne
     h_len = v_len             # trait horizontal dans le sens de lecture
     tri_size = marker_h * 0.22
@@ -2926,13 +2935,13 @@ def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
                    f'{hx:g},{vy + tri_size:g} {hx - tri_w:g},{vy:g}"/>')
     out.append('</g>')
 def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
-                   stroke="#999999", sw=0.75, arrow_fill=False):
+                   stroke="#999999", sw=0.75, filled=False):
     """Symbole de répétition du chant dans la ligne marker horizontale —
     transposé de _render_vrep_marker : barre verticale, montant horizontal,
     disque creux. 'end' ( )| ) : barre à ~80% de la case, montant vers la
     gauche, disque à gauche ; 'start' ( |( ) : miroir à ~20%, montant et
     disque vers la droite."""
-    out.append(f'<g class="vocal-rep" fill="{stroke if arrow_fill else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
+    out.append(f'<g class="vocal-rep" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     v_len = marker_h * 0.66
     r = marker_h * 0.22
     vy = y_top + v_len
@@ -3029,7 +3038,8 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     csw = o.get('cell_width') or spec.cell_width
     acol = o.get('arrow_color') or spec.arrow_color
     asw = o.get('arrow_width') or spec.arrow_width
-    afill = bool(o.get('arrow_fill', spec.arrow_fill))
+    rfill = bool(o.get('rep_fill', spec.rep_fill))
+    vfill = bool(o.get('vrep_fill', spec.vrep_fill))
     GAP_HEADER = spec.u(spec.gap_header)
     # header_h = titre fs 26 + descente d'encre 6 + air (TITLE_GAP + demi-colonne) 15 = 47
     header_h = spec.u(spec.header_h_title) if title else spec.u(spec.header_h)
@@ -3208,10 +3218,10 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
                     for kind_s, typ, x in row_syms:
                         if kind_s == 'a':
                             _h_repeat_arrow(out, x, ym, cell_w, marker_h, typ,
-                                            stroke=acol, sw=asw, arrow_fill=afill)
+                                            stroke=acol, sw=asw, filled=rfill)
                         else:
                             _h_vrep_marker(out, x, ym, cell_w, marker_h, typ,
-                                           stroke=acol, sw=asw, arrow_fill=afill)
+                                           stroke=acol, sw=asw, filled=vfill)
                 # Notes par-dessus bordures et symboles
                 for base_tok, x in row_notes:
                     render_cell(out, base_tok, x + cell_w / 2, y + cell_h / 2, fs,
@@ -4257,7 +4267,7 @@ def _strip_repeat_marks(tok):
 
 
 def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
-                         stroke="#bbbbbb", sw=0.75, arrow_fill=False):
+                         stroke="#bbbbbb", sw=0.75, filled=False):
     """Dessine une flèche de répétition en graphiques vectoriels SVG.
 
     La flèche part de la bordure gauche de la colonne marker (x_left),
@@ -4269,7 +4279,7 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
 
     arrow_type: 'start' = flèche descendante (~80% haut), 'end' = flèche montante (~80% bas).
     x_left = bordure gauche de la colonne marker. cy = position verticale du haut de la case."""
-    out.append(f'<g class="repeat-arrow" fill="{stroke if arrow_fill else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
+    out.append(f'<g class="repeat-arrow" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     h_len = marker_w * 0.66  # longueur du trait horizontal
     v_len = h_len  # trait vertical au moins aussi long que l'horizontal
     tri_size = marker_w * 0.22  # demi-largeur du triangle
@@ -4301,7 +4311,7 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
                    f'{hx + tri_size:g},{vy:g} {hx:g},{tip_y:g}"/>')
     out.append('</g>')
 def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
-                        stroke="#bbbbbb", sw=0.75, arrow_fill=False):
+                        stroke="#bbbbbb", sw=0.75, filled=False):
     """Symbole de répétition du chant dans la colonne marker — même
     géométrie et même taille que l'ancien marqueur @end_circle
     (_render_end_circle) : barre horizontale sur 66% de marker_w, montant
@@ -4315,7 +4325,7 @@ def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
     à l'axe HORIZONTAL : barre à ~20% du haut, montant vers le bas,
     disque en dessous.
     x_left = bordure gauche de la colonne marker. cy = haut de la case."""
-    out.append(f'<g class="vocal-rep" fill="{stroke if arrow_fill else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
+    out.append(f'<g class="vocal-rep" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     h_len = marker_w * 0.66
     v_len = h_len
     r = marker_w * 0.22
@@ -4477,6 +4487,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     """
     if opts is None:
         opts = {}
+    circle_w = opts.get('circle_width', 1)  # épaisseur du cercle de 尺 (@shaku_circled)
     tmap = _avg_tech_map()  # copie des positions propres à chaque marque
     def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None, note_fs=None,
             cell_cy=None, box_w=None, box_top=None):
@@ -4576,7 +4587,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # cercle centré sur le glyphe du 尺 (calibrage Inkscape nov. 2026 :
         # centre = baseline − fs·0.318 = cy ; l'ancien cy+2 décentrait vers le bas)
         out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
-                   f'fill="none" stroke="black" stroke-width="1"/>')
+                   f'fill="none" stroke="black" stroke-width="{circle_w:g}"/>')
         out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape("尺")}</text>')
@@ -4688,7 +4699,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         if main_note == "尺" and opts.get('shaku_circled') and not main_sharp:
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
-                       f'fill="none" stroke="black" stroke-width="1"/>')
+                       f'fill="none" stroke="black" stroke-width="{circle_w:g}"/>')
         out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
@@ -4836,7 +4847,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         if base_tok == "尺" and opts.get('shaku_circled') and not shaku_sharp:
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
-                       f'fill="none" stroke="black" stroke-width="1"/>')
+                       f'fill="none" stroke="black" stroke-width="{circle_w:g}"/>')
         out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape(base_tok)}</text>')
