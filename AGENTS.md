@@ -277,6 +277,7 @@ petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
   - marges page → bloc de tablature : haut ≈ 1 cm, bas ≈ 1,3 cm, droite ≈ 1,5 cm ; marge gauche (bord feuille → élément le plus à gauche : bloc de tablature OU bloc de couplets) probablement ≈ 1,5 cm ;
   - numéro de page : bas ≈ 0,7 cm du bord inférieur de la feuille, hauteur ≈ 2,5 mm ;
   - titre et @choshi : MÊME fs, alignés horizontalement entre eux (sans tenir compte du ruby éventuel) ; haut du titre ≈ 2,1 cm du haut de la feuille ; bas du @choshi ≈ 2,3 cm du bord bas de la feuille (variable — l'éditeur peut le rabaisser pour faire de la place) ;
+  - droite du titre et du @choshi (hors ruby) ≈ 0,7–0,8 cm du bord droit de la feuille ;
   - titre long : saut de colonne accepté, le bloc de tablature est alors repoussé à gauche d'autant ; dans ce cas le @choshi est aligné horizontalement sur la 1re colonne du titre (celle la plus à droite) ;
   - genre présent : intercalé entre la colonne du @choshi et le bloc de tablature (repousse le @choshi plus à droite), écrit verticalement entre yamakakko pivotés à 90°, fs ≈ 50 % de la fs du titre (à ajuster plus tard) ;
   - titre alternatif : placé directement sous le titre, en vertical, entre parenthèses pivotées à 90 %, fs ≈ 75 % de la fs du titre ;
