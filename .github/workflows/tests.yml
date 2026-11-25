@@ -60,6 +60,8 @@ jobs:
         run: python3 tests/test_koe_lower_third.py
       - name: Lancer les tests de la constante md_spacing (espacement homogène des métadonnées)
         run: python3 tests/test_md_spacing.py
+      - name: Lancer les tests des constantes de layout (meta_order, render_sections, render_koe/yubii)
+        run: python3 tests/test_layout_constants.py
       - name: Lancer les tests de position de kaki-utu ^ (⌝)
         run: python3 tests/test_kaki_utu.py
       - name: Lancer les tests de repli des paroles en nomura (pas de débordement du hanmen)
