@@ -300,6 +300,19 @@ petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
     - colonne d'intertitre de partie : largeur, position x (à droite du bloc de tab, lecture droite→gauche), centrage vertical exact sur le bloc de tablature ;
     - couleur/épaisseur exactes (noir #000 ?) et épaisseur des filets (0,6 pt aujourd'hui), cadre non tracé confirmé ;
     - pagination : 15 piles/page (14 avec titre) confirmé ? paroles à gauche de la dernière page ou pages dédiées ?
+  - réponses 2026-11-24 (2e tournée, recueil Hyoukashuu) :
+    - (1) pas de padding entre piles (dan_gap = 0 confirmé) ; le marker est toujours présent en principe ;
+    - (2) confirmé : cell 65×83 px, marker 32 px ≈ ½ case ;
+    - (3) fs du @choshi à ALIGNER sur celle du titre ; indice de calcul : てぃんさぐぬ花 (7 caractères) → bloc titre de 4,3 cm de haut hors ruby ⇒ fs titre ≈ 4,3 cm / 7 ≈ 17,4 pt si avance = 1 em/caractère (contre fs 18 + espacement 22 pt aujourd'hui) — à confirmer au rendu ;
+    - (4) ancrages en BASELINE : haut du titre = baseline à 2,1 cm du haut de page ; bas du @choshi = baseline à 2,3 cm du bas de page ; ancrer À LA PAGE (cas extrême sans grille) — en chindami hanmen = cadre (pas de padding), donc équivalent, mais la page est le référentiel retenu ;
+    - (5) @musicno présent : haut d'encre à 1,4 cm du haut de la page, hauteur ≈ 4 mm, écart avec le haut du titre ≈ 0,4 cm ;
+    - (6) genre : sa centerline est à ≈ 0,4 cm du bord DROIT du bloc de tablature ;
+    - (7) pas de gap entre piles ; fs des syllabes inconnue ; largeur d'un grand kana ≈ 80 % de la largeur du marker ;
+    - (8) paroles : pas de mesure pour l'instant ;
+    - (9) la colonne d'intertitre s'insère dans l'INTERBLOC, large de 0,8 cm ;
+    - (10) n° de page : ancrage baseline (bas à 0,7 cm du bord inférieur), centré en x sur la page ;
+    - (11) #000 partout ; épaisseur des filets : 0,5 pt serait mieux que les 0,6 pt actuels ;
+    - (12) plus gros bloc trouvé = 16 dans (titre standard, aucune intertitre, aucune méta auteur/parolier, aucune parole) → max_dans à revoir (15 aujourd'hui, 14 en p.1 avec colonne titre).
 
 Les constantes mesurées (NOMURA_*, CHINDAMI_*) figurent dans le code et
 dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
