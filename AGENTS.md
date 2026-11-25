@@ -288,7 +288,7 @@ petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
   - lyrics : soit un bloc unique sur toute la hauteur du bloc (unique) de tablature, soit deux blocs de hauteur égale séparés par une gouttière ≈ 0,5 cm.
   - couplets : acceptent les kunojiten portant sur 4 caractères (combiné U+3033 〳 + U+3035 々 d'après le recueil) ;
   - une seule couleur, le noir, pour tout ; toutes les lignes sont des filets assez fins ;
-  - flèches de répétition INSTRUMENTALES pleines (remplies), mais disques de répétition VOCALE vides (creux) — aujourd'hui `arrow_fill` (LayoutSpec, surchargeable par @arrow_fill) remplit les deux à la fois : à découpler pour chindami (flèches pleines, disques vocaux creux) ;
+  - flèches de répétition INSTRUMENTALES pleines (remplies), mais disques de répétition VOCALE vides (creux) — FAIT 2026-11-24 (PR #105) : séparé en `rep_fill` (flèches instrumentales — chindami pleines par défaut) et `vrep_fill` (disques vocaux — creux) ;
 
 Les constantes mesurées (NOMURA_*, CHINDAMI_*) figurent dans le code et
 dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
