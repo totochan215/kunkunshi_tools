@@ -90,7 +90,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ✅ (2026-11-23) Koedashi/koekiri attenant à un point `.` (ex. `.)`, `(.`) : résolu — la borne se rattache au point via `_vocal_paren_slots` (kkml2svg.py:3243) et ○/□ est rendu DANS la case aligné sur le slot du point, même masqué par `@show_dots off` (vérifié : `.)` en vertical → □ à la hauteur du ・ avec `@show_dots on`, position inchangée avec `off`). Les parenthèses ne changent PAS le nombre de sous-positions vocales de la case (corrigé 2026-11-10, commit 5d4838a — cas ahabushi case 44 : 3 points dans le KKML = 3 positions, plus de point fantôme).
 - ✅ (2026-11-24) **`render_koe` / `render_yubii` en constantes de layout** (`LayoutSpec.render_koe` / `render_yubii`, défaut True ; tuto False) — les `opts` de `render_svg` sont lus depuis le spec au lieu du `layout != "tuto"` en dur. Test `tests/test_layout_constants.py`.
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
-  jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
+  jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri — (2026-11-24) confirmé : la PREMIÈRE note d'une tablature peut être rendue entre parenthèses, note jouée une seule fois et NON reprise dans les boucles.
 
 ## 1. Validations en attente (bloquantes ou quasi)
 
