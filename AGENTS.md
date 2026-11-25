@@ -46,6 +46,8 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
     - Mises en page à taille de page FIXE (nomura, chindami, mega, tuto) — blocs de tablature : nombre de blocs, dans/bloc et cellules/dan définis par le layout ; si ça déborde → bloc suivant, sinon page suivante, jusqu'à épuisement des tablatures. Blocs de texte (lyrics) : nombre de blocs et taille physique définis/déduits par le layout ; si le texte déborde → bloc suivant, sinon page suivante.
     - Mises en page SANS taille fixe (vertical, horizontal) — tablature : nb de blocs = 1 → le bloc grandit à mesure qu'on rajoute des dans ; nb = 0 → nouveau bloc quand le max de dans/bloc est atteint. Lyrics : en principe nb = 1 ; on pourrait proposer n = 0 (saut de bloc tous les N lignes, vides comprises, et/ou à une certaine largeur en vertical / hauteur en horizontal).
     - Mènera à définir en KKML des instructions explicites de saut de ligne/colonne/dan, de bloc et de page (aujourd'hui : saut de ligne de `::tab` = nouveau dan, `|` = saut de ligne de couplet en `::lyrics`, `::block`/`::page` = mega uniquement).
+  - ⬜ (2026-11-24) Kunojiten dans `::lyrics` (recueil chindami) : les couplets acceptent des marques de répétition portant sur 4 caractères. Hypothèse utilisateur : la marque du recueil est un COMBINÉ de U+3033 (〳) et U+3035 (々) — en UTF pur (texte KKML) une telle séquence combinante est « monstrueuse » : prévoir une syntaxe KKML compacte (ex. `々` seul, ou antislash + ASCII), le rendu dessinant alors le combiné U+3033+U+3035. Rendu SVG à préciser.
+  - ❓ (2026-11-24) **Hiérarchie compilation > morceau > partie** (trou du modèle global, constaté sur le recueil chindami) : chindami accepte des compilations de morceaux à la suite dans l'ordre titre+métadonnées, tablature, lyrics, puis morceau suivant… ; et chaque morceau accepte des PARTIES dans l'ordre intertitre, tablature, intertitre, tablature…, puis lyrics. Aujourd'hui KKML n'a que `::part <nom>` = morceau dans une compilation (mega) — il faudrait distinguer 3 niveaux : compilation (le fichier lui-même) > morceau > partie (nouvelle section avec intertitre, ex. `::subsection` — ATTENTION : `::section` est déjà alias de `::part`). À articuler avec « Gestion de medleys » (section 4) et les constantes par layout d'assemblage (mega = par type de section, autres = par part).
 - ⬜ (2026-11-22) Autres idées utilisateur :
   - ✅ (2026-11-22) `@tuning` remplacé par `@choshi` — fait (voir entrée ✅ de la section 0) : alias `@tuning` accepté au parsing avec info stderr, rectifié en `@choshi` par le cleaner.
   - ✅ (2026-11-22) Numéros de page auto-incrémentés en nomura/chindami/mega — fait (voir entrée ✅ de la section 0) : `–n–`, n = `@page_base` (>= 1) + index de page.
@@ -89,7 +91,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ✅ (2026-11-23) Koedashi/koekiri attenant à un point `.` (ex. `.)`, `(.`) : résolu — la borne se rattache au point via `_vocal_paren_slots` (kkml2svg.py:3243) et ○/□ est rendu DANS la case aligné sur le slot du point, même masqué par `@show_dots off` (vérifié : `.)` en vertical → □ à la hauteur du ・ avec `@show_dots on`, position inchangée avec `off`). Les parenthèses ne changent PAS le nombre de sous-positions vocales de la case (corrigé 2026-11-10, commit 5d4838a — cas ahabushi case 44 : 3 points dans le KKML = 3 positions, plus de point fantôme).
 - ✅ (2026-11-24) **`render_koe` / `render_yubii` en constantes de layout** (`LayoutSpec.render_koe` / `render_yubii`, défaut True ; tuto False) — les `opts` de `render_svg` sont lus depuis le spec au lieu du `layout != "tuto"` en dur. Test `tests/test_layout_constants.py`.
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
-  jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
+  jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri — (2026-11-24) confirmé : la PREMIÈRE note d'une tablature peut être rendue entre parenthèses, note jouée une seule fois et NON reprise dans les boucles.
 
 ## 1. Validations en attente (bloquantes ou quasi)
 
@@ -188,6 +190,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ❓ (2026-11-19) Granularité `::vocal` vs round-trip Portama (remontée utilisateur) : une case KKML = paire Portama = 2 cellules × 3 positions vocales (top/mid/bot) = **6 sous-positions** ; idem côté ruby (`allRubyData` = 3 unités/cellule Portama = 6/case KKML). Encodage actuel (1 token `::vocal` par paire) : cellule principale → `(`/`)` nu (**position perdue**), cellule à cheval seule → points de tête (top = nu, mid = 1, bot = 2 — position OK), les deux combinés → token nu (`()` / `)(`, **positions perdues**). Pour un réexport Portama fidèle, il faudra soit coder la position des deux côtés dans le même token (ex. principale = parenthèse + points de queue, à cheval = points de tête + parenthèse), soit diviser chaque case en 6 sous-positions. À trancher avant d'écrire `kkml2portama.py`.
   **Proposition de résolution (2026-11-19)** : champ `::vocal` de 6 sous-positions par case (0=principale top, 1=mid, 2=bot, 3=à cheval top, 4=mid, 5=bot) ; un marqueur koedashi/koekiri = la parenthèse placée à l'index N du champ, les autres slots en points `.` — ex. koedashi seul : `(.....` `.(....` `..(...` `...(..` `....(.` `.....(`. La parenthèse reste du formatage inline (0 unité, déjà le cas dans `_vocal_elements`) : son slot = nombre d'unités AVANT elle, un caractère pleine chasse (kanji) comptant 2 unités et étant atomique (pas de borne à l'intérieur). Avec du chant : ex. `字..(.` = kanji (2 unités) + 2 points → parenthèse au slot 4. Cas limite « case pleine de chant » (6 unités) : pas de débordement puisque la parenthèse est gratuite — koedashi en `(字字字` (borne 0) ou `字字字(` (borne 6 = fin de case) ; un slot demandé à l'intérieur d'un caractère pleine chasse est rabattu sur la borne suivante. À valider avant implémentation.
 
+- ✅ (2026-11-24) **Terminologie : « compilation » préféré à « medley »** (plus générique : une compilation de morceaux, pas nécessairement un medley musical) — vaut pour la hiérarchie compilation > morceau > partie (❓ section 0) et partout (doc, commentaires, AGENTS.md). - ⬜ (2026-11-24) Renommage mécanique des « medley » restants en « compilation » (identifiants, commentaires, docs, ex. `tests/test_clean_medley.py`, commentaires « medley » de kkml_clean/kkml2svg, `docs/`) — à faire comme `kkml_cleaner`→`kkml_clean`.
 ## 4. Long terme
 
 - ❓ (2026-11-23) Remplacer les notations `A/B` (croche), `A:B` (shuffle), `A//B/C`… de `::tab` par un système de points analogue à celui de `::vocal` — **long terme, soumis à un vote préalable des utilisateurs**, car cela remet en cause le caractère intuitif du KKML.
@@ -272,6 +275,44 @@ petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
   mixte kanji/romaji).
 
 # Références de calibrage externes (hors dépôt)
+
+- (2026-11-24) **Mesures directes sur le recueil Chindami Kunkunshi Hyoukashuu** (layout chindami), ajustements visuels à prévoir (lecture au recueil, valeurs « environ ») :
+  - marges page → bloc de tablature : haut ≈ 1 cm, bas ≈ 1,3 cm, droite ≈ 1,5 cm ; marge gauche (bord feuille → élément le plus à gauche : bloc de tablature OU bloc de couplets) probablement ≈ 1,5 cm ;
+  - numéro de page : bas ≈ 0,7 cm du bord inférieur de la feuille, hauteur ≈ 2,5 mm ;
+  - titre et @choshi : MÊME fs, alignés horizontalement entre eux (sans tenir compte du ruby éventuel) ; haut du titre ≈ 2,1 cm du haut de la feuille ; bas du @choshi ≈ 2,3 cm du bord bas de la feuille (variable — l'éditeur peut le rabaisser pour faire de la place) ;
+  - droite du titre et du @choshi (hors ruby) ≈ 0,7–0,8 cm du bord droit de la feuille ;
+  - titre long : saut de colonne accepté, le bloc de tablature est alors repoussé à gauche d'autant ; dans ce cas le @choshi est aligné horizontalement sur la 1re colonne du titre (celle la plus à droite) ;
+  - genre présent : intercalé entre la colonne du @choshi et le bloc de tablature (repousse le @choshi plus à droite), écrit verticalement entre yamakakko pivotés à 90°, fs ≈ 50 % de la fs du titre (à ajuster plus tard) ;
+  - titre alternatif : placé directement sous le titre, en vertical, entre parenthèses pivotées à 90 %, fs ≈ 75 % de la fs du titre ;
+  - compositeur et/ou parolier renseignés : à gauche du bloc de tablature, écrits verticalement dans deux colonnes séparées « 作曲　名 du compositeur » et « 作詞　名 du parolier » (compositeur à gauche le cas échéant) ; bas de ces métadonnées ≈ 3,1 cm du bas de la feuille (l'éditeur peut modifier cet alignement) ; dans ce cas les lyrics sont décalées à gauche d'autant ;
+  - ruby : fs = 0,5 × fs du texte qu'ils précisent ;
+  - parties de chanson (cas rare, notion proche de la part des medleys, à affiner) : une colonne d'intertitre placée avant chaque bloc de tablature, fs = 75 % de la fs du titre (idem titre alternatif), centrage vertical sur le bloc de tablature  — voir ❓ « hiérarchie compilation > morceau > partie » (section 0).
+  - lyrics : soit un bloc unique sur toute la hauteur du bloc (unique) de tablature, soit deux blocs de hauteur égale séparés par une gouttière ≈ 0,5 cm.
+  - couplets : acceptent les kunojiten portant sur 4 caractères (combiné U+3033 〳 + U+3035 々 d'après le recueil) ;
+  - une seule couleur, le noir, pour tout ; toutes les lignes sont des filets assez fins ;
+  - flèches de répétition INSTRUMENTALES pleines (remplies), mais disques de répétition VOCALE vides (creux) — FAIT 2026-11-24 (PR #105) : séparé en `rep_fill` (flèches instrumentales — chindami pleines par défaut) et `vrep_fill` (disques vocaux — creux) ;
+  - mesures à COMPLÉTER pour ajuster le modèle chindami (en complément des mesures ci-dessus, 2026-11-24) :
+    - marges mesurées = bord page → BLOC de tablature : y a-t-il un écart cadre→hanmen (dan_gap/padding, à 0 aujourd'hui) ? marge gauche 1,5 cm = à l'élément le plus à gauche (bloc tab OU couplets), bloc tab ancré à 1,5 cm à droite ?
+    - fs absolue du titre (= celle du @choshi) et largeur de la colonne titre (title_w) ; ancrages exacts : haut d'encre du titre à 2,1 cm ? bas du @choshi à 2,3 cm (baseline ou bas d'encre, ancré bord page ou bas de grille) ? idem bas des colonnes 作曲/作詞 à 3,1 cm ; @musicno présent ? écart n°→titre ;
+    - n° de page : hauteur 2,5 mm → fs ; bas à 0,7 cm du bord inférieur (baseline ou bas d'encre) ; position x (centré page ?) ;
+    - pile : cell 65×83 px et marker 32 px (≈½ case) confirmés dans ce recueil ? gap entre piles (dan_gap) ? fs des syllabes dans le marker ?
+    - paroles : fs absolue (lyr_fs 10,8 pt aujourd'hui), largeur de colonne, interligne, écart entre couplets, gouttière ≈0,5 cm entre les 2 blocs de lyrics, marge gauche du bloc, repli au caractère ;
+    - colonne d'intertitre de partie : largeur, position x (à droite du bloc de tab, lecture droite→gauche), centrage vertical exact sur le bloc de tablature ;
+    - couleur/épaisseur exactes (noir #000 ?) et épaisseur des filets (0,6 pt aujourd'hui), cadre non tracé confirmé ;
+    - pagination : 15 piles/page (14 avec titre) confirmé ? paroles à gauche de la dernière page ou pages dédiées ?
+  - réponses 2026-11-24 (2e tournée, recueil Hyoukashuu) :
+    - (1) pas de padding entre piles (dan_gap = 0 confirmé) ; le marker est toujours présent en principe ;
+    - (2) confirmé : cell 65×83 px, marker 32 px ≈ ½ case ;
+    - (3) fs du @choshi à ALIGNER sur celle du titre ; indice de calcul : てぃんさぐぬ花 (7 caractères) → bloc titre de 4,3 cm de haut hors ruby ⇒ fs titre ≈ 4,3 cm / 7 ≈ 17,4 pt si avance = 1 em/caractère (contre fs 18 + espacement 22 pt aujourd'hui) — à confirmer au rendu ;
+    - (4) ancrages en BASELINE : haut du titre = baseline à 2,1 cm du haut de page ; bas du @choshi = baseline à 2,3 cm du bas de page ; ancrer À LA PAGE (cas extrême sans grille) — en chindami hanmen = cadre (pas de padding), donc équivalent, mais la page est le référentiel retenu ;
+    - (5) @musicno présent : haut d'encre à 1,4 cm du haut de la page, hauteur ≈ 4 mm, écart avec le haut du titre ≈ 0,4 cm ;
+    - (6) genre : sa centerline est à ≈ 0,4 cm du bord DROIT du bloc de tablature ;
+    - (7) pas de gap entre piles ; fs des syllabes inconnue ; largeur d'un grand kana ≈ 80 % de la largeur du marker ;
+    - (8) paroles : pas de mesure pour l'instant ;
+    - (9) la colonne d'intertitre s'insère dans l'INTERBLOC, large de 0,8 cm ;
+    - (10) n° de page : ancrage baseline (bas à 0,7 cm du bord inférieur), centré en x sur la page ;
+    - (11) #000 partout ; épaisseur des filets : 0,5 pt serait mieux que les 0,6 pt actuels ;
+    - (12) plus gros bloc trouvé = 16 dans (titre standard, aucune intertitre, aucune méta auteur/parolier, aucune parole) → max_dans à revoir (15 aujourd'hui, 14 en p.1 avec colonne titre).
 
 Les constantes mesurées (NOMURA_*, CHINDAMI_*) figurent dans le code et
 dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
