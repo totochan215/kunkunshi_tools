@@ -10,7 +10,7 @@ Règles :
 ---
 # Feuille de route
 
-Dernière mise à jour : 23 novembre 2026
+Dernière mise à jour : 24 novembre 2026
 
 Pipeline : Portama JSON → KKML → SVG / PDF. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
@@ -40,6 +40,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   - ✅ (2026-11-22) Position de kaki-utu `^` (`⌝`) revue : tout passé en relatif de `note_fs`, homogène entre layouts — fait (voir entrée ✅ de la section 0).
   - ⬜ (2026-11-23) Nouvelle section `::melody` (optionnelle), alignée sur `::vocal`, pour représenter la hauteur de chant — compatibilité avec les manuels nomura-ryu (sous-colonne « hauteur » de la colonne marker nomura, voir P3 `::声楽譜`).
   - ⬜ (2026-11-23) Blocs de lyrics multiples dans les layouts : pouvoir déclarer plusieurs blocs `::lyrics` et les rendre dans la mise en page (plusieurs blocs/colonnes de paroles), au-delà du flux unique rendu à la suite aujourd'hui (voir aussi `@lyrics_variant`, section 2).
+  - ⬜ (2026-11-24) Déclaration de **n blocs de lyrics**, comme on déclare n blocs de tablature (ex. `@mega_dans N`, marqueurs `::block`/`::page` en mega) : plusieurs blocs `::lyrics` déclarés explicitement (comptés/étiquetés) et rendus en autant de blocs/colonnes de paroles — à articuler avec la puce « blocs de lyrics multiples » ci-dessus et `@lyrics_variant` (section 2). Syntaxe à définir.
   - ⬜ (2026-11-23) Amélioration de l'indentation des couplets (pas encore parfaite — cf. déviation JLREQ notée section 6 : indent à 3 chasses pleines vs 字下げ 1 em).
 - ⬜ (2026-11-22) Autres idées utilisateur :
   - ✅ (2026-11-22) `@tuning` remplacé par `@choshi` — fait (voir entrée ✅ de la section 0) : alias `@tuning` accepté au parsing avec info stderr, rectifié en `@choshi` par le cleaner.
