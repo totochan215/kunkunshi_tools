@@ -2,5 +2,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
 <rect width="100%" height="100%" fill="white"/>
 <text x="640" y="288" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="50" fill="black">テスト節 composites</text>
-<text x="640" y="331.2" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="25" fill="#555">本字子</text>
+<text x="640" y="331.2" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="25" fill="#555">本調子</text>
 </svg>
