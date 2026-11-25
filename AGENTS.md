@@ -291,6 +291,15 @@ petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
   - couplets : acceptent les kunojiten portant sur 4 caractères (combiné U+3033 〳 + U+3035 々 d'après le recueil) ;
   - une seule couleur, le noir, pour tout ; toutes les lignes sont des filets assez fins ;
   - flèches de répétition INSTRUMENTALES pleines (remplies), mais disques de répétition VOCALE vides (creux) — FAIT 2026-11-24 (PR #105) : séparé en `rep_fill` (flèches instrumentales — chindami pleines par défaut) et `vrep_fill` (disques vocaux — creux) ;
+  - mesures à COMPLÉTER pour ajuster le modèle chindami (en complément des mesures ci-dessus, 2026-11-24) :
+    - marges mesurées = bord page → BLOC de tablature : y a-t-il un écart cadre→hanmen (dan_gap/padding, à 0 aujourd'hui) ? marge gauche 1,5 cm = à l'élément le plus à gauche (bloc tab OU couplets), bloc tab ancré à 1,5 cm à droite ?
+    - fs absolue du titre (= celle du @choshi) et largeur de la colonne titre (title_w) ; ancrages exacts : haut d'encre du titre à 2,1 cm ? bas du @choshi à 2,3 cm (baseline ou bas d'encre, ancré bord page ou bas de grille) ? idem bas des colonnes 作曲/作詞 à 3,1 cm ; @musicno présent ? écart n°→titre ;
+    - n° de page : hauteur 2,5 mm → fs ; bas à 0,7 cm du bord inférieur (baseline ou bas d'encre) ; position x (centré page ?) ;
+    - pile : cell 65×83 px et marker 32 px (≈½ case) confirmés dans ce recueil ? gap entre piles (dan_gap) ? fs des syllabes dans le marker ?
+    - paroles : fs absolue (lyr_fs 10,8 pt aujourd'hui), largeur de colonne, interligne, écart entre couplets, gouttière ≈0,5 cm entre les 2 blocs de lyrics, marge gauche du bloc, repli au caractère ;
+    - colonne d'intertitre de partie : largeur, position x (à droite du bloc de tab, lecture droite→gauche), centrage vertical exact sur le bloc de tablature ;
+    - couleur/épaisseur exactes (noir #000 ?) et épaisseur des filets (0,6 pt aujourd'hui), cadre non tracé confirmé ;
+    - pagination : 15 piles/page (14 avec titre) confirmé ? paroles à gauche de la dernière page ou pages dédiées ?
 
 Les constantes mesurées (NOMURA_*, CHINDAMI_*) figurent dans le code et
 dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
