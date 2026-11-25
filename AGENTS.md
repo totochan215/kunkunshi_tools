@@ -273,6 +273,18 @@ petits kana tassés dans la colonne marker (`_draw_vertical_vocal`).
 
 # Références de calibrage externes (hors dépôt)
 
+- (2026-11-24) **Mesures directes sur le recueil Chindami Kunkunshi Hyoukashuu** (layout chindami), ajustements visuels à prévoir (lecture au recueil, valeurs « environ ») :
+  - marges page → bloc de tablature : haut ≈ 1 cm, bas ≈ 1,3 cm, droite ≈ 1,5 cm ; marge gauche (bord feuille → élément le plus à gauche : bloc de tablature OU bloc de couplets) probablement ≈ 1,5 cm ;
+  - numéro de page : bas ≈ 0,7 cm du bord inférieur de la feuille, hauteur ≈ 2,5 mm ;
+  - titre et @choshi : MÊME fs, alignés horizontalement entre eux (sans tenir compte du ruby éventuel) ; haut du titre ≈ 2,1 cm du haut de la feuille ; bas du @choshi ≈ 2,3 cm du bord bas de la feuille (variable — l'éditeur peut le rabaisser pour faire de la place) ;
+  - titre long : saut de colonne accepté, le bloc de tablature est alors repoussé à gauche d'autant ; dans ce cas le @choshi est aligné horizontalement sur la 1re colonne du titre (celle la plus à droite) ;
+  - genre présent : intercalé entre la colonne du @choshi et le bloc de tablature (repousse le @choshi plus à droite), écrit verticalement entre yamakakko pivotés à 90°, fs ≈ 50 % de la fs du titre (à ajuster plus tard) ;
+  - titre alternatif : placé directement sous le titre, en vertical, entre parenthèses pivotées à 90 %, fs ≈ 75 % de la fs du titre ;
+  - compositeur et/ou parolier renseignés : à gauche du bloc de tablature, écrits verticalement dans deux colonnes séparées « 作曲　名 du compositeur » et « 作詞　名 du parolier » (compositeur à gauche le cas échéant) ; bas de ces métadonnées ≈ 3,1 cm du bas de la feuille (l'éditeur peut modifier cet alignement) ; dans ce cas les lyrics sont décalées à gauche d'autant ;
+  - ruby : fs = 0,5 × fs du texte qu'ils précisent ;
+  - parties de chanson (cas rare, notion proche de la part des medleys, à affiner) : une colonne d'intertitre placée avant chaque bloc de tablature, fs = 75 % de la fs du titre (idem titre alternatif), centrage vertical sur le bloc de tablature ;
+  - lyrics : soit un bloc unique sur toute la hauteur du bloc (unique) de tablature, soit deux blocs de hauteur égale séparés par une gouttière ≈ 0,5 cm.
+
 Les constantes mesurées (NOMURA_*, CHINDAMI_*) figurent dans le code et
 dans ce fichier. Les scans de recueils servant au calibrage ne sont pas
 dans le dépôt (droits d'auteur) ; leur provenance et leur emplacement
