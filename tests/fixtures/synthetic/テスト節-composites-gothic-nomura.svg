@@ -45,7 +45,7 @@
 <rect x="421.6311071428571" y="659.9121916666666" width="31.66428571428571" height="59.74166666666665" fill="none" stroke="#333333" stroke-width="0.6"/>
 <rect x="421.6311071428571" y="719.6538583333331" width="31.66428571428571" height="59.74166666666665" fill="none" stroke="#333333" stroke-width="0.6"/>
 <g class="repeat-arrow" fill="none" stroke="#333333" stroke-width="0.6">
-<path d="M 453.295 612.119 L 474.194 612.119 L 474.194 633.017"/>
+<path d="M 453.295 612.119 L 474.194 612.119 L 474.194 633.017" fill="none"/>
 <polygon points="467.228,633.017 481.16,633.017 474.194,645.083"/>
 </g>
 <text x="421.86324999999994" y="100.63435833333331" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="26.0" fill="black" textLength="31.2" lengthAdjust="spacingAndGlyphs">イ合</text>
@@ -115,7 +115,7 @@
 <rect x="265.97396428571426" y="659.9121916666666" width="31.66428571428571" height="59.74166666666665" fill="none" stroke="#333333" stroke-width="0.6"/>
 <rect x="265.97396428571426" y="719.6538583333331" width="31.66428571428571" height="59.74166666666665" fill="none" stroke="#333333" stroke-width="0.6"/>
 <g class="repeat-arrow" fill="none" stroke="#333333" stroke-width="0.6">
-<path d="M 297.638 767.447 L 318.537 767.447 L 318.537 746.549"/>
+<path d="M 297.638 767.447 L 318.537 767.447 L 318.537 746.549" fill="none"/>
 <polygon points="311.571,746.549 325.503,746.549 318.537,734.483"/>
 </g>
 <text x="266.2061071428571" y="100.63435833333331" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="26.0" fill="black" textLength="31.2" lengthAdjust="spacingAndGlyphs">イ合</text>

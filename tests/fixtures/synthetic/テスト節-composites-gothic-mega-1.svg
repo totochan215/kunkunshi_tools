@@ -49,11 +49,11 @@
 <rect x="1004.7511562499999" y="375.4500645833333" width="22.178187499999996" height="30.495460416666663" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
 <rect x="1026.9293437499998" y="40" width="11.089093749999998" height="365.945525" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
 <g class="repeat-arrow" fill="none" stroke="#bbbbbb" stroke-width="0.75">
-<path d="M 1093.46 320.558 L 1100.78 320.558 L 1100.78 327.877"/>
+<path d="M 1093.46 320.558 L 1100.78 320.558 L 1100.78 327.877" fill="none"/>
 <polygon points="1098.34,327.877 1103.22,327.877 1100.78,332.103"/>
 </g>
 <g class="repeat-arrow" fill="none" stroke="#bbbbbb" stroke-width="0.75">
-<path d="M 1026.93 399.846 L 1034.25 399.846 L 1034.25 392.528"/>
+<path d="M 1026.93 399.846 L 1034.25 399.846 L 1034.25 392.528" fill="none"/>
 <polygon points="1031.81,392.528 1036.69,392.528 1034.25,388.302"/>
 </g>
 <text x="1075.7748125" y="58.74573020833333" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="11" fill="black" textLength="13.2" lengthAdjust="spacingAndGlyphs">イ合</text>

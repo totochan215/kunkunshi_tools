@@ -60,15 +60,16 @@ assert abs(max(y for _, y, _ in tc) - (grid_bottom - 4 - 20.0)) < 0.01
 assert not tuning_chars(svgs[1], set("本調子"))   # colonne titre = page 1 seule
 print("OK nomura : @choshi en bas de la colonne titre (page 1), ancré sur le bas de la grille")
 
-# 3. chindami : non-régression (déjà en bas : bloc groupé, dernier y = fy1 - 4 - 16)
+# 3. chindami : @choshi en bas, même fs que le titre (17,5), dernière baseline à 2,3 cm du bord bas page
+#     (ancrage page, recueil Chindami Kunkunshi Hyoukashuu 2026-11-24)
 spec = k.CHINDAMI
-fx0, fy0, fx1, fy1 = spec.frame_rect()
 svgs = k.render_svg(k.parse_kkml(SRC), layout="chindami")
-m = re.search(r'<text\b[^>]*\sy="([^"]+)"[^>]*>本調子</text>', svgs[0])
+m = re.search(r'<text\b[^>]*\sy="([^"]+)"[^>]*font-size="([\d.]+)"[^>]*>本調子</text>', svgs[0])
 assert m, svgs[0][:400]
 last_y = float(m.group(1).split()[-1])
-assert abs(last_y - (fy1 - 4 - 16)) < 0.01, (last_y, fy1)
-print("OK chindami : @choshi toujours en bas (fy1 − 4 − len·16), non-régression")
+assert m.group(2) == "17.5", m.group(2)   # fs @choshi = fs titre
+assert abs(last_y - (spec.page_h - 2.3 * k.CM)) < 0.01, (last_y, spec.page_h)
+print("OK chindami : @choshi en bas, baseline à 2,3 cm du bord bas page, fs = fs titre (17,5)")
 
 # 4. vertical/horizontal : le @choshi reste sous le titre (en haut), inchangés
 for layout in ("vertical", "horizontal"):

@@ -45,7 +45,8 @@ assert k.HORIZONTAL.cell_color == "#999999" and k.HORIZONTAL.arrow_color == "#99
 assert k.NOMURA.cell_color == "#333333" and k.NOMURA.cell_width == 0.6
 assert k.NOMURA.frame_color == "#333333" and k.NOMURA.frame_width == 1.5
 assert k.NOMURA.arrow_color == "#333333" and k.NOMURA.arrow_width == 0.6
-assert k.CHINDAMI.cell_color == "#bbbbbb" and k.CHINDAMI.cell_width == 0.6
+assert k.CHINDAMI.cell_color == "#000000" and k.CHINDAMI.cell_width == 0.4   # recueil : noir unique, filets 0,4 pt (essai 2026-11-25)
+assert k.CHINDAMI.arrow_color == "#000000" and k.CHINDAMI.arrow_width == 0.4
 assert k.TUTO.cell_color == "#999999" and k.TUTO.cell_width == 0.75
 assert k.MEGA.cell_color == "#bbbbbb" and k.MEGA.cell_width == 0.75
 assert all(not s.vrep_fill for s in k.LAYOUTS.values())
@@ -155,7 +156,7 @@ print("OK nomura : cadre tracé par défaut, @frame_width 0 = non tracé")
 svg, _ = render("@title t\n" + TAB, "chindami")
 assert not re.search(r'<rect [^>]*stroke="#333333" stroke-width="1\.5"', svg)
 svg, _ = render("@title t\n@frame_width 2\n@frame_color red\n" + TAB, "chindami")
-assert re.search(r'<rect x="49\.55[^>]*stroke="red" stroke-width="2"/>', svg)
+assert re.search(r'<rect x="42\.51975[^>]*stroke="red" stroke-width="2"/>', svg)   # chindami : margin_l = 1,5 cm
 svg, _ = render("@title t\n@frame_width 2\n" + TAB, "mega")
 assert re.search(r'<rect [^>]*stroke="#333333" stroke-width="2"/>', svg)
 svg, _ = render("@title t\n@frame_width 1.5\n" + TAB, "tuto")   # 1,5 pt = 2 px en tuto
@@ -179,7 +180,7 @@ print("Tous les tests de test_layout_attrs.py passent.")
 svg, _ = render("@title t\n" + TAB_V, "vertical")
 assert 'class="repeat-arrow" fill="none"' in svg and 'class="vocal-rep" fill="none"' in svg
 svg, _ = render("@title t\n@rep_fill on\n" + TAB_V, "vertical")
-assert 'class="repeat-arrow" fill="#bbbbbb"' in svg and 'class="vocal-rep" fill="none"' in svg
+assert 'class="repeat-arrow" fill="#bbbbbb"' in svg and 'class="vocal-rep" fill="none"' in svg   # plein = couleur de flèche du layout
 svg, _ = render("@title t\n@vrep_fill on\n" + TAB_V, "vertical")
 assert 'class="repeat-arrow" fill="none"' in svg and 'class="vocal-rep" fill="#bbbbbb"' in svg
 svg, _ = render("@title t\n@rep_fill on\n@vrep_fill on\n" + TAB_V, "vertical")
@@ -187,7 +188,7 @@ assert 'class="repeat-arrow" fill="#bbbbbb"' in svg and 'class="vocal-rep" fill=
 svg, _ = render("@title t\n@vrep_fill on\n" + TAB_V, "horizontal")
 assert 'class="vocal-rep" fill="#999999"' in svg and 'class="repeat-arrow" fill="none"' in svg
 svg, _ = render("@title t\n" + TAB_V, "chindami")
-assert 'class="repeat-arrow" fill="#bbbbbb"' in svg and 'class="vocal-rep" fill="none"' in svg  # défaut chindami : flèches pleines, disques creux
+assert 'class="repeat-arrow" fill="#000000"' in svg and 'class="vocal-rep" fill="none"' in svg  # défaut chindami : flèches pleines noires, disques creux
 print("OK split rep_fill/vrep_fill : flèches instrumentales vs disques vocaux, tous layouts ; chindami flèches pleines par défaut")
 
 print("Tous les tests passent.")

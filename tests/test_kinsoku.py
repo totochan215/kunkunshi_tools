@@ -75,7 +75,7 @@ assert "WARNING" in err.getvalue(), err.getvalue()
 print("OK @kinsoku en méta, WARNING sur valeur invalide")
 
 # 7. E2E chindami : kinsoku actif change le repli (、 à la limite de colonne)
-long_line = "あ" * 29 + "、" + "い" * 10   # 40 unités > max_lyr_u chindami (~29)
+long_line = "あ" * 30 + "、" + "い" * 10   # 41 unités > max_lyr_u chindami (30), 、 à la limite de colonne
 kkml_tmpl = "@layout chindami\n@kinsoku {k}\n::tab\n工 工 工 工\n::\n::lyrics\n{line}\n::\n"
 err = io.StringIO()
 with contextlib.redirect_stderr(err):

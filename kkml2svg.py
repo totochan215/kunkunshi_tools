@@ -896,20 +896,25 @@ NOMURA = LayoutSpec(
 CHINDAMI = LayoutSpec(
     name="chindami", unit="pt",
     page_w=23 * CM, page_h=15 * CM, page_cm=(23, 15),
-    # mesures sur samples/chindami-pdf p8-p11 (1816x1181 px, 2,785 px/pt) :
-    # marges = position du cadre (non tracé : frame_width = 0, sans liseré de
-    # page) ; la grille occupe tout le hanmen (padding 0)
-    margin_l=138 / 2.785, margin_r=138 / 2.785,
-    margin_t=85 / 2.785, margin_b=15 * CM - 1079 / 2.785,
+    # mesures recueil Chindami Kunkunshi Hyoukashuu (2026-11-24) : marges mesurées
+    # au BLOC de tablature (haut ≈ 1 cm, bas ≈ 1,3 cm, droite/gauche ≈ 1,5 cm) ; la
+    # colonne titre est posée DANS la marge droite (bord droit à ≈ 0,75 cm du bord
+    # droit de la page). Cadre virtuel non tracé (frame_width = 0) ; la grille
+    # occupe tout le hanmen (padding 0, pas de gap entre piles, dan_gap = 0).
+    margin_l=1.5 * CM, margin_r=1.5 * CM,
+    margin_t=1 * CM, margin_b=1.3 * CM,
     cell_w=65 / 2.785, cell_h=83 / 2.785, pile_w=97 / 2.785, marker_w=32 / 2.785,
-    dan_gap=0, max_dans=15, cells_per_dan=12, dans_per_block=15, fs=12,
+    dan_gap=0, max_dans=16, cells_per_dan=12, dans_per_block=16, fs=12,  # max 16 dans constaté
     title_w=(1816 - 1750) / 2.785, title_gap=10,
+    title_fs=17.5, title_spacing=17.5,  # fs titre = fs @choshi (4,3 cm / 7 car. pour てぃんさぐぬ花)
     md_spacing=6,
+    page_no_fs=10,                       # n° de page ≈ 2,5 mm de haut, baseline à 0,7 cm du bord bas
     lyr_gap=12, lyr_fs=10.8,   # 0,9 x fs=12, int() -> 10
-    cell_width=0.6, arrow_width=0.6,
-    rep_fill=True,   # recueil chindami (2026-11-24) : flèches de boucles instrumentales PLEINES ; disques vocaux creux (vrep_fill off)
-    circle_width=0.5,  # cercles de 尺 (@shaku_circled) : 0,5 pt en chindami (recueil 2026-11-24)
-    meta_order=("choshi",))   # chindami : méta = titre + @musicno + tempo + @choshi uniquement
+    cell_color="#000000", arrow_color="#000000",   # une seule couleur : le noir
+    cell_width=0.4, arrow_width=0.4,               # filets fins (0,4 pt, essai 2026-11-25 ; cercles de 尺 restent 0,5 pt)
+    rep_fill=True,   # flèches de boucles instrumentales PLEINES (recueil 2026-11-24) ; disques vocaux creux
+    circle_width=0.5,  # cercles de 尺 (@shaku_circled) : 0,5 pt (recueil 2026-11-24)
+    meta_order=("genre", "choshi"))  # genre entre colonne @choshi et bloc tab ; sinon titre + @musicno + tempo + @choshi
 
 TUTO = LayoutSpec(
     name="tuto", unit="px",
@@ -1778,6 +1783,9 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     font_family = (opts or {}).get('font_family', 'serif')
 
     spec = spec or CHINDAMI
+    # La colonne marker est cosubstantielle au layout chindami : forcer
+    # @marker on, quelle que soit la méta (recueil 2026-11-24).
+    marker = True
     MD_SP = spec.u(spec.md_spacing)  # gap titre -> méta (tempo)
     o = opts or {}
     cs = o.get('cell_color') or spec.cell_color
@@ -1794,8 +1802,18 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     fs = spec.fs
     fx0, fy0, fx1, fy1 = spec.frame_rect()   # cadre = marges depuis le bord (non tracé ici)
     page_base = _meta_page_base(song.meta)
-    title_offset = (spec.title_w + spec.title_gap) if (title or musicno or _speed_text(song)) else 0
-    syllable_fs = min(int(cell_h * 0.26), int(marker_w * 0.8)) if marker_w > 0 else 0
+    # Colonne titre posée dans la marge droite (bord droit à 0,75 cm du bord page) :
+    # elle ne consomme PAS de largeur de grille, sauf titre long (saut de colonne
+    # accepté -> le bloc de tab est repoussé à gauche d'autant).
+    TF = spec.title_fs or 18
+    TSP = spec.title_spacing or TF
+    grid_h = rows * cell_h
+    title_extra_w = 0
+    if title:
+        h_title = TF * 0.88 + (len(title) - 1) * TSP
+        n_tcols = max(1, -(-int(h_title * 100) // int(grid_h * 100)))  # ceil
+        title_extra_w = (n_tcols - 1) * spec.title_w
+    syllable_fs = int(marker_w * 0.8) if marker_w > 0 else 0   # grand kana ≈ 80 % de la largeur du marker (recueil)
 
     # Flux : aplatir les sections tab en colonnes de 12, avec vocal sync.
     tab_columns = []
@@ -1871,15 +1889,15 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     lyr_next = 0  # prochaine colonne de paroles à placer
     while i < len(tab_columns):
         remaining = len(tab_columns) - i
-        budget = max_dans - (1 if first and (title or musicno) else 0)
+        budget = max_dans   # colonne titre dans la marge : ne consomme pas de dan
         take = min(budget, remaining)
+        take = min(take, max(1, int((frame_w - title_extra_w * (1 if first else 0)) // spec.pile_w)))
         # dernière page de musique : remplir l'espace libre à gauche des
         # piles avec autant de colonnes de paroles qu'il en tient
         # (L + P + title_offset + 12 ≤ largeur utile du cadre)
         lyr_slice = None
         if i + take >= len(tab_columns) and lyr_next < len(lyr_cols):
-            avail_w = (frame_w - title_offset * (1 if first else 0)
-                       - take * spec.pile_w)
+            avail_w = frame_w - title_extra_w * (1 if first else 0) - take * spec.pile_w
             n_fit = 0
             while (lyr_next + n_fit < len(lyr_cols) and
                    (n_fit + 1) * lyr_col_w0 + n_fit * lyr_gap0 + lyr_sep0 <= avail_w):
@@ -1939,37 +1957,54 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         except ValueError:
             pass  # n° non numérique : rendu tel quel, pousse le titre pareil
         if is_first and (title or mno or _speed_text(song)):
-            tx = fx1 - spec.title_w / 2
-            title_top = fy0
+            # colonne titre DANS la marge droite : bord droit à 0,75 cm du bord droit page
+            tx = spec.page_w - 0.75 * CM - spec.title_w / 2
+            # genre présent : colonne intercalée entre le bloc de tab (bord droit fx1)
+            # et le titre — centerline à 0,4 cm du bord droit du bloc de tab ; repousse
+            # le titre plus à droite. fs ≈ 50 % fs titre, vertical entre yamakakko
+            # pivotés à 90°, centré verticalement sur le bloc de tab.
+            genre = song.meta.get("genre", "")
+            author = song.meta.get("author", "")
+            if "genre" in spec.meta_order and genre and genre != author:
+                gfs = TF * 0.5
+                gx = fx1 + 0.4 * CM
+                tx = gx + gfs / 2 + spec.title_w / 2
+                gtxt = "\\" + chr(0x300A) + genre + "\\" + chr(0x300B)   # yamakakko échappés (sinon = délimiteurs ruby), pivotés à 90° en vertical
+                gy = fy0 + grid_h / 2 - (len(gtxt) - 1) * gfs / 2 + gfs * 0.88
+                _vertical_grouped_text(out, gtxt, gx, gy, gfs, "#000", gfs, font_family)
             if mno:
-                MNO_FS = 11
-                MNO_GAP = 8   # scans (p078) : bas d'encre du n° → haut
-                             # d'encre du titre ≈ 23 px = 8 pt ; dégage
-                             # aussi le ruby de la 1re glyphe du titre
-                out.append(f'<text x="{tx}" y="{fy0 + MNO_FS * 0.88:.2f}" '
+                MNO_FS = 11   # hauteur d'encre ≈ 4 mm ; haut d'encre à 1,4 cm du haut de page
+                out.append(f'<text x="{tx}" y="{1.4 * CM + MNO_FS * 0.88:.2f}" '
                            f'text-anchor="middle" font-family="serif" '
-                           f'font-size="{MNO_FS}" fill="#333">{escape(mno)}</text>')
-                title_top = fy0 + MNO_FS + MNO_GAP
+                           f'font-size="{MNO_FS}" fill="#000">{escape(mno)}</text>')
+                # écart n° -> haut du titre ≈ 0,4 cm ; haut du titre = baseline
+                y_title = 1.4 * CM + MNO_FS + 0.4 * CM + TF * 0.88
+            else:
+                y_title = 2.1 * CM   # haut du titre = baseline à 2,1 cm du haut de page
             title_end = None
             if title:
-                # Blocs <text> groupés (même règle que le vertical) : base
-                # en un seul élément, rubys indépendants, pivotés à part
-                title_end = _vertical_grouped_text(out, title, tx,
-                                      title_top + 18 * 0.88, 18, "#000", 22, font_family,
-                                      links=True)
+                # titre long : réparti sur plusieurs colonnes verticales (saut de
+                # colonne), le bloc de tab est repoussé à gauche d'autant
+                per_col = max(1, int((grid_h - TF * 0.88) // TSP) + 1)
+                chunks = [title[k:k + per_col] for k in range(0, len(title), per_col)]
+                for ci, chunk in enumerate(chunks):
+                    title_end = _vertical_grouped_text(out, chunk, tx - ci * spec.title_w,
+                                          y_title, TF, "#000", TSP, font_family,
+                                          links=True)
             st = _speed_text(song)
             if st:
-                # tempo ♩=... : horizontal, text-anchor=middle sur tx (centerline de
-                # base du titre, hors ruby), sous le titre, au-dessus de @choshi ; fs 10 en chindami
-                base_y = title_end if title_end is not None else title_top + 18 * 0.88
-                _emit_centered_text(out, st, tx, base_y + MD_SP + 10 * 0.88, 10, "#555")
+                # tempo ♩=... : horizontal, centré sur tx, sous le titre, au-dessus de @choshi
+                base_y = title_end if title_end is not None else y_title
+                _emit_centered_text(out, st, tx, base_y + MD_SP + 10 * 0.88, 10, "#000")
             if tuning and "choshi" in spec.meta_order:
-                _vertical_grouped_text(out, tuning, tx, fy1 - 4 - len(tuning) * 16,
-                                       11, "#555", 16, font_family)
+                # même fs que le titre, aligné horizontalement sur sa 1re colonne
+                # (la plus à droite) ; bas du @choshi = baseline à 2,3 cm du bord bas page
+                yb = spec.page_h - 2.3 * CM - (len(tuning) - 1) * TSP
+                _vertical_grouped_text(out, tuning, tx, yb, TF, "#000", TSP, font_family)
 
         # Piles de droite à gauche (jamais décalées par les paroles : celles-ci
         # occupent l'espace libre à GAUCHE, réservé par la pagination)
-        x_right = fx1 - title_offset if is_first else fx1
+        x_right = fx1 - (title_extra_w if is_first else 0)
         for ci in range(n_cols):
             x = x_right - (ci + 1) * group_w
             y0 = fy0
@@ -2037,14 +2072,13 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                     # consomment PAS d'unités) : n'ajouter qu'UN gap de
                     # ligne, jamais len(ln) brut (double avancement,
                     # débordement des colonnes rubyées)
-                    cy = _vertical_grouped_text(out, ln, vx, cy, lyr_fs, "#333",
+                    cy = _vertical_grouped_text(out, ln, vx, cy, lyr_fs, "#000",
                                                 lyr_sp, font_family)
                     cy += lyr_sp
                 vx -= lyr_col_w + int(lyr_col_w * 0.8)
-        grid_bottom = fy0 + rows * cell_h
+        # n° de page : baseline à 0,7 cm du bord inférieur de la feuille, centré en x
         _draw_page_no(out, page_base + pno - 1, total_w / 2,
-                      (grid_bottom + total_h) / 2 + spec.page_no_fs * 0.35,
-                      spec.page_no_fs)
+                      total_h - 0.7 * CM, spec.page_no_fs, fill="#000")
         out.append('</svg>')
         svgs.append("\n".join(out))
     return svgs
@@ -2912,7 +2946,8 @@ def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
     verticale) : trait vertical depuis le haut de la ligne, puis coude
     horizontal dans le sens de lecture, un seul path, triangle creux au
     bout. 'start' (|:) pointe vers la droite (sens de lecture), 'end' (:|)
-    vers la gauche."""
+    vers la gauche.
+    La queue (path en L) porte toujours fill="none" : même avec un <g> rempli (flèche pleine), elle n’est jamais remplie — un path ouvert serait fermé implicitement au remplissage, créant un triangle rectangle rempli au coude ; seule la tête (polygon) hérite du fill du groupe."""
     out.append(f'<g class="repeat-arrow" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     v_len = marker_h * 0.66   # trait vertical depuis le haut de la ligne
     h_len = v_len             # trait horizontal dans le sens de lecture
@@ -2923,14 +2958,14 @@ def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
         vx = x_left + cell_w * 0.20
         hx = vx + h_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<polygon points="{hx:g},{vy - tri_size:g} '
                    f'{hx:g},{vy + tri_size:g} {hx + tri_w:g},{vy:g}"/>')
     else:
         vx = x_left + cell_w * 0.80
         hx = vx - h_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<polygon points="{hx:g},{vy - tri_size:g} '
                    f'{hx:g},{vy + tri_size:g} {hx - tri_w:g},{vy:g}"/>')
     out.append('</g>')
@@ -2940,7 +2975,8 @@ def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
     transposé de _render_vrep_marker : barre verticale, montant horizontal,
     disque creux. 'end' ( )| ) : barre à ~80% de la case, montant vers la
     gauche, disque à gauche ; 'start' ( |( ) : miroir à ~20%, montant et
-    disque vers la droite."""
+    disque vers la droite.
+    La queue (path en L) porte toujours fill="none" : même avec un <g> rempli (flèche pleine), elle n’est jamais remplie — un path ouvert serait fermé implicitement au remplissage, créant un triangle rectangle rempli au coude ; seule la tête (cercle) hérite du fill du groupe."""
     out.append(f'<g class="vocal-rep" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     v_len = marker_h * 0.66
     r = marker_h * 0.22
@@ -2949,13 +2985,13 @@ def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
         vx = x_left + cell_w * 0.80
         hx = vx - v_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<circle cx="{hx - r:g}" cy="{vy:g}" r="{r:g}"/>')
     else:
         vx = x_left + cell_w * 0.20
         hx = vx + v_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<circle cx="{hx + r:g}" cy="{vy:g}" r="{r:g}"/>')
     out.append('</g>')
 def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
@@ -4278,7 +4314,8 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
     (stroke/sw passés par le layout appelant, défaut = cases vertical).
 
     arrow_type: 'start' = flèche descendante (~80% haut), 'end' = flèche montante (~80% bas).
-    x_left = bordure gauche de la colonne marker. cy = position verticale du haut de la case."""
+    x_left = bordure gauche de la colonne marker. cy = position verticale du haut de la case.
+    La queue (path en L) porte toujours fill="none" : même avec un <g> rempli (flèche pleine), elle n’est jamais remplie — un path ouvert serait fermé implicitement au remplissage, créant un triangle rectangle rempli au coude ; seule la tête (polygon) hérite du fill du groupe."""
     out.append(f'<g class="repeat-arrow" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     h_len = marker_w * 0.66  # longueur du trait horizontal
     v_len = h_len  # trait vertical au moins aussi long que l'horizontal
@@ -4292,7 +4329,7 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
         hx = x_left + h_len
         vy = hy + v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         # Triangle creux pointant vers le bas, sommet à (hx, vy + tri_h)
         tip_y = vy + tri_h
         out.append(f'<polygon points="{hx - tri_size:g},{vy:g} '
@@ -4304,7 +4341,7 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
         # Coude propre : horizontal puis vertical montant, un seul path
         vy = hy - v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         # Triangle creux pointant vers le haut, sommet à (hx, vy - tri_h)
         tip_y = vy - tri_h
         out.append(f'<polygon points="{hx - tri_size:g},{vy:g} '
@@ -4324,7 +4361,8 @@ def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
     haut, disque au-dessus) ; 'start' = |( → image spéculaire par rapport
     à l'axe HORIZONTAL : barre à ~20% du haut, montant vers le bas,
     disque en dessous.
-    x_left = bordure gauche de la colonne marker. cy = haut de la case."""
+    x_left = bordure gauche de la colonne marker. cy = haut de la case.
+    La queue (path en L) porte toujours fill="none" : même avec un <g> rempli (flèche pleine), elle n’est jamais remplie — un path ouvert serait fermé implicitement au remplissage, créant un triangle rectangle rempli au coude ; seule la tête (cercle) hérite du fill du groupe."""
     out.append(f'<g class="vocal-rep" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     h_len = marker_w * 0.66
     v_len = h_len
@@ -4336,13 +4374,13 @@ def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
         # Coude propre : barre horizontale puis montant vers le haut
         vy = hy - v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<circle cx="{hx:g}" cy="{vy - r:g}" r="{r:g}"/>')
     else:  # 'start' : miroir horizontal — barre en haut, montant descendant
         hy = cy + cell_h * 0.20
         vy = hy + v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<circle cx="{hx:g}" cy="{vy + r:g}" r="{r:g}"/>')
     out.append('</g>')
 def _render_end_circle(out, x_left, cy, cell_h, marker_w):
@@ -4880,7 +4918,7 @@ def escape(s):
 # Caractères à pivoter de 90° sens horaire en texte vertical
 # （ U+FF08, ） U+FF09, ( U+0028, ) U+0029
 # 「 U+300C, 」 U+300D, 『 U+300E, 』 U+300F
-VERTICAL_ROTATE_CHARS = set("（）()「」『』ー")
+VERTICAL_ROTATE_CHARS = set("（）()「」『』《》ー")  # + yamakakko 《》 (échappés = littéraux pivotés)
 
 
 def _vertical_char(out, ch, x, y, fs, fill, family="serif"):

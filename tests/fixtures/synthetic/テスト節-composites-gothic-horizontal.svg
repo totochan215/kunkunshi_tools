@@ -17,7 +17,7 @@
 <rect x="588" y="63" width="52" height="58" fill="none" stroke="#999999" stroke-width="0.75"/>
 <rect x="16" y="121" width="624" height="29" fill="none" stroke="#999999" stroke-width="0.75"/>
 <g class="repeat-arrow" fill="none" stroke="#999999" stroke-width="0.75">
-<path d="M 494.4 121 L 494.4 140.14 L 513.54 140.14"/>
+<path d="M 494.4 121 L 494.4 140.14 L 513.54 140.14" fill="none"/>
 <polygon points="513.54,133.76 513.54,146.52 524.59,140.14"/>
 </g>
 <text x="28.8" y="98.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ合</text>
@@ -83,7 +83,7 @@
 <rect x="588" y="237" width="52" height="58" fill="none" stroke="#999999" stroke-width="0.75"/>
 <rect x="16" y="295" width="624" height="29" fill="none" stroke="#999999" stroke-width="0.75"/>
 <g class="repeat-arrow" fill="none" stroke="#999999" stroke-width="0.75">
-<path d="M 629.6 295 L 629.6 314.14 L 610.46 314.14"/>
+<path d="M 629.6 295 L 629.6 314.14 L 610.46 314.14" fill="none"/>
 <polygon points="610.46,307.76 610.46,320.52 599.41,314.14"/>
 </g>
 <text x="28.8" y="272.996" font-family="Hiragino Kaku Gothic ProN, 'Yu Gothic', Meiryo, MS Gothic, Noto Sans CJK JP, sans-serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">イ合</text>
