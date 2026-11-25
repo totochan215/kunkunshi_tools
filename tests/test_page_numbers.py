@@ -30,7 +30,7 @@ import kkml2svg as k
 import kkml_clean as c
 
 PNO_RE = re.compile(
-    r'<text x="([\d.]+)" y="([\d.]+)" text-anchor="(\w+)"[^>]*font-size="([\d.]+)" fill="#555">–(\d+)–</text>')
+    r'<text x="([\d.]+)" y="([\d.]+)" text-anchor="(\w+)"[^>]*font-size="([\d.]+)" fill="[^"]*">–(\d+)–</text>')
 
 
 def page_nos(svg):
@@ -103,7 +103,7 @@ n1, n2 = page_nos(svgs[0])[0], page_nos(svgs[1])[0]
 assert n1[4] == "2" and n1[2] == "start" and n2[4] == "3" and n2[2] == "end", (n1, n2)
 print("OK nomura : –n– au-dessus du cadre, n pair -> gauche, impair -> droite, @page_base")
 
-# 6. chindami : centré, mi-hauteur bas de grille / bas de page, auto-incrémenté
+# 6. chindami : centré en x, baseline à 0,7 cm du bord bas (recueil 2026-11-24), fs 10, auto-incrémenté
 svgs, err = render(MEDLEY, "chindami")
 assert len(svgs) > 1 and "WARNING" not in err, (len(svgs), err)
 spec = k.CHINDAMI
@@ -111,9 +111,9 @@ fx0, fy0, fx1, fy1 = spec.frame_rect()
 grid_bottom = fy0 + spec.cells_per_dan * spec.cell_h
 p0 = page_nos(svgs[0])[0]
 assert p0[4] == "1" and p0[2] == "middle" and abs(float(p0[0]) - spec.page_w / 2) < 0.01
-assert abs(float(p0[1]) - ((grid_bottom + spec.page_h) / 2 + spec.page_no_fs * 0.35)) < 0.01
+assert p0[3] == "10" and abs(float(p0[1]) - (spec.page_h - 0.7 * k.CM)) < 0.01, p0   # fs 10, baseline à 0,7 cm du bord bas
 assert [page_nos(s)[0][4] for s in svgs] == [str(i + 1) for i in range(len(svgs))]
-print("OK chindami : –n– centré, mi-hauteur bas grille / bas de page, auto-incrémenté")
+print("OK chindami : –n– centré en x, baseline à 0,7 cm du bord bas, fs 10, auto-incrémenté")
 
 # 7. layouts libres : pas de numéro de page
 for layout in ("vertical", "horizontal", "tuto"):

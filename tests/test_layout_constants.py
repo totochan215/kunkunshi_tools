@@ -79,7 +79,7 @@ assert t.render_sections == ("tab", "vocal")
 assert t.render_koe is False and t.render_yubii is False
 assert t.meta_order == ("genre", "author", "composer", "lyricist", "origin", "choshi")
 assert k.LAYOUTS["nomura"].meta_order == ("choshi",)
-assert k.LAYOUTS["chindami"].meta_order == ("choshi",)
+assert k.LAYOUTS["chindami"].meta_order == ("genre", "choshi")
 assert k.LAYOUTS["mega"].meta_order == ("genre", "author", "choshi")
 for name in ("nomura", "chindami", "mega"):
     assert k.LAYOUTS[name].render_sections == k.SECTION_KINDS, name
@@ -103,7 +103,7 @@ assert "う" in tu                     # ::vocal rattaché au ::tab, rendu en ce
 nm = text_of("nomura")
 assert "ZZChoshi" in nm and "ZZAuteur" not in nm and "ZZComp" not in nm and "ZZGenre" not in nm
 cd = text_of("chindami")
-assert "ZZChoshi" in cd and "ZZAuteur" not in cd and "ZZComp" not in cd
+assert "ZZChoshi" in cd and "ZZGenre" in cd and "ZZAuteur" not in cd and "ZZComp" not in cd  # chindami : genre + choshi
 mg = text_of("mega")
 assert "ZZGenre" in mg and "ZZAuteur" in mg and "ZZChoshi" in mg
 assert "ZZComp" not in mg and "ZZParol" not in mg and "ZZOrig" not in mg
