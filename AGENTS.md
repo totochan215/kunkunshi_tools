@@ -91,6 +91,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ❓ Notes entre parenthèses dans certaines tablatures (notes à sauter au 1er passage,
   jouées en revenant de boucle) : syntaxe à prévoir, risque de collision avec koedashi/koekiri.
 
+- ✅ (2026-11-24) **`arrow_fill` renommé `rep_fill`, séparé de `vrep_fill`** : champs `LayoutSpec.rep_fill` (têtes des FLÈCHES de répétition instrumentale `|: :|`) et `LayoutSpec.vrep_fill` (DISQUES de répétition vocale `(: :)`), défaut `False`, méta `@rep_fill`/`@vrep_fill` — valables pour tous les layouts (nommage aligné sur Portama `repeatStart/End` vs `vocalRepStart/End`). `@arrow_fill` reste accepté (alias, info stderr, `META_ALIASES`) et rectifié en `@rep_fill` par le cleaner (comme `@tuning`→`@choshi`). chindami : `rep_fill=True` (recueil 2026-11-24 : flèches instrumentales pleines), `vrep_fill=False` (disques creux). Rendus identiques octet par octet hors chindami (seuls les groupes `repeat-arrow` passent à `fill="#bbbbbb"` — 175 rendus vérifiés). Tests `tests/test_layout_attrs.py` §10 (split + alias + cleaner), doc `docs/kkml-format.md` (@rep_fill/@vrep_fill).
 ## 1. Validations en attente (bloquantes ou quasi)
 
 - ✅ (2026-11-01, PR #12) marqueur de couplet en début de ligne dans `::lyrics` force le changement de couplet (même sans ligne vide) → saut de colonne en layout vertical. Cas jukunoharu. `_split_verses` modifié.
