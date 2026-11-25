@@ -503,7 +503,7 @@ META_KEYS = {"title", "choshi", "tuning", "cols", "cells_per_dan", "layout", "ma
              "page_dans", "dans_per_page", "tuto_block", "kinsoku", "page_base",
              # attributs de design surchargeables par mise en page (défaut = LayoutSpec)
              "text_color", "frame_color", "frame_width", "cell_color", "cell_width",
-             "arrow_color", "arrow_width", "rep_fill", "vrep_fill", "arrow_fill",  # arrow_fill = alias de rep_fill (forme collée)
+             "arrow_color", "arrow_width", "rep_fill", "vrep_fill", "circle_width", "arrow_fill",  # arrow_fill = alias de rep_fill (forme collée)
              # compatibilité Portama (valeurs stockées telles quelles dans song.meta)
              "musicno", "chogen", "base_note", "rythm", "rythm_mode"}
 class Song:
@@ -810,7 +810,7 @@ class LayoutSpec:
     syl_cell_ratio: float = 0.26     # syllabe marker : min(ratio x cell_h, ...)
     syl_marker_ratio: float = 0.8
     syl_fs_ratio: float = 0.6        # repli si pas de marker (horizontal/tuto)
-    # Attributs de design (surchargeables par métadonnées @*_color/@*_width/@rep_fill/@vrep_fill) :
+    # Attributs de design (surchargeables par métadonnées @*_color/@*_width/@rep_fill/@vrep_fill/@circle_width) :
     # couleurs au format HTML (#rgb, #rrggbb ou nom), épaisseurs en pt
     text_color: str = "#000000"      # couleur de tout le texte (fill racine SVG)
     frame_color: str = "#333333"     # filet de cadre de page
@@ -821,6 +821,7 @@ class LayoutSpec:
     arrow_width: float = 0.75        # épaisseur des flèches de boucles
     rep_fill: bool = False           # têtes des FLÈCHES de répétition instrumentale remplies (on) ou creuses (off)
     vrep_fill: bool = False          # DISQUES de répétition vocale remplis (on) ou creux (off) — séparé de rep_fill
+    circle_width: float = 1.0      # épaisseur du CERCLE de 尺 (@shaku_circled on), unité native — méta @circle_width
     page_no_fs: float = 11
     # Quelles métadonnées et quelles sections ce layout rend (surcharge des
     # constantes globales META_ORDER / SECTION_KINDS) : meta_order = clés de
@@ -907,6 +908,7 @@ CHINDAMI = LayoutSpec(
     lyr_gap=12, lyr_fs=10.8,   # 0,9 x fs=12, int() -> 10
     cell_width=0.6, arrow_width=0.6,
     rep_fill=True,   # recueil chindami (2026-11-24) : flèches de boucles instrumentales PLEINES ; disques vocaux creux (vrep_fill off)
+    circle_width=0.5,  # cercles de 尺 (@shaku_circled) : 0,5 pt en chindami (recueil 2026-11-24)
     meta_order=("choshi",))   # chindami : méta = titre + @musicno + tempo + @choshi uniquement
 
 TUTO = LayoutSpec(
@@ -1153,6 +1155,7 @@ def render_svg(song, cols=None, layout=None, cell_w=None, cell_h=None, font_size
     opts['frame_width'] = spec.frame_width if _fw is None else _fw
     opts['cell_color'] = _meta_color(song.meta, 'cell_color') or spec.cell_color
     opts['cell_width'] = _meta_pt(song.meta, 'cell_width') or spec.cell_width
+    opts['circle_width'] = _meta_pt(song.meta, 'circle_width') or spec.circle_width
     opts['arrow_color'] = _meta_color(song.meta, 'arrow_color') or spec.arrow_color
     opts['arrow_width'] = _meta_pt(song.meta, 'arrow_width') or spec.arrow_width
     for _fk in ('rep_fill', 'vrep_fill'):
@@ -4484,6 +4487,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
     """
     if opts is None:
         opts = {}
+    circle_w = opts.get('circle_width', 1)  # épaisseur du cercle de 尺 (@shaku_circled)
     tmap = _avg_tech_map()  # copie des positions propres à chaque marque
     def _rt(out, suffixes, cx, cy, cw, ch, fs, text_w=None, note_fs=None,
             cell_cy=None, box_w=None, box_top=None):
@@ -4583,7 +4587,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         # cercle centré sur le glyphe du 尺 (calibrage Inkscape nov. 2026 :
         # centre = baseline − fs·0.318 = cy ; l'ancien cy+2 décentrait vers le bas)
         out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
-                   f'fill="none" stroke="black" stroke-width="1"/>')
+                   f'fill="none" stroke="black" stroke-width="{circle_w:g}"/>')
         out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape("尺")}</text>')
@@ -4695,7 +4699,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         if main_note == "尺" and opts.get('shaku_circled') and not main_sharp:
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
-                       f'fill="none" stroke="black" stroke-width="1"/>')
+                       f'fill="none" stroke="black" stroke-width="{circle_w:g}"/>')
         out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
@@ -4843,7 +4847,7 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
         if base_tok == "尺" and opts.get('shaku_circled') and not shaku_sharp:
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
-                       f'fill="none" stroke="black" stroke-width="1"/>')
+                       f'fill="none" stroke="black" stroke-width="{circle_w:g}"/>')
         out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
                    f'font-family="serif" font-size="{effective_fs}" '
                    f'fill="black">{escape(base_tok)}</text>')

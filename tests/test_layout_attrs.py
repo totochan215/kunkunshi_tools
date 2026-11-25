@@ -52,6 +52,8 @@ assert all(not s.vrep_fill for s in k.LAYOUTS.values())
 assert all(s.text_color == "#000000" for s in k.LAYOUTS.values())
 assert k.CHINDAMI.rep_fill is True   # recueil chindami : flèches instrumentales pleines
 assert all(not s.rep_fill for n, s in k.LAYOUTS.items() if n != "chindami")
+assert k.CHINDAMI.circle_width == 0.5   # cercles de 尺 : 0,5 pt en chindami (recueil)
+assert all(s.circle_width == 1.0 for n, s in k.LAYOUTS.items() if n != "chindami")
 print("OK LayoutSpec : défauts de design des 6 mises en page")
 
 # 2. Sans métadonnée : rendu historique (couleurs/épaisseurs littérales du layout)
@@ -102,12 +104,12 @@ print("OK @cell_width et @arrow_width indépendants")
 
 # 7. Valeurs invalides : WARNING + défaut du layout conservé
 svg, err = render("@title t\n@text_color pas-une-couleur!\n@cell_width abc\n"
-                  "@arrow_width -2\n@arrow_fill maybe\n" + TAB, "vertical")
-assert err.count("WARNING") == 4, err
+                  "@arrow_width -2\n@arrow_fill maybe\n@circle_width abc\n" + TAB, "vertical")
+assert err.count("WARNING") == 5, err
 assert 'fill="black"' in svg and '<svg fill=' not in svg
 assert 'stroke="#bbbbbb" stroke-width="0.75"' in svg
 assert 'fill="none" stroke="#bbbbbb" stroke-width="0.75"' in svg
-print("OK valeurs invalides : 4 WARNING, défauts du layout appliqués")
+print("OK valeurs invalides : 5 WARNING, défauts du layout appliqués")
 
 # 8. Horizontal : défauts #999999, surcharge par @cell_color (les flèches gardent
 #    @arrow_color, donc #999999 tant que @arrow_color n'est pas renseigné)
@@ -118,12 +120,12 @@ print("OK horizontal : surcharge @cell_color, flèches sur @arrow_color")
 
 # 9. Cleaner : les 8 métadonnées sont reconnues et conservées (idempotent)
 src = ("@format KKML\n@title t\n@text_color #a00000\n@frame_color green\n@frame_width 3\n"
-       "@cell_color red\n@cell_width 2\n@arrow_color blue\n@arrow_width 1.5\n@rep_fill on\n"
+       "@cell_color red\n@cell_width 2\n@arrow_color blue\n@arrow_width 1.5\n@rep_fill on\n@circle_width 2\n"
        + TAB)
 out = c.clean(src)
 for key in ("@text_color #a00000", "@frame_color green", "@frame_width 3",
             "@cell_color red", "@cell_width 2", "@arrow_color blue",
-            "@arrow_width 1.5", "@rep_fill on"):
+            "@arrow_width 1.5", "@rep_fill on", "@circle_width 2"):
     assert key in out, (key, out)
 assert c.clean(out) == out
 out_alias = c.clean("@format KKML\n@title t\n@arrow_fill on\n" + TAB)
@@ -187,5 +189,17 @@ assert 'class="vocal-rep" fill="#999999"' in svg and 'class="repeat-arrow" fill=
 svg, _ = render("@title t\n" + TAB_V, "chindami")
 assert 'class="repeat-arrow" fill="#bbbbbb"' in svg and 'class="vocal-rep" fill="none"' in svg  # défaut chindami : flèches pleines, disques creux
 print("OK split rep_fill/vrep_fill : flèches instrumentales vs disques vocaux, tous layouts ; chindami flèches pleines par défaut")
+
+print("Tous les tests passent.")
+
+# 11. circle_width : épaisseur du cercle de 尺 (@shaku_circled on)
+SHAKU = "@shaku_circled on\n::tab\n尺\n::\n"
+svg, _ = render("@title t\n" + SHAKU, "vertical")
+assert "<circle" in svg and 'stroke-width="1"' in svg          # défaut layout = 1
+svg, _ = render("@title t\n" + SHAKU, "chindami")
+assert 'stroke-width="0.5"' in svg                             # chindami : 0,5 pt (recueil)
+svg, _ = render("@title t\n@circle_width 2\n" + SHAKU, "vertical")
+assert 'stroke-width="2"' in svg                               # surcharge méta
+print("OK circle_width : cercle de 尺, défaut 1 / chindami 0,5 pt / @circle_width surcharge")
 
 print("Tous les tests passent.")
