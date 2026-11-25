@@ -45,8 +45,8 @@ assert k.HORIZONTAL.cell_color == "#999999" and k.HORIZONTAL.arrow_color == "#99
 assert k.NOMURA.cell_color == "#333333" and k.NOMURA.cell_width == 0.6
 assert k.NOMURA.frame_color == "#333333" and k.NOMURA.frame_width == 1.5
 assert k.NOMURA.arrow_color == "#333333" and k.NOMURA.arrow_width == 0.6
-assert k.CHINDAMI.cell_color == "#000000" and k.CHINDAMI.cell_width == 0.5   # recueil : noir unique, filets 0,5 pt
-assert k.CHINDAMI.arrow_color == "#000000" and k.CHINDAMI.arrow_width == 0.5
+assert k.CHINDAMI.cell_color == "#000000" and k.CHINDAMI.cell_width == 0.4   # recueil : noir unique, filets 0,4 pt (essai 2026-11-25)
+assert k.CHINDAMI.arrow_color == "#000000" and k.CHINDAMI.arrow_width == 0.4
 assert k.TUTO.cell_color == "#999999" and k.TUTO.cell_width == 0.75
 assert k.MEGA.cell_color == "#bbbbbb" and k.MEGA.cell_width == 0.75
 assert all(not s.vrep_fill for s in k.LAYOUTS.values())

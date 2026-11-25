@@ -43,8 +43,11 @@ for layout in ("vertical", "horizontal"):
         kids = list(g)
         assert len(kids) == 2 and kids[0].tag == ns + "path"
         assert kids[1].tag in (ns + "polygon", ns + "circle")
-        for kid in kids:  # plus d'attribut de trait sur les enfants (hérité du <g>)
-            assert "stroke" not in kid.attrib and "fill" not in kid.attrib
+        for kid in kids:  # plus d'attribut de trait sur les enfants (hérité du <g>),
+            assert "stroke" not in kid.attrib          # la queue (path) peut porter fill="none" explicite
+            assert kid.attrib.get("fill", "none") == "none" or kid.tag == ns + "polygon" or kid.tag == ns + "circle"
+            if kid.tag == ns + "path":
+                assert kid.attrib.get("fill") == "none"  # queue jamais remplie même si <g> rempli
     print(f"OK {layout} : 2 <g class=\"repeat-arrow\"> + 2 <g class=\"vocal-rep\">, XML valide")
 
 print("\nTous les tests de groupes SVG passent.")

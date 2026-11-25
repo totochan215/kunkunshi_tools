@@ -77,7 +77,7 @@ assert abs(spec.pile_w - 97 / 2.785) < 1e-9 and abs(spec.marker_w - 32 / 2.785) 
 assert spec.title_fs == 17.5 and spec.title_spacing == 17.5   # fs choshi = fs titre
 assert spec.page_no_fs == 10                                   # n° ≈ 2,5 mm de haut
 assert spec.cell_color == "#000000" and spec.arrow_color == "#000000"
-assert spec.cell_width == 0.5 and spec.arrow_width == 0.5      # filets fins
+assert spec.cell_width == 0.4 and spec.arrow_width == 0.4      # filets fins (0,4 pt, essai 2026-11-25)
 assert spec.rep_fill is True and spec.vrep_fill is False       # flèches pleines, disques creux
 assert spec.circle_width == 0.5                                # cercles de 尺 0,5 pt
 assert spec.meta_order == ("genre", "choshi")
@@ -150,12 +150,12 @@ svg = render(base_src())[0]
 rects = re.findall(r'<rect [^>]*fill="none"[^>]*/>', svg)
 assert rects, "cases introuvables"
 for r in rects:
-    assert 'stroke="#000000"' in r and 'stroke-width="0.5"' in r, r
+    assert 'stroke="#000000"' in r and 'stroke-width="0.4"' in r, r
 src17 = ("@title " + TITRE + "\n@choshi " + CHOSHI + "\n::tab\n"
          + "\n".join(" ".join([GO] * 12) for _ in range(17)) + "\n::\n")
 svgs = render(src17)   # 17 colonnes de 12 cases -> 2 pages (max 16 dans/page)
 assert len(svgs) == 2, len(svgs)
-print("OK 5. cases/marker en #000 filet 0,5 pt ; 17 dans -> 2 pages (max_dans = 16)")
+print("OK 5. cases/marker en #000 filet 0,4 pt ; 17 dans -> 2 pages (max_dans = 16)")
 
 # 6. Titre long : saut de colonne (2 colonnes de titre, bloc de tab repoussé à gauche)
 long_title = "あ" * 25
@@ -168,5 +168,26 @@ assert abs(tb[1][0][0] - tb[0][0][0] + spec.title_w) < 0.01  # colonne suivante 
 first_pile_x = min(float(r.split('x="')[1].split('"')[0]) for r in re.findall(r'<rect [^>]*fill="none"[^>]*/>', svg) if 'height="29.8' in r)
 assert abs(first_pile_x - (fx1 - spec.title_w - spec.pile_w)) < 0.01, first_pile_x   # tab repoussé d'une colonne
 print("OK 6. titre long : 2 colonnes verticales, bloc de tab repoussé à gauche d'autant")
+
+
+# 7. Flèche pleine (rep_fill chindami) : seule la TÊTE est remplie — la queue (path
+#    en L) porte fill="none" explicite, sinon le path ouvert serait fermé implicitement
+#    au remplissage et créerait un triangle rectangle rempli au coude (8 sites : 4 fonctions
+#    x start/end, vertical + horizontal).
+TAB_V = "::tab\n|: " + GO + " (:" + chr(0x5C3A) + " " + chr(0x5C3A) + ":) :|\n::\n"
+for layout in ("chindami", "vertical", "horizontal"):
+    src = "@title t\n" + ("@rep_fill on\n@vrep_fill on\n" if layout != "chindami" else "") + TAB_V
+    svg = "".join(k.render_svg(k.parse_kkml(src), layout=layout))
+    groups = re.findall(r'<g class="(?:repeat-arrow|vocal-rep)"([^>]*)>(.*?)</g>', svg, re.S)
+    assert len(groups) == 4, (layout, len(groups))
+    for attrs, body in groups:
+        gfill = re.search(r'fill="([^"]*)"', attrs).group(1)
+        path = re.search(r'<path[^>]*/>', body).group(0)
+        head = re.search(r'<(?:polygon|circle)[^>]*/>', body).group(0)
+        assert 'fill="none"' in path, (layout, path)          # queue JAMAIS remplie
+        assert "fill=" not in head, (layout, head)            # tête hérite du fill du <g>
+        if gfill != "none":                                   # flèche/disque plein
+            assert "fill=" not in path or 'fill="none"' in path
+print("OK 7. rep_fill/vrep_fill : seule la tête (polygon/cercle) est remplie, queue fill=\"none\" (4 fonctions x 2, vertical+horizontal+chindami)")
 
 print("\nTous les tests de calibrage chindami passent.")

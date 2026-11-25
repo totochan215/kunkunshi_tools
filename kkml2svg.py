@@ -911,7 +911,7 @@ CHINDAMI = LayoutSpec(
     page_no_fs=10,                       # n° de page ≈ 2,5 mm de haut, baseline à 0,7 cm du bord bas
     lyr_gap=12, lyr_fs=10.8,   # 0,9 x fs=12, int() -> 10
     cell_color="#000000", arrow_color="#000000",   # une seule couleur : le noir
-    cell_width=0.5, arrow_width=0.5,               # filets fins (0,5 pt)
+    cell_width=0.4, arrow_width=0.4,               # filets fins (0,4 pt, essai 2026-11-25 ; cercles de 尺 restent 0,5 pt)
     rep_fill=True,   # flèches de boucles instrumentales PLEINES (recueil 2026-11-24) ; disques vocaux creux
     circle_width=0.5,  # cercles de 尺 (@shaku_circled) : 0,5 pt (recueil 2026-11-24)
     meta_order=("genre", "choshi"))  # genre entre colonne @choshi et bloc tab ; sinon titre + @musicno + tempo + @choshi
@@ -2946,7 +2946,8 @@ def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
     verticale) : trait vertical depuis le haut de la ligne, puis coude
     horizontal dans le sens de lecture, un seul path, triangle creux au
     bout. 'start' (|:) pointe vers la droite (sens de lecture), 'end' (:|)
-    vers la gauche."""
+    vers la gauche.
+    La queue (path en L) porte toujours fill="none" : même avec un <g> rempli (flèche pleine), elle n’est jamais remplie — un path ouvert serait fermé implicitement au remplissage, créant un triangle rectangle rempli au coude ; seule la tête (polygon) hérite du fill du groupe."""
     out.append(f'<g class="repeat-arrow" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     v_len = marker_h * 0.66   # trait vertical depuis le haut de la ligne
     h_len = v_len             # trait horizontal dans le sens de lecture
@@ -2957,14 +2958,14 @@ def _h_repeat_arrow(out, x_left, y_top, cell_w, marker_h, arrow_type,
         vx = x_left + cell_w * 0.20
         hx = vx + h_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<polygon points="{hx:g},{vy - tri_size:g} '
                    f'{hx:g},{vy + tri_size:g} {hx + tri_w:g},{vy:g}"/>')
     else:
         vx = x_left + cell_w * 0.80
         hx = vx - h_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<polygon points="{hx:g},{vy - tri_size:g} '
                    f'{hx:g},{vy + tri_size:g} {hx - tri_w:g},{vy:g}"/>')
     out.append('</g>')
@@ -2974,7 +2975,8 @@ def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
     transposé de _render_vrep_marker : barre verticale, montant horizontal,
     disque creux. 'end' ( )| ) : barre à ~80% de la case, montant vers la
     gauche, disque à gauche ; 'start' ( |( ) : miroir à ~20%, montant et
-    disque vers la droite."""
+    disque vers la droite.
+    La queue (path en L) porte toujours fill="none" : même avec un <g> rempli (flèche pleine), elle n’est jamais remplie — un path ouvert serait fermé implicitement au remplissage, créant un triangle rectangle rempli au coude ; seule la tête (cercle) hérite du fill du groupe."""
     out.append(f'<g class="vocal-rep" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     v_len = marker_h * 0.66
     r = marker_h * 0.22
@@ -2983,13 +2985,13 @@ def _h_vrep_marker(out, x_left, y_top, cell_w, marker_h, marker_type,
         vx = x_left + cell_w * 0.80
         hx = vx - v_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<circle cx="{hx - r:g}" cy="{vy:g}" r="{r:g}"/>')
     else:
         vx = x_left + cell_w * 0.20
         hx = vx + v_len
         out.append(f'<path d="M {vx:g} {y_top:g} L {vx:g} {vy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<circle cx="{hx + r:g}" cy="{vy:g}" r="{r:g}"/>')
     out.append('</g>')
 def _draw_marker_line_vocal(out, vrow, row, ml, y_top, cell_w, marker_h,
@@ -4312,7 +4314,8 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
     (stroke/sw passés par le layout appelant, défaut = cases vertical).
 
     arrow_type: 'start' = flèche descendante (~80% haut), 'end' = flèche montante (~80% bas).
-    x_left = bordure gauche de la colonne marker. cy = position verticale du haut de la case."""
+    x_left = bordure gauche de la colonne marker. cy = position verticale du haut de la case.
+    La queue (path en L) porte toujours fill="none" : même avec un <g> rempli (flèche pleine), elle n’est jamais remplie — un path ouvert serait fermé implicitement au remplissage, créant un triangle rectangle rempli au coude ; seule la tête (polygon) hérite du fill du groupe."""
     out.append(f'<g class="repeat-arrow" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     h_len = marker_w * 0.66  # longueur du trait horizontal
     v_len = h_len  # trait vertical au moins aussi long que l'horizontal
@@ -4326,7 +4329,7 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
         hx = x_left + h_len
         vy = hy + v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         # Triangle creux pointant vers le bas, sommet à (hx, vy + tri_h)
         tip_y = vy + tri_h
         out.append(f'<polygon points="{hx - tri_size:g},{vy:g} '
@@ -4338,7 +4341,7 @@ def _render_repeat_arrow(out, x_left, cy, cell_h, marker_w, arrow_type,
         # Coude propre : horizontal puis vertical montant, un seul path
         vy = hy - v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         # Triangle creux pointant vers le haut, sommet à (hx, vy - tri_h)
         tip_y = vy - tri_h
         out.append(f'<polygon points="{hx - tri_size:g},{vy:g} '
@@ -4358,7 +4361,8 @@ def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
     haut, disque au-dessus) ; 'start' = |( → image spéculaire par rapport
     à l'axe HORIZONTAL : barre à ~20% du haut, montant vers le bas,
     disque en dessous.
-    x_left = bordure gauche de la colonne marker. cy = haut de la case."""
+    x_left = bordure gauche de la colonne marker. cy = haut de la case.
+    La queue (path en L) porte toujours fill="none" : même avec un <g> rempli (flèche pleine), elle n’est jamais remplie — un path ouvert serait fermé implicitement au remplissage, créant un triangle rectangle rempli au coude ; seule la tête (cercle) hérite du fill du groupe."""
     out.append(f'<g class="vocal-rep" fill="{stroke if filled else "none"}" stroke="{stroke}" stroke-width="{sw:g}">')
     h_len = marker_w * 0.66
     v_len = h_len
@@ -4370,13 +4374,13 @@ def _render_vrep_marker(out, x_left, cy, cell_h, marker_w, marker_type,
         # Coude propre : barre horizontale puis montant vers le haut
         vy = hy - v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<circle cx="{hx:g}" cy="{vy - r:g}" r="{r:g}"/>')
     else:  # 'start' : miroir horizontal — barre en haut, montant descendant
         hy = cy + cell_h * 0.20
         vy = hy + v_len
         out.append(f'<path d="M {x_left:g} {hy:g} L {hx:g} {hy:g} '
-                   f'L {hx:g} {vy:g}"/>')
+                   f'L {hx:g} {vy:g}" fill="none"/>')
         out.append(f'<circle cx="{hx:g}" cy="{vy + r:g}" r="{r:g}"/>')
     out.append('</g>')
 def _render_end_circle(out, x_left, cy, cell_h, marker_w):

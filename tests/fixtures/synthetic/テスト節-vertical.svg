@@ -67,19 +67,19 @@
 <rect x="16" y="694" width="52" height="58" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
 <rect x="68" y="56" width="26" height="696" fill="none" stroke="#bbbbbb" stroke-width="0.75"/>
 <g class="repeat-arrow" fill="none" stroke="#bbbbbb" stroke-width="0.75">
-<path d="M 380 415.6 L 397.16 415.6 L 397.16 432.76"/>
+<path d="M 380 415.6 L 397.16 415.6 L 397.16 432.76" fill="none"/>
 <polygon points="391.44,432.76 402.88,432.76 397.16,442.667"/>
 </g>
 <g class="repeat-arrow" fill="none" stroke="#bbbbbb" stroke-width="0.75">
-<path d="M 380 508.4 L 397.16 508.4 L 397.16 491.24"/>
+<path d="M 380 508.4 L 397.16 508.4 L 397.16 491.24" fill="none"/>
 <polygon points="391.44,491.24 402.88,491.24 397.16,481.333"/>
 </g>
 <g class="vocal-rep" fill="none" stroke="#bbbbbb" stroke-width="0.75">
-<path d="M 380 531.6 L 397.16 531.6 L 397.16 548.76"/>
+<path d="M 380 531.6 L 397.16 531.6 L 397.16 548.76" fill="none"/>
 <circle cx="397.16" cy="554.48" r="5.72"/>
 </g>
 <g class="vocal-rep" fill="none" stroke="#bbbbbb" stroke-width="0.75">
-<path d="M 380 624.4 L 397.16 624.4 L 397.16 607.24"/>
+<path d="M 380 624.4 L 397.16 624.4 L 397.16 607.24" fill="none"/>
 <circle cx="397.16" cy="601.52" r="5.72"/>
 </g>
 <text x="354.0" y="91.996" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black">合</text>

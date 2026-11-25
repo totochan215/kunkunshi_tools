@@ -12,33 +12,33 @@
 <text x="618.86 618.86 618.86 618.86" y="59.5277 77.0276 94.5276 112.028" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="17.5" fill="#000">テスト節</text>
 <text x="618.86" y="144.328" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="10" fill="#000">♩=120</text>
 <text x="618.86 618.86 618.86" y="325.001 342.501 360.001" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="17.5" fill="#000">本調子</text>
-<rect x="574.6203065529622" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="574.6203065529622" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="597.9596243267504" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.5"/>
-<g class="repeat-arrow" fill="#000000" stroke="#000000" stroke-width="0.5">
-<path d="M 597.96 213.122 L 605.543 213.122 L 605.543 220.706"/>
+<rect x="574.6203065529622" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="574.6203065529622" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="597.9596243267504" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.4"/>
+<g class="repeat-arrow" fill="#000000" stroke="#000000" stroke-width="0.4">
+<path d="M 597.96 213.122 L 605.543 213.122 L 605.543 220.706" fill="none"/>
 <polygon points="603.015,220.706 608.071,220.706 605.543,225.084"/>
 </g>
-<g class="repeat-arrow" fill="#000000" stroke="#000000" stroke-width="0.5">
-<path d="M 597.96 260.806 L 605.543 260.806 L 605.543 253.223"/>
+<g class="repeat-arrow" fill="#000000" stroke="#000000" stroke-width="0.4">
+<path d="M 597.96 260.806 L 605.543 260.806 L 605.543 253.223" fill="none"/>
 <polygon points="603.015,253.223 608.071,253.223 605.543,248.844"/>
 </g>
-<g class="vocal-rep" fill="none" stroke="#000000" stroke-width="0.5">
-<path d="M 597.96 272.727 L 605.543 272.727 L 605.543 280.311"/>
+<g class="vocal-rep" fill="none" stroke="#000000" stroke-width="0.4">
+<path d="M 597.96 272.727 L 605.543 272.727 L 605.543 280.311" fill="none"/>
 <circle cx="605.543" cy="282.838" r="2.52783"/>
 </g>
-<g class="vocal-rep" fill="none" stroke="#000000" stroke-width="0.5">
-<path d="M 597.96 320.411 L 605.543 320.411 L 605.543 312.828"/>
+<g class="vocal-rep" fill="none" stroke="#000000" stroke-width="0.4">
+<path d="M 597.96 320.411 L 605.543 320.411 L 605.543 312.828" fill="none"/>
 <circle cx="605.543" cy="310.3" r="2.52783"/>
 </g>
 <text x="586.2899654398564" y="47.06375673249551" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">合</text>
@@ -60,19 +60,19 @@
 <text x="586.2899654398564" y="374.8914048473967" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">合</text>
 <text x="594.692" y="342.863" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="5" fill="black">○</text>
 <text x="594.692" y="372.665" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="5" fill="black">□</text>
-<rect x="539.7908631059245" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="539.7908631059245" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="563.1301808797126" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.5"/>
+<rect x="539.7908631059245" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="539.7908631059245" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="563.1301808797126" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.4"/>
 <text x="551.4605219928186" y="47.06375673249551" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">-</text>
 <text x="551.4605219928186" y="60.815680131657686" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="8" fill="black">合</text>
 <text x="551.4605219928186" y="76.86627019748653" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">-</text>
@@ -103,19 +103,19 @@
 <text x="559.863" y="44.8378" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="5" fill="black">□</text>
 <text x="559.863" y="253.455" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="5" fill="black">○</text>
 <text x="559.863" y="253.455" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="5" fill="black">□</text>
-<rect x="504.9614196588868" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="504.9614196588868" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="528.300737432675" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.5"/>
+<rect x="504.9614196588868" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="504.9614196588868" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="528.300737432675" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.4"/>
 <text x="516.631078545781" y="47.06375673249551" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">合</text>
 <text x="516.631078545781" y="76.86627019748653" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">乙</text>
 <text x="516.631078545781" y="106.66878366247755" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">老</text>
@@ -128,19 +128,19 @@
 <text x="516.631078545781" y="315.28637791741465" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">四</text>
 <text x="516.631078545781" y="345.08889138240573" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">上</text>
 <text x="516.631078545781" y="374.8914048473967" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">中</text>
-<rect x="470.13197621184906" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="470.13197621184906" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="493.4712939856372" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.5"/>
+<rect x="470.13197621184906" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="470.13197621184906" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="493.4712939856372" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.4"/>
 <text x="481.80163509874313" y="47.06375673249551" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">尺</text>
 <circle cx="481.80163509874313" cy="73.05027019748653" r="7.59" fill="none" stroke="black" stroke-width="0.5"/>
 <text x="481.80163509874313" y="76.86627019748653" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">尺</text>
@@ -154,19 +154,19 @@
 <text x="481.80163509874313" y="315.28637791741465" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">七</text>
 <text x="481.80163509874313" y="345.08889138240573" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">八</text>
 <text x="481.80163509874313" y="374.8914048473967" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">九</text>
-<rect x="435.3025327648114" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="435.3025327648114" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.5"/>
-<rect x="458.64185053859956" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.5"/>
+<rect x="435.3025327648114" y="28.3465" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="58.14901346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="87.95152692998204" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="117.75404039497306" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="147.55655385996408" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="177.3590673249551" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="207.16158078994613" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="236.96409425493715" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="266.7666077199282" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="296.5691211849192" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="326.3716346499102" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="435.3025327648114" y="356.17414811490124" width="23.33931777378815" height="29.802513464991023" fill="none" stroke="#000000" stroke-width="0.4"/>
+<rect x="458.64185053859956" y="28.3465" width="11.490125673249551" height="357.6301615798923" fill="none" stroke="#000000" stroke-width="0.4"/>
 <text x="439.7721916517055" y="47.06375673249551" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black" textLength="14.399999999999999" lengthAdjust="spacingAndGlyphs">イ工</text>
 <text x="439.7721916517055" y="76.86627019748653" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black" textLength="14.399999999999999" lengthAdjust="spacingAndGlyphs">イ五</text>
 <text x="446.9721916517055" y="106.66878366247755" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="12" fill="black">◯</text>
