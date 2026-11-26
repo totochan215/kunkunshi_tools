@@ -78,7 +78,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@shaku_circled` | `off`      | Rend les 尺 entourés d'un cercle : `on` : activé, `off` : désactivé |
 | `@shaku_sharp`   | `off`      | Rend les 尺♯ accompagnés du symbole ♯ : `on` : activé, `off` : désactivé |
 | `@lyrics_size`   | `medium`   | Taille de police des couplets : `small` = 50%, `medium` = 75%, `big` = 100% de la taille de base |
-| `@kinsoku`       | `simple`   | Kinsoku (禁則処理, [JLREQ W3C](https://www.w3.org/TR/jlreq/)) au repli des paroles `::lyrics` quand une ligne est coupée au caractère (layout `chindami`) : `simple` = 行頭禁則 avec追い出し (fermetures, ponctuation 、。，・：；, 々〻, ー, petits kana) + 行末禁則 (ouvrantes), `strict` = ajoute ！？ en tête de ligne, `off` = coupe au caractère (comportement historique). Défaut `simple`, sauf `nomura` (`off` : pas de repli des paroles au caractère). `--kinsoku` en CLI. |
+| `@kinsoku`       | `simple`   | Kinsoku (禁則処理, [JLREQ W3C](https://www.w3.org/TR/jlreq/)) au repli des paroles `::lyrics` quand une ligne est coupée au caractère (layout `chindami`) : `simple` = 行頭禁則 avec追い出し (fermetures, ponctuation 、。，・：；, 々〻, ー, petits kana) + 行末禁則 (ouvrantes), `strict` = ajoute ！？ en tête de ligne, `off` = coupe au caractère (comportement historique). En vertical, tête de ligne 行頭 = haut de la pile, fin de ligne 行末 = bas : le追い出し fait descendre le caractère interdit en fin de ligne courante, qui s'allonge d'une unité (ce n'est PAS un ぶら下げ組, non implémenté). Défaut `simple`, sauf `nomura` (`off` : pas de repli des paroles au caractère). `--kinsoku` en CLI. |
 | `@text_color`    | `#000000`    | Couleur de **tout le texte**, format HTML (`#rgb`, `#rrggbb` ou nom CSS, ex. `red`). Surcharge le défaut du design de la mise en page |
 | `@frame_color`   | défaut du layout | Couleur du filet de cadre de page (layout `nomura` seul à ce jour), format HTML. Défaut `nomura` : `#333333` |
 | `@frame_width`   | défaut du layout | Épaisseur du filet de cadre, en pt (nombre positif ou nul). **`0` = cadre non affiché** (le cadre virtuel se confond alors avec le hanmen). Défaut `nomura` : `1.5`, autres layouts : `0` |
@@ -126,7 +126,7 @@ en nom canonique par `kkml_clean.py` (avec une info stderr au parsing) :
 `::` ferme la section courante.
 
 ### Lyrics
-`::lyrics` — section de paroles, divisé en couplets. Séparateurs de couplets : ligne vide, OU marqueur de couplet en début de ligne (voir ci-dessous) — un marqueur force le changement de couplet même sans ligne vide, et donc un saut de colonne en layout vertical. Chaque caractère `|`, où qu'il soit dans la ligne, ferme la colonne courante et ouvre la suivante ; `||` ferme la colonne et insère en plus une colonne blanche avant le contenu suivant. Une ligne sans aucun `|` s'enchaîne dans la colonne courante (saut de ligne = 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
+`::lyrics` — section de paroles, divisé en couplets. Séparateurs de couplets : ligne vide, OU marqueur de couplet en début de ligne (voir ci-dessous) — un marqueur force le changement de couplet même sans ligne vide, et donc un saut de ligne en layout vertical (nouvelle ligne 行, avance de ligne 行送り horizontale droite→gauche). Chaque caractère `|`, où qu'il soit dans la ligne source, ferme la ligne (行) courante et en ouvre une suivante ; `||` ferme la ligne et insère en plus une ligne blanche avant le contenu suivant. Une ligne source sans aucun `|` s'enchaîne dans la ligne courante (les segments se suivent sur la même ligne, 1 espace). Les espaces autour du `|` (simple ou pleine chasse, ex. `phrase|　奥ぬ…` ou `phrase | suite`) sont du formatage visuel du KKML brut et sont ignorés au rendu — `|` suivi d'espaces s'interprète comme `|` seul. Marqueurs de début de couplet reconnus :
   - `⚪︎` `⚫︎` `○` `●` `・` ou `、` — marqueur générique.
   - `一、` `二、` `三、` etc. — numéro de couplet (numéraux CJK + virgule japonaise pleine largeur `、`). 
   - `①` `②` `③` … jusqu'à `⑳` (U+2460–U+2473) — numéro de couplet (virgule `、` facultative après, ex. `①、`). 
@@ -136,7 +136,7 @@ en nom canonique par `kkml_clean.py` (avec une info stderr au parsing) :
 Variantes phonétiques des paroles : `::lyrics-kanji`, `::lyrics-ruby`, `::lyrics-romaji`, `::lyrics-kana` —
   pour les chansons dont on conserve plusieurs versions phonétiques (par ex. une en kanji pour les japonais,
   une en romaji pour les étrangers). Toutes ces variantes partagent la grammaire et le rendu de `::lyrics`
-  (couplets, colonnes `|`/`||`, rubys). `::lyrics` est un alias de `::lyrics-ruby` : kanji avec support des rubys.
+  (couplets, lignes `|`/`||`, rubys). `::lyrics` est un alias de `::lyrics-ruby` : kanji avec support des rubys.
   `::lyrics-kanji` désigne une version en kanjis seuls (sans rubys), `::lyrics-kana` une transcription en kanas,
   `::lyrics-romaji` une romanisation.
 
@@ -204,9 +204,9 @@ Composition : le marqueur partage librement sa case avec du contenu, rendu centr
 
 L'espace séparateur entre une clé de métadonnée et sa valeur est lui aussi toléré absent : `@title｛安波節｝《あはぶし》` (sans espace après `@title`) est reconnu comme `@title ｛安波節｝…`, avec une info stderr par clé concernée.
 
-Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de figures valides. Dans les sections `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de colonne et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Dans `::vocal`, un token `ー`/`ｰ`/`－` ISOLÉ est normalisé en `-` (case vide) ; collé à une syllabe, le ー reste une voyelle longue. Dans `::lyrics`, aucune normalisation (le ー y reste une voyelle longue).
+Les espaces multiples et l'espace pleine chasse `　` (U+3000) sont de toute façon des séparateurs de figures valides. Dans les sections `::lyrics`, `｜` (U+FF5C) est normalisé en `|` — les sauts de ligne (`|` / `‖`) et séparateurs de couplets s'écrivent indifféremment en simple ou double largeur. Dans `::vocal`, un token `ー`/`ｰ`/`－` ISOLÉ est normalisé en `-` (case vide) ; collé à une syllabe, le ー reste une voyelle longue. Dans `::lyrics`, aucune normalisation (le ー y reste une voyelle longue).
 
-Rendu vertical des paroles : une colonne de couplet qui commence par un marqueur de couplet (一、二、… ①②③… 女　男　) est alignée en haut de la zone de paroles ; les colonnes de continuation (après `|`) s'indentent sous le marqueur ; une colonne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la colonne de paroles la plus haute, même si elle dépasse la grille.
+Rendu vertical des paroles : une ligne de couplet (行) qui commence par un marqueur de couplet (一、二、… ①②③… 女　男　) est alignée en haut de la zone de paroles (行頭) ; les lignes de continuation (après `|`) s'indentent sous le marqueur, le long de la ligne ; une ligne blanche (après `||`) réinitialise l'indentation. La hauteur du canevas couvre la ligne de paroles la plus longue (longueur de ligne 行の長さ), même si elle dépasse la grille.
 
 ## Tolérances
 

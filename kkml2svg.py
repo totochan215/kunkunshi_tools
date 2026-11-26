@@ -401,8 +401,8 @@ VERSE_CIRCLED_RE = re.compile(r'^([①-⑳]、?)')
 # (ex. だんじゅかりゆし （いめのかじありよ船《ふに》）). Un hayashi n'est
 # PAS un couplet : il ne porte pas de marqueur, n'ouvre pas de couplet,
 # ne compte pas dans la numérotation (marqueurs numéraux) ni dans
-# l'indentation cible de la section ; il se rend en colonne propre,
-# alignée en haut (indent 0).
+# l'indentation cible de la section ; il se rend en ligne propre (行),
+# alignée en haut (行頭, indent 0).
 HAYASHI_RE = re.compile(r'^[（(].*[)）]$')
 
 
@@ -430,7 +430,7 @@ def _verse_indent_len(first_line):
 
 
 def _verse_indent_target(lines):
-    """Indentation uniforme des colonnes de continuation d'une section de
+    """Indentation uniforme des lignes de continuation d'une section de
     paroles : les en-têtes de couplets occupent TOUJOURS 3 caractères
     pleine chasse (marqueur + espaces pleine chasse de remplissage :
     ー、　 / 女、　 / 男、　 / 十二、 / 男女、), donc l'indent cible vaut
@@ -698,7 +698,7 @@ def parse_kkml(text):
                 current.lines.append(norm)
             elif current.kind == "lyrics":
                 # Tolérance IME : ｜ (U+FF5C, barre pleine chasse) = |.
-                # Normalisé au parsing pour que la construction des colonnes
+                # Normalisé au parsing pour que la construction des lignes
                 # et l'estimation de largeur ne voient qu'une seule forme.
                 if "｜" in stripped:
                     _info_input_variant("｜", "|")
@@ -1277,8 +1277,8 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
             v_blocks.append((val, 15, TUNING_SPACING,
                              "#555" if k == "choshi" else "#777", MD_SP))
     # Règle alignée (layouts libres) : les métadonnées s'ajoutent SOUS le
-    # titre dans la MÊME colonne, autant que de besoin, SANS repli en
-    # colonne suivante ; la hauteur de page grandit pour couvrir tout le
+    # titre dans la MÊME ligne (行), autant que de besoin, SANS repli à la
+    # ligne suivante ; la hauteur de page grandit pour couvrir tout le
     # flux (titre + métadonnées).
     title_total_h = (sum(_v_block_h(text, mfs, msp, lead)
                          for text, mfs, msp, _fill, lead in v_blocks)
@@ -1434,8 +1434,8 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
         if title or tuning:
             total_h = max(total_h, header_h + mt + GAP_HEADER + title_total_h)
 
-        # s'assurer que la hauteur couvre les paroles verticales (une colonne
-        # de couplet peut être plus haute que la grille — ex. 安波節)
+        # s'assurer que la hauteur couvre les paroles verticales (une ligne
+        # de couplet peut être plus longue que la grille = longueur de ligne — ex. 安波節)
         if lyrics_sections:
             ly0 = header_h + mt + GAP_HEADER
             lyrics_bottom = ly0 + LYRICS_FS
@@ -1451,9 +1451,9 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
                         lyrics_bottom = max(lyrics_bottom, ly0 + LYRICS_FS + h)
             total_h = max(total_h, lyrics_bottom + mt)
 
-        # Colonnes du titre vertical : flux de blocs dans la hauteur de
-        # page ; un bloc qui ne tient pas passe ENTIERS en colonne
-        # suivante (à gauche de la précédente, largeur TITLE_W)
+        # Lignes du titre vertical (行) : flux de blocs le long de la ligne ;
+        # un bloc qui ne tient pas passe ENTIER à la ligne suivante (colonne
+        # suivante sur la page, à gauche de la précédente, largeur TITLE_W)
         if v_blocks:
             v_top = header_h + mt + GAP_HEADER
             v_bottom = total_h - mt
@@ -1525,11 +1525,11 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
             vi = 0
             for _, data in lyrics_sections:
                 for verse in _split_verses(data):
-                    # Construire les colonnes via le helper partagé
+                    # Construire les lignes via le helper partagé
                     # (même logique que l'estimation de largeur).
                     # Layout partagé avec l'estimation de hauteur :
-                    # une colonne avec marqueur de couplet démarre en haut,
-                    # une colonne de continuation s'indente sous le marqueur.
+                    # une ligne avec marqueur de couplet démarre en haut (行頭),
+                    # une ligne de continuation s'indente sous le marqueur.
                     layout = _lyrics_columns_layout(verse, _verse_indent_target(data))
                     for col_lines, verse_indent in layout:
                         vx = (ml + lyrics_total_w
@@ -1539,7 +1539,7 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
                         if verse_indent > 0:
                             cy += verse_indent * LYRICS_SP
                         for li, line in enumerate(col_lines):
-                            # Saut de ligne dans la même colonne = 1 espace
+                            # Saut de segment (ligne source) dans la même ligne (行) = 1 espace
                             if li > 0:
                                 cy += LYRICS_SP
                             cy = _render_vertical_text(out, line, vx, cy,
@@ -1549,9 +1549,9 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
         # --- Titre vertical à droite de la grille (flux de blocs) --- #
         if v_blocks:
             ty = header_h + mt + GAP_HEADER
-            # Règle alignée : PAS de repli en colonne suivante — tous les
-            # blocs s'empilent sous le titre dans la même colonne, la page
-            # a grandi en conséquence (title_total_h couvre le flux entier).
+            # Règle alignée : PAS de repli à la ligne suivante — tous les
+            # blocs s'empilent sous le titre dans la même ligne (行), la page
+            # a grandi en hauteur en conséquence (title_total_h couvre le flux).
             tx_cur = total_w - mr - TITLE_W / 2
             vcy = ty
             for text, mfs, msp, fill, lead in v_blocks:
@@ -1588,8 +1588,9 @@ def _render_vertical(song, sections, cells_per_dan, cell_w, cell_h,
 
 # --------------------------------------------------------------------------- #
 # Kinsoku (禁則処理) — JLREQ (W3C, https://www.w3.org/TR/jlreq/), annexe A.
-# Appliqué UNIQUEMENT au repli des paroles (::lyrics) dans _cap_lyr_column :
-# ::tab et ::vocal ne sont jamais coupés au caractère.
+# Appliqué UNIQUEMENT au repli des paroles (::lyrics) en sous-lignes
+# (_cap_lyr_column, découpe de ligne 行) : ::tab et ::vocal ne sont jamais
+# coupés au caractère.
 # --------------------------------------------------------------------------- #
 # 行頭禁則 (interdit en tête de ligne) : cl-02 fermetures, cl-05 ・：；,
 # cl-06 。．, cl-07 、，, cl-09 々〻, cl-10 ー, cl-11 petits kana, cl-29 ‥…〆
@@ -1608,14 +1609,18 @@ KINSOKU_NO_LINE_END = set("（｛［「『〔〈《【〖([{")
 
 
 def _kinsoku_adjust_cut(text, cut, kinsoku):
-    """Ajuste un point de coupe entre deux sous-colonnes de paroles selon le
-    kinsoku JLREQ. `cut` = nombre de caractères placés sur la sous-colonne
-    courante ; le reste `text[cut:]` démarre la sous-colonne suivante.
-    - 行頭禁則 avec追い出し : un caractère interdit en tête de ligne remonte
-      en fin de sous-colonne courante (celle-ci déborde de la longueur du
-      bloc interdit — ぶら下げ des ponctuations) ;
-    - 行末禁則 : une ouvrante (cl-01) ne termine pas une ligne, elle passe à
-      la sous-colonne suivante.
+    """Ajuste un point de coupe entre deux sous-lignes de paroles selon le
+    kinsoku JLREQ (axe du flux : en vertical, 行頭 = haut de la pile,
+    行末 = bas). `cut` = nombre de caractères placés sur la sous-ligne
+    courante ; le reste `text[cut:]` démarre la sous-ligne suivante.
+    - 行頭禁則 avec追い出し : un caractère interdit en tête de ligne (行頭禁則,
+      = haut de la pile en vertical) descend en fin de ligne courante (行末,
+      = bas) — la ligne courante s'allonge alors d'une unité au-delà du
+      plafond ;
+    - 行末禁則 : une ouvrante (cl-01, 行末禁則) ne termine pas une ligne, elle
+      passe en tête de la ligne suivante.
+    NB : ceci N'EST PAS le ぶら下げ組 de JLreq (suspension de cl-06/cl-07 hors
+    du hanmen en fin de ligne, sans consommer d'unité) — non implémenté.
     `kinsoku` : 'simple' (défaut), 'strict' (ajoute ！？ en tête), 'off'.
     """
     if kinsoku == "off" or cut <= 0:
@@ -1631,7 +1636,8 @@ def _kinsoku_adjust_cut(text, cut, kinsoku):
 
 
 def _lyr_line_segments(s):
-    """Découpe une ligne de paroles en segments insécables pour le repli :
+    """Découpe une ligne de paroles (行) en segments insécables pour la
+    découpe en sous-lignes (repli) :
     (texte, atomique, unités d'affichage). Un groupe ruby composite
     ｛base｝《ruby》 ou une base suivie de son 《ruby》 forment UN segment
     atomique (le parseur ne doit jamais voir le groupe coupé en deux) ;
@@ -1682,28 +1688,33 @@ def _lyr_line_segments(s):
 
 
 def _cap_lyr_column(col_lines, indent, max_u, kinsoku="simple"):
-    """Replie une colonne de paroles en sous-colonnes de ≤ max_u unités
+    """Replie une ligne de paroles (行) en sous-lignes de ≤ max_u unités
     (1 unité = 1 pas d'espacement lyr_sp = 1 glyphe de paroles, annotations
-    ruby exclues). Layout chindami : la hauteur de page est IMPOSÉE, une
-    colonne trop longue (couplet dépassant le bas de grille) est découpée
-    en sous-colonnes ; une ligne trop longue est coupée au caractère,
+    ruby exclues). En vertical, la ligne est l'axe du flux : 行頭 = haut de
+    la pile, 行末 = bas ; max_u est donc la LONGUEUR de ligne (行の長さ,
+    équivalent vertical de la justification), et la ligne repliée n'est une
+    « colonne » que par sa position x sur la page.
+    Layout chindami : la hauteur de page est IMPOSÉE, une ligne trop longue
+    (couplet dépassant le bas de grille) est découpée en sous-lignes ;
+    un segment trop long est coupé au caractère,
     UNIQUEMENT entre segments atomiques (groupes ｛…｝《…》 et base+《…》
     jamais coupés : un crash _parse_ruby avait révélé le besoin).
     Le point de coupe respecte le kinsoku JLREQ (`_kinsoku_adjust_cut`,
     paramètre `kinsoku` = 'simple'|'strict'|'off', défaut 'simple') : un
-    caractère interdit en tête de sous-colonne (行頭禁則) remonte en fin de
-    sous-colonne précédente (追い出し), une ouvrante (行末禁則) passe à la
-    sous-colonne suivante ; 'off' = coupe au caractère (historique).
-    Indentation des sous-colonnes : la première sous-colonne garde l'indent
-    de la colonne (marqueur en haut = 0) ; les sous-colonnes de CONTINUATION
-    issues du découpage d'une colonne MARQUEUR s'alignent au niveau
+    caractère interdit en tête de ligne (行頭禁則, = haut de la pile en
+    vertical) avec追い出し descend en fin de ligne courante (行末, = bas),
+    une ouvrante (行末禁則) passe en tête de la sous-ligne suivante ;
+    'off' = coupe au caractère (historique).
+    Indentation des sous-lignes : la première sous-ligne garde l'indent
+    de la ligne (marqueur en haut = 0) ; les sous-lignes de CONTINUATION
+    issues du découpage d'une ligne MARQUEUR s'alignent au niveau
     marqueur + 1 espace pleine chasse — un marqueur suivi du texte sur la
     même ligne s'interprète comme « marqueur　» (règle uniforme, cf.
     _verse_indent_target). Ex. だんじゅかりゆし couplet 1 : le marqueur 一、
-    occupe 2 unités, だんじゅ… commence à l'unité 3 → la sous-colonne de
+    occupe 2 unités, だんじゅ… commence à l'unité 3 → la sous-ligne de
     continuation (ぇる…) démarre AUSSI à l'unité 3 (même niveau que だん).
-    Une colonne sans marqueur repliée garde son indent pour toutes ses
-    sous-colonnes."""
+    Une ligne sans marqueur repliée garde son indent pour toutes ses
+    sous-lignes."""
     def line_units(s):
         return sum(u for _t, _a, u in _lyr_line_segments(s)) if s else 0
     mk = _verse_indent_len(col_lines[0]) if col_lines else 0
@@ -1712,7 +1723,7 @@ def _cap_lyr_column(col_lines, indent, max_u, kinsoku="simple"):
     else:
         cont_indent = indent
     def cost(lines, ind):
-        # hauteur en unités : indent + glyphes + sauts de ligne entre lignes
+        # longueur en unités le long de la ligne (行) : indent + glyphes + sauts entre segments
         if not lines:
             return 0
         return ind + sum(line_units(l) for l in lines) + len(lines) - 1
@@ -1756,15 +1767,15 @@ def _cap_lyr_column(col_lines, indent, max_u, kinsoku="simple"):
                         text = text[cut:]
                         u = len(_unescape(text))  # le reste est du texte clair : unités affichées
                     close_sub()
-                    continue  # reste du texte clair : sous-colonne neuve
+                    continue  # reste du texte clair : sous-ligne neuve
                 close_sub()
                 if u > max_u - cur_ind:
-                    # segment insécable plus grand qu'une sous-colonne :
+                    # segment insécable plus grand qu'une sous-ligne :
                     # accepté seul avec léger dépassement (jamais coupé)
                     li = text
                     close_sub()
                     break
-                # retenter le segment atomique dans une sous-colonne neuve
+                # retenter le segment atomique dans une sous-ligne neuve
         close_line()
     close_sub()
     return subs
@@ -1777,7 +1788,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     droite de la page 1 surmonté du numéro de morceau (@musicno, écriture
     horizontale : n° = 0 non écrit, > 999 tronqué mod 1000, pousse le
     titre vers le bas), paroles
-    (::lyrics) en colonnes verticales à gauche de la dernière page.
+    (::lyrics) en lignes verticales (行) à gauche de la dernière page.
     Retourne une liste de SVG (un par page)."""
     title = song.meta.get("title", "")
     tuning = song.meta.get("choshi", "本調子")
@@ -1805,8 +1816,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     fx0, fy0, fx1, fy1 = spec.frame_rect()   # cadre = marges depuis le bord (non tracé ici)
     page_base = _meta_page_base(song.meta)
     # Colonne titre posée dans la marge droite (bord droit à 0,75 cm du bord page) :
-    # elle ne consomme PAS de largeur de grille, sauf titre long (saut de colonne
-    # accepté -> le bloc de tab est repoussé à gauche d'autant).
+    # elle ne consomme PAS de largeur de grille, sauf titre long (saut de ligne accepté : le titre passe à la colonne
+    # suivante -> le bloc de tab est repoussé à gauche d'autant).
     TF = spec.title_fs or 18
     TSP = spec.title_spacing or TF
     grid_h = rows * cell_h
@@ -1864,9 +1875,10 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     lyr_col_w0 = int(lyr_fs0 * 1.33)
     lyr_gap0 = int(lyr_col_w0 * 0.8)
     lyr_sp0 = int(lyr_fs0 * 1.2)
-    # Hauteur disponible pour une colonne de paroles : la page est IMPOSÉE
-    # (23 x 15 cm), un couplet plus long que la hauteur de grille est REPLIÉ
-    # en sous-colonnes ; l'excédent de colonnes passe sur des pages dédiées.
+    # Longueur de ligne disponible pour les paroles : la page est IMPOSÉE
+    # (23 x 15 cm), une ligne (couplet) plus longue que la hauteur de grille
+    # est REPLIÉE en sous-lignes ; l'excédent de lignes passe sur des pages
+    # dédiées (position x : per_page colonnes par page).
     # haut d'encre de la première glyphe = haut de grille (baseline =
     # GRID_TOP + 0,88·fs) ; bas d'encre de la dernière ≤ bas de grille
     max_lyr_u = int((fy1 - fy0 - lyr_fs0)
@@ -2002,7 +2014,8 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
             title_end = None
             if title:
                 # titre long : réparti sur plusieurs colonnes verticales (saut de
-                # colonne), le bloc de tab est repoussé à gauche d'autant
+                # ligne = avance horizontale vers la colonne suivante), le bloc
+                # de tab est repoussé à gauche d'autant
                 per_col = max(1, int((grid_h - TF * 0.88) // TSP) + 1)
                 chunks = [title[k:k + per_col] for k in range(0, len(title), per_col)]
                 for ci, chunk in enumerate(chunks):
@@ -2089,7 +2102,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                     # dernier glyphe affiché (les annotations ruby ne
                     # consomment PAS d'unités) : n'ajouter qu'UN gap de
                     # ligne, jamais len(ln) brut (double avancement,
-                    # débordement des colonnes rubyées)
+                    # débordement des lignes rubyées)
                     cy = _vertical_grouped_text(out, ln, vx, cy, lyr_fs, "#000",
                                                 lyr_sp, font_family)
                     cy += lyr_sp
@@ -2168,7 +2181,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     if vocal_columns and len(vocal_columns) < len(tab_columns):
         vocal_columns += [None] * (len(tab_columns) - len(vocal_columns))
 
-    # --- Sections lyrics (couplets) : colonnes verticales --- #
+    # --- Sections lyrics (couplets) : lignes verticales (行) --- #
     lyrics_sections = [(s[0], s[1]) for s in sections if s[2] == "lyrics"]
 
     # --- Pagination : 7 dans par page ; titre en p.1, paroles en dernière --- #
@@ -2176,11 +2189,11 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     # autant de colonnes que nécessaire pour les couplets (>= 1 si paroles)
     lyrics_col_count = 0
     lyrics_layouts = []   # [(col_lines, indent)]
-    # Hauteur disponible pour une colonne de paroles : le hanmen est IMPOSÉ
-    # (page A4 fixe) — comme en chindami, une colonne trop longue est REPLIÉE
-    # en sous-colonnes de ≤ max_lyr_u unités (_cap_lyr_column, kinsoku JLREQ) ;
-    # les sous-colonnes comptent dans la pagination (elles consomment des dans
-    # virtuels comme les colonnes pleines).
+    # Longueur de ligne disponible pour les paroles : le hanmen est IMPOSÉ
+    # (page A4 fixe) — comme en chindami, une ligne (couplet) trop longue est
+    # REPLIÉE en sous-lignes de ≤ max_lyr_u unités (_cap_lyr_column, kinsoku
+    # JLREQ) ; les sous-lignes comptent dans la pagination (elles consomment
+    # des dans virtuels comme les lignes pleines).
     lyr_col_w_n = group_w / 3.0
     lyr_fs_n = lyr_col_w_n * 0.7
     lyr_sp_n = lyr_fs_n * 1.2
@@ -2418,7 +2431,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
                                                f'fill="#333">{escape(ch)}</text>')
             x_right -= (group_w + spec.dan_gap)
 
-        # 3. paroles : colonnes verticales à gauche (dans virtuels de CETTE page)
+        # 3. paroles : lignes verticales (行) à gauche (dans virtuels de CETTE page)
         if lyr_here > 0:
             for vi, (col_lines, verse_indent) in enumerate(
                     lyrics_layouts[lyr_col_offset:lyr_col_offset + lyr_here * LYRICS_MAX_COLS]):
@@ -2452,13 +2465,15 @@ def _wrap_vertical(items, cells_per_dan):
 
 
 def _lyrics_columns(verse):
-    """Construit les colonnes d'un couplet de paroles.
+    """Construit les lignes (行) d'un couplet de paroles (en vertical, chaque
+    ligne est une colonne par sa position x sur la page).
 
-    Règle : chaque | (où qu'il soit dans la ligne) ferme la colonne
-    courante et ouvre la suivante ; || ferme la colonne et insère en
-    plus une colonne blanche (séparation de couplets). Une ligne sans
-    aucun | s'enchaîne dans la colonne courante (saut de ligne = 1
-    espace). Segment vide entre deux | = colonne blanche.
+    Règle : chaque | (où qu'il soit dans la ligne source) ferme la ligne
+    courante et en ouvre une suivante (avance de ligne 行送り, horizontale
+    droite→gauche en vertical) ; || ferme la ligne et insère en plus une
+    ligne blanche (séparation de couplets). Une ligne source sans aucun |
+    s'enchaîne dans la ligne courante (les segments se suivent sur la même
+    ligne, 1 espace entre eux). Segment vide entre deux | = ligne blanche.
     Utilisé à la fois pour l'estimation de largeur du canevas et pour
     le rendu — source unique pour éviter toute dérive entre les deux."""
     columns = []
@@ -2480,21 +2495,21 @@ def _lyrics_columns(verse):
                 if part:
                     current_col.append(part)
             else:
-                # | rencontré : fermer la colonne, ouvrir la suivante.
+                # | rencontré : fermer la ligne, ouvrir la suivante.
                 # Les espaces autour du | (ex. "phrase|　奥ぬ…" ou
                 # "phrase | suite") sont du formatage visuel du KKML
                 # brut : ils sont retirés pour ne pas décaler l'aligne-
-                # ment des colonnes au rendu. Un segment réduit à des
+                # ment des lignes au rendu. Un segment réduit à des
                 # espaces équivaut au segment vide correspondant.
                 part = part.strip()
                 _flush()
                 if part:
                     current_col.append(part)
                 elif k < len(parts) - 1:
-                    # segment vide entre deux | = colonne blanche (||)
+                    # segment vide entre deux | = ligne blanche (||)
                     columns.append([])
-                # segment vide final (ligne finissant par |) : simple fin
-                # de colonne, rien à faire
+                # segment vide final (ligne source finissant par |) : simple
+                # fin de ligne, rien à faire
     _flush()
     return columns
 
@@ -2528,18 +2543,22 @@ def _pad_inline_marker(ln):
 
 
 def _lyrics_columns_layout(verse, base_indent=None):
-    """Layout complet d'un couplet : liste de (col_lines, indent).
+    """Layout complet d'un couplet : liste de (col_lines, indent) — chaque
+    entrée est une LIGNE (行) du couplet (ses segments | se suivent sur la
+    ligne, 1 espace entre eux ; en vertical, la ligne est une colonne par sa
+    position x sur la page).
 
     Source unique pour le rendu ET pour l'estimation de hauteur.
-    Règle d'indentation : une colonne qui commence par un marqueur de
-    couplet (一、二、… 女　男　) est alignée en haut (indent 0) et définit
-    l'indentation courante pour les colonnes de continuation du même
-    couplet (après |), qui s'indentent sous le marqueur. Une colonne
-    blanche (après ||) réinitialise l'indentation courante : le couplet
-    suivant, même sans marqueur, ne s'indente pas sous le précédent.
-    Chaque ligne commençant par un marqueur INLINE est normalisée par
-    _pad_inline_marker (texte au caractère 4, cf. règle des en-têtes de
-    3 caractères pleine chasse)."""
+    Règle d'indentation : une ligne qui commence par un marqueur de
+    couplet (一、二、… 女　男　) est alignée en haut (行頭, indent 0) et définit
+    l'indentation courante pour les lignes de continuation du même
+    couplet (après |), qui s'indentent sous le marqueur (le long de la
+    ligne). Une ligne blanche (après ||) réinitialise l'indentation
+    courante : le couplet suivant, même sans marqueur, ne s'indente pas
+    sous le précédent.
+    Chaque ligne source commençant par un marqueur INLINE est normalisée
+    par _pad_inline_marker (texte au caractère 4, cf. règle des en-têtes
+    de 3 caractères pleine chasse)."""
     layout = []
     cur_marker_indent = 0
     for col in _lyrics_columns(verse):
@@ -2647,16 +2666,17 @@ def _h_lyrics_atoms(segment, fs):
 
 def _h_lyrics_layout(data, fs, usable_w):
     """Transposition HORIZONTALE de la règle verticale des paroles
-    (_lyrics_columns_layout) : chaque colonne verticale (délimitée par
-    | / ||) devient une LIGNE ; les segments d'une même colonne se
-    suivent sur la ligne séparés par une espace pleine chasse (comme
-    espace pleine chasse (transposé de l'espace vertical de 1 LYRICS_SP
-    en colonne) ; une colonne qui commence par un marqueur de couplet
+    (_lyrics_columns_layout) : chaque ligne verticale (行, délimitée par
+    | / ||) devient une LIGNE horizontale ; les segments d'une même ligne
+    se suivent sur la ligne horizontale séparés par une espace pleine
+    chasse (transposé de l'espace vertical de 1 LYRICS_SP le long de la
+    ligne) ; une ligne qui commence par un marqueur de couplet
     s'aligne à gauche (indent 0) et les continuations du couplet
     s'indentent sous SON marqueur + 1 espace pleine chasse (indent par
     couplet, ex. 女、-> 3, 男女、-> 4), pas à l'indentation uniforme de
     la section. Règle alignée (layouts libres) : PAS de repli — une
-    colonne = une ligne, aussi longue soit-elle (usable_w = None →
+    ligne verticale = une ligne horizontale, aussi longue soit-elle
+    (usable_w = None →
     largeur infinie ; la page s'élargit à la ligne la plus longue). Le
     paramètre usable_w est conservé pour un éventuel repli explicite.
     Une ligne vide est insérée automatiquement entre chaque couplet.
@@ -2668,7 +2688,7 @@ def _h_lyrics_layout(data, fs, usable_w):
     lines = []
     base_indent = _verse_indent_target(data)
     verses = _split_verses(data)
-    sep = "\u3000"   # espace pleine chasse entre segments d'une colonne
+    sep = "\u3000"   # espace pleine chasse entre segments d'une ligne (行)
 
     def _flush(cur, indent):
         txt = "".join(cur).rstrip(sep)
@@ -2693,7 +2713,7 @@ def _h_lyrics_layout(data, fs, usable_w):
                 lines.append((0, "", False))
                 continue
             # Couplets INDENTÉS : les retours à la ligne automatiques d'une
-            # colonne qui commence par un marqueur reprennent à
+            # ligne qui commence par un marqueur reprennent à
             # l'indentation du couplet (marqueur + 1 espace pleine chasse),
             # pas à 0.
             cont_indent = (vindent if indent == 0 and vindent > 0
@@ -3139,8 +3159,8 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
     # Règle alignée (layouts libres) : les dimensions dépendent du CONTENU.
     # - métadonnées : flux sur la ligne du titre, sans repli ; la page
     #   s'élargit à la largeur du flux.
-    # - paroles : PAS de repli sur la largeur de la grille ; chaque colonne
-    #   verticale = une ligne, la page s'élargit à la ligne la plus longue.
+    # - paroles : PAS de repli sur la largeur de la grille ; chaque ligne
+    #   verticale (行) = une ligne horizontale, la page s'élargit à la ligne la plus longue.
     # Largeur du flux de métadonnées (une seule ligne, même simulation
     # que le rendu, blocs jamais scindés).
     h_sep_w = MD_SP
@@ -3177,7 +3197,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
         if kind == "tab":
             total_h += len(data) * (cell_h + marker_h) + 6
         elif kind == "lyrics":
-            # même layout que le rendu (colonnes verticales → lignes,
+            # même layout que le rendu (lignes verticales (行) → lignes
             # indentation, interlignes élargies pour le ruby comme en
             # vertical) ; PAS de repli : usable_w=None → largeur infinie
             hl = _h_lyrics_layout(data, h_lyrics_fs, None)
@@ -3319,7 +3339,7 @@ def _render_horizontal(song, sections, cols, cell_w, cell_h,
         else:
             if kind == "lyrics":
                 # Transposition horizontale de la règle verticale :
-                # colonnes → lignes, continuation indentée sous le marqueur,
+                # lignes verticales (行) → lignes horizontales, continuation indentée sous le marqueur,
                 # interligne élargi quand la ligne suivante porte un ruby ;
                 # PAS de repli (règle alignée, la page a grandi)
                 hl = _h_lyrics_layout(data, h_lyrics_fs, None)
@@ -3668,7 +3688,8 @@ def _wrap_horizontal(tokens, cols):
 # largeur ; les paroles n'y restent que si elles sont très compactes
 # (largeur réservée ≤ spec.lyr_inline_max_ratio de la largeur utile),
 # sinon elles sont paginées sur des pages A3 dédiées APRÈS les pages de
-# tablature, en colonnes verticales de droite à gauche. Pagination
+# tablature, en lignes verticales (行) de droite à gauche (avance de ligne
+# horizontale 行送り). Pagination
 # automatique : 64 dans par page A3 (@dans_per_page / -p peut réduire ce plafond).
 
 
@@ -3974,9 +3995,10 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
     # --- Pages dédiées aux paroles (si trop larges pour la 1re page) :
     # mêmes pages A3, même structure que la tablature : DEUX blocs
-    # horizontaux empilés de hauteur spec.cells_per_dan*cell_h, colonnes verticales
-    # de droite à gauche, repli impératif à la hauteur du bloc, saut d'une
-    # colonne entre deux chansons, TITRE de chaque chanson en colonne
+    # horizontaux empilés de hauteur spec.cells_per_dan*cell_h, lignes verticales
+    # (行) de droite à gauche (avance de ligne horizontale), repli impératif
+    # en sous-lignes à la hauteur du bloc, saut d'une ligne vide entre deux
+    # chansons, TITRE de chaque chanson en ligne
     # verticale 「…」 en gras DEVANT ses paroles (remplace le chapeau
     # horizontal) ; bloc du haut consommé → bloc du bas ; les deux consommés →
     # page suivante ; colonne titre verticale répétée --- #
@@ -3985,7 +4007,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         usable_w = spec.page_w - 2 * spec.margin_l - title_offset
         col_step = LYRICS_COL_W + LYRICS_VERSE_GAP
         max_cols = max(1, int((usable_w + LYRICS_VERSE_GAP) / col_step))
-        # Association chanson → paroles : remonter les blocs bruts (le
+        # Association chanson → paroles : relire les blocs bruts (le
         # regroupement attache le titre au ::tab, pas aux ::lyrics qui le
         # suivent) ; chaque section de paroles doit connaître sa chanson.
         lyr_by_song = []
@@ -3995,21 +4017,21 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                 cur_song = blk.label
             elif blk.kind == "lyrics":
                 lyr_by_song.append((cur_song, blk.lines))
-        # Slots de colonnes : (lines, indent, song_title, song_id), («T»,
-        # song_title, song_id) pour la colonne titre, ou None pour la
-        # colonne vide de séparation entre deux chansons. Chaque
-        # colonne est repliée à la hauteur du bloc (l'indent de couplet ne
+        # Slots de lignes de paroles : (lines, indent, song_title, song_id),
+        # («T», song_title, song_id) pour la colonne titre, ou None pour la
+        # ligne vide de séparation entre deux chansons. Chaque ligne est
+        # repliée en sous-lignes à la hauteur du bloc (l'indent de couplet ne
         # porte que sur le premier fragment).
         ly_cols = []
         for si, (song_title, data) in enumerate(lyr_by_song):
-            scols = []   # colonnes de paroles de CETTE chanson
+            scols = []   # lignes de paroles de CETTE chanson
             base_indent = _verse_indent_target(data)
             for verse in _split_verses(data):
                 for col_lines, indent in _lyrics_columns_layout(verse, base_indent):
                     # Niveau de continuation des fragments de REPLI : marqueur
                     # + 1 espace pleine chasse (un marqueur inline s'inter-
                     # prète comme « marqueur　», même règle que l'indent
-                    # cible de la section) ; colonne de continuation : son
+                    # cible de la section) ; ligne de continuation : son
                     # indent.
                     if col_lines and _verse_indent_len(col_lines[0]) > 0:
                         wrap_ind = max(3, _verse_indent_len(col_lines[0]))
@@ -4036,15 +4058,15 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                     if chunk:
                         scols.append((chunk, indent if first else wrap_ind,
                                       song_title, si))
-            # Titre de chanson en COLONNE VERTICALE 「…」 en gras, placé
+            # Titre de chanson en LIGNE VERTICALE 「…」 en gras, placé
             # AVANT les paroles de la chanson (sens de lecture droite →
-            # gauche : colonne la plus à droite du run). Il REMPLACE le
+            # gauche : ligne la plus à droite du run, première lue). Il REMPLACE le
             # chapeau horizontal (nom + flèches) des pages dédiées.
             # Guillemets pivotés 90° par _vertical_char, comme toute
             # ponctuation verticale. Slot («T», titre, song_id).
             if scols:
                 if ly_cols:
-                    ly_cols.append(None)   # saut de colonne entre chansons
+                    ly_cols.append(None)   # saut de ligne vide entre chansons
                 if song_title:   # paroles sans ::song : pas de titre
                     ly_cols.append(("T", song_title, si))
                 ly_cols.extend(scols)
@@ -4060,9 +4082,9 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                     break
                 y0 = spec.margin_l + b * (blk_h + spec.block_gap)
                 # (Plus de chapeau horizontal : le titre de chaque chanson
-                # est rendu en colonne verticale 「…」 en gras, devant ses
+                # est rendu en ligne verticale 「…」 en gras, devant ses
                 # paroles — cf. slot «T» ci-dessous.)
-                # Colonnes du bloc, de droite à gauche
+                # Lignes du bloc, de droite à gauche (avance de ligne 行送り)
                 for vi, col in enumerate(bcols):
                     if col is None:
                         continue
@@ -5385,7 +5407,7 @@ def _plan_vertical_ruby(segments, fs, sp):
         else:
             ry = max(ry_cur + step, centered_ry)
         b0 = ry + H_r / 2 - H_b / 2 + adj
-        if b0 < y:  # garde-fou (arrondis) : la base ne remonte jamais
+        if b0 < y:  # garde-fou (arrondis) : la base ne recule jamais (le long de la ligne)
             b0 = y
             ry = max(ry, y + H_b / 2 - adj - H_r / 2)
         rpos = []
@@ -5528,8 +5550,9 @@ def _vertical_text_height(text, fs, sp):
     """Hauteur réellement consommée par _render_vertical_text(text, …, sp) :
     avance par caractère (espaces compris), caractères combinants ignorés ;
     avec ruby, hauteur du plan ruby vertical (l'écartement ruby allonge le
-    flux). Utilisée pour le repli des colonnes de paroles en blocs de
-    hauteur fixée (layout mega)."""
+    flux). Utilisée pour le repli des lignes de paroles (行) en sous-lignes
+    de hauteur fixée (layout mega) : la hauteur est la longueur de ligne
+    consommée."""
     segments = _parse_ruby(text)
     if _has_ruby(segments):
         return _plan_vertical_ruby(segments, fs, sp)[1]
@@ -5591,7 +5614,7 @@ def _plan_horizontal_ruby(segments, fs):
         else:
             rx = max(rx_end + gap, centered_rx)
         b0 = rx + ruby_w / 2 - base_w / 2
-        if b0 < x:  # garde-fou (arrondis) : la base ne remonte jamais
+        if b0 < x:  # garde-fou (arrondis) : la base ne recule jamais (le long de la ligne)
             b0 = x
             rx = max(rx, b0 + (base_w - ruby_w) / 2)
         plan.append({'base': (base, b0), 'ruby': (ruby, rx)})
