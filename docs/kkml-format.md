@@ -61,7 +61,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@composer`      | —          | Compositeur (ruby supporté)       |
 | `@lyricist`      | —          | Parolier (ruby supporté)          |
 | `@origin`        | —          | Origine (ruby supporté)           |
-| `@source`        | —          | Source de la version du morceau (chindami, nomura, site web, production perso…) — texte libre, **non affiché** dans les mises en page (information KKML uniquement, comme `@comment`) |
+| `@source`        | —          | Source de la version du morceau (recueil chindami, recueil nomura, site web, production personnelle, etc.) — texte libre.|
 | `@comment`       | —          | Commentaire                       |
 | `@choshi`        | `本調子`   | Accordage relatif (champ Portama `choshi`). Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`. Ancien nom `@tuning` accepté (alias), rectifié en `@choshi` par `kkml_clean.py` ; rendu en bas de la colonne titre en `chindami`/`mega`/`nomura` |
 | `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ). Stockée telle quelle, sans effet sur le rendu SVG à ce jour |
