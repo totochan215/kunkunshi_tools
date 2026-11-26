@@ -59,8 +59,10 @@ from dataclasses import dataclass, field
 POSITION_CHARS = set("合乙老下四上中尺工五六七八九十")
 SPECIAL_CHARS = set("○〇▲Ⓡ□×◯・#")
 
-# Échelle du ruby par rapport à la taille de base (paramètre interne,
-# non exposé comme en-tête KKML : @ruby_size volontairement absent pour le moment)
+# Échelle du ruby par rapport à la taille de base : JIS X 4051 (base normative de
+# JLreq, §3.3 ruby) fixe la taille des caractères de ruby à 1/2 de celle de la
+# base — constante unique, volontairement NON surchargeable (paramètre interne,
+# non exposé comme en-tête KKML : @ruby_size volontairement absent)
 RUBY_SCALE = 0.5
 EMPTY_TOKEN = "-"
 SUSTAIN_TOKEN = "."
