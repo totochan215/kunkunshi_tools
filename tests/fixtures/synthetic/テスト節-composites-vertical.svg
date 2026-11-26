@@ -108,16 +108,7 @@
 <text x="28.8" y="671.996" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="22" fill="black" textLength="26.4" lengthAdjust="spacingAndGlyphs">ロ中</text>
 <text x="60.72" y="203.862" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="9" fill="black">○</text>
 <text x="60.72" y="319.862" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="9" fill="black">□</text>
-<text x="278.0" y="226.0" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 216.9)">c</text>
-<text x="278.0" y="239.0" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 229.9)">o</text>
-<text x="278.0" y="252.0" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 242.9)">m</text>
-<text x="278.0" y="272.28" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 263.17999999999995)">p</text>
-<text x="278.0" y="285.28" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 276.17999999999995)">o</text>
-<text x="278.0" y="298.28" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 289.17999999999995)">s</text>
-<text x="278.0" y="311.28" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 302.17999999999995)">i</text>
-<text x="278.0" y="318.56" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 309.46)">t</text>
-<text x="278.0" y="325.84000000000003" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 316.74)">e</text>
-<text x="278.0" y="338.84000000000003" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278.0 329.74)">s</text>
 <text x="278 278 278 278" y="76 106 136 166" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black">テスト節</text>
-<text x="278 278 278" y="366.84 388.84 410.84" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="#555">本調子</text>
+<text x="278" y="226" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="26" fill="black" transform="rotate(90 278 216.9)">composites</text>
+<text x="278 278 278" y="358 380 402" text-anchor="middle" font-family="Hiragino Mincho ProN, YuMincho, 'MS PMincho', Noto Serif CJK JP, serif" font-size="15" fill="#555">本調子</text>
 </svg>

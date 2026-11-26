@@ -92,31 +92,43 @@ assert chr(0x30FC) in "".join(ROT.findall("".join(k.render_svg(k.parse_kkml(
 print("OK 6. régression : 《》 pivotés, choonpu inchangé (test_vocal_choonpu_koe)")
 
 
-# 7. Chasse variable (2026-11-25) : en vertical, un latin pivoté occupe sa LARGEUR,
-#    pas le pas fixe sp — écarts entre baselines des glyphes pivotés = chasse em x fs.
-#    Titre "iWmあ" en vertical (fs 26) : i=0,28em, W=0,94em, m=0,78em, puis あ au pas sp.
-ROTY = re.compile(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="([\d.]+)"[^>]*transform="rotate\(90 [\d.]+ [\d.]+\)"[^>]*>([^<]*)</text>')
-svg = "".join(k.render_svg(k.parse_kkml("@title iWm" + chr(0x3042) + "\n::tab\n" + " ".join([GO] * 12) + "\n::\n"), layout="vertical"))
-rot = [(float(y), float(f), ch) for y, f, ch in ROTY.findall(svg) if ch in "iWm"]
-assert [ch for _, _, ch in rot] == ["i", "W", "m"], rot
-fs = rot[0][1]
-ys = [y for y, _, _ in rot]
-assert abs((ys[1] - ys[0]) - 0.28 * fs) < 0.01, (ys, fs)   # i étroit
-assert abs((ys[2] - ys[1]) - 0.94 * fs) < 0.01, (ys, fs)   # W large
-# le kana あ (bloc groupé, non pivoté) reprend après le m à 0,78 em
-blk = re.search(r'<text x="[\d. ]+" y="([\d.]+)"[^>]*font-size="' + str(int(fs)) + r'"[^>]*>' + chr(0x3042) + r'</text>', svg)
-ya = float(blk.group(1))
-assert abs((ya - ys[2]) - 0.78 * fs) < 0.01, (ya, ys[2], fs)   # m
-print("OK 7. chasse variable : écarts verticaux = chasse du glyphe pivoté (i 0,28 / W 0,94 / m 0,78 em), kana suivant au pas fixe")
+# 7. Runs de latins pivotés en UN SEUL bloc rotatif (2026-11-25, après comparaison
+#    avec le texte horizontal même police/fs : le pivotage lettre par lettre à chasses
+#    approchées décalait jusqu'à 8,7 pt et élargissait « composites » de +7,6 % à fs 26).
+#    Le moteur avance alors les glyphes avec leurs VRAIES largeurs ; la table LATIN_WIDTH_EM
+#    (vraies métriques Times-Roman AFM) ne sert qu'à l'avance du run (frontière suivante).
+#    Titre "iWmあ-ab" en vertical (fs 26, sp 30) : runs "iWm" et "ab" en blocs uniques.
+RUN = re.compile(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="([\d.]+)"[^>]*transform="rotate\(90 [\d.]+ [\d.]+\)"[^>]*>([^<]+)</text>')
+svg = "".join(k.render_svg(k.parse_kkml("@title iWm" + chr(0x3042) + "-ab\n::tab\n" + " ".join([GO] * 12) + "\n::\n"), layout="vertical"))
+runs = [(float(y), float(f), t) for y, f, t in RUN.findall(svg)]
+assert [t for _, _, t in runs] == ["iWm", "ab"], runs          # 2 runs, un seul <text> chacun
+assert all(f == 26.0 for _, f, _ in runs)
+y_iwm, y_ab = runs[0][0], runs[1][0]
+# avance du run iWm = (0,278 + 0,944 + 0,778) em x 26 = 52 pt, puis あ et '-' au pas sp=30
+assert abs((y_ab - y_iwm) - (2.0 * 26 + 2 * 30)) < 0.01, (y_iwm, y_ab)
+# le kana あ et le tiret restent dans le bloc groupé non pivoté, au pas fixe
+blk = re.search(r'<text (?![^>]*transform)[^>]*x="([0-9. ]+)" y="([0-9. ]+)"[^>]*font-size="26"[^>]*>([^<]*)</text>', svg)
+ys = [float(v) for v in blk.group(2).split()]
+assert blk.group(3) == chr(0x3042) + "-" and ys == [y_iwm + 2.0 * 26, y_iwm + 2.0 * 26 + 30], (blk.group(3), ys)
+# un run interrompu par un non-latin est coupé : "a-b" -> run "a", tiret, run "b"
+svg2 = "".join(k.render_svg(k.parse_kkml("@title a-b\n::tab\n" + " ".join([GO] * 12) + "\n::\n"), layout="vertical"))
+runs2 = [t for _, _, t in RUN.findall(svg2)]
+assert runs2 == ["a", "b"], runs2
+print("OK 7. runs de latins pivotés en UN bloc rotatif (iWm / ab), avance du run = somme des vraies chasses, kana/tiret au pas fixe entre les runs")
 
-# 8. _vstep : latin half-width pivoté -> fs x chasse ; le reste -> sp
-assert abs(k._vstep("i", 26, 30) - 26 * 0.28) < 1e-9
-assert abs(k._vstep("m", 26, 30) - 26 * 0.78) < 1e-9
-assert abs(k._vstep("5", 26, 30) - 26 * 0.5) < 1e-9
+# 8. _vstep / _latin_run_char : latin half-width alnum -> fs x chasse AFM ; le reste -> sp
+assert abs(k._vstep("i", 26, 30) - 26 * 0.278) < 1e-9
+assert abs(k._vstep("m", 26, 30) - 26 * 0.778) < 1e-9
+assert abs(k._vstep("W", 26, 30) - 26 * 0.944) < 1e-9
+assert abs(k._vstep("s", 26, 30) - 26 * 0.389) < 1e-9
+assert abs(k._vstep("c", 26, 30) - 26 * 0.444) < 1e-9
+assert k._vstep("5", 26, 30) == 26 * 0.5
 assert k._vstep(chr(0x3042), 26, 30) == 30          # kana : sp
 assert k._vstep(chr(0xFF21), 26, 30) == 30          # pleine chasse Ａ : sp (non pivotée)
 assert k._vstep(chr(0x30FC), 26, 30) == 30          # choonpu pleine chasse : sp
 assert k._vstep("-", 26, 30) == 30                  # tiret : sp
-print("OK 8. _vstep : chasse em pour latin half-width pivoté, sp sinon")
+assert k._vstep("(", 26, 30) == 30                  # parenthèse ASCII : sp (pivotée seule, pleine chasse)
+assert k._latin_run_char("a") and k._latin_run_char("9") and not k._latin_run_char("(") and not k._latin_run_char(chr(0x3042))
+print("OK 8. _vstep/_latin_run_char : chasses AFM Times pour A-Za-z0-9, sp sinon (parenthèses pleine chasse exclues des runs)")
 
 print("\nTous les tests de rotation du romaji en vertical passent.")
