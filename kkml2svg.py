@@ -780,6 +780,8 @@ class LayoutSpec:
     max_dans: int = 0                # dans max par page = dans_per_block hors mega (nomura 7, chindami 15, tuto 7)
     title_w: float = 0               # colonne titre verticale
     title_gap: float = 0
+    genre_w: float = 0              # chindami : pitch de la colonne @genre (4 mm)
+    genre_gap: float = 0            # chindami : gap tab<->genre et genre<->titre (1 mm)
     title_spacing: float = 0
     tuning_spacing: float = 0
     md_spacing: float = 0             # avance titre->1re méta et méta->méta (@choshi exclu si ancré en bas)
@@ -905,7 +907,7 @@ CHINDAMI = LayoutSpec(
     margin_t=1 * CM, margin_b=1.3 * CM,
     cell_w=65 / 2.785, cell_h=83 / 2.785, pile_w=97 / 2.785, marker_w=32 / 2.785,
     dan_gap=0, max_dans=16, cells_per_dan=12, dans_per_block=16, fs=12,  # max 16 dans constaté
-    title_w=(1816 - 1750) / 2.785, title_gap=10,
+    title_w=6 * CM / 10, title_gap=0.15 * CM, genre_w=0.4 * CM, genre_gap=0.1 * CM,  # mesures recueil 2026-11-25 : 1,5 + 6,0 + 7,5 = 15 mm au total (hors ruby) : pitch titre 6 mm ancré à 0,75 cm du bord droit, gap tab->titre 1,5 mm ; genre : 1 mm + pitch 4 mm + 1 mm
     title_fs=17.5, title_spacing=17.5,  # fs titre = fs @choshi (4,3 cm / 7 car. pour てぃんさぐぬ花)
     md_spacing=6,
     page_no_fs=10,                       # n° de page ≈ 2,5 mm de haut, baseline à 0,7 cm du bord bas
@@ -1814,6 +1816,20 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         n_tcols = max(1, -(-int(h_title * 100) // int(grid_h * 100)))  # ceil
         title_extra_w = (n_tcols - 1) * spec.title_w
     syllable_fs = int(marker_w * 0.8) if marker_w > 0 else 0   # grand kana ≈ 80 % de la largeur du marker (recueil)
+    # Géométrie de la marge droite (mesures recueil 2026-11-25) : la colonne titre est
+    # ancrée à 0,75 cm du bord droit (pitch title_w = 6 mm) et ne bouge PAS ; c'est le bloc
+    # de tab qui recule pour ménager le gap title_gap (1,5 mm) avant la colonne titre.
+    # Avec @genre, une colonne genre (pitch genre_w = 4 mm, gaps genre_gap = 1 mm de chaque
+    # côté) s'intercale entre les deux : le bloc de tab recule de 2*genre_gap + genre_w = 6 mm.
+    TG = spec.u(spec.title_gap)
+    GW = spec.u(getattr(spec, 'genre_w', 0) or 0)
+    GG = spec.u(getattr(spec, 'genre_gap', 0) or 0)
+    genre = song.meta.get("genre", "")
+    author = song.meta.get("author", "")
+    has_genre = "genre" in spec.meta_order and bool(genre) and genre != author
+    tx0 = spec.page_w - 0.75 * CM - spec.title_w / 2
+    title_col_left = tx0 - spec.title_w / 2
+    tab_right_first = min(fx1, title_col_left - (2 * GG + GW if has_genre else TG))
 
     # Flux : aplatir les sections tab en colonnes de 12, avec vocal sync.
     tab_columns = []
@@ -1891,13 +1907,14 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         remaining = len(tab_columns) - i
         budget = max_dans   # colonne titre dans la marge : ne consomme pas de dan
         take = min(budget, remaining)
-        take = min(take, max(1, int((frame_w - title_extra_w * (1 if first else 0)) // spec.pile_w)))
+        page_frame_w = ((tab_right_first - title_extra_w - fx0) if first else frame_w)
+        take = min(take, max(1, int(page_frame_w // spec.pile_w)))
         # dernière page de musique : remplir l'espace libre à gauche des
         # piles avec autant de colonnes de paroles qu'il en tient
         # (L + P + title_offset + 12 ≤ largeur utile du cadre)
         lyr_slice = None
         if i + take >= len(tab_columns) and lyr_next < len(lyr_cols):
-            avail_w = frame_w - title_extra_w * (1 if first else 0) - take * spec.pile_w
+            avail_w = page_frame_w - take * spec.pile_w
             n_fit = 0
             while (lyr_next + n_fit < len(lyr_cols) and
                    (n_fit + 1) * lyr_col_w0 + n_fit * lyr_gap0 + lyr_sep0 <= avail_w):
@@ -1957,28 +1974,29 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         except ValueError:
             pass  # n° non numérique : rendu tel quel, pousse le titre pareil
         if is_first and (title or mno or _speed_text(song)):
-            # colonne titre DANS la marge droite : bord droit à 0,75 cm du bord droit page
-            tx = spec.page_w - 0.75 * CM - spec.title_w / 2
-            # genre présent : colonne intercalée entre le bloc de tab (bord droit fx1)
-            # et le titre — centerline à 0,4 cm du bord droit du bloc de tab ; repousse
-            # le titre plus à droite. fs ≈ 50 % fs titre, vertical entre yamakakko
-            # pivotés à 90°, centré verticalement sur le bloc de tab.
-            genre = song.meta.get("genre", "")
-            author = song.meta.get("author", "")
-            if "genre" in spec.meta_order and genre and genre != author:
+            # colonne titre ancrée à 0,75 cm du bord droit page (pitch title_w = 6 mm) —
+            # elle ne bouge pas si @genre est présent : c'est le bloc de tab qui recule
+            tx = tx0
+            # genre présent : colonne intercalée entre le bloc de tab et la colonne titre —
+            # gap genre_gap (1 mm) avec le titre, pitch genre_w (4 mm), gap genre_gap (1 mm) avec le tab ;
+            # fs ≈ 50 % fs titre, vertical entre yamakakko pivotés à 90°, centré sur le bloc de tab.
+            if has_genre:
                 gfs = TF * 0.5
-                gx = fx1 + 0.4 * CM
-                tx = gx + gfs / 2 + spec.title_w / 2
+                gx = title_col_left - GG - GW / 2   # centerline de la colonne genre
                 gtxt = "\\" + chr(0x300A) + genre + "\\" + chr(0x300B)   # yamakakko échappés (sinon = délimiteurs ruby), pivotés à 90° en vertical
                 gy = fy0 + grid_h / 2 - (len(gtxt) - 1) * gfs / 2 + gfs * 0.88
                 _vertical_grouped_text(out, gtxt, gx, gy, gfs, "#000", gfs, font_family)
             if mno:
-                MNO_FS = 11   # hauteur d'encre ≈ 4 mm ; haut d'encre à 1,4 cm du haut de page
-                out.append(f'<text x="{tx}" y="{1.4 * CM + MNO_FS * 0.88:.2f}" '
+                MNO_FS = 6 * CM / 10   # largeur "99" = 6 mm (chiffres 0,5 em) ; hauteur d'encre ≈ 4 mm (recueil 2026-11-25)
+                # ligne médiane du n° ~1 mm AU-DESSUS de la ligne médiane de la 1re cellule —
+                # ancrage PAGE (margin_t et cell_h sont des constantes de page, pas un ancrage
+                # sur le bloc de tab) ; centré horizontalement sur la colonne titre (x = tx)
+                y_mno = spec.margin_t + cell_h / 2 - 0.1 * CM + MNO_FS * 0.35
+                out.append(f'<text x="{tx}" y="{y_mno:.2f}" '
                            f'text-anchor="middle" font-family="serif" '
-                           f'font-size="{MNO_FS}" fill="#000">{escape(mno)}</text>')
-                # écart n° -> haut du titre ≈ 0,4 cm ; haut du titre = baseline
-                y_title = 1.4 * CM + MNO_FS + 0.4 * CM + TF * 0.88
+                           f'font-size="{MNO_FS:g}" fill="#000">{escape(mno)}</text>')
+                # écart bas d'encre du n° -> haut du titre ≈ 0,4 cm ; haut du titre = baseline
+                y_title = y_mno + MNO_FS * 0.12 + 0.4 * CM + TF * 0.88
             else:
                 y_title = 2.1 * CM   # haut du titre = baseline à 2,1 cm du haut de page
             title_end = None
@@ -2004,7 +2022,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
 
         # Piles de droite à gauche (jamais décalées par les paroles : celles-ci
         # occupent l'espace libre à GAUCHE, réservé par la pagination)
-        x_right = fx1 - (title_extra_w if is_first else 0)
+        x_right = (tab_right_first if is_first else fx1) - (title_extra_w if is_first else 0)
         for ci in range(n_cols):
             x = x_right - (ci + 1) * group_w
             y0 = fy0
@@ -2827,10 +2845,14 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
 
 
 def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient="v"):
-    """Straddle de tête '/B' : note à cheval sur le bord PRÉCÉDENT de la
+    """
+Straddle de tête '/B' : note à cheval sur le bord PRÉCÉDENT de la
     première case — supérieur en vertical, gauche en horizontal (miroir du
     straddle A/B par rapport au centre de la case). cy_edge = bord concerné
     (haut de la case en vertical, haut de la rangée en horizontal)."""
+    if not note or note == EMPTY_TOKEN:
+        return  # token vide en tête de bloc : jamais rendu comme texte
+
     ss = int(fs * STRADDLE_RATIO)
     ss_pos = int(fs * STRADDLE_RATIO)
     if orient == "h":
@@ -4439,6 +4461,8 @@ def _note_svg(note, font_size, opts=None):
         return (f'{escape("尺")}'
                 f'<tspan font-size="{int(font_size * 0.65)}" '
                 f'dx="0" dy="0">♯</tspan>')
+    if note in (EMPTY_TOKEN, "", None):
+        return ""   # token vide : jamais rendu comme texte (toutes les mises en page)
     return escape(note)
 
 
@@ -4755,12 +4779,14 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="{circle_w:g}"/>')
-        out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
-                   f'font-family="serif" font-size="{effective_fs}" '
-                   f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
-        # Techniques de la note principale
-        if main_tech:
-            _rt(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
+        # note principale vide ("-" en 1re partie de token = case vide) : jamais de texte
+        if main_note not in ("", EMPTY_TOKEN):
+            out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
+                       f'font-family="serif" font-size="{effective_fs}" '
+                       f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
+            # Techniques de la note principale
+            if main_tech:
+                _rt(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
 
         if straddle_note:
             ss_pos = int(fs * STRADDLE_RATIO)
