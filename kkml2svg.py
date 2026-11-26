@@ -2744,8 +2744,8 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
     def _emit(sx, yy, ch):
         if ch in KOE_CHARS:
             return  # parenthèses de ::vocal = position du koedashi/koekiri, déjà rendu dans la case
-        if ch == "ー":
-            # voyelle longue : trait vertical en écriture verticale
+        if ch in VERTICAL_ROTATE_CHARS:
+            # pivoté 90° (choonpu, romaji, chiffres...) : trait vertical en écriture verticale
             ry = yy - syllable_fs * 0.35
             out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
                        f'font-family="serif" font-size="{syllable_fs}" '
@@ -2805,8 +2805,25 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
                                f'text-anchor="middle" font-family="serif" font-size="{syllable_fs}" '
                                f'fill="#333">{escape(el[1])}</text>')
                 else:
-                    for k, ch in enumerate(el):
-                        _emit(sx, sy + k * step, ch)
+                    yy = sy
+                    k = 0
+                    while k < len(el):
+                        ch = el[k]
+                        if _latin_run_char(ch):
+                            run = []
+                            while k < len(el) and _latin_run_char(el[k]):
+                                run.append(el[k])
+                                k += 1
+                            ry = yy - syllable_fs * 0.35
+                            out.append(f'<text x="{sx:g}" y="{yy:g}" font-family="serif" '
+                                       f'font-size="{syllable_fs}" fill="#333" '
+                                       f'transform="rotate(90 {sx:g} {ry:g})">'
+                                       f'{escape("".join(run))}</text>')
+                            yy += sum(_vstep(c, syllable_fs, step) for c in run)
+                        else:
+                            _emit(sx, yy, ch)
+                            yy += _vstep(ch, syllable_fs, step)
+                            k += 1
 
 
 def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient="v"):
@@ -4918,7 +4935,96 @@ def escape(s):
 # Caractères à pivoter de 90° sens horaire en texte vertical
 # （ U+FF08, ） U+FF09, ( U+0028, ) U+0029
 # 「 U+300C, 」 U+300D, 『 U+300E, 』 U+300F
-VERTICAL_ROTATE_CHARS = set("（）()「」『』《》ー")  # + yamakakko 《》 (échappés = littéraux pivotés)
+VERTICAL_ROTATE_CHARS = set("（）()「」『』《》ー"
+    + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")  # + yamakakko 《》 (échapés = littéraux pivotés)
+#   + romaji/chiffres half-width (2026-11-25, JLREQ texte vertical : le latin demi-chasse
+#   est pivoté de 90° ; le latin PLEINE chasse ＡＢＣ U+FF21+ reste droit, idem tiret ASCII '-')
+
+# Vraies métriques des lettres/chiffres latins half-width : largeurs d'avance WX
+# (en em) de Times-Roman, AFM Adobe standard (em = 1000) — la police de référence
+# des serif occidentales. En écriture verticale, un RUN de latins pivotés est émis
+# en UN SEUL bloc <text> rotatif (voir _vertical_rotated_run) : c'est le moteur qui
+# fait avancer les glyphes avec ces vraies largeurs ; la table ne sert qu'à l'avance
+# du run entier (frontière avec le caractère suivant), d'où une erreur minime.
+LATIN_WIDTH_EM = {
+    **{c: 0.5 for c in "0123456789"},
+    "a": 0.444, "b": 0.5, "c": 0.444, "d": 0.5, "e": 0.444, "f": 0.333, "g": 0.5,
+    "h": 0.5, "i": 0.278, "j": 0.278, "k": 0.5, "l": 0.278, "m": 0.778, "n": 0.5,
+    "o": 0.5, "p": 0.5, "q": 0.5, "r": 0.333, "s": 0.389, "t": 0.278, "u": 0.5,
+    "v": 0.5, "w": 0.722, "x": 0.5, "y": 0.5, "z": 0.444,
+    "A": 0.722, "B": 0.667, "C": 0.667, "D": 0.722, "E": 0.611, "F": 0.556, "G": 0.722,
+    "H": 0.722, "I": 0.333, "J": 0.389, "K": 0.722, "L": 0.611, "M": 0.889, "N": 0.722,
+    "O": 0.722, "P": 0.556, "Q": 0.722, "R": 0.667, "S": 0.556, "T": 0.611, "U": 0.722,
+    "V": 0.722, "W": 0.944, "X": 0.722, "Y": 0.722, "Z": 0.611,
+}
+
+
+def _latin_run_char(ch):
+    """Vrai si ch fait partie d'un run de latins half-width pivotés en bloc."""
+    return ch in VERTICAL_ROTATE_CHARS and ch.isascii() and ch.isalnum()
+
+
+def _vstep(ch, fs, sp):
+    """Avance verticale d'un caractère en texte vertical : chasse du glyphe
+    (fs x chasse em) pour un latin half-width pivoté, pas fixe sp sinon."""
+    if _latin_run_char(ch):
+        return fs * LATIN_WIDTH_EM.get(ch, 0.5)
+    return sp
+
+
+def _vertical_rotated_run(out, run, x, y, fs, fill, family="serif"):
+    """Émet un RUN de latins half-width pivotés en UN SEUL bloc <text> avec un
+    unique transform="rotate(90 x cy)" : le moteur de rendu fait alors avancer les
+    glyphes avec leurs VRAIES largeurs (+ crénage), exactement comme à l'horizontal
+    (mesuré le 2026-11-25 sur « composites » en Times : le pivotage lettre par lettre
+    à chasses approchées décalait les centres jusqu'à 8,7 pt à fs 26 et élargissait
+    le run de +7,6 %). y = baseline du 1er caractère (convention _vertical_char)."""
+    cy = y - fs * 0.35
+    out.append(f'<text x="{x:g}" y="{y:g}" font-family="{family}" font-size="{fs:g}" '
+               f'fill="{fill}" transform="rotate(90 {x:g} {cy:g})">'
+               f'{escape("".join(run))}</text>')
+
+
+def _emit_vertical_sequence(out, items, x, fs, fill, family="serif", group=True):
+    """Émet une séquence de (caractère, baseline) en texte vertical : les runs de
+    latins half-width pivotés en UN bloc rotatif (_vertical_rotated_run), les autres
+    caractères pivotés pleine chasse individuellement (_vertical_char), le reste en
+    UN bloc <text> groupé (group=True) ou caractère par caractère (group=False)."""
+    gchars, gys = [], []
+
+    def flush():
+        if gchars:
+            xs = " ".join(f"{x:g}" for _ in gchars)
+            out.append(f'<text x="{xs}" y="{" ".join(f"{v:g}" for v in gys)}" '
+                       f'text-anchor="middle" font-family="{family}" '
+                       f'font-size="{fs:g}" fill="{fill}">'
+                       f'{escape("".join(gchars))}</text>')
+            gchars.clear()
+            gys.clear()
+
+    i, n = 0, len(items)
+    while i < n:
+        ch, yy = items[i]
+        if _latin_run_char(ch):
+            flush()
+            run = []
+            while i < n and _latin_run_char(items[i][0]):
+                run.append(items[i][0])
+                i += 1
+            _vertical_rotated_run(out, run, x, yy, fs, fill, family)
+        elif ch in VERTICAL_ROTATE_CHARS:
+            flush()
+            _vertical_char(out, ch, x, yy, fs, fill, family)
+            i += 1
+        elif group:
+            gchars.append(ch)
+            gys.append(yy)
+            i += 1
+        else:
+            _vertical_char(out, ch, x, yy, fs, fill, family)
+            i += 1
+    flush()
+
 
 
 def _vertical_char(out, ch, x, y, fs, fill, family="serif"):
@@ -4928,7 +5034,9 @@ def _vertical_char(out, ch, x, y, fs, fill, family="serif"):
     le sens horaire, comme l'exige la typographie japonaise verticale.
     Le signe ー (chōonpu, U+30FC) est également pivoté de 90° : barre
     horizontale en horizontal, verticale en écriture verticale.
-    (Pas de pivot pour le tiret ASCII '-' ni pour 一, qui reste droit.)
+    (Pas de pivot pour le tiret ASCII '-' ni pour 一, qui reste droit ;
+    idem pour le latin/chiffres PLEINE chasse ＡＢＣ... — seuls les caractères half-width A-Za-z0-9 sont pivotés,
+    règle JLREQ du texte vertical appliquée au romaji, 2026-11-25.)
     """
     if ch in VERTICAL_ROTATE_CHARS:
         cy = y - fs * 0.35  # centre visuel approximatif du glyphe
@@ -5231,11 +5339,16 @@ def _plan_vertical_ruby(segments, fs, sp):
         ruby centré sur sa base ou poussé à la suite du flux ruby."""
         nonlocal y, ry_cur
         n = len(base)
-        H_b = (n - 1) * sp
+        # positions cumulées : chasse variable des latins pivotés (2026-11-25)
+        bpos = []
+        yy = y
+        for ch in base:
+            bpos.append((ch, yy))
+            yy += _vstep(ch, fs, sp)
+        H_b = bpos[-1][1] - bpos[0][1] if n > 1 else 0.0
         if not ruby:
-            plan.append({'base': [(ch, y + j * sp) for j, ch in enumerate(base)],
-                         'ruby': []})
-            y += n * sp
+            plan.append({'base': bpos, 'ruby': []})
+            y = yy
             return
         H_r = (len(ruby) - 1) * ruby_sp
         # centrage sur les centres d'ENCRE (glyphe : encre de y-0.88em à
@@ -5249,10 +5362,15 @@ def _plan_vertical_ruby(segments, fs, sp):
         if b0 < y:  # garde-fou (arrondis) : la base ne remonte jamais
             b0 = y
             ry = max(ry, y + H_b / 2 - adj - H_r / 2)
-        plan.append({'base': [(ch, b0 + j * sp) for j, ch in enumerate(base)],
-                     'ruby': [(rc, ry + j * ruby_sp) for j, rc in enumerate(ruby)]})
-        ry_cur = ry + H_r
-        y = b0 + H_b + sp   # le flux de base continue après la dernière base
+        rpos = []
+        rr = ry
+        for rc in ruby:
+            rpos.append((rc, rr))
+            rr += _vstep(rc, ruby_fs, ruby_sp)
+        plan.append({'base': [(ch, b0 + (bp - bpos[0][1])) for ch, bp in bpos],
+                     'ruby': rpos})
+        ry_cur = rpos[-1][1]
+        y = b0 + H_b + _vstep(base[-1], fs, sp)   # le flux de base continue après la dernière base (rebasé sur b0)
 
     for seg in segments:
         if seg["type"] == "plain":
@@ -5263,7 +5381,7 @@ def _plan_vertical_ruby(segments, fs, sp):
                     continue
                 if keep(ch):
                     base.append((ch, y))
-                y += sp
+                y += _vstep(ch, fs, sp)   # chasse variable des latins pivotés (2026-11-25)
             plan.append({'base': base, 'ruby': []})
         elif seg["type"] == "mono":
             annotated(seg["base"], seg["ruby"] or "")
@@ -5287,10 +5405,10 @@ def _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family="serif"):
     ruby_x = x + fs * 0.75  # ruby à droite, espacé de la base
     plan, h = _plan_vertical_ruby(segments, fs, sp)
     for e in plan:
-        for ch, cy in e['base']:
-            _vertical_char(out, ch, x, y + cy, fs, fill, family)
-        for rc, ry in e['ruby']:
-            _vertical_char(out, rc, ruby_x, y + ry, ruby_fs, fill, family)
+        _emit_vertical_sequence(out, [(ch, y + cy) for ch, cy in e['base']],
+                                x, fs, fill, family, group=False)
+        _emit_vertical_sequence(out, [(rc, y + ry) for rc, ry in e['ruby']],
+                                ruby_x, ruby_fs, fill, family, group=False)
     return y + h
 
 
@@ -5327,24 +5445,9 @@ def _vertical_grouped_text(out, text, x, y, fs, fill, sp, family="serif", links=
                 y = y2
         return y
     def _emit_group(chars, ys, gfs, gx):
-        # Les caractères pivotés (ー, parenthèses…) sortent du bloc : l'attribut
-        # rotate par glyphe a une sémantique variable selon les moteurs de
-        # rendu (pivot/anchor), alors que le transform="rotate(90 x cy)" sur
-        # élément individuel est éprouvé (même rendu que le per-char historique).
-        gchars, gys = [], []
-        for ch, cy in zip(chars, ys):
-            if ch in VERTICAL_ROTATE_CHARS:
-                _vertical_char(out, ch, gx, cy, gfs, fill, family)
-            else:
-                gchars.append(ch)
-                gys.append(cy)
-        if not gchars:
-            return
-        xs = " ".join(f"{gx:g}" for _ in gchars)
-        out.append(f'<text x="{xs}" y="{" ".join(f"{v:g}" for v in gys)}" '
-                   f'text-anchor="middle" font-family="{family}" '
-                   f'font-size="{gfs:g}" fill="{fill}">'
-                   f'{escape("".join(gchars))}</text>')
+        # Runs de latins half-width pivotés en UN bloc rotatif (2026-11-25),
+        # autres pivotés pleine chasse en éléments individuels, le reste en bloc groupé.
+        _emit_vertical_sequence(out, list(zip(chars, ys)), gx, gfs, fill, family, group=True)
 
     segments = _parse_ruby(text)
     plan, h = _plan_vertical_ruby(segments, fs, sp)
@@ -5381,14 +5484,16 @@ def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif", links=F
         return y
     segments = _parse_ruby(text)
     if not _has_ruby(segments):
+        items = []
         for ch in _unescape(text):
             if ch.isspace():
                 y += sp
                 continue
             if unicodedata.combining(ch) or ch in VARIATION_SELECTORS:
                 continue
-            _vertical_char(out, ch, x, y, fs, fill, family)
-            y += sp
+            items.append((ch, y))
+            y += _vstep(ch, fs, sp)   # avance du run de latins pivotés (2026-11-25)
+        _emit_vertical_sequence(out, items, x, fs, fill, family, group=False)
         return y
     return _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family)
 

@@ -86,14 +86,21 @@ for layout in ("vertical", "horizontal", "tuto"):
     assert "WARNING" not in err.getvalue(), (layout, err.getvalue())
     assert '<a xmlns:xlink="http://www.w3.org/1999/xlink" ' \
            'xlink:href="https://exemple.jp/x?a=1&amp;b=2">' in svg, layout
-    assert "Portama" in svg, layout
+    if layout == "vertical":
+        # romaji du label pivoté lettre à lettre (JLREQ, 2026-11-25)
+        rot = "".join(re.findall(r'transform="rotate\(90 [^"]*"[^>]*>([^<]*)</text>', svg))
+        assert "Portama" in rot, (layout, rot)
+    else:
+        assert "Portama" in svg, layout
     assert svg.count("https://exemple.jp") == 1, layout  # uniquement dans le href
 print("OK lien [Portama](url) en <a xlink:href> via @author (vertical/horizontal/tuto, url non affichée)")
 
 # 6. Lien dans le titre, avec ruby dans le label
 kkml2 = "@title ｛安｝《あ》[site](https://x.jp)\n::tab\n合 工\n::\n"
 svg = "".join(k.render_svg(k.parse_kkml(kkml2), layout="vertical"))
-assert 'xlink:href="https://x.jp"' in svg and "安" in svg and "あ" in svg and "site" in svg
+assert 'xlink:href="https://x.jp"' in svg and "安" in svg and "あ" in svg
+rot_t = "".join(re.findall(r'transform="rotate\(90 [^"]*"[^>]*>([^<]*)</text>', svg))
+assert "site" in rot_t  # label romaji du lien pivoté en vertical (JLREQ, 2026-11-25)
 svg_h = "".join(k.render_svg(k.parse_kkml(kkml2), layout="horizontal"))
 assert 'xlink:href="https://x.jp"' in svg_h and "site" in svg_h
 print("OK lien dans @title avec ruby dans le label (vertical + horizontal)")
