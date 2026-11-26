@@ -89,7 +89,6 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@rep_fill`     | `off`      | Têtes des **flèches de répétition instrumentale** `|: :|` : `on` = remplies (couleur `@arrow_color`), `off` = creuses (défaut). Ancien nom `@arrow_fill` accepté et rectifié en `@rep_fill` par le cleaner |
 | `@vrep_fill`    | `off`      | **Disques de répétition vocale** `(: :)` : `on` = remplis (couleur `@arrow_color`), `off` = creux (défaut) — indépendant de `@rep_fill` |
 | `@circle_width` | défaut du layout | Épaisseur du **cercle de 尺** (`@shaku_circled on`), nombre positif (pt). Défauts : `1` partout, `0.5` en chindami |
-| `@ruby_size`     | `50`       | Taille de police du ruby, en % de la taille de base. **Non utilisé à ce jour** |
 
 Ces 10 attributs de design sont définis dans chaque mise en page (champs `text_color`, `frame_color`, `frame_width`, `cell_color`, `cell_width`, `arrow_color`, `arrow_width`, `rep_fill`, `vrep_fill`, `circle_width` du `LayoutSpec` de `kkml2svg.py`) ; la métadonnée KKML correspondante surcharge le défaut du layout. Une valeur invalide (couleur non HTML, épaisseur non positive, `rep_fill`/`vrep_fill` autre que `on`/`off`) est ignorée avec un `AVERTISSEMENT` et le défaut du layout s'applique. Chindami : `cell_width = arrow_width = 0.4` (filets 0,4 pt), `rep_fill = on` par défaut (flèches instrumentales pleines : seule la tête est remplie, la queue en L du path porte `fill="none"`), `vrep_fill = off` (disques vocaux creux), `circle_width = 0.5` (cercles de 尺).
 | `@musicno`       | —          | Numéro de morceau (champ Portama `musicno`, entier). Valeur stockée telle quelle ; affichée en layout `chindami` (tronquée mod 1000 si > 999) |
@@ -159,6 +158,7 @@ Détails :
 - `｛｝` (U+FF5B / U+FF5D) = accolades pleine largeur, délimitent le groupe de base
 - En mono-ruby sans `｛｝`, seul le caractère placé immédiatement avant `《》` est annoté. Le texte précédent est rendu sans ruby.
 - Échappement : `\《` `\》` `\｛` `\｝` (antislash + délimiteur) produisent le caractère littéral, non interprété comme ruby/groupe (ex. `x\《y》` affiche `x《y》` sans ruby). L'antislash n'est retiré que devant ces 4 caractères ; ailleurs il reste littéral. Valable dans les métadonnées et les paroles.
+- Taille de police du ruby : fixée à **50 % de la taille de base** (JIS X 4051, base normative de JLreq §3.3) — non configurable : aucune métadonnée `@ruby_size` n'est supportée.
 
 ### Liens hypertexte (métadonnées uniquement)
 - Syntaxe Markdown dans les valeurs de métadonnées affichées (`@title`, `@author`, `@composer`, `@lyricist`, `@origin`, `@genre`) : `[label](url)` — seul le `label` est affiché, rendu cliquable (`<a xlink:href="url">`) dans le SVG. Ex. `@source [Portama](https://exemple.jp/)`.
