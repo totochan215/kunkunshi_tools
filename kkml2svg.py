@@ -2845,10 +2845,14 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
 
 
 def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient="v"):
-    """Straddle de tête '/B' : note à cheval sur le bord PRÉCÉDENT de la
+    """
+Straddle de tête '/B' : note à cheval sur le bord PRÉCÉDENT de la
     première case — supérieur en vertical, gauche en horizontal (miroir du
     straddle A/B par rapport au centre de la case). cy_edge = bord concerné
     (haut de la case en vertical, haut de la rangée en horizontal)."""
+    if not note or note == EMPTY_TOKEN:
+        return  # token vide en tête de bloc : jamais rendu comme texte
+
     ss = int(fs * STRADDLE_RATIO)
     ss_pos = int(fs * STRADDLE_RATIO)
     if orient == "h":
@@ -4457,6 +4461,8 @@ def _note_svg(note, font_size, opts=None):
         return (f'{escape("尺")}'
                 f'<tspan font-size="{int(font_size * 0.65)}" '
                 f'dx="0" dy="0">♯</tspan>')
+    if note in (EMPTY_TOKEN, "", None):
+        return ""   # token vide : jamais rendu comme texte (toutes les mises en page)
     return escape(note)
 
 
@@ -4773,12 +4779,14 @@ def render_cell(out, tok, cx, cy, fs, cell_w=52, cell_h=58, opts=None, orient="v
             r = effective_fs * 0.6325
             out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" '
                        f'fill="none" stroke="black" stroke-width="{circle_w:g}"/>')
-        out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
-                   f'font-family="serif" font-size="{effective_fs}" '
-                   f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
-        # Techniques de la note principale
-        if main_tech:
-            _rt(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
+        # note principale vide ("-" en 1re partie de token = case vide) : jamais de texte
+        if main_note not in ("", EMPTY_TOKEN):
+            out.append(f'<text x="{cx}" y="{cy + effective_fs * 0.318}" text-anchor="middle" '
+                       f'font-family="serif" font-size="{effective_fs}" '
+                       f'fill="black">{_note_svg(main_note, effective_fs, opts)}</text>')
+            # Techniques de la note principale
+            if main_tech:
+                _rt(out, main_tech, cx, cy, cell_w, cell_h, effective_fs)
 
         if straddle_note:
             ss_pos = int(fs * STRADDLE_RATIO)
