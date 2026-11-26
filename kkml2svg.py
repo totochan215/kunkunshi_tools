@@ -2805,8 +2805,10 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
                                f'text-anchor="middle" font-family="serif" font-size="{syllable_fs}" '
                                f'fill="#333">{escape(el[1])}</text>')
                 else:
-                    for k, ch in enumerate(el):
-                        _emit(sx, sy + k * step, ch)
+                    yy = sy
+                    for ch in el:
+                        _emit(sx, yy, ch)
+                        yy += _vstep(ch, syllable_fs, step)   # chasse variable (2026-11-25)
 
 
 def _draw_lead_straddle(out, note, cx, cy_edge, cell_w, cell_h, fs, opts, orient="v"):
@@ -4923,6 +4925,23 @@ VERTICAL_ROTATE_CHARS = set("（）()「」『』《》ー"
 #   + romaji/chiffres half-width (2026-11-25, JLREQ texte vertical : le latin demi-chasse
 #   est pivoté de 90° ; le latin PLEINE chasse ＡＢＣ U+FF21+ reste droit, idem tiret ASCII '-')
 
+# Chasses relatives (en em) des lettres/chiffres latins half-width, d'après les
+# métriques usuelles des serif (style Times, em = 1000) — heuristique pour les
+# polices à chasses variables : en écriture verticale, un glyphe latin pivoté
+# occupe en vertical sa LARGEUR (sa chasse), pas le pas fixe sp (JLREQ, ajusté
+# le 2026-11-25). Par défaut 0,5 em (chiffres et lettres courantes).
+LATIN_WIDTH_EM = {**{c: 0.28 for c in "iljt"}, **{c: 0.33 for c in "frI"},
+                  "m": 0.78, "w": 0.72, "M": 0.89, "W": 0.94}
+
+
+def _vstep(ch, fs, sp):
+    """Avance verticale d'un caractère en texte vertical : chasse du glyphe
+    (fs x chasse em) pour un latin half-width pivoté, pas fixe sp sinon."""
+    if ch in VERTICAL_ROTATE_CHARS and ch.isascii():
+        return fs * LATIN_WIDTH_EM.get(ch, 0.5)
+    return sp
+
+
 
 def _vertical_char(out, ch, x, y, fs, fill, family="serif"):
     """Rend un caractère en texte vertical.
@@ -5236,11 +5255,16 @@ def _plan_vertical_ruby(segments, fs, sp):
         ruby centré sur sa base ou poussé à la suite du flux ruby."""
         nonlocal y, ry_cur
         n = len(base)
-        H_b = (n - 1) * sp
+        # positions cumulées : chasse variable des latins pivotés (2026-11-25)
+        bpos = []
+        yy = y
+        for ch in base:
+            bpos.append((ch, yy))
+            yy += _vstep(ch, fs, sp)
+        H_b = bpos[-1][1] - bpos[0][1] if n > 1 else 0.0
         if not ruby:
-            plan.append({'base': [(ch, y + j * sp) for j, ch in enumerate(base)],
-                         'ruby': []})
-            y += n * sp
+            plan.append({'base': bpos, 'ruby': []})
+            y = yy
             return
         H_r = (len(ruby) - 1) * ruby_sp
         # centrage sur les centres d'ENCRE (glyphe : encre de y-0.88em à
@@ -5254,10 +5278,15 @@ def _plan_vertical_ruby(segments, fs, sp):
         if b0 < y:  # garde-fou (arrondis) : la base ne remonte jamais
             b0 = y
             ry = max(ry, y + H_b / 2 - adj - H_r / 2)
-        plan.append({'base': [(ch, b0 + j * sp) for j, ch in enumerate(base)],
-                     'ruby': [(rc, ry + j * ruby_sp) for j, rc in enumerate(ruby)]})
-        ry_cur = ry + H_r
-        y = b0 + H_b + sp   # le flux de base continue après la dernière base
+        rpos = []
+        rr = ry
+        for rc in ruby:
+            rpos.append((rc, rr))
+            rr += _vstep(rc, ruby_fs, ruby_sp)
+        plan.append({'base': [(ch, b0 + (bp - bpos[0][1])) for ch, bp in bpos],
+                     'ruby': rpos})
+        ry_cur = rpos[-1][1]
+        y = b0 + H_b + _vstep(base[-1], fs, sp)   # le flux de base continue après la dernière base (rebasé sur b0)
 
     for seg in segments:
         if seg["type"] == "plain":
@@ -5268,7 +5297,7 @@ def _plan_vertical_ruby(segments, fs, sp):
                     continue
                 if keep(ch):
                     base.append((ch, y))
-                y += sp
+                y += _vstep(ch, fs, sp)   # chasse variable des latins pivotés (2026-11-25)
             plan.append({'base': base, 'ruby': []})
         elif seg["type"] == "mono":
             annotated(seg["base"], seg["ruby"] or "")
@@ -5393,7 +5422,7 @@ def _render_vertical_text(out, text, x, y, fs, fill, sp, family="serif", links=F
             if unicodedata.combining(ch) or ch in VARIATION_SELECTORS:
                 continue
             _vertical_char(out, ch, x, y, fs, fill, family)
-            y += sp
+            y += _vstep(ch, fs, sp)   # chasse variable des latins pivotés (2026-11-25)
         return y
     return _render_vertical_ruby(out, segments, x, y, fs, fill, sp, family)
 

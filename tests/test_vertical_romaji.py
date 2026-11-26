@@ -91,4 +91,32 @@ assert chr(0x30FC) in "".join(ROT.findall("".join(k.render_svg(k.parse_kkml(
     layout="vertical")))) or True  # ー déjà couvert par test_vocal_choonpu_koe
 print("OK 6. régression : 《》 pivotés, choonpu inchangé (test_vocal_choonpu_koe)")
 
+
+# 7. Chasse variable (2026-11-25) : en vertical, un latin pivoté occupe sa LARGEUR,
+#    pas le pas fixe sp — écarts entre baselines des glyphes pivotés = chasse em x fs.
+#    Titre "iWmあ" en vertical (fs 26) : i=0,28em, W=0,94em, m=0,78em, puis あ au pas sp.
+ROTY = re.compile(r'<text x="[\d.]+" y="([\d.]+)"[^>]*font-size="([\d.]+)"[^>]*transform="rotate\(90 [\d.]+ [\d.]+\)"[^>]*>([^<]*)</text>')
+svg = "".join(k.render_svg(k.parse_kkml("@title iWm" + chr(0x3042) + "\n::tab\n" + " ".join([GO] * 12) + "\n::\n"), layout="vertical"))
+rot = [(float(y), float(f), ch) for y, f, ch in ROTY.findall(svg) if ch in "iWm"]
+assert [ch for _, _, ch in rot] == ["i", "W", "m"], rot
+fs = rot[0][1]
+ys = [y for y, _, _ in rot]
+assert abs((ys[1] - ys[0]) - 0.28 * fs) < 0.01, (ys, fs)   # i étroit
+assert abs((ys[2] - ys[1]) - 0.94 * fs) < 0.01, (ys, fs)   # W large
+# le kana あ (bloc groupé, non pivoté) reprend après le m à 0,78 em
+blk = re.search(r'<text x="[\d. ]+" y="([\d.]+)"[^>]*font-size="' + str(int(fs)) + r'"[^>]*>' + chr(0x3042) + r'</text>', svg)
+ya = float(blk.group(1))
+assert abs((ya - ys[2]) - 0.78 * fs) < 0.01, (ya, ys[2], fs)   # m
+print("OK 7. chasse variable : écarts verticaux = chasse du glyphe pivoté (i 0,28 / W 0,94 / m 0,78 em), kana suivant au pas fixe")
+
+# 8. _vstep : latin half-width pivoté -> fs x chasse ; le reste -> sp
+assert abs(k._vstep("i", 26, 30) - 26 * 0.28) < 1e-9
+assert abs(k._vstep("m", 26, 30) - 26 * 0.78) < 1e-9
+assert abs(k._vstep("5", 26, 30) - 26 * 0.5) < 1e-9
+assert k._vstep(chr(0x3042), 26, 30) == 30          # kana : sp
+assert k._vstep(chr(0xFF21), 26, 30) == 30          # pleine chasse Ａ : sp (non pivotée)
+assert k._vstep(chr(0x30FC), 26, 30) == 30          # choonpu pleine chasse : sp
+assert k._vstep("-", 26, 30) == 30                  # tiret : sp
+print("OK 8. _vstep : chasse em pour latin half-width pivoté, sp sinon")
+
 print("\nTous les tests de rotation du romaji en vertical passent.")
