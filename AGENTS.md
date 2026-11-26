@@ -10,7 +10,7 @@ Règles :
 ---
 # Feuille de route
 
-Dernière mise à jour : 24 novembre 2026
+Dernière mise à jour : 25 novembre 2026
 
 Pipeline : Portama JSON → KKML → SVG / PDF. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
@@ -48,6 +48,7 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
     - Mènera à définir en KKML des instructions explicites de saut de ligne/colonne/dan, de bloc et de page (aujourd'hui : saut de ligne de `::tab` = nouveau dan, `|` = saut de ligne de couplet en `::lyrics`, `::block`/`::page` = mega uniquement).
   - ⬜ (2026-11-24) Kunojiten dans `::lyrics` (recueil chindami) : les couplets acceptent des marques de répétition portant sur 4 caractères. Hypothèse utilisateur : la marque du recueil est un COMBINÉ de U+3033 (〳) et U+3035 (々) — en UTF pur (texte KKML) une telle séquence combinante est « monstrueuse » : prévoir une syntaxe KKML compacte (ex. `々` seul, ou antislash + ASCII), le rendu dessinant alors le combiné U+3033+U+3035. Rendu SVG à préciser.
   - ❓ (2026-11-24) **Hiérarchie compilation > morceau > partie** (trou du modèle global, constaté sur le recueil chindami) : chindami accepte des compilations de morceaux à la suite dans l'ordre titre+métadonnées, tablature, lyrics, puis morceau suivant… ; et chaque morceau accepte des PARTIES dans l'ordre intertitre, tablature, intertitre, tablature…, puis lyrics. Aujourd'hui KKML n'a que `::part <nom>` = morceau dans une compilation (mega) — il faudrait distinguer 3 niveaux : compilation (le fichier lui-même) > morceau > partie (nouvelle section avec intertitre, ex. `::subsection` — ATTENTION : `::section` est déjà alias de `::part`). À articuler avec « Gestion de medleys » (section 4) et les constantes par layout d'assemblage (mega = par type de section, autres = par part).
+  - ⬜ (2026-11-25) **Moyen terme — KKML complexes (compilations/medleys, recueils)** : (1) **ordonnancement des sections dans l'ordre naturel de leur apparition dans le layout** (et non dans l'ordre de déclaration KKML) ; (2) **hiérarchie compilation > chanson > partie** (voir ❓ ci-dessus) ; (3) **gestion des sauts** — de page, de bloc, de ligne/colonne de couplet (lyrics), de ligne/colonne de tab (dan) — automatiques (flux) et/ou instructions KKML explicites, voir ❓ « modèle de flux blocs/pages » ci-dessus et ⬜ constantes d'assemblage par layout (section 4). Constantes de layout impliquées : ordre de rendu des sections, saut provoqué ou non par un changement de partie (dan / ligne / bloc / page / aucun).
 - ⬜ (2026-11-22) Autres idées utilisateur :
   - ✅ (2026-11-22) `@tuning` remplacé par `@choshi` — fait (voir entrée ✅ de la section 0) : alias `@tuning` accepté au parsing avec info stderr, rectifié en `@choshi` par le cleaner.
   - ✅ (2026-11-22) Numéros de page auto-incrémentés en nomura/chindami/mega — fait (voir entrée ✅ de la section 0) : `–n–`, n = `@page_base` (>= 1) + index de page.
