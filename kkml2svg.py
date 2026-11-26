@@ -1987,12 +1987,16 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                 gy = fy0 + grid_h / 2 - (len(gtxt) - 1) * gfs / 2 + gfs * 0.88
                 _vertical_grouped_text(out, gtxt, gx, gy, gfs, "#000", gfs, font_family)
             if mno:
-                MNO_FS = 11   # hauteur d'encre ≈ 4 mm ; haut d'encre à 1,4 cm du haut de page
-                out.append(f'<text x="{tx}" y="{1.4 * CM + MNO_FS * 0.88:.2f}" '
+                MNO_FS = 6 * CM / 10   # largeur "99" = 6 mm (chiffres 0,5 em) ; hauteur d'encre ≈ 4 mm (recueil 2026-11-25)
+                # ligne médiane du n° ~1 mm AU-DESSUS de la ligne médiane de la 1re cellule —
+                # ancrage PAGE (margin_t et cell_h sont des constantes de page, pas un ancrage
+                # sur le bloc de tab) ; centré horizontalement sur la colonne titre (x = tx)
+                y_mno = spec.margin_t + cell_h / 2 - 0.1 * CM + MNO_FS * 0.35
+                out.append(f'<text x="{tx}" y="{y_mno:.2f}" '
                            f'text-anchor="middle" font-family="serif" '
-                           f'font-size="{MNO_FS}" fill="#000">{escape(mno)}</text>')
-                # écart n° -> haut du titre ≈ 0,4 cm ; haut du titre = baseline
-                y_title = 1.4 * CM + MNO_FS + 0.4 * CM + TF * 0.88
+                           f'font-size="{MNO_FS:g}" fill="#000">{escape(mno)}</text>')
+                # écart bas d'encre du n° -> haut du titre ≈ 0,4 cm ; haut du titre = baseline
+                y_title = y_mno + MNO_FS * 0.12 + 0.4 * CM + TF * 0.88
             else:
                 y_title = 2.1 * CM   # haut du titre = baseline à 2,1 cm du haut de page
             title_end = None

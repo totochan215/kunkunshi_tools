@@ -7,7 +7,7 @@ Vérifie les constantes de la spec CHINDAMI et les ancres de rendu :
 - case 65x83 px, pile 97 px, marker 32 px (px ÷ 2,785) ;
 - colonne titre dans la marge droite (bord droit à 0,75 cm du bord page), fs 17,5,
   1re baseline à 2,1 cm du haut de page (ancrage page = hanmen = cadre ici) ;
-- @musicno : haut d'encre à 1,4 cm, hauteur ≈ 4 mm (fs 11), écart 0,4 cm avec le titre ;
+- @musicno : fs = 6 mm (largeur « 99 » = 6 mm), centré sur la colonne titre, ligne médiane ~1 mm au-dessus de celle de la 1re cellule (ancrage page), écart 0,4 cm avec le haut du titre ;
 - @choshi : même fs que le titre, dernière baseline à 2,3 cm du bord bas ;
 - @genre : colonne entre bloc de tab et titre, centerline à 0,4 cm du bord droit du
   bloc de tab, fs 50 % titre, yamakakko pivotés à 90° ;
@@ -127,8 +127,12 @@ svg = svgs[0]
 m = re.search(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="([\d.]+)"[^>]*fill="([^"]*)">12</text>', svg)
 assert m, "@musicno introuvable"
 mno_x, mno_y, mno_fs = float(m.group(1)), float(m.group(2)), m.group(3)
-assert mno_fs == "11" and m.group(4) == "#000"
-assert abs(mno_y - (1.4 * CM + 11 * 0.88)) < 0.01, mno_y    # haut d'encre à 1,4 cm
+MNO_FS = 6 * CM / 10
+assert mno_fs == f"{MNO_FS:g}" and m.group(4) == "#000"     # fs = 6 mm -> largeur "99" = 6 mm
+y_mno_attendu = spec.margin_t + spec.cell_h / 2 - 0.1 * CM + MNO_FS * 0.35
+assert abs(mno_y - y_mno_attendu) < 0.01, mno_y
+# ligne médiane du n° = baseline - 0,35 fs, à 1 mm au-dessus de la ligne médiane de la 1re cellule
+assert abs((mno_y - 0.35 * MNO_FS) - (spec.margin_t + spec.cell_h / 2 - 0.1 * CM)) < 0.01
 tx0b = spec.page_w - 0.75 * CM - spec.title_w / 2            # colonne titre ancrée à 0,75 cm du bord droit, ne bouge PAS
 assert abs(mno_x - tx0b) < 0.01, (mno_x, tx0b)
 tcl = tx0b - spec.title_w / 2
@@ -140,13 +144,13 @@ tab_right_g = min(fx1, tcl - 2 * spec.genre_gap - spec.genre_w)   # bloc tab rec
 mrect = [r for r in re.findall(r'<rect x="([\d.]+)" y="[\d.]+" width="([\d.]+)"[^>]*/>', svg)
          if abs(float(r[1]) - spec.marker_w) < 1e-6]
 assert mrect and all(abs(float(r[0]) + float(r[1]) - tab_right_g) < 0.01 for r in mrect), (mrect, tab_right_g)
-assert abs(titre[1][0] - (1.4 * CM + 11 + 0.4 * CM + 17.5 * 0.88)) < 0.01, titre[1][0]
+assert abs(titre[1][0] - (y_mno_attendu + MNO_FS * 0.12 + 0.4 * CM + 17.5 * 0.88)) < 0.01, titre[1][0]   # écart 0,4 cm bas d'encre n° -> haut du titre
 rot = [(float(x), float(y), float(f), c) for x, y, f, c in ROT.findall(svg)]
 yama = [r for r in rot if r[3] in ("《", "》")]
 assert len(yama) == 2, rot                                 # yamakakko pivotés à 90°
 assert all(abs(r[0] - gx) < 0.01 and r[2] == 8.75 for r in yama), yama   # fs = 50 % fs titre
 assert any(b[4] == "民謡" and abs(b[0][0] - gx) < 0.01 and b[2] == 8.75 for b in blocks(svg, fs=8.75))
-print("OK 3. @musicno (haut 1,4 cm, fs 11), titre ancré 0,75 cm du bord droit (ne bouge pas avec @genre), genre intercalé (1 mm + pitch 4 mm + 1 mm, bloc tab reculé de 6 mm, fs 8,75, 《》 pivotés)")
+print("OK 3. @musicno (fs 6 mm, centré sur le titre, médiane à 1 mm au-dessus de la 1re cellule, écart 0,4 cm avec le titre), titre ancré 0,75 cm du bord droit (ne bouge pas avec @genre), genre intercalé (1 mm + 4 mm + 1 mm, bloc tab reculé de 6 mm, fs 8,75, 《》 pivotés)")
 
 # 4. Marker cosubstantiel : présent même avec @marker off ; syllabes à 80 % du marker
 src_off = "@marker off\n" + base_src()
