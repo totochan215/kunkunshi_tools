@@ -907,7 +907,7 @@ CHINDAMI = LayoutSpec(
     margin_t=1 * CM, margin_b=1.3 * CM,
     cell_w=65 / 2.785, cell_h=83 / 2.785, pile_w=97 / 2.785, marker_w=32 / 2.785,
     dan_gap=0, max_dans=16, cells_per_dan=12, dans_per_block=16, fs=12,  # max 16 dans constaté
-    title_w=7 * CM / 10, title_gap=0.15 * CM, genre_w=0.4 * CM, genre_gap=0.1 * CM,  # mesures recueil 2026-11-25 : pitch titre 7 mm ancré à 0,75 cm du bord droit, gap tab->titre 1,5 mm ; genre : 1 mm + pitch 4 mm + 1 mm (bloc tab reculé de 6 mm)
+    title_w=6 * CM / 10, title_gap=0.15 * CM, genre_w=0.4 * CM, genre_gap=0.1 * CM,  # mesures recueil 2026-11-25 : 1,5 + 6,0 + 7,5 = 15 mm au total (hors ruby) : pitch titre 6 mm ancré à 0,75 cm du bord droit, gap tab->titre 1,5 mm ; genre : 1 mm + pitch 4 mm + 1 mm
     title_fs=17.5, title_spacing=17.5,  # fs titre = fs @choshi (4,3 cm / 7 car. pour てぃんさぐぬ花)
     md_spacing=6,
     page_no_fs=10,                       # n° de page ≈ 2,5 mm de haut, baseline à 0,7 cm du bord bas
@@ -1817,7 +1817,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         title_extra_w = (n_tcols - 1) * spec.title_w
     syllable_fs = int(marker_w * 0.8) if marker_w > 0 else 0   # grand kana ≈ 80 % de la largeur du marker (recueil)
     # Géométrie de la marge droite (mesures recueil 2026-11-25) : la colonne titre est
-    # ancrée à 0,75 cm du bord droit (pitch title_w = 7 mm) et ne bouge PAS ; c'est le bloc
+    # ancrée à 0,75 cm du bord droit (pitch title_w = 6 mm) et ne bouge PAS ; c'est le bloc
     # de tab qui recule pour ménager le gap title_gap (1,5 mm) avant la colonne titre.
     # Avec @genre, une colonne genre (pitch genre_w = 4 mm, gaps genre_gap = 1 mm de chaque
     # côté) s'intercale entre les deux : le bloc de tab recule de 2*genre_gap + genre_w = 6 mm.
@@ -1974,7 +1974,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
         except ValueError:
             pass  # n° non numérique : rendu tel quel, pousse le titre pareil
         if is_first and (title or mno or _speed_text(song)):
-            # colonne titre ancrée à 0,75 cm du bord droit page (pitch title_w = 7 mm) —
+            # colonne titre ancrée à 0,75 cm du bord droit page (pitch title_w = 6 mm) —
             # elle ne bouge pas si @genre est présent : c'est le bloc de tab qui recule
             tx = tx0
             # genre présent : colonne intercalée entre le bloc de tab et la colonne titre —

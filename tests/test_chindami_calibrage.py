@@ -75,7 +75,7 @@ assert spec.dan_gap == 0
 assert abs(spec.cell_w - 65 / 2.785) < 1e-9 and abs(spec.cell_h - 83 / 2.785) < 1e-9
 assert abs(spec.pile_w - 97 / 2.785) < 1e-9 and abs(spec.marker_w - 32 / 2.785) < 1e-9
 assert spec.title_fs == 17.5 and spec.title_spacing == 17.5   # fs choshi = fs titre
-assert abs(spec.title_w - 0.7 * CM) < 1e-9            # pitch colonne titre = 7 mm (recueil 2026-11-25)
+assert abs(spec.title_w - 0.6 * CM) < 1e-9            # pitch colonne titre = 6 mm hors ruby (1,5+6,0+7,5 = 15 mm au total, recueil 2026-11-25)
 assert abs(spec.title_gap - 0.15 * CM) < 1e-9         # gap bloc tab -> colonne titre = 1,5 mm
 assert abs(spec.genre_w - 0.4 * CM) < 1e-9 and abs(spec.genre_gap - 0.1 * CM) < 1e-9  # genre : pitch 4 mm, gaps 1 mm
 assert spec.page_no_fs == 10                                   # n° ≈ 2,5 mm de haut
@@ -107,7 +107,8 @@ cxs, cys, _f, _fill, _c = choshi[0]
 assert all(abs(x - tx0) < 0.01 for x in cxs)                # aligné sur la 1re colonne du titre
 assert abs(cys[-1] - (spec.page_h - 2.3 * CM)) < 0.01, cys[-1]   # dernière baseline à 2,3 cm du bord bas
 title_col_left = tx0 - spec.title_w / 2
-tab_right = min(fx1, title_col_left - spec.title_gap)          # bloc tab reculé pour ménager le gap 1,5 mm
+tab_right = min(fx1, title_col_left - spec.title_gap)          # = fx1 exactement : 1,5 + 6,0 + 7,5 = 15 mm au total
+assert abs(tab_right - fx1) < 1e-6, (tab_right, fx1)
 mrect = [r for r in re.findall(r'<rect x="([\d.]+)" y="[\d.]+" width="([\d.]+)"[^>]*/>', svg)
          if abs(float(r[1]) - spec.marker_w) < 1e-6]
 assert mrect and all(abs(float(r[0]) + float(r[1]) - tab_right) < 0.01 for r in mrect), (mrect, tab_right)
