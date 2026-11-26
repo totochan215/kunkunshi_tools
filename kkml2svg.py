@@ -2744,8 +2744,8 @@ def _draw_vertical_vocal(out, vocal_lines, cells_per_dan, ml, y0,
     def _emit(sx, yy, ch):
         if ch in KOE_CHARS:
             return  # parenthèses de ::vocal = position du koedashi/koekiri, déjà rendu dans la case
-        if ch == "ー":
-            # voyelle longue : trait vertical en écriture verticale
+        if ch in VERTICAL_ROTATE_CHARS:
+            # pivoté 90° (choonpu, romaji, chiffres...) : trait vertical en écriture verticale
             ry = yy - syllable_fs * 0.35
             out.append(f'<text x="{sx}" y="{yy}" text-anchor="middle" '
                        f'font-family="serif" font-size="{syllable_fs}" '
@@ -4918,7 +4918,10 @@ def escape(s):
 # Caractères à pivoter de 90° sens horaire en texte vertical
 # （ U+FF08, ） U+FF09, ( U+0028, ) U+0029
 # 「 U+300C, 」 U+300D, 『 U+300E, 』 U+300F
-VERTICAL_ROTATE_CHARS = set("（）()「」『』《》ー")  # + yamakakko 《》 (échappés = littéraux pivotés)
+VERTICAL_ROTATE_CHARS = set("（）()「」『』《》ー"
+    + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")  # + yamakakko 《》 (échapés = littéraux pivotés)
+#   + romaji/chiffres half-width (2026-11-25, JLREQ texte vertical : le latin demi-chasse
+#   est pivoté de 90° ; le latin PLEINE chasse ＡＢＣ U+FF21+ reste droit, idem tiret ASCII '-')
 
 
 def _vertical_char(out, ch, x, y, fs, fill, family="serif"):
@@ -4928,7 +4931,9 @@ def _vertical_char(out, ch, x, y, fs, fill, family="serif"):
     le sens horaire, comme l'exige la typographie japonaise verticale.
     Le signe ー (chōonpu, U+30FC) est également pivoté de 90° : barre
     horizontale en horizontal, verticale en écriture verticale.
-    (Pas de pivot pour le tiret ASCII '-' ni pour 一, qui reste droit.)
+    (Pas de pivot pour le tiret ASCII '-' ni pour 一, qui reste droit ;
+    idem pour le latin/chiffres PLEINE chasse ＡＢＣ... — seuls les caractères half-width A-Za-z0-9 sont pivotés,
+    règle JLREQ du texte vertical appliquée au romaji, 2026-11-25.)
     """
     if ch in VERTICAL_ROTATE_CHARS:
         cy = y - fs * 0.35  # centre visuel approximatif du glyphe
