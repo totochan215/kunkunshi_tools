@@ -72,7 +72,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@mega_dans`     | `32`       | Layout `mega` uniquement : nombre de colonnes (*dans*) par bloc horizontal (2 blocs/page A3, donc 64 dans/page par défaut). La largeur des cases s'adapte |
 | `@cells_per_dan` | —          | Nombre de cellules par *dan*. Utilisé par `kkml_clean.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal` (défaut `12`) et `tuto` (défaut `8`), mais pas par `chindami`, `nomura` et `mega`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
 | `@marker`        | `on`       | Active/désactive les colonnes/lignes de marker : `on` : activé, `off`, désactivé. Certaines mises en pages surchargent cette valeur. |
-| `@show_dots`     | `off`      | Points ・ (U+30FB) de positionnement des syllabes `::vocal` dans la colonne/ligne marker : `on` = affichés, `off` = masqués (défaut). Les syllabes conservent leur position dans les deux cas (le point occupe toujours sa sous-partie de case). |
+| `@show_dots`     | `off`      | Affiche ou masque les points de positionnement des syllabes : `on` = affichés, `off` = masqués (défaut). Les syllabes conservent leur position dans les deux cas (le point occupe toujours sa sous-partie de case). |
 | `@end_circle`    | —          | **Déprécié** |
 | `@font_style`    | `mincho`   | Police de rendu : `mincho` (Hiragino Mincho ProN, YuMincho, MS PMincho, Noto Serif CJK JP) ou `gothic` (Hiragino Kaku Gothic ProN, Yu Gothic, Meiryo, MS Gothic, Noto Sans CJK JP). La police réelle dépend du système qui affiche le SVG.    |
 | `@shaku_circled` | `off`      | Rend les 尺 entourés d'un cercle : `on` : activé, `off` : désactivé |
