@@ -70,5 +70,7 @@ jobs:
         run: python3 tests/test_chindami_calibrage.py
       - name: Lancer les tests de rotation du romaji en vertical (JLREQ, 2026-11-25)
         run: python3 tests/test_vertical_romaji.py
+      - name: Lancer les tests de nommage des fixtures SVG (<kkml>-<layout>-<font>[-N].svg)
+        run: python3 tests/test_fixture_names.py
       - name: Lancer les tests du token vide `-` jamais rendu comme texte (6 layouts)
         run: python3 tests/test_empty_token.py

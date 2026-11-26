@@ -23,3 +23,4 @@ correspond à `国頭ジントヨー.kkml`).
   synthétiques de test (`テスト節.kkml`, `テスト節-2.kkml`, `medley-samples.kkml`,
   avec les rendus mega de référence `medley-samples-mega-p1/p2.svg`) sont dans
   [tests/fixtures/synthetic/](../tests/fixtures/synthetic/).
+  Dans `tests/fixtures/synthetic/`, les SVG rendus suivent la convention `<nom du kkml>-<layout>-<font>.svg` (multi-page : `-N` en dernier), `<font>` = `@font_style` du kkml (défaut `mincho`) — voir AGENTS.md.
