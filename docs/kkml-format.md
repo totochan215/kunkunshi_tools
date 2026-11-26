@@ -64,7 +64,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@source`        | —          | Source de la version du morceau (recueil chindami, recueil nomura, site web, production personnelle, etc.) — texte libre.|
 | `@comment`       | —          | Commentaire — texte libre.        |
 | `@choshi`        | `本調子`    | Accordage relatif. Valeurs connues : `本調子`, `二揚げ`, `三下げ`, `一二揚げ`, `一揚げ`. Ancien nom `@tuning` accepté (alias) |
-| `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ). Stockée telle quelle, sans effet sur le rendu SVG à ce jour |
+| `@base_note`     | `C3`       | Note de base : hauteur de la position 合 (accordages 本調子, 二揚げ, 三下げ) ou 合 moins 2 demi-tons (一二揚げ, 一揚げ). |
 | `@layout`        | `vertical` | Modèle de mise en page : `vertical`, `horizontal`, `nomura`, `chindami`, `tuto` ou `mega` (voir [svg-layout.md](svg-layout.md)) |
 | `@dans_per_page` | —          | Nombre max de *dans* par page avant un saut de page forcé |
 | `@page_base`     | `1`        | Numéro affiché sur la 1re page (layouts à page fixe `nomura`/`chindami`/`mega`, sous la forme –n– ; les pages suivantes s'incrémentent automatiquement. Entier >= 1 |
