@@ -43,7 +43,7 @@
 <line x1="472.743" y1="281.731" x2="501.573" y2="271.731" stroke="#333333" stroke-width="0.6"/>
 <text x="655.56" y="169.422" text-anchor="middle" font-family="monospace" font-size="12" fill="#333333" font-weight="bold">工</text>
 <text x="672.975" y="168.422" text-anchor="middle" font-family="monospace" font-size="10" fill="#333333">あ</text>
-<text x="487.158" y="143.521" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">piles (max 15/page, 12 cases)</text>
+<text x="487.158" y="143.521" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">piles (max 16/bloc, 12 cases)</text>
 <rect x="688.72" y="150.521" width="23.6984" height="119.21" fill="#f6f6f6" stroke="#333333" stroke-width="0.6"/>
 <text x="700.569" y="143.521" text-anchor="middle" font-family="monospace" font-size="9" fill="#333333">titre p.1</text>
 <rect x="159.551" y="150.521" width="26" height="119.21" fill="#f6f6f6" stroke="#333333" stroke-width="0.6"/>

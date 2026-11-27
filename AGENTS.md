@@ -10,7 +10,7 @@ Règles :
 ---
 # Feuille de route
 
-Dernière mise à jour : 25 novembre 2026
+Dernière mise à jour : 26 novembre 2026
 
 Pipeline : Portama JSON → KKML → SVG / PDF. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
@@ -108,6 +108,8 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
   `cd tests/fixtures/synthetic && for base in テスト節 テスト節-2 テスト節-3m テスト節-3g; do font=$(grep -oP '@font_style\s+\K\w+' $base.kkml || echo mincho); for layout in vertical horizontal nomura chindami tuto mega; do python3 ../../../kkml2svg.py -l $layout $base.kkml -o $base-$layout-$font.svg; done; done`
   (les sorties multi-pages sont auto-suffixées `-1`/`-2` ; comparer les fichiers suffixés, pas le nom de base ; les rendus `medley-samples-*.svg` de la boucle ne sont pas trackés). Garde-fou : `tests/test_fixture_names.py` (en CI) — tout SVG tracké hors goldens suit `<kkml>-<layout>-<font>[-N].svg` avec la font du `@font_style`, et chaque kkml de test a ses 6 layouts.
 - ✅ (2026-11-25) **Renommage des kkml composites** : `テスト節-composites.kkml` → `テスト節-3m.kkml` (variante mincho) et `テスト節-composites-gothic.kkml` → `テスト節-3g.kkml` (`@font_style gothic` ; m/g = mincho/gothic, comme le suffixe font des SVG). Les 16 SVG suivent la convention : `テスト節-3m-<layout>-mincho[-N].svg` et `テスト節-3g-<layout>-gothic[-N].svg`. Le `@title` interne (`テスト節 composites`) est inchangé. Boucle de régénération mise à jour ci-dessus ; `tests/test_fixture_names.py` couvre les nouveaux noms (aucune référence au nom de fichier hors AGENTS.md).
+- ✅ (2026-11-26) **Modèle page → bloc → dan explicite dans `LayoutSpec`** (option (a) pour `@dans_per_page`) : nouveau champ `writing_mode` (`vertical` partout sauf horizontal/tuto — mode d'écriture UNIQUE par page, cf. JLreq ; seul le n° de page fait exception) ; champ `max_dans` **supprimé**, remplacé par `dans_per_block` présent dans tous les layouts (nomura 7, chindami 16, tuto 7, mega 32 ; 0 = illimité en vertical/horizontal) ; nouvelle propriété dérivée `page_dans_cap = blocks × dans_per_block` (nomura 7, chindami 16, tuto 7, mega 64 ; 0 = page libre) — la notion de « max de dans par page » n'est plus primitive. Chindami : 16 = plafond absolu du bloc (page non extensible), atteint seulement si aucun titre/méta sur la page, sinon le nombre de piles est dérivé de la largeur du bloc ancré (comportement inchangé). `@dans_per_page`/`@page_dans`/`-p` **déprécié mais accepté** : INFO stderr une fois par clé (`_info_deprecated` dans kkml2svg, `info()` dans kkml_clean — la clé reste préservée par le cleaner) ; sémantique = simple plafond de la capacité dérivée, appliqué au point de consommation (tuto : `min(page_dans, page_dans_cap)` ; mega : `min` avec la capacité effective `blocks` × `dans_per_block` tenant compte de `@mega_dans` ; vertical : page libre, plafond sans objet), sans effet en nomura/chindami/horizontal (page imposée). Tests : `test_layout_constants.py` (writing_mode + page_dans_cap par layout, `max_dans` absent), `test_chindami_calibrage.py` §1 (dans_per_block = page_dans_cap = 16). Docs : `docs/svg-layout.md` (paragraphe modèle en tête + sections vertical/nomura/chindami/tuto/mega), `docs/kkml-format.md` (ligne `@dans_per_page` dépréciée), README (CLI `-p`), figures `docs/svg/*.svg` (libellés `/bloc` ; labels seuls modifiés — la figure chindami committée était déjà périmée depuis le calibrage 2026-11-24, drift préexistant hors scope). **Rendus SVG byte-identiques** (110 échantillons × 6 layouts vs main avant refactor).
+
 ## 1. Validations en attente (bloquantes ou quasi)
 
 - ✅ (2026-11-01, PR #12) marqueur de couplet en début de ligne dans `::lyrics` force le changement de couplet (même sans ligne vide) → saut de colonne en layout vertical. Cas jukunoharu. `_split_verses` modifié.
@@ -362,10 +364,13 @@ chindami 10,8), ratios paroles (`lyr_sp_ratio`, `lyr_col_w_ratio`,
 `lyr_verse_gap_ratio`), ratios syllabes
 (`syl_cell_ratio`, `syl_marker_ratio`, `syl_fs_ratio`), structure de blocs
 (`blocks` = 1 partout sauf mega 2, `block_gap` = 0 sauf mega 30,
-`dans_per_block` = `max_dans` hors mega — nomura 7, chindami 15, tuto 7 —
-0 = illimité en vertical/horizontal, 32 en mega ; `lyr_inline_max_ratio` =
-seuil paroles inline 1re page, mega), `dan_gap`/`max_dans` (nomura, chindami,
-tuto).
+`dans_per_block` — nomura 7, chindami 16 (plafond absolu : page non
+extensible, atteint seulement sans titre/méta sur la page), tuto 7, mega 32 —
+0 = illimité en vertical/horizontal ; capacité de page DÉRIVÉE `page_dans_cap` =
+`blocks × dans_per_block` (nomura 7, chindami 16, tuto 7, mega 64 ; 0 = page libre ;
+`max_dans` supprimé le 2026-11-26) ; `lyr_inline_max_ratio` =
+seuil paroles inline 1re page, mega), `dan_gap` (nomura, chindami,
+tuto), `writing_mode` (`vertical` sauf horizontal/tuto).
 ✅ (2026-11-21) unification des champs de bloc : `blocks`/`block_gap`/
 `dans_per_block` présents dans TOUS les layouts (hors mega : bloc unique,
 `dans_per_block = max_dans`) ; `rows_per_col`+`cols_per_row` fondus en

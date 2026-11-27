@@ -23,7 +23,7 @@
 <rect x="475.469" y="168.857" width="51.4327" height="33.4171" fill="none" stroke="#333333" stroke-width="0.255"/>
 <text x="141.156" y="159.952" text-anchor="middle" font-family="monospace" font-size="12.58" fill="#333333" font-weight="bold">工</text>
 <text x="141.156" y="170.217" text-anchor="middle" font-family="monospace" font-size="7.48" fill="#333333">あ</text>
-<text x="321.171" y="136.8" text-anchor="middle" font-family="monospace" font-size="10" fill="#333333">8 cases/dan · 7 dans/page (défaut)</text>
+<text x="321.171" y="136.8" text-anchor="middle" font-family="monospace" font-size="10" fill="#333333">8 cases/dan · 7 dans/bloc (défaut)</text>
 <line x1="115.44" y1="211.114" x2="526.902" y2="206.354" stroke="#333333" stroke-width="0.255"/>
 <text x="321.171" y="213.834" text-anchor="middle" font-family="monospace" font-size="4.08" fill="#333333">⋮</text>
 <line x1="110" y1="129.32" x2="110" y2="109.2" stroke="#1a56db" stroke-width="0.17"/>

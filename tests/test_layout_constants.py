@@ -81,6 +81,18 @@ assert t.meta_order == ("genre", "author", "composer", "lyricist", "origin", "ch
 assert k.LAYOUTS["nomura"].meta_order == ("choshi",)
 assert k.LAYOUTS["chindami"].meta_order == ("genre", "choshi")
 assert k.LAYOUTS["mega"].meta_order == ("genre", "author", "choshi")
+
+# --- modèle page -> bloc -> dan + mode d’écriture unique (2026-11-26) ---
+for _name, _wm in [("vertical", "vertical"), ("nomura", "vertical"), ("chindami", "vertical"),
+                   ("mega", "vertical"), ("horizontal", "horizontal"), ("tuto", "horizontal")]:
+    assert k.LAYOUTS[_name].writing_mode == _wm, _name
+assert k.LAYOUTS["vertical"].page_dans_cap == 0 and k.LAYOUTS["horizontal"].page_dans_cap == 0  # page libre
+assert k.LAYOUTS["nomura"].page_dans_cap == 7      # 1 bloc x 7 dans
+assert k.LAYOUTS["chindami"].page_dans_cap == 16   # 1 bloc x 16 dans (plafond absolu, page non extensible)
+assert k.LAYOUTS["tuto"].page_dans_cap == 7        # 1 bloc x 7 dans
+assert k.LAYOUTS["mega"].page_dans_cap == 64       # 2 blocs x 32 dans
+assert not hasattr(k.LAYOUTS["vertical"], "max_dans")   # champ supprimé (remplacé par dans_per_block)
+print("OK modèle page->bloc->dan : writing_mode + page_dans_cap par layout (max_dans supprimé)")
 for name in ("nomura", "chindami", "mega"):
     assert k.LAYOUTS[name].render_sections == k.SECTION_KINDS, name
     assert k.LAYOUTS[name].render_koe is True and k.LAYOUTS[name].render_yubii is True

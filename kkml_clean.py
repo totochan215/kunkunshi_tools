@@ -46,6 +46,9 @@ def info(msg):
     print(f"kkml_clean: INFO: {msg}", file=sys.stderr)
 
 
+_DEPRECATED_INFO_SHOWN = set()
+
+
 def warn(msg):
     print(f"kkml_clean: WARNING: {msg}", file=sys.stderr)
 
@@ -127,6 +130,11 @@ def clean(text):
             key = "cells_per_dan"
         elif key == "page_dans":
             key = "dans_per_page"
+        if key == "dans_per_page" and key not in _DEPRECATED_INFO_SHOWN:
+            _DEPRECATED_INFO_SHOWN.add(key)
+            info("@dans_per_page est déprécié : la capacité de page est dérivée du layout "
+                 "(blocs x dans_per_block) ; conservé comme simple plafond "
+                 "(vertical/tuto/mega), sans effet en nomura/chindami/horizontal (page imposée)")
         if key not in file_keys:
             file_keys.append(key)
     # @cells_per_dan est ignoré par le parser de kkml2svg (indication de mise
