@@ -70,7 +70,8 @@ assert abs(spec.margin_t - 1 * CM) < 1e-9
 assert abs(spec.margin_b - 1.3 * CM) < 1e-9
 assert abs(spec.margin_l - 1.5 * CM) < 1e-9
 assert abs(spec.margin_r - 1.5 * CM) < 1e-9
-assert spec.max_dans == 16 and spec.dans_per_block == 16 and spec.cells_per_dan == 12
+assert spec.dans_per_block == 16 and spec.page_dans_cap == 16 and spec.cells_per_dan == 12
+# 16 = plafond absolu par bloc (page non extensible ; atteint seulement sans titre/méta sur la page)
 assert spec.dan_gap == 0
 assert abs(spec.cell_w - 65 / 2.785) < 1e-9 and abs(spec.cell_h - 83 / 2.785) < 1e-9
 assert abs(spec.pile_w - 97 / 2.785) < 1e-9 and abs(spec.marker_w - 32 / 2.785) < 1e-9
@@ -172,9 +173,9 @@ for r in rects:
     assert 'stroke="#000000"' in r and 'stroke-width="0.4"' in r, r
 src17 = ("@title " + TITRE + "\n@choshi " + CHOSHI + "\n::tab\n"
          + "\n".join(" ".join([GO] * 12) for _ in range(17)) + "\n::\n")
-svgs = render(src17)   # 17 colonnes de 12 cases -> 2 pages (max 16 dans/page)
+svgs = render(src17)   # 17 colonnes de 12 cases -> 2 pages (plafond 16 dans/bloc, page non extensible)
 assert len(svgs) == 2, len(svgs)
-print("OK 5. cases/marker en #000 filet 0,4 pt ; 17 dans -> 2 pages (max_dans = 16)")
+print("OK 5. cases/marker en #000 filet 0,4 pt ; 17 dans -> 2 pages (dans_per_block = 16)")
 
 # 6. Titre long : saut de colonne (2 colonnes de titre, bloc de tab repoussé à gauche)
 long_title = "あ" * 25

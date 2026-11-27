@@ -514,7 +514,8 @@ class Song:
         self.blocks = []
         self.cols = 12         # DEPRECATED : @cells_per_dan n'est plus une propriété de la chanson ; défaut de mise en page = 12 (vertical/horizontal)
         self.layout = "vertical"
-        self.page_dans = None  # dans max par page (pagination), None = illimité
+        self.page_dans = None  # alias DÉPRÉCIÉ @dans_per_page/-p : simple plafond de la
+                              # capacité dérivée du layout (blocs x dans_per_block) ; None = pas de plafond
 
 
 class Block:
@@ -583,6 +584,17 @@ def parse_kkml(text):
                     song.page_dans = int(val)
                 except ValueError:
                     pass
+                _info_deprecated("@dans_per_page",
+                                 "la capacité de page est dérivée du layout (blocs x dans_per_block) ; "
+                                 "conservé comme simple plafond (vertical/tuto/mega), sans effet en "
+                                 "nomura/chindami/horizontal (page imposée)")
+            elif key == "mega_dans":
+                # DÉPRÉCIÉ : dans_per_block est une propriété du BLOC fixée par le layout
+                # (MEGA.dans_per_block) ; conservé comme surcharge de la valeur effective en mega
+                song.meta[key] = val
+                _info_deprecated("@mega_dans",
+                                 "dans_per_block est fixé par le layout (MEGA.dans_per_block = 32) ; "
+                                 "conservé comme simple surcharge de la valeur effective en mega")
             elif key == "layout":
                 song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami", "tuto", "mega") else "vertical"
             else:
@@ -767,6 +779,7 @@ CM = 28.3465       # 1 cm en points (1 pt = 1/72 in, universel PDF/CSS/SVG)
 class LayoutSpec:
     name: str
     unit: str = "pt"                 # unité native de sortie SVG
+    writing_mode: str = "vertical"   # mode d'écriture UNIQUE de la page (JLreq) : "vertical" ou "horizontal"
     page_w: float = 0                # 0 = taille libre (contenu)
     page_h: float = 0
     page_cm: tuple = ()              # (w_cm, h_cm) pour _svg_open_print
@@ -779,7 +792,6 @@ class LayoutSpec:
     pad_l: float = 0
     pad_r: float = 0
     dan_gap: float = 0               # nomura : marge de dan M entre les dans
-    max_dans: int = 0                # dans max par page = dans_per_block hors mega (nomura 7, chindami 15, tuto 7)
     title_w: float = 0               # colonne titre verticale
     title_gap: float = 0
     genre_w: float = 0              # chindami : pitch de la colonne @genre (4 mm)
@@ -797,10 +809,18 @@ class LayoutSpec:
     fs: float = 0                    # 0 = max(fs_min, fs_ratio x cell_h)
     fs_ratio: float = 0
     fs_min: int = 8
-    cells_per_dan: int = 12          # cases par dan (ex-cells_per_dan / cells_per_dan)
-    blocks: int = 1                  # blocs horizontaux par page (mega : 2 ; sinon bloc unique)
+    cells_per_dan: int = 12          # cases max par dan (niveau dan ; personnalisation par bloc à terme)
+    blocks: int = 1                  # blocs de tablature par page (mega : 2 ; sinon bloc unique)
     block_gap: float = 0             # gap entre blocs (mega)
-    dans_per_block: int = 0          # dans par bloc, 0 = illimité (hors mega = max_dans)
+    dans_per_block: int = 0          # dans max par BLOC (0 = illimité, page de taille libre).
+                                     # Modèle page -> bloc -> dan : une page = `blocks` blocs de
+                                     # tablature ; capacité en dans DÉRIVÉE = blocks x
+                                     # dans_per_block (propriété page_dans_cap) — la notion de
+                                     # « max de dans par page » n'existe plus comme champ.
+                                     # nomura 7 (A4 imposée) ; chindami 16 (page NON extensible :
+                                     # plafond absolu, atteint seulement si aucun titre/méta sur
+                                     # la page — sinon dérivé de la largeur du bloc ancré) ;
+                                     # tuto 7 ; mega 32
     marker_ratio: float = 0.5        # marker = ratio x cell (0 = pas de marker)
     marker_w: float = 0              # absolu (pt) si > 0 (chindami)
     pile_w: float = 0                # chindami : pas de pile absolu si > 0
@@ -855,6 +875,12 @@ class LayoutSpec:
         x0, y0, x1, y1 = self.frame_rect()
         return (x0 + self.pad_l, y0 + self.pad_t, x1 - self.pad_r, y1 - self.pad_b)
 
+    @property
+    def page_dans_cap(self):
+        """Capacité de page en dans, DÉRIVÉE du modèle page->bloc->dan :
+        blocks x dans_per_block (0 = illimitée, page de taille libre)."""
+        return self.blocks * self.dans_per_block if self.dans_per_block else 0
+
 
 VERTICAL = LayoutSpec(
     name="vertical", unit="px",
@@ -868,7 +894,7 @@ VERTICAL = LayoutSpec(
     lyr_gap=12 * PX)
 
 HORIZONTAL = LayoutSpec(
-    name="horizontal", unit="px",
+    name="horizontal", unit="px", writing_mode="horizontal",
     margin_t=16 * PX, margin_b=16 * PX, margin_l=16 * PX, margin_r=16 * PX,
     header_h=26 * PX, header_h_title=47 * PX, gap_header=0,   # 47 = 26 + 6 + 15 (H_TITLE_AIR)
     cell_w=52 * PX, cell_h=58 * PX, fs=22 * PX, cells_per_dan=12,
@@ -890,7 +916,7 @@ NOMURA = LayoutSpec(
     margin_t=(29.7 * CM - 745.9) / 2.0, margin_b=(29.7 * CM - 745.9) / 2.0,
     pad_l=14.5, pad_r=14.5, pad_t=14.5, pad_b=14.5,
     frame_width=1.5,              # filet de cadre tracé (frame_color #333333)
-    dan_gap=14.5, max_dans=7, cells_per_dan=12, dans_per_block=7,
+    dan_gap=14.5, cells_per_dan=12, dans_per_block=7,   # 1 bloc/page : capacité dérivée 7 dans (A4 imposée)
     md_spacing=8,
     marker_ratio=1.0,             # sous-colonne marker = pleine case
     fs=26.0,
@@ -908,7 +934,7 @@ CHINDAMI = LayoutSpec(
     margin_l=1.5 * CM, margin_r=1.5 * CM,
     margin_t=1 * CM, margin_b=1.3 * CM,
     cell_w=65 / 2.785, cell_h=83 / 2.785, pile_w=97 / 2.785, marker_w=32 / 2.785,
-    dan_gap=0, max_dans=16, cells_per_dan=12, dans_per_block=16, fs=12,  # max 16 dans constaté
+    dan_gap=0, cells_per_dan=12, dans_per_block=16, fs=12,  # 16 = plafond absolu (page non extensible ; seulement sans titre/méta sur la page, sinon dérivé de la largeur du bloc ancré)
     title_w=6 * CM / 10, title_gap=0.15 * CM, genre_w=0.4 * CM, genre_gap=0.1 * CM,  # mesures recueil 2026-11-25 : 1,5 + 6,0 + 7,5 = 15 mm au total (hors ruby) : pitch titre 6 mm ancré à 0,75 cm du bord droit, gap tab->titre 1,5 mm ; genre : 1 mm + pitch 4 mm + 1 mm
     title_fs=17.5, title_spacing=17.5,  # fs titre = fs @choshi (4,3 cm / 7 car. pour てぃんさぐぬ花)
     md_spacing=6,
@@ -921,11 +947,11 @@ CHINDAMI = LayoutSpec(
     meta_order=("genre", "choshi"))  # genre entre colonne @choshi et bloc tab ; sinon titre + @musicno + tempo + @choshi
 
 TUTO = LayoutSpec(
-    name="tuto", unit="px",
+    name="tuto", unit="px", writing_mode="horizontal",
     page_w=1280 * PX, page_h=720 * PX,          # @tuto_block, défaut 1280x720
     margin_t=16 * PX, margin_b=16 * PX, margin_l=16 * PX, margin_r=16 * PX,
     cell_w=0, cell_h=0, fs=0, fs_ratio=0.38,    # dérivés du bloc (voir _render_tuto)
-    cells_per_dan=8, max_dans=7, dans_per_block=7,  # 8 cases/dan, 7 dans/page
+    cells_per_dan=8, dans_per_block=7,  # 8 cases/dan, 7 dans/bloc (= 7 dans/page : bloc unique)
     marker_ratio=0,                              # pas de bande marker en tuto
     md_spacing=43.2 * PX,                        # gap entre blocs de la page de titre (H*0.06 à H=720)
     cell_color="#999999",
@@ -1872,7 +1898,6 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     # à gauche de la dernière page de musique ; si la largeur restante ne suffit
     # pas, les colonnes de paroles passent sur des pages dédiées (per_page
     # colonnes par page). Jamais de débordement hors page, jamais de pile perdue.
-    max_dans = spec.max_dans
     lyr_fs0 = int(spec.lyr_fs) if spec.lyr_fs else int(spec.fs * spec.lyr_size.get("medium", 0.75))
     lyr_col_w0 = int(lyr_fs0 * 1.33)
     lyr_gap0 = int(lyr_col_w0 * 0.8)
@@ -1919,7 +1944,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     lyr_next = 0  # prochaine colonne de paroles à placer
     while i < len(tab_columns):
         remaining = len(tab_columns) - i
-        budget = max_dans   # colonne titre dans la marge : ne consomme pas de dan
+        budget = spec.dans_per_block   # colonne titre dans la marge : ne consomme pas de dan
         take = min(budget, remaining)
         page_frame_w = ((tab_right_first - title_extra_w - fx0) if first else frame_w)
         take = min(take, max(1, int(page_frame_w // spec.pile_w)))
@@ -2216,7 +2241,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     LYRICS_MAX_COLS = 3
     lyrics_dans = (lyrics_col_count + LYRICS_MAX_COLS - 1) // LYRICS_MAX_COLS
 
-    first_cap = spec.max_dans - (1 if (title or ("choshi" in spec.meta_order and tuning)) else 0)
+    first_cap = spec.dans_per_block - (1 if (title or ("choshi" in spec.meta_order and tuning)) else 0)
     # La musique remplit les pages normalement (p.1 : 7 - 1 si titre,
     # puis 7 dans). Les couplets occupent les dans LIBRES de la dernière
     # page de musique ; l'excédent de dans virtuels passe sur des pages
@@ -2227,7 +2252,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     remaining_vocal = list(vocal_columns)
     pi = 0
     while remaining:
-        cap = first_cap if pi == 0 else spec.max_dans
+        cap = first_cap if pi == 0 else spec.dans_per_block
         take = remaining[:cap]
         take_v = remaining_vocal[:cap] if remaining_vocal else [None] * len(take)
         remaining = remaining[cap:]
@@ -2239,7 +2264,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
     # dans virtuels de couplets acceptés sur la dernière page de musique
     if music_pages:
         last_cols = music_pages[-1][0]
-        last_cap = first_cap if len(music_pages) == 1 else spec.max_dans
+        last_cap = first_cap if len(music_pages) == 1 else spec.dans_per_block
         free = last_cap - len(last_cols)
     else:
         free = first_cap
@@ -2259,7 +2284,7 @@ def _render_nomura(song, sections, fs, marker=False, opts=None, spec=None):
         pages.append(([], [], is_last, lyr_here, 0))
         lyr_col_offset += lyr_here * LYRICS_MAX_COLS
     while lyr_left > 0:
-        here = min(lyr_left, spec.max_dans)
+        here = min(lyr_left, spec.dans_per_block)
         lyr_left -= here
         pages.append(([], [], lyr_left == 0, here, lyr_col_offset))
         lyr_col_offset += here * LYRICS_MAX_COLS
@@ -3645,6 +3670,8 @@ def _render_tuto(song, sections, cols, page_dans, marker, opts, spec=None):
         cols = spec.cells_per_dan
     if page_dans is None:
         page_dans = spec.dans_per_block
+    elif spec.page_dans_cap:            # @dans_per_page déprécié = simple plafond de la
+        page_dans = min(page_dans, spec.page_dans_cap)   # capacité dérivée (blocs x dans_per_block)
     ml = mt = mb = spec.u(spec.margin_l)
     # Marge droite renforée (16 + 1/4 de case) : les vocals placés sous le
     # straddle de la dernière colonne ne doivent pas toucher la bordure droite
@@ -3812,7 +3839,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
     # Géométrie verticale : spec.blocks blocs de spec.cells_per_dan cases + gaps, marges
     spec = spec or MEGA
-    # @mega_dans N : colonnes (dans) par bloc horizontal en mega (défaut : spec)
+    # @mega_dans N (DÉPRÉCIÉ) : surcharge de spec.dans_per_block (dans par bloc horizontal, mega)
     dans_per_block = spec.dans_per_block
     if song.meta.get("mega_dans"):
         try:
@@ -3820,7 +3847,8 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         except ValueError:
             print(f"kkml2svg: WARNING: @mega_dans non entier ({song.meta['mega_dans']!r}), "
                   f"défaut {spec.dans_per_block} utilisé", file=sys.stderr)
-    dans_per_page = spec.blocks * dans_per_block
+    dans_per_page = spec.blocks * dans_per_block   # capacité dérivée page->bloc->dan : blocs x dans_per_block
+                                                  # (dans_per_block effectif, ajustable par @mega_dans)
     cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
               / (spec.blocks * spec.cells_per_dan))
     fs = max(spec.fs_min, int(cell_h * spec.fs_ratio))  # ratio fs/case ~0,38 (calibrage Portama)
@@ -4512,6 +4540,16 @@ def _info_input_variant(orig, canon):
 
 
 _INFO_INPUT_SEEN = set()
+
+
+_INFO_DEPRECATED_SEEN = set()
+
+
+def _info_deprecated(key, msg):
+    """INFO stderr (une seule fois par clé) : entrée dépréciée mais encore acceptée."""
+    if key not in _INFO_DEPRECATED_SEEN:
+        _INFO_DEPRECATED_SEEN.add(key)
+        print(f"kkml2svg: INFO: {key} est déprécié : {msg}", file=sys.stderr)
 
 
 _WARNED_MISC = set()
@@ -5709,7 +5747,8 @@ def main():
     ap.add_argument("-l", "--layout", choices=["vertical", "horizontal", "nomura", "chindami", "tuto", "mega"],
                     help="force le layout (surcharge @layout)")
     ap.add_argument("-p", "--dans-per-page", "--page-dans", type=int, dest="page_dans",
-                    help="nombre max de dans par page (pagination multipage, surcharge @dans_per_page)")
+                    help="plafond de dans par page (DÉPRÉCIÉ : capacité de page dérivée du layout = "
+                         "blocs x dans_per_block ; surcharge @dans_per_page)")
     ap.add_argument("--kinsoku", choices=["simple", "strict", "off"], default=None,
                     help="kinsoku JLREQ au repli des paroles ::lyrics (surcharge @kinsoku)")
     args = ap.parse_args()

@@ -55,7 +55,7 @@ Rend un fichier KKML sous forme de mise en page SVG, en appliquant les options d
     python3 kkml2svg.py chanson.kkml                  # -> chanson.svg
     cat chanson.kkml | python3 kkml2svg.py -          # stdin -> stdout
 
-Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page`, `--kinsoku simple|strict|off`.
+Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout vertical|horizontal|nomura|chindami|tuto|mega`, `-p/--dans-per-page` (déprécié : plafond de la capacité de page dérivée du layout), `--kinsoku simple|strict|off`.
 
 ### kkml2pdf.py
 
@@ -70,7 +70,7 @@ l'export du logiciel d'édition.
     python3 kkml2pdf.py chanson.kkml                  # -> chanson.pdf
     cat chanson.kkml | python3 kkml2pdf.py -          # stdin -> output.pdf
 
-Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout nomura|chindami|mega`, `-p/--dans-per-page`, `--engine auto|rsvg-convert|inkscape|cairosvg`, `--merger auto|pypdf|pdfunite|gs`, `--keep-temp DIR` (conserve les SVG/PDF intermédiaires).
+Options CLI : `-o/--output`, `-c/--cells-per-dan`, `-l/--layout nomura|chindami|mega`, `-p/--dans-per-page` (déprécié : plafond de la capacité de page dérivée du layout), `--engine auto|rsvg-convert|inkscape|cairosvg`, `--merger auto|pypdf|pdfunite|gs`, `--keep-temp DIR` (conserve les SVG/PDF intermédiaires).
 
 La taille de page PDF (MediaBox) est celle du SVG en cm. Dépendances externes
 optionnelles (hors stdlib) : un moteur SVG→PDF détecté automatiquement

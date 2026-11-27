@@ -106,5 +106,5 @@
 <text x="424.712" y="380.967" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">cell_w = 22.2</text>
 <line x1="428.039" y1="377.367" x2="431.366" y2="377.367" stroke="#1a56db" stroke-width="0.3" marker-start="url(#arr)" marker-end="url(#arr)"/>
 <text x="426.376" y="380.967" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">marker_w = cell_w/2 = 11.1</text>
-<text x="100" y="382.167" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">blocks = 2 · dans_per_block = 32 → 64 dans/page · fs = 11 · paroles en pages A3 dédiées (inline si ≤ 15% de la largeur utile) · cell_w = (page−2·marge−title_offset)/(32×1,5)</text>
+<text x="100" y="382.167" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">blocks = 2 · dans_per_block = 32 → 64 dans/page (blocs x dans_per_block) · fs = 11 · paroles en pages A3 dédiées (inline si ≤ 15% de la largeur utile) · cell_w = (page−2·marge−title_offset)/(32×1,5)</text>
 </svg>

@@ -331,7 +331,7 @@ def fig_nomura():
     FW, FH = FX1 - FMX, FY1 - FM                          # ~559.3 x ~745.9
     GAP = k.NOMURA.dan_gap                                  # 14.5 (= pad_* : padding du cadre)
     ROWS = k.NOMURA.cells_per_dan                                    # 12
-    MAX_DANS = k.NOMURA.max_dans                            # 7
+    MAX_DANS = k.NOMURA.dans_per_block                     # 7 dans/bloc (1 bloc/page : cap deriv 7)
     CELL_W, CELL_H = ((FW - 8 * GAP) / 14.0), ((FH - 2 * GAP) / ROWS)       # ~31.7 x ~60.7
     MARKER_W = CELL_W                                       # marker = pleine case
     GROUP_W = CELL_W + MARKER_W
@@ -359,7 +359,7 @@ def fig_nomura():
         f.line(x + 3, yb + 14, x + GROUP_W - 3, yb + 2, stroke=GRAY, sw=0.6)
     f.text(dan_x[0] + CELL_W / 2, grid_y0 + CELL_H / 2 + 9, "工", fs=FS, bold=True, scaled=True)
     f.text(dan_x[0] + GROUP_W / 2, grid_y0 + CELL_H / 2 + 6, "あ", fs=int(FS * 0.6), scaled=True)
-    f.text(dan_x[-1] + GROUP_W / 2, grid_y0 - 8, f"dans (max {MAX_DANS}/page, {ROWS} cases)", fs=9)
+    f.text(dan_x[-1] + GROUP_W / 2, grid_y0 - 8, f"dans (max {MAX_DANS}/bloc, {ROWS} cases)", fs=9)
     # colonne titre page 1 (droite) + paroles (gauche, 3 colonnes = 1 dan virtuel)
     f.rect(FMX + FW - GAP - GROUP_W - 60, grid_y0, 30, 3 * CELL_H, fill="#f6f6f6", stroke=GRAY, sw=0.6)
     f.text(FMX + FW - GAP - GROUP_W - 45, grid_y0 - 8, "titre p.1", fs=9)
@@ -391,7 +391,7 @@ def fig_nomura():
     f.line(dan_x[-1] + CELL_W, yb, dan_x[-1] + GROUP_W, yb, stroke=BLUE, sw=1.0, marker="arr")
     f.text(dan_x[-1] + GROUP_W / 2, yb + 12, f"marker_w = cell_w", fill=BLUE, fs=9)
     f.text(0, PH + 34, f"fs notes = {FS:g} pt · LYRICS_COL_W = group_w/3 = {LYR_COL_W:.1f} · "
-           f"LYRICS_FS = 0,7·LYRICS_COL_W = {LYR_FS:.1f} · 7 dans max/page · "
+           f"LYRICS_FS = 0,7·LYRICS_COL_W = {LYR_FS:.1f} · {MAX_DANS} dans max/bloc · "
            f"titre + paroles = 1 dan chacun", fill=BLUE, fs=9, anchor="start")
     return f
 
@@ -411,7 +411,7 @@ def fig_chindami():
     LYR_COL_W = int(LYR_FS * 1.33)
     LYR_SP = int(LYR_FS * 1.2)
     LYR_SEP = k.CHINDAMI.lyr_gap                      # 12
-    MAX_DANS = k.CHINDAMI.max_dans                    # 15
+    MAX_DANS = k.CHINDAMI.dans_per_block              # 16 (plafond absolu : page non extensible)
     DRAWN = 6
     sc = 1.0
     ox, oy = 110, 120
@@ -432,7 +432,7 @@ def fig_chindami():
         f.line(x + 3, yb + 12, x + PILE_W - 3, yb + 2, stroke=GRAY, sw=0.6)
     f.text(pile_x[0] + CELL_W / 2, GT + CELL_H / 2 + 4, "工", fs=FS, bold=True, scaled=True)
     f.text(pile_x[0] + CELL_W + MARKER_W / 2, GT + CELL_H / 2 + 3, "あ", fs=int(FS * 0.9), scaled=True)
-    f.text(pile_x[-1] + PILE_W / 2, GT - 7, f"piles (max {MAX_DANS}/page, {ROWS} cases)", fs=9)
+    f.text(pile_x[-1] + PILE_W / 2, GT - 7, f"piles (max {MAX_DANS}/bloc, {ROWS} cases)", fs=9)
     tx = PW - FMX - TITLE_W
     f.rect(tx, GT, TITLE_W, 4 * CELL_H, fill="#f6f6f6", stroke=GRAY, sw=0.6)
     f.text(tx + TITLE_W / 2, GT - 7, "titre p.1", fs=9)
@@ -496,7 +496,7 @@ def fig_tuto():
     y0 = MT + 10
     f.text(ML + CELL_W / 2, y0 + CELL_H / 2 + FS * 0.35, "工", fs=FS, bold=True, scaled=True)
     f.text(ML + CELL_W / 2, y0 + CELL_H - 6, "あ", fs=SYL_FS, scaled=True)
-    f.text(ML + 4 * CELL_W, y0 - 6, f"{COLS} cases/dan · {DANS} dans/page (défaut)", fs=10)
+    f.text(ML + 4 * CELL_W, y0 - 6, f"{COLS} cases/dan · {DANS} dans/bloc (défaut)", fs=10)
     yb = MT + 10 + ROWS_DRAWN * CELL_H
     f.line(ML, yb + 16, ML + COLS * CELL_W, yb + 2, stroke=GRAY, sw=0.75)
     f.text(ML + COLS * CELL_W / 2, yb + 24, "⋮", fs=12, scaled=True)
@@ -594,7 +594,7 @@ def fig_mega():
     f.line(x0 + CELL_W, yb, x0 + GROUP_W, yb, stroke=BLUE, sw=1.0, marker="arr")
     f.text(x0 + GROUP_W / 2, yb + 12, f"marker_w = cell_w/2 = {MARKER_W:.1f}", fill=BLUE, fs=9)
     f.text(0, PH + 32, f"blocks = {BLOCKS} · dans_per_block = {DANS_PER_BLOCK} → "
-           f"{BLOCKS * DANS_PER_BLOCK} dans/page · fs = {FS} · paroles en pages A3 dédiées "
+           f"{BLOCKS * DANS_PER_BLOCK} dans/page (blocs x dans_per_block) · fs = {FS} · paroles en pages A3 dédiées "
            f"(inline si ≤ {k.MEGA.lyr_inline_max_ratio:.0%} de la largeur utile) · cell_w = "
            f"(page−2·marge−title_offset)/({DANS_PER_BLOCK}×1,5)", fill=BLUE, fs=9, anchor="start")
     return f
