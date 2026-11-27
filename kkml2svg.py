@@ -588,6 +588,13 @@ def parse_kkml(text):
                                  "la capacité de page est dérivée du layout (blocs x dans_per_block) ; "
                                  "conservé comme simple plafond (vertical/tuto/mega), sans effet en "
                                  "nomura/chindami/horizontal (page imposée)")
+            elif key == "mega_dans":
+                # DÉPRÉCIÉ : dans_per_block est une propriété du BLOC fixée par le layout
+                # (MEGA.dans_per_block) ; conservé comme surcharge de la valeur effective en mega
+                song.meta[key] = val
+                _info_deprecated("@mega_dans",
+                                 "dans_per_block est fixé par le layout (MEGA.dans_per_block = 32) ; "
+                                 "conservé comme simple surcharge de la valeur effective en mega")
             elif key == "layout":
                 song.layout = val if val in ("vertical", "horizontal", "nomura", "chindami", "tuto", "mega") else "vertical"
             else:
@@ -3832,7 +3839,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
 
     # Géométrie verticale : spec.blocks blocs de spec.cells_per_dan cases + gaps, marges
     spec = spec or MEGA
-    # @mega_dans N : colonnes (dans) par bloc horizontal en mega (défaut : spec)
+    # @mega_dans N (DÉPRÉCIÉ) : surcharge de spec.dans_per_block (dans par bloc horizontal, mega)
     dans_per_block = spec.dans_per_block
     if song.meta.get("mega_dans"):
         try:

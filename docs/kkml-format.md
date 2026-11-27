@@ -69,7 +69,7 @@ Les lignes précédées du symbole \# (commentaire) sont ignorées.
 | `@dans_per_page` | —          | **Déprécié** — Nombre max de *dans* par page avant un saut de page forcé. La capacité de page est dérivée du layout (`blocks` × `dans_per_block`, propriété `page_dans_cap` du `LayoutSpec`) ; cette méta n'est conservée que comme simple plafond (vertical/tuto/mega), sans effet en nomura/chindami/horizontal (page imposée). Ancien nom `@page_dans` accepté (alias) |
 | `@page_base`     | `1`        | Numéro affiché sur la 1ère page (layouts à page fixe `nomura`/`chindami`/`mega`, sous la forme –n– ; les pages suivantes s'incrémentent automatiquement. Entier >= 1 |
 | `@tuto_block`    | `1280x720` | Layout `tuto` uniquement : dimensions du bloc en pixels (`LxH`) ; chaque page SVG fait exactement LxH |
-| `@mega_dans`     | `32`       | Layout `mega` uniquement : nombre de colonnes (*dans*) par bloc horizontal (2 blocs/page A3, donc 64 dans/page par défaut). La largeur des cases s'adapte |
+| `@mega_dans`     | `32`       | **Déprécié** — Layout `mega` uniquement : ancienne surcharge du nombre de colonnes (*dans*) par bloc horizontal. Remplacé par le champ `dans_per_block` du `LayoutSpec` mega (propriété du bloc fixée par le layout ; 2 blocs/page A3, donc 64 dans/page par défaut, la largeur des cases s'adapte). Conservé comme simple surcharge de la valeur effective en mega |
 | `@cells_per_dan` | —          | Nombre de cellules par *dan*. Utilisé par `kkml_clean.py` comme indice de repli pour ::tab et ::vocals. Utilisé par les mises en page `vertical` et `horizontal` (défaut `12`) et `tuto` (défaut `8`), mais pas par `chindami`, `nomura` et `mega`, qui imposent la valeur `12`). `-c n` en CLI. Ancien nom `@cols` accepté mais non canonique. |
 | `@marker`        | `on`       | Active/désactive les colonnes/lignes de marker : `on` : activé, `off`, désactivé. Certaines mises en pages surchargent cette valeur. |
 | `@show_dots`     | `off`      | Affiche ou masque les points de positionnement des syllabes : `on` = affichés, `off` = masqués (défaut). Les syllabes conservent leur position dans les deux cas (le point occupe toujours sa sous-partie de case). |
@@ -112,7 +112,7 @@ en nom canonique par `kkml_clean.py` (avec une info stderr au parsing) :
 `::tabs` → `::tab`, `::vocals` → `::vocal`, `::lyric` → `::lyrics`, `::parts`/`::songs`/`::song`/`::section` → `::part`.
 
 ### Sauts de mise en page (layout `mega` uniquement)
-`::block` — ferme le bloc horizontal courant et passe au bloc suivant ; le bloc sauté est rempli de *dans* vides jusqu'à son nombre de colonnes prévues (`@mega_dans`). `::page` — idem, puis la page courante est complétée de blocs vides et on passe à la page suivante. Sans contenu ; ignorés par les autres layouts.
+`::block` — ferme le bloc horizontal courant et passe au bloc suivant ; le bloc sauté est rempli de *dans* vides jusqu'à son nombre de colonnes prévues (`dans_per_block` du bloc). `::page` — idem, puis la page courante est complétée de blocs vides et on passe à la page suivante. Sans contenu ; ignorés par les autres layouts.
 
 ### Tab
 `::tab` — section de tablature, organisée en temps (figures), séparés par des espaces.

@@ -62,6 +62,7 @@ with contextlib.redirect_stderr(err):
     p_33 = k.render_svg(k.parse_kkml(
         "@title t\n@layout mega\n@mega_dans 33\n::tab\n" + tab130 + "\n::\n"), layout="mega")
 assert "WARNING" not in err.getvalue(), err.getvalue()
+assert "INFO" in err.getvalue() and "@mega_dans est déprécié" in err.getvalue(), err.getvalue()
 assert len(p_def) == 3 and len(p_33) == 2, (len(p_def), len(p_33))
 print("OK e2e @mega_dans 33 : 130 dans -> 2 pages (3 par défaut)")
 

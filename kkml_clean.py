@@ -135,6 +135,10 @@ def clean(text):
             info("@dans_per_page est déprécié : la capacité de page est dérivée du layout "
                  "(blocs x dans_per_block) ; conservé comme simple plafond "
                  "(vertical/tuto/mega), sans effet en nomura/chindami/horizontal (page imposée)")
+        if key == "mega_dans" and key not in _DEPRECATED_INFO_SHOWN:
+            _DEPRECATED_INFO_SHOWN.add(key)
+            info("@mega_dans est déprécié : dans_per_block est fixé par le layout "
+                 "(MEGA.dans_per_block = 32) ; conservé comme surcharge de la valeur effective en mega")
         if key not in file_keys:
             file_keys.append(key)
     # @cells_per_dan est ignoré par le parser de kkml2svg (indication de mise
