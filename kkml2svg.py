@@ -499,7 +499,7 @@ META_ALIASES = {"tuning": "choshi", "arrow_fill": "rep_fill"}  # @arrow_fill = a
 # Clés de métadonnées reconnues (pour la tolérance @cléValeur collée) —
 # "tuning" y reste pour la forme collée @tuningValeur (alias, voir META_ALIASES)
 META_KEYS = {"title", "choshi", "tuning", "cols", "cells_per_dan", "layout", "marker", "end_circle", "show_dots",
-             "lyrics_size", "genre", "author", "composer", "lyricist",
+             "lyrics_size", "lyr_blocks", "genre", "author", "composer", "lyricist",
              "origin", "source", "shaku_circled", "shaku_sharp", "speed", "font_style",
              "mega_dans",
              "page_dans", "dans_per_page", "tuto_block", "kinsoku", "page_base",
@@ -831,6 +831,9 @@ class LayoutSpec:
     lyr_col_w_ratio: float = 1.33
     lyr_verse_gap_ratio: float = 0.8
     lyr_inline_max_ratio: float = 0   # mega : seuil paroles inline 1re page (ratio largeur utile)
+    lyr_blocks: int = 1         # blocs de paroles par page (défaut layout ; surcharge @lyr_blocks, plafonnée à lyr_blocks_max)
+    lyr_blocks_max: int = 1     # blocs de paroles max acceptés par le layout (chindami : 3 ; sinon 1 = pas de multi-blocs)
+    lyr_block_gap: float = 0    # gap vertical entre blocs de paroles, pt (chindami : 0,7 cm)
     syl_cell_ratio: float = 0.26     # syllabe marker : min(ratio x cell_h, ...)
     syl_marker_ratio: float = 0.8
     syl_fs_ratio: float = 0.6        # repli si pas de marker (horizontal/tuto)
@@ -880,6 +883,15 @@ class LayoutSpec:
         """Capacité de page en dans, DÉRIVÉE du modèle page->bloc->dan :
         blocks x dans_per_block (0 = illimitée, page de taille libre)."""
         return self.blocks * self.dans_per_block if self.dans_per_block else 0
+
+    def lyr_block_spans(self, y0, y1, n):
+        """Spans verticaux (y0, y1) des n blocs de paroles sur [y0, y1] (kihon
+        hanmen) : hauteurs égales, chaînés haut -> bas (comme en mega), gap
+        lyr_block_gap entre blocs ; l'ensemble couvre tout le hanmen."""
+        n = max(1, int(n))
+        gap = self.u(self.lyr_block_gap) if n > 1 else 0
+        h = (y1 - y0 - (n - 1) * gap) / n
+        return [(y0 + b * (h + gap), y0 + b * (h + gap) + h) for b in range(n)]
 
 
 VERTICAL = LayoutSpec(
@@ -940,6 +952,7 @@ CHINDAMI = LayoutSpec(
     md_spacing=6,
     page_no_fs=10,                       # n° de page ≈ 2,5 mm de haut, baseline à 0,7 cm du bord bas
     lyr_gap=12, lyr_fs=10.8,   # 0,9 x fs=12, int() -> 10
+    lyr_blocks=1, lyr_blocks_max=3, lyr_block_gap=0.7 * CM,   # blocs de paroles : défaut 1, accepte 2 voire 3 ; spanning vertical haut->bas, hauteurs égales sur tout le kihon hanmen, gap 0,7 cm entre blocs
     cell_color="#000000", arrow_color="#000000",   # une seule couleur : le noir
     cell_width=0.4, arrow_width=0.4,               # filets fins (0,4 pt, essai 2026-11-25 ; cercles de 尺 restent 0,5 pt)
     rep_fill=True,   # flèches de boucles instrumentales PLEINES (recueil 2026-11-24) ; disques vocaux creux
@@ -1026,6 +1039,28 @@ def _meta_page_base(meta):
               f"défaut 1 appliqué", file=sys.stderr)
         return 1
     return n
+
+
+def _lyr_blocks_count(song, spec):
+    """Nombre de blocs de paroles par page : défaut du layout (spec.lyr_blocks),
+    surchargeable par la méta chanson @lyr_blocks, plafonné à [1, spec.lyr_blocks_max].
+    Unique à l'échelle d'une chanson ; peut varier d'une chanson à l'autre d'une compilation."""
+    n = spec.lyr_blocks
+    raw = str((song.meta or {}).get("lyr_blocks", "")).strip()
+    if raw:
+        try:
+            n = int(raw)
+        except ValueError:
+            print(f"kkml2svg: WARNING: @lyr_blocks non entier ({raw!r}), "
+                  f"défaut {spec.lyr_blocks} appliqué", file=sys.stderr)
+            n = spec.lyr_blocks
+        else:
+            if n < 1 or n > spec.lyr_blocks_max:
+                clamped = min(max(n, 1), spec.lyr_blocks_max)
+                print(f"kkml2svg: WARNING: @lyr_blocks {n} hors [1, {spec.lyr_blocks_max}] "
+                      f"pour le layout {spec.name!r}, ramené à {clamped}", file=sys.stderr)
+                n = clamped
+    return max(1, min(int(n), spec.lyr_blocks_max))
 
 
 def _draw_page_no(out, n, x, y, fs, anchor="middle", fill="#555"):
@@ -1816,7 +1851,9 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     droite de la page 1 surmonté du numéro de morceau (@musicno, écriture
     horizontale : n° = 0 non écrit, > 999 tronqué mod 1000, pousse le
     titre vers le bas), paroles
-    (::lyrics) en lignes verticales (行) à gauche de la dernière page.
+    (::lyrics) en lignes verticales (行) à gauche de la dernière page ; blocs de paroles multiples (@lyr_blocks) : chaînés
+    haut -> bas, hauteurs égales couvrant tout le kihon hanmen, gap spec.lyr_block_gap
+    entre blocs.
     Retourne une liste de SVG (un par page)."""
     title = song.meta.get("title", "")
     tuning = song.meta.get("choshi", "本調子")
@@ -1894,6 +1931,13 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
 
     lyrics_sections = [(s[0], s[1]) for s in sections if s[2] == "lyrics"]
 
+    # Blocs de paroles : @lyr_blocks (méta chanson) plafonné au max du layout ;
+    # spans verticaux haut -> bas, hauteurs égales, couvrent tout le kihon hanmen
+    n_lyr_blocks = _lyr_blocks_count(song, spec)
+    _hx0, hy0, _hx1, hy1 = spec.hanmen_rect()
+    lyr_spans = spec.lyr_block_spans(hy0, hy1, n_lyr_blocks)
+    lyr_block_h = lyr_spans[0][1] - lyr_spans[0][0]
+
     # Pagination façon nomura : les paroles (::lyrics) occupent la place LIBRE
     # à gauche de la dernière page de musique ; si la largeur restante ne suffit
     # pas, les colonnes de paroles passent sur des pages dédiées (per_page
@@ -1908,7 +1952,7 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
     # dédiées (position x : per_page colonnes par page).
     # haut d'encre de la première glyphe = haut de grille (baseline =
     # GRID_TOP + 0,88·fs) ; bas d'encre de la dernière ≤ bas de grille
-    max_lyr_u = int((fy1 - fy0 - lyr_fs0)
+    max_lyr_u = int((lyr_block_h - lyr_fs0)
                     // lyr_sp0) + 1
     lyr_cols = []
     for _, d in lyrics_sections:
@@ -1959,21 +2003,22 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
                    (n_fit + 1) * lyr_col_w0 + n_fit * lyr_gap0 + lyr_sep0 <= avail_w):
                 n_fit += 1
             if n_fit > 0:
-                lyr_slice = (lyr_next, lyr_next + n_fit)
-                lyr_next += n_fit
-        pages.append((i, i + take, first, lyr_slice))
+                lyr_slice = (lyr_next, lyr_next + n_lyr_blocks * n_fit)
+                lyr_next += n_lyr_blocks * n_fit
+        pages.append((i, i + take, first, lyr_slice, n_fit if lyr_slice else 0))
         i += take
         first = False
     if not pages:
-        pages = [(0, 0, True, None)]
+        pages = [(0, 0, True, None, 0)]
     # pages dédiées paroles pour l'excédent
     while lyr_next < len(lyr_cols):
         pages.append((0, 0, False,
-                      (lyr_next, min(lyr_next + per_lyr_page, len(lyr_cols)))))
-        lyr_next += per_lyr_page
+                      (lyr_next, min(lyr_next + n_lyr_blocks * per_lyr_page, len(lyr_cols))),
+                      per_lyr_page))
+        lyr_next += n_lyr_blocks * per_lyr_page
 
     svgs = []
-    for pno, (c0, c1, is_first, lyr_slice) in enumerate(pages, 1):
+    for pno, (c0, c1, is_first, lyr_slice, lyr_cap) in enumerate(pages, 1):
         n_cols = c1 - c0
         lyr_fs = int(spec.lyr_fs) if spec.lyr_fs else int(fs * spec.lyr_size.get("medium", 0.75))
         lyr_col_w = int(lyr_fs * 1.33)
@@ -2119,21 +2164,27 @@ def _render_chindami(song, sections, fs, marker=False, opts=None, spec=None):
             # (demi-em + ruby) et la grille ; pages dédiées paroles :
             # ancre = bord droit du cadre
             lyr_anchor = (x_right - n_cols * group_w) if n_cols > 0 else fx1
-            vx = lyr_anchor - lyr_sep
-            for col_lines, indent in lyrics_here:
-                # haut d'encre de la première glyphe = haut de grille
-                cy = fy0 + lyr_fs * 0.88
-                cy += indent * lyr_sp
-                for ln in col_lines:
-                    # _render_vertical_text retourne la position après le
-                    # dernier glyphe affiché (les annotations ruby ne
-                    # consomment PAS d'unités) : n'ajouter qu'UN gap de
-                    # ligne, jamais len(ln) brut (double avancement,
-                    # débordement des lignes rubyées)
-                    cy = _vertical_grouped_text(out, ln, vx, cy, lyr_fs, "#000",
-                                                lyr_sp, font_family)
-                    cy += lyr_sp
-                vx -= lyr_col_w + int(lyr_col_w * 0.8)
+            vx0 = lyr_anchor - lyr_sep
+            for bi, (by0, _by1) in enumerate(lyr_spans):
+                # bloc bi (chaînés haut -> bas comme en mega) : lyr_cap colonnes max
+                block_cols = lyrics_here[bi * lyr_cap:(bi + 1) * lyr_cap] if lyr_cap else []
+                if not block_cols:
+                    continue
+                vx = vx0
+                for col_lines, indent in block_cols:
+                    # haut d'encre de la première glyphe = haut du bloc
+                    cy = by0 + lyr_fs * 0.88
+                    cy += indent * lyr_sp
+                    for ln in col_lines:
+                        # _vertical_grouped_text retourne la position après le
+                        # dernier glyphe affiché (les annotations ruby ne
+                        # consomment PAS d'unités) : n'ajouter qu'UN gap de
+                        # ligne, jamais len(ln) brut (double avancement,
+                        # débordement des lignes rubyées)
+                        cy = _vertical_grouped_text(out, ln, vx, cy, lyr_fs, "#000",
+                                                    lyr_sp, font_family)
+                        cy += lyr_sp
+                    vx -= lyr_col_w + int(lyr_col_w * 0.8)
         # n° de page : baseline à 0,7 cm du bord inférieur de la feuille, centré en x
         _draw_page_no(out, page_base + pno - 1, total_w / 2,
                       total_h - 0.7 * CM, spec.page_no_fs, fill="#000")
