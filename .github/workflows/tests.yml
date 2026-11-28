@@ -68,6 +68,8 @@ jobs:
         run: python3 tests/test_nomura_lyrics_wrap.py
       - name: Lancer les tests du calibrage chindami (recueil Hyoukashuu, mesures 2026-11-24)
         run: python3 tests/test_chindami_calibrage.py
+      - name: Lancer les tests des blocs de paroles multiples @lyr_blocks (chindami)
+        run: python3 tests/test_chindami_lyr_blocks.py
       - name: Lancer les tests de rotation du romaji en vertical (JLREQ, 2026-11-25)
         run: python3 tests/test_vertical_romaji.py
       - name: Lancer les tests de nommage des fixtures SVG (<kkml>-<layout>-<font>[-N].svg)
