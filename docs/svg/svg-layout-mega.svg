@@ -94,7 +94,7 @@
 <line x1="99.4" y1="241.784" x2="92.2" y2="241.784" stroke="#1a56db" stroke-width="0.15"/>
 <line x1="99.4" y1="250.784" x2="92.2" y2="250.784" stroke="#1a56db" stroke-width="0.15"/>
 <line x1="95.2" y1="241.784" x2="95.2" y2="250.784" stroke="#1a56db" stroke-width="0.3" marker-start="url(#arr)" marker-end="url(#arr)"/>
-<text x="90.2" y="246.284" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 90.2 246.284)">block_gap = 30</text>
+<text x="90.2" y="246.284" text-anchor="middle" font-family="monospace" font-size="10" fill="#1a56db" transform="rotate(-90 90.2 246.284)">tab_block_gap = 30</text>
 <line x1="457.766" y1="120" x2="464.966" y2="120" stroke="#1a56db" stroke-width="0.15"/>
 <line x1="457.766" y1="372.567" x2="464.966" y2="372.567" stroke="#1a56db" stroke-width="0.15"/>
 <line x1="461.966" y1="120" x2="461.966" y2="372.567" stroke="#1a56db" stroke-width="0.3" marker-start="url(#arr)" marker-end="url(#arr)"/>
@@ -106,5 +106,5 @@
 <text x="424.712" y="380.967" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">cell_w = 22.2</text>
 <line x1="428.039" y1="377.367" x2="431.366" y2="377.367" stroke="#1a56db" stroke-width="0.3" marker-start="url(#arr)" marker-end="url(#arr)"/>
 <text x="426.376" y="380.967" text-anchor="middle" font-family="monospace" font-size="9" fill="#1a56db">marker_w = cell_w/2 = 11.1</text>
-<text x="100" y="382.167" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">blocks = 2 · dans_per_block = 32 → 64 dans/page (blocs x dans_per_block) · fs = 11 · paroles en pages A3 dédiées (inline si ≤ 15% de la largeur utile) · cell_w = (page−2·marge−title_offset)/(32×1,5)</text>
+<text x="100" y="382.167" text-anchor="start" font-family="monospace" font-size="9" fill="#1a56db">tab_blocks = 2 · dans_per_block = 32 → 64 dans/page (tab_blocks x dans_per_block) · fs = 11 · paroles en pages A3 dédiées (inline si ≤ 15% de la largeur utile) · cell_w = (page−2·marge−title_offset)/(32×1,5)</text>
 </svg>

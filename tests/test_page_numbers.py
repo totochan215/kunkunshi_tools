@@ -55,10 +55,10 @@ assert p1[4] == "1" and p2[4] == "2", (p1, p2)
 assert p1[2] == "middle" and abs(float(p1[0]) - k.MEGA.page_w / 2) < 0.01
 assert p1[1] == p2[1], (p1, p2)
 spec = k.MEGA
-cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
-          / (spec.blocks * spec.cells_per_dan))
-grid_bottom = (spec.margin_t + spec.blocks * spec.cells_per_dan * cell_h
-               + (spec.blocks - 1) * spec.block_gap)
+cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.tab_blocks - 1) * spec.tab_block_gap)
+          / (spec.tab_blocks * spec.cells_per_dan))
+grid_bottom = (spec.margin_t + spec.tab_blocks * spec.cells_per_dan * cell_h
+               + (spec.tab_blocks - 1) * spec.tab_block_gap)
 assert abs(float(p1[1]) - ((grid_bottom + spec.page_h) / 2 + spec.page_no_fs * 0.35)) < 0.01
 print("OK mega : –n– centré, mi-distance bas du 2e bloc / bord bas feuille, n auto-incrémenté")
 

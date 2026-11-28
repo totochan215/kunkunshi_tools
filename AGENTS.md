@@ -10,7 +10,7 @@ Règles :
 ---
 # Feuille de route
 
-Dernière mise à jour : 27 novembre 2026
+Dernière mise à jour : 28 novembre 2026
 
 Pipeline : Portama JSON → KKML → SVG / PDF. Ce document est la référence unique pour
 les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire · ❓ décision à trancher.
@@ -111,6 +111,8 @@ les priorités du projet. Statuts : ✅ fait · 🚧 en cours · ⬜ à faire ·
 - ✅ (2026-11-26) **Modèle page → bloc → dan explicite dans `LayoutSpec`** (option (a) pour `@dans_per_page`) : nouveau champ `writing_mode` (`vertical` partout sauf horizontal/tuto — mode d'écriture UNIQUE par page, cf. JLreq ; seul le n° de page fait exception) ; champ `max_dans` **supprimé**, remplacé par `dans_per_block` présent dans tous les layouts (nomura 7, chindami 16, tuto 7, mega 32 ; 0 = illimité en vertical/horizontal) ; nouvelle propriété dérivée `page_dans_cap = blocks × dans_per_block` (nomura 7, chindami 16, tuto 7, mega 64 ; 0 = page libre) — la notion de « max de dans par page » n'est plus primitive. Chindami : 16 = plafond absolu du bloc (page non extensible), atteint seulement si aucun titre/méta sur la page, sinon le nombre de piles est dérivé de la largeur du bloc ancré (comportement inchangé). `@dans_per_page`/`@page_dans`/`-p` **déprécié mais accepté** : INFO stderr une fois par clé (`_info_deprecated` dans kkml2svg, `info()` dans kkml_clean — la clé reste préservée par le cleaner) ; sémantique = simple plafond de la capacité dérivée, appliqué au point de consommation (tuto : `min(page_dans, page_dans_cap)` ; mega : `min` avec la capacité effective `blocks` × `dans_per_block` tenant compte de `@mega_dans` ; vertical : page libre, plafond sans objet), sans effet en nomura/chindami/horizontal (page imposée). `@mega_dans` également **déprécié mais accepté** (INFO une fois, remplacé par le champ `dans_per_block` du layout) : conservé comme surcharge de la valeur effective de `dans_per_block` en mega (cell_w, pagination, `::block`/`::page` et capacité dérivée effective suivent la valeur effective ; test `test_mega_breaks.py` §6 assert l'INFO). Tests : `test_layout_constants.py` (writing_mode + page_dans_cap par layout, `max_dans` absent), `test_chindami_calibrage.py` §1 (dans_per_block = page_dans_cap = 16). Docs : `docs/svg-layout.md` (paragraphe modèle en tête + sections vertical/nomura/chindami/tuto/mega), `docs/kkml-format.md` (ligne `@dans_per_page` dépréciée), README (CLI `-p`), figures `docs/svg/*.svg` (libellés `/bloc` ; labels seuls modifiés — la figure chindami committée était déjà périmée depuis le calibrage 2026-11-24, drift préexistant hors scope). **Rendus SVG byte-identiques** (110 échantillons × 6 layouts vs main avant refactor).
 
 - ✅ (2026-11-27) **Blocs de paroles multiples génériques (`@lyr_blocks`), consommés en chindami** : nouveaux champs `LayoutSpec` communs à tous les layouts — `lyr_blocks` (défaut 1), `lyr_blocks_max` (chindami 3, sinon 1 = pas de multi-blocs), `lyr_block_gap` (pt ; chindami 0,7 cm) — + méthode `lyr_block_spans(y0, y1, n)` (spans verticaux haut->bas, hauteurs égales, couvrent tout le kihon hanmen, gap entre blocs) et helper `_lyr_blocks_count(song, spec)` (méta chanson `@lyr_blocks`, unique par chanson, peut varier dans une compilation ; plafonné à [1, lyr_blocks_max], WARNING si invalide/hors bornes). `@lyr_blocks` ajouté à `META_KEYS` (préservé tel quel par kkml_clean). Chindami (`_render_chindami`) : longueur de ligne `max_lyr_u` = hauteur d'un BLOC (plus hauteur de page), capacité de la zone paroles par page = `lyr_blocks` x colonnes/bloc, rendu par bloc chaîné haut->bas à l'ancre droite habituelle. Défaut 1 = rendu byte-identique (110 échantillons x 6 layouts vérifiés vs main). Tests `tests/test_chindami_lyr_blocks.py` (en CI). Docs `docs/kkml-format.md` (`@lyr_blocks`), `docs/svg-layout.md` (paragraphe modèle + section chindami). NB : le kinsoku 追い出し peut allonger une sous-ligne de +1 unité au-delà du plafond (comportement existant) ; le gap 0,7 cm > 1 pas l'absorbe entre blocs.
+
+- ✅ (2026-11-28) **Renommage explicite `blocks` -> `tab_blocks`, `block_gap` -> `tab_block_gap`** (champs `LayoutSpec`, distincts des blocs de paroles `lyr_blocks`/`lyr_block_gap`) : champs, kwargs MEGA, usages mega (`_mega_paginate` param `tab_blocks_per_page`, `page_tab_blocks`), tests, figure mega (libellés `tab_blocks = 2` / `tab_block_gap = 30`), docs, référence vivante ci-dessus. `song.blocks` (sections KKML) et le marqueur `::block` inchangés. Renommage pur : rendus byte-identiques (110 échantillons x 6 layouts vs main), tests OK.
 
 ## 1. Validations en attente (bloquantes ou quasi)
 
@@ -365,11 +367,11 @@ page), `fs` (0 = `max(fs_min, fs_ratio × cell_h)`), `cells_per_dan`
 chindami 10,8), ratios paroles (`lyr_sp_ratio`, `lyr_col_w_ratio`,
 `lyr_verse_gap_ratio`), ratios syllabes
 (`syl_cell_ratio`, `syl_marker_ratio`, `syl_fs_ratio`), structure de blocs
-(`blocks` = 1 partout sauf mega 2, `block_gap` = 0 sauf mega 30,
+(`tab_blocks` = 1 partout sauf mega 2, `tab_block_gap` = 0 sauf mega 30,
 `dans_per_block` — nomura 7, chindami 16 (plafond absolu : page non
 extensible, atteint seulement sans titre/méta sur la page), tuto 7, mega 32 —
 0 = illimité en vertical/horizontal ; capacité de page DÉRIVÉE `page_dans_cap` =
-`blocks × dans_per_block` (nomura 7, chindami 16, tuto 7, mega 64 ; 0 = page libre ;
+`tab_blocks × dans_per_block` (nomura 7, chindami 16, tuto 7, mega 64 ; 0 = page libre ;
 `max_dans` supprimé le 2026-11-26) ; `lyr_inline_max_ratio` =
 seuil paroles inline 1re page, mega), `lyr_blocks`/`lyr_blocks_max`/`lyr_block_gap`
 (blocs de paroles : défaut 1, chindami max 3 gap 0,7 cm, surcharge `@lyr_blocks`),

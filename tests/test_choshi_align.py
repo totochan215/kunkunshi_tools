@@ -33,10 +33,10 @@ SRC = "@title t\n@choshi 本調子\n::tab\n" + " ".join([GO] * 12) + "\n::\n"
 
 # 1. mega : @choshi en bas de colonne, bas ancré sur le bas de la grille, sur chaque page
 spec = k.MEGA
-cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
-          / (spec.blocks * spec.cells_per_dan))
-grid_bottom = (spec.margin_t + spec.blocks * spec.cells_per_dan * cell_h
-               + (spec.blocks - 1) * spec.block_gap)
+cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.tab_blocks - 1) * spec.tab_block_gap)
+          / (spec.tab_blocks * spec.cells_per_dan))
+grid_bottom = (spec.margin_t + spec.tab_blocks * spec.cells_per_dan * cell_h
+               + (spec.tab_blocks - 1) * spec.tab_block_gap)
 sp = spec.u(spec.tuning_spacing)
 svgs = k.render_svg(k.parse_kkml(SRC), layout="mega")
 for s in svgs:
