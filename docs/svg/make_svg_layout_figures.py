@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 sys.path.insert(0, ROOT)
 DOCS = os.path.dirname(os.path.abspath(__file__))   # docs/svg/
 
-import kkml2svg as k   # specs de mise en page (k.NOMURA.page_w, k.CHINDAMI.cell_h, k.MEGA.block_gap...)
+import kkml2svg as k   # specs de mise en page (k.NOMURA.page_w, k.CHINDAMI.cell_h, k.MEGA.tab_block_gap...)
 
 GRAY, BLUE, PAGE_FILL = "#333333", "#1a56db", "#fdfdfd"
 CM = k.CM
@@ -531,10 +531,10 @@ def fig_tuto():
 # --------------------------------------------------------------------------- #
 def fig_mega():
     PW, PH = k.MEGA.page_w, k.MEGA.page_h      # 1190.55 x 841.89
-    MARGIN, BLOCKS, BLOCK_GAP = k.MEGA.margin_l, k.MEGA.blocks, k.MEGA.block_gap
+    MARGIN, TAB_TAB_BLOCKS, TAB_TAB_BLOCK_GAP = k.MEGA.margin_l, k.MEGA.tab_blocks, k.MEGA.tab_block_gap
     ROWS = k.MEGA.cells_per_dan                          # 12
     DANS_PER_BLOCK = k.MEGA.dans_per_block      # 32
-    CELL_H = (PH - 2 * MARGIN - (BLOCKS - 1) * BLOCK_GAP) / (BLOCKS * ROWS)
+    CELL_H = (PH - 2 * MARGIN - (TAB_BLOCKS - 1) * TAB_BLOCK_GAP) / (TAB_BLOCKS * ROWS)
     FS = max(8, int(CELL_H * 0.38))
     TITLE_W, TITLE_GAP = 36, 10
     TITLE_OFFSET = TITLE_W + TITLE_GAP
@@ -551,8 +551,8 @@ def fig_mega():
             title="Mise en page mega — constantes (layout « mega », pt, A3 paysage 42×29,7 cm)")
     f.rect(0, 0, PW, PH, fill=PAGE_FILL, stroke=GRAY, sw=2)
     blk_h = ROWS * CELL_H
-    for b in range(BLOCKS):
-        by = MARGIN + b * (blk_h + BLOCK_GAP)
+    for b in range(TAB_BLOCKS):
+        by = MARGIN + b * (blk_h + TAB_BLOCK_GAP)
         for ci in range(DRAWN):
             x = PW - MARGIN - TITLE_OFFSET - (ci + 1) * GROUP_W
             for r in range(3):
@@ -561,7 +561,7 @@ def fig_mega():
             yb = by + 3 * CELL_H
             f.line(x + 2, yb + 10, x + GROUP_W - 2, yb + 2, stroke=GRAY, sw=0.6)
         f.text(PW - MARGIN - TITLE_OFFSET - DRAWN * GROUP_W / 2, by - 7,
-               f"bloc {b + 1}/{BLOCKS} : jusqu'à {DANS_PER_BLOCK} dans × {ROWS} cases", fs=10)
+               f"bloc {b + 1}/{TAB_BLOCKS} : jusqu'à {DANS_PER_BLOCK} dans × {ROWS} cases", fs=10)
     f.text(PW - MARGIN - CELL_W / 2, MARGIN + CELL_H / 2 + 4, "工", fs=FS, bold=True, scaled=True)
     tx = PW - MARGIN - TITLE_W
     f.rect(tx, MARGIN, TITLE_W, 3 * CELL_H, fill="#f6f6f6", stroke=GRAY, sw=0.6)
@@ -582,8 +582,8 @@ def fig_mega():
     f.dim_v(0, MARGIN, -16, f"margin_l = {MARGIN:g}", ext_x=-2)
     f.dim_v(MARGIN, MARGIN + CELL_H, -32, f"cell_h = {CELL_H:.1f}", ext_x=-2)
     f.dim_v(MARGIN, MARGIN + blk_h, -48, f"bloc = {ROWS}×cell_h = {blk_h:.0f} pt", ext_x=-2)
-    f.dim_v(MARGIN + blk_h, MARGIN + blk_h + BLOCK_GAP, -16,
-            f"block_gap = {BLOCK_GAP:g}", ext_x=-2)
+    f.dim_v(MARGIN + blk_h, MARGIN + blk_h + TAB_BLOCK_GAP, -16,
+            f"tab_block_gap = {TAB_BLOCK_GAP:g}", ext_x=-2)
     f.dim_v(0, PH, PW + 16, f"page {PH:.1f} pt", side="right", ext_x=PW + 2)
     yb = PH + 16
     x0 = PW - MARGIN - TITLE_OFFSET - GROUP_W
@@ -593,8 +593,8 @@ def fig_mega():
     f.text(x0 + CELL_W / 2, yb + 12, f"cell_w = {CELL_W:.1f}", fill=BLUE, fs=9)
     f.line(x0 + CELL_W, yb, x0 + GROUP_W, yb, stroke=BLUE, sw=1.0, marker="arr")
     f.text(x0 + GROUP_W / 2, yb + 12, f"marker_w = cell_w/2 = {MARKER_W:.1f}", fill=BLUE, fs=9)
-    f.text(0, PH + 32, f"blocks = {BLOCKS} · dans_per_block = {DANS_PER_BLOCK} → "
-           f"{BLOCKS * DANS_PER_BLOCK} dans/page (blocs x dans_per_block) · fs = {FS} · paroles en pages A3 dédiées "
+    f.text(0, PH + 32, f"tab_blocks = {TAB_BLOCKS} · dans_per_block = {DANS_PER_BLOCK} → "
+           f"{TAB_BLOCKS * DANS_PER_BLOCK} dans/page (blocs x dans_per_block) · fs = {FS} · paroles en pages A3 dédiées "
            f"(inline si ≤ {k.MEGA.lyr_inline_max_ratio:.0%} de la largeur utile) · cell_w = "
            f"(page−2·marge−title_offset)/({DANS_PER_BLOCK}×1,5)", fill=BLUE, fs=9, anchor="start")
     return f

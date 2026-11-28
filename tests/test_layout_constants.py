@@ -91,6 +91,10 @@ assert k.LAYOUTS["nomura"].page_dans_cap == 7      # 1 bloc x 7 dans
 assert k.LAYOUTS["chindami"].page_dans_cap == 16   # 1 bloc x 16 dans (plafond absolu, page non extensible)
 assert k.LAYOUTS["tuto"].page_dans_cap == 7        # 1 bloc x 7 dans
 assert k.LAYOUTS["mega"].page_dans_cap == 64       # 2 blocs x 32 dans
+assert k.LAYOUTS["mega"].tab_blocks == 2 and k.LAYOUTS["mega"].tab_block_gap == 30
+for _n in ("vertical", "horizontal", "nomura", "chindami", "tuto"):
+    assert k.LAYOUTS[_n].tab_blocks == 1 and k.LAYOUTS[_n].tab_block_gap == 0, _n
+assert not hasattr(k.LAYOUTS["vertical"], "blocks")   # champ renommé tab_blocks (distinct de lyr_blocks)
 assert not hasattr(k.LAYOUTS["vertical"], "max_dans")   # champ supprimé (remplacé par dans_per_block)
 print("OK modèle page->bloc->dan : writing_mode + page_dans_cap par layout (max_dans supprimé)")
 for name in ("nomura", "chindami", "mega"):

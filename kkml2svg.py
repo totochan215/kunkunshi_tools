@@ -810,11 +810,11 @@ class LayoutSpec:
     fs_ratio: float = 0
     fs_min: int = 8
     cells_per_dan: int = 12          # cases max par dan (niveau dan ; personnalisation par bloc à terme)
-    blocks: int = 1                  # blocs de tablature par page (mega : 2 ; sinon bloc unique)
-    block_gap: float = 0             # gap entre blocs (mega)
+    tab_blocks: int = 1              # blocs de TABLATURE par page (mega : 2 ; sinon bloc unique) — distinct de lyr_blocks (blocs de paroles)
+    tab_block_gap: float = 0         # gap entre blocs de tablature (mega) — distinct de lyr_block_gap
     dans_per_block: int = 0          # dans max par BLOC (0 = illimité, page de taille libre).
-                                     # Modèle page -> bloc -> dan : une page = `blocks` blocs de
-                                     # tablature ; capacité en dans DÉRIVÉE = blocks x
+                                     # Modèle page -> bloc -> dan : une page = `tab_blocks` blocs de
+                                     # tablature ; capacité en dans DÉRIVÉE = tab_blocks x
                                      # dans_per_block (propriété page_dans_cap) — la notion de
                                      # « max de dans par page » n'existe plus comme champ.
                                      # nomura 7 (A4 imposée) ; chindami 16 (page NON extensible :
@@ -881,8 +881,8 @@ class LayoutSpec:
     @property
     def page_dans_cap(self):
         """Capacité de page en dans, DÉRIVÉE du modèle page->bloc->dan :
-        blocks x dans_per_block (0 = illimitée, page de taille libre)."""
-        return self.blocks * self.dans_per_block if self.dans_per_block else 0
+        tab_blocks x dans_per_block (0 = illimitée, page de taille libre)."""
+        return self.tab_blocks * self.dans_per_block if self.dans_per_block else 0
 
     def lyr_block_spans(self, y0, y1, n):
         """Spans verticaux (y0, y1) des n blocs de paroles sur [y0, y1] (kihon
@@ -978,7 +978,7 @@ MEGA = LayoutSpec(
     name="mega", unit="pt",
     page_w=42 * CM, page_h=29.7 * CM, page_cm=(42, 29.7),
     margin_t=40, margin_b=40, margin_l=40, margin_r=40,
-    blocks=2, block_gap=30, cells_per_dan=12, dans_per_block=32,
+    tab_blocks=2, tab_block_gap=30, cells_per_dan=12, dans_per_block=32,
     fs_ratio=0.38, marker_ratio=0.5,
     title_w=36, title_gap=10, title_spacing=30, tuning_spacing=22,
     title_fs=26, meta_fs=15, md_spacing=15,
@@ -3811,22 +3811,22 @@ def _mega_song_header(out, text, xc, ty):
                    f'{escape(_unescape(text))}</text>')
 
 
-def _mega_paginate(stream, dans_per_block, blocks_per_page=2, per_page=None, rows=12):
-    """Découpe le flux de dans en pages de `blocks_per_page` blocs de
+def _mega_paginate(stream, dans_per_block, tab_blocks_per_page=2, per_page=None, rows=12):
+    """Découpe le flux de dans en pages de `tab_blocks_per_page` blocs de
     `dans_per_block` colonnes. Retourne une liste de pages, chaque page étant
     une liste de blocs (eux-mêmes des listes d'entrées du flux).
 
     Marqueurs dans le flux : ("__block__",) ferme le bloc courant en le
     complétant de dans VIDES jusqu'à `dans_per_block` colonnes ; ("__page__",)
-    fait de même puis complète la page de blocs vides jusqu'à `blocks_per_page`
+    fait de même puis complète la page de blocs vides jusqu'à `tab_blocks_per_page`
     — même si bloc/page n'étaient pas pleins (sauts volontaires ::block /
     ::page). `per_page` = plafond de colonnes par page (-p / @dans_per_page,
-    défaut blocks_per_page * dans_per_block). `rows` = cases par dan (pour
+    défaut tab_blocks_per_page * dans_per_block). `rows` = cases par dan (pour
     les dans vides)."""
     if per_page:
-        per_page = max(1, min(per_page, blocks_per_page * dans_per_block))
+        per_page = max(1, min(per_page, tab_blocks_per_page * dans_per_block))
     else:
-        per_page = blocks_per_page * dans_per_block
+        per_page = tab_blocks_per_page * dans_per_block
     pages, cur_page, cur_blk = [], [], []
 
     def empty_dan():
@@ -3855,15 +3855,15 @@ def _mega_paginate(stream, dans_per_block, blocks_per_page=2, per_page=None, row
             while cur_blk and len(cur_blk) < dans_per_block:
                 cur_blk.append(empty_dan())
             close_blk()
-            if len(cur_page) >= blocks_per_page or page_cols() >= per_page:
+            if len(cur_page) >= tab_blocks_per_page or page_cols() >= per_page:
                 close_page()
             continue
         if entry[0] == "__page__":
             while cur_blk and len(cur_blk) < dans_per_block:
                 cur_blk.append(empty_dan())
             close_blk()
-            # la page est complétée de blocs vides jusqu'à blocks_per_page
-            while 0 < len(cur_page) < blocks_per_page and page_cols() < per_page:
+            # la page est complétée de blocs vides jusqu'à tab_blocks_per_page
+            while 0 < len(cur_page) < tab_blocks_per_page and page_cols() < per_page:
                 cur_page.append([empty_dan() for _ in range(dans_per_block)])
             close_page()
             continue
@@ -3872,7 +3872,7 @@ def _mega_paginate(stream, dans_per_block, blocks_per_page=2, per_page=None, row
         cur_blk.append(entry)
         if len(cur_blk) >= dans_per_block:
             close_blk()
-            if len(cur_page) >= blocks_per_page:
+            if len(cur_page) >= tab_blocks_per_page:
                 close_page()
     close_page()
     if not pages:
@@ -3888,7 +3888,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     has_vocal = any(s[3] or s[2] == "vocal" for s in sections)
     marker = marker or has_vocal
 
-    # Géométrie verticale : spec.blocks blocs de spec.cells_per_dan cases + gaps, marges
+    # Géométrie verticale : spec.tab_blocks blocs de spec.cells_per_dan cases + gaps, marges
     spec = spec or MEGA
     # @mega_dans N (DÉPRÉCIÉ) : surcharge de spec.dans_per_block (dans par bloc horizontal, mega)
     dans_per_block = spec.dans_per_block
@@ -3898,14 +3898,14 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
         except ValueError:
             print(f"kkml2svg: WARNING: @mega_dans non entier ({song.meta['mega_dans']!r}), "
                   f"défaut {spec.dans_per_block} utilisé", file=sys.stderr)
-    dans_per_page = spec.blocks * dans_per_block   # capacité dérivée page->bloc->dan : blocs x dans_per_block
+    dans_per_page = spec.tab_blocks * dans_per_block   # capacité dérivée page->bloc->dan : blocs x dans_per_block
                                                   # (dans_per_block effectif, ajustable par @mega_dans)
-    cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.blocks - 1) * spec.block_gap)
-              / (spec.blocks * spec.cells_per_dan))
+    cell_h = ((spec.page_h - 2 * spec.margin_t - (spec.tab_blocks - 1) * spec.tab_block_gap)
+              / (spec.tab_blocks * spec.cells_per_dan))
     fs = max(spec.fs_min, int(cell_h * spec.fs_ratio))  # ratio fs/case ~0,38 (calibrage Portama)
     page_base = _meta_page_base(song.meta)
-    grid_bottom = (spec.margin_t + spec.blocks * spec.cells_per_dan * cell_h
-                   + (spec.blocks - 1) * spec.block_gap)
+    grid_bottom = (spec.margin_t + spec.tab_blocks * spec.cells_per_dan * cell_h
+                   + (spec.tab_blocks - 1) * spec.tab_block_gap)
 
     # --- Colonne titre verticale (à droite de la grille, comme vertical) --- #
     TITLE_W = spec.u(spec.title_w)
@@ -3990,14 +3990,14 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
     per_page = dans_per_page
     if page_dans:
         per_page = max(1, min(page_dans, dans_per_page))
-    pages = _mega_paginate(stream, dans_per_block, spec.blocks, per_page, spec.cells_per_dan)
+    pages = _mega_paginate(stream, dans_per_block, spec.tab_blocks, per_page, spec.cells_per_dan)
 
     result = []
-    for pi, page_blocks in enumerate(pages):
+    for pi, page_tab_blocks in enumerate(pages):
         out = _svg_open_print(spec.page_w, spec.page_h, 42, 29.7, title=title)  # A3, 600 dpi
         _draw_frame(out, spec, opts)   # tracé seulement si frame_width > 0 (défaut 0)
         y0 = spec.margin_l
-        for bdan in page_blocks:
+        for bdan in page_tab_blocks:
             if not bdan:
                 continue
             cols = [d[0] for d in bdan]
@@ -4039,7 +4039,7 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                                marker_w, title_offset, opts, end_circle=False,
                                vocal_data=vcols if has_vocal else None,
                                syllable_fs=SYLLABLE_FS)
-            y0 += spec.cells_per_dan * cell_h + spec.block_gap
+            y0 += spec.cells_per_dan * cell_h + spec.tab_block_gap
 
         # Paroles verticales à gauche (1re page seulement, et uniquement si
         # assez compactes pour ne pas comprimer la grille ; la largeur est
@@ -4151,17 +4151,17 @@ def _render_mega(song, sections, marker=False, opts=None, page_dans=None, spec=N
                 if song_title:   # paroles sans ::song : pas de titre
                     ly_cols.append(("T", song_title, si))
                 ly_cols.extend(scols)
-        per_page = spec.blocks * max_cols
+        per_page = spec.tab_blocks * max_cols
         ly_pages = [ly_cols[i:i + per_page]
                     for i in range(0, len(ly_cols), per_page)] or [[]]
         for lpi, page_cols in enumerate(ly_pages):
             out = _svg_open_print(spec.page_w, spec.page_h, 42, 29.7, title=title)
             _draw_frame(out, spec, opts)   # tracé seulement si frame_width > 0 (défaut 0)
-            for b in range(spec.blocks):
+            for b in range(spec.tab_blocks):
                 bcols = page_cols[b * max_cols:(b + 1) * max_cols]
                 if not bcols:
                     break
-                y0 = spec.margin_l + b * (blk_h + spec.block_gap)
+                y0 = spec.margin_l + b * (blk_h + spec.tab_block_gap)
                 # (Plus de chapeau horizontal : le titre de chaque chanson
                 # est rendu en ligne verticale 「…」 en gras, devant ses
                 # paroles — cf. slot «T» ci-dessous.)
